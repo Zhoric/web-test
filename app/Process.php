@@ -1,8 +1,10 @@
 <?php
 
 
-namespace app\models;
-use yii;
+namespace App;
+
+
+
 class Process{
     private $pid;
     private $command;
