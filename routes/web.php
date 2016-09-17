@@ -12,5 +12,5 @@
 */
 
 Route::get('/','DemoController@index');
-Route::get('/editor','DemoController@editor');
+Route::get('editor','DemoController@editor');
 
