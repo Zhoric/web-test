@@ -178,6 +178,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        ProAI\Datamapper\DatamapperServiceProvider::class
 
     ],
 
@@ -226,6 +227,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'SSH' => Collective\Remote\RemoteFacade::class,
+        'EM' => ProAI\Datamapper\Support\Facades\EntityManager::class
 
     ],
 
