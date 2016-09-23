@@ -1,15 +1,11 @@
 <?php
+/*
+namespace App\Models;
 
 use Illuminate\Database\Seeder;
-use App\User;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         // $this->call(UsersTableSeeder::class);

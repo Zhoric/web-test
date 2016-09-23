@@ -1,9 +1,6 @@
 <?php
 
-
-namespace App;
-
-
+namespace App\Models;
 
 class Process{
     private $pid;

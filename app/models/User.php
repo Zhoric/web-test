@@ -1,22 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use ProAI\Datamapper\Support\Entity;
 use ProAI\Datamapper\Annotations as ORM;
+use ProAI\Datamapper\Support\Entity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User extends Entity
+class User extends BaseEntity 
 {
-    /**
-     * @ORM\Id
-     * @ORM\AutoIncrement
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
 
     /**
      * @ORM\Column(type="string", length=20)
