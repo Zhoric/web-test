@@ -9,44 +9,43 @@ use ProAI\Datamapper\Support\Entity;
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User extends BaseEntity 
+class User extends Entity
 {
+     /**
+      * @ORM\Id
+      * @ORM\AutoIncrement
+      * @ORM\Column(type="integer")
+      * @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Group")
+      */
+    public $id;
 
     /**
      * @ORM\Column(type="string", length=20)
      */
-    protected $login;
+    public $login;
 
     /**
      * @ORM\Column(type="string", length=60)
      */
-    protected $password;
+    public $password;
 
     /**
      * @ORM\Column(type="string", length=100)
      */
-    protected $fullName;
+    public $fullName;
 
     /**
      * @ORM\Column(type="smallInteger")
      */
-    protected $role;
+    public $role;
 
     /**
      * @ORM\Column(type="smallInteger", nullable=true)
      */
-    protected $admissionYear;
+    public $admissionYear;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    protected $rememberToken;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $groupId;
-    //     * @Relation(type="belongsTo", relatedEntity="app\Group")
-
-
+    public $rememberToken;
 }

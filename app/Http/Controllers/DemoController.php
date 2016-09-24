@@ -11,12 +11,13 @@ use Mockery\CountValidator\Exception;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SSH2;
 use Collective\Remote\RemoteServiceProvider;
-
+use ProAI\Datamapper\EntityManager;
+use App\Models;
 
 class DemoController extends BaseController
 {
 
-    public function index(){
+    public function index(EntityManager $em){
 
 
      //   $container_id = exec("docker run -d -i -t baseimage-ssh /sbin/my_init",$output);
@@ -27,7 +28,9 @@ class DemoController extends BaseController
         $command = 'echo hello wold';
         $result =  exec("$command_pattern $command",$output);
 
-        dd($result,$output);
+        //dd($result,$output);
+
+        $users = $em->entity('App\Models\User')->get(0);
 
 
 

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'namespace_tablenames' => true,
+    'namespace_tablenames' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ return [
     |
     */
 
-    'models_namespace' => '',
+    'models_namespace' => 'App\models',
 
     /*
     |--------------------------------------------------------------------------
