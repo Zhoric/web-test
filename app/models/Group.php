@@ -5,6 +5,7 @@ namespace App\Models;
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
 
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="groups")
@@ -15,7 +16,7 @@ class Group extends Entity
      * @ORM\Id
      * @ORM\AutoIncrement
      * @ORM\Column(type="integer")
-     * @ORM\Relation(type="belongsTo", relatedEntity="app\models\Profile")
+     * @ORM\Relation(type="belongsTo", relatedEntity="App\models\Profile")
      */
     public $id;
 
