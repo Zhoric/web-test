@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -15,7 +15,7 @@ class YearShift extends Entity
      *  @ORM\Id
      *  @ORM\Column(type="integer")
      *  @ORM\AutoIncrement
-     *  @ORM\Relation(type="belongsTo", relatedEntity="App\Models\User")
+     *  @ORM\Relation(type="belongsTo", relatedEntity="App\models\User", inverse=true)
      */
     public  $id;
 

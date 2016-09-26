@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -19,12 +19,12 @@ class GivenAnswer extends Entity
     public  $id;
 
     /**
-     *  @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Test")
+     *  @ORM\Relation(type="belongsTo", relatedEntity="App\models\Test")
      */
     public $testId;
 
     /**
-     *  @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Question")
+     *  @ORM\Relation(type="belongsTo", relatedEntity="App\models\Question")
      */
     public $questionId;
 

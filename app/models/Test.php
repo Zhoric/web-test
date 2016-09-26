@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -15,7 +15,7 @@ class Test extends Entity
      * @ORM\Id
      * @ORM\AutoIncrement
      * @ORM\Column(type="integer")
-     * @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Discipline")
+     * @ORM\Relation(type="belongsTo", relatedEntity="App\models\Discipline")
      */
     public $id;
 

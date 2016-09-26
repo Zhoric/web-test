@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -15,13 +15,17 @@ class User extends Entity
       * @ORM\Id
       * @ORM\AutoIncrement
       * @ORM\Column(type="integer")
-      * @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Group")
       */
     public $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="integer", nullable=true)
      */
+    public $groupId;
+
+    /**
+    * @ORM\Column(type="string", length=20)
+    */
     public $login;
 
     /**
@@ -48,4 +52,6 @@ class User extends Entity
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     public $rememberToken;
+
+    public function __construct(){}
 }

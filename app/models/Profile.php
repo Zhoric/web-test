@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -15,9 +15,18 @@ class Profile extends Entity
      * @ORM\Id
      * @ORM\AutoIncrement
      * @ORM\Column(type="integer")
-     * @ORM\Relation(type="belongsToMany", relatedEntity="App\Models\Discipline", inverse=false)
      */
     public $id;
+
+    /**
+     * @ORM\Relation(type="belongsToMany", relatedEntity="App\models\Discipline")
+     */
+    public $disciplines;
+
+    /**
+     * @ORM\Relation(type="hasMany", relatedEntity="App\models\Discipline", inverse=true)
+     */
+    public $groups;
 
     /**
      * @ORM\Column(type="string", length=100)

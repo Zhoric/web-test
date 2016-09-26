@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -19,12 +19,12 @@ class ExtraAttempt extends Entity
     public $id;
 
     /**
-     *  @ORM\Relation(type="belongsTo", relatedEntity="App\Models\User")
+     *  @ORM\Relation(type="belongsTo", relatedEntity="App\models\User")
      */
     public $userId;
 
     /**
-     *  @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Test")
+     *  @ORM\Relation(type="belongsTo", relatedEntity="App\models\Test")
      */
     public $testId;
 

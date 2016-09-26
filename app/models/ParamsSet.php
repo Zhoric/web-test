@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
 use ProAI\Datamapper\Annotations as ORM;
 use ProAI\Datamapper\Support\Entity;
@@ -15,9 +15,18 @@ class ParamsSet extends Entity
      * @ORM\Id
      * @ORM\AutoIncrement
      * @ORM\Column(type="integer")
-     * @ORM\Relation(type="belongsTo", relatedEntity="App\Models\Program")
      */
     public $id;
+
+    /**
+     * @ORM\Relation(type="belongsTo", relatedEntity="App\models\Program")
+     */
+    public $program;
+
+    /**
+     * @ORM\Relation(type="hasMany", relatedEntity="App\models\ParamsSet", inverse=true)
+     */
+    public $inputParams;
 
     /**
      * @ORM\Column(type="string", length=100)

@@ -30,7 +30,8 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php",
-	    "app/models"
+	    "app/models",
+	    "app/Repositories"
         ]
     },
     "scripts": {
@@ -38,15 +39,15 @@
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "php5.6 artisan key:generate"
+            "php artisan key:generate"
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php5.6 artisan optimize"
+            "php artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php5.6 artisan optimize"
+            "php artisan optimize"
         ]
     },
     "config": {
