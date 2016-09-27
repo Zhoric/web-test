@@ -37,4 +37,6 @@ class InputParam extends Entity
      * @ORM\Column(type="string", length=100)
      */
     public $value;
+
+    public function __construct(){}
 }

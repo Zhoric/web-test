@@ -2,7 +2,6 @@
 
 namespace Repositories;
 
-use Repositories\Interfaces;
 use ProAI\Datamapper\EntityManager;
 use Repositories\Interfaces\IRepository;
 
@@ -29,12 +28,12 @@ abstract class BaseRepository implements IRepository
 
     public function update($entity)
     {
-        return $this->em->update($entity);
+        $this->em->update($entity);
     }
 
-    public function delete($id)
+    public function delete($entity)
     {
-        return $this->em->delete($id);
+        return $this->em->delete($entity);
     }
 
     public function find($id)

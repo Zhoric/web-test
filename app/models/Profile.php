@@ -37,4 +37,6 @@ class Profile extends Entity
      * @ORM\Column(type="smallInteger")
      */
     public $semesters;
+
+    public function __construct(){}
 }

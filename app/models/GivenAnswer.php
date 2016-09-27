@@ -37,4 +37,6 @@ class GivenAnswer extends Entity
      * @ORM\Column(type="boolean")
      */
     public $isRight;
+
+    public function __construct(){}
 }

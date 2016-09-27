@@ -15,9 +15,13 @@ class Test extends Entity
      * @ORM\Id
      * @ORM\AutoIncrement
      * @ORM\Column(type="integer")
-     * @ORM\Relation(type="belongsTo", relatedEntity="App\models\Discipline")
      */
     public $id;
+
+    /**
+     * @ORM\Relation(type="belongsTo", relatedEntity="App\models\Discipline")
+     */
+    public $discipline;
 
     /**
      * @ORM\Column(type="string", length=200)
@@ -48,4 +52,6 @@ class Test extends Entity
      * @ORM\Column(type="smallInteger")
      */
     public $extramuralStart;
+
+    public function __construct(){}
 }

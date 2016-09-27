@@ -46,6 +46,11 @@ class User extends Entity
     /**
      * @ORM\Column(type="smallInteger", nullable=true)
      */
+    public $yearShift;
+
+    /**
+     * @ORM\Column(type="smallInteger", nullable=true)
+     */
     public $admissionYear;
 
     /**

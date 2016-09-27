@@ -28,4 +28,6 @@ class Program extends Entity
      * @ORM\Column(type="smallInteger")
      */
     public $lang;
+
+    public function __construct(){}
 }

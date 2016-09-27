@@ -32,4 +32,6 @@ class ParamsSet extends Entity
      * @ORM\Column(type="string", length=100)
      */
     public $expectedOutput;
+
+    public function __construct(){}
 }

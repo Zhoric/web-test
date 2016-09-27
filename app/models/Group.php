@@ -25,7 +25,8 @@ class Group extends Entity
     public $profile;
 
     /**
-     * @ORM\Relation(type="hasMany", relatedEntity="App\models\User", localForeignKey="groupId");
+     * @ORM\Relation(type="hasMany", relatedEntity="App\models\User",
+     *     localForeignKey="groupId", inverse=true, relation="group");
      */
     public $students;
 

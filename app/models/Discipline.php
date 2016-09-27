@@ -38,4 +38,5 @@ class Discipline extends Entity
      */
     public $extramuralStart;
 
+    public function __construct(){}
 }

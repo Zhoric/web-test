@@ -37,4 +37,6 @@ class Theme extends Entity
      * @ORM\Column(type="string", length=100)
      */
     public $name;
+
+    public function __construct(){}
 }

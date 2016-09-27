@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\models\Group;
 use App\models\User;
+use App\models\UserRole;
 use App\Process;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Managers\UserManager;
 use Mockery\CountValidator\Exception;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SSH2;
@@ -20,8 +22,14 @@ use Repositories\UserRepository;
 
 class DemoController extends BaseController
 {
+    public $_userManager;
 
-    public function index(UserRepository $usersRepo){
+    public function __construct(UserManager $userManager)
+    {
+        $this->_userManager = $userManager;
+    }
+
+    public function index(){
 
     //   $container_id = exec("docker run -d -i -t baseimage-ssh /sbin/my_init",$output);
 
@@ -31,10 +39,6 @@ class DemoController extends BaseController
         $command = 'echo hello wold';
         //$result =  exec("$command_pattern $command",$output);
 
-        //dd($result,$output);
-       //$users = $em->entity('App\Models\User')->get(0);
-        //$usersRepo->add(new Models\User());
-
         $user = new User();
         $user->id = 1;
         $user->fullName = "Вася1";
@@ -43,10 +47,14 @@ class DemoController extends BaseController
         $user->role = 0;
         $user->groupId = 1;
 
-        //$usersRepo->create($user);
+        //$this->_userManager->addUser('Иван Петрович','vasya','123456',UserRole::Lecturer, 2013, 1);
 
-        $vasyan = $usersRepo->where('fullName', 'like', '%Вас%');
-        dd($vasyan);
+        //$usersRepo->create($user);
+        //$this->_userManager->updateUser(20,'Колян', 2055, 3);
+
+        dd($this->_userManager->getStudents());
+
+
     }
 
     public function editor(){

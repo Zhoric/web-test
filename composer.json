@@ -31,7 +31,8 @@
         "classmap": [
             "tests/TestCase.php",
 	    "app/models",
-	    "app/Repositories"
+	    "app/Repositories",
+        "app/Managers"
         ]
     },
     "scripts": {

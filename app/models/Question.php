@@ -42,4 +42,6 @@ class Question extends Entity
      * @ORM\Column(type="smallInteger")
      */
     public $complexity;
+
+    public function __construct(){}
 }

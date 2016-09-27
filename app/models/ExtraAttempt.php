@@ -32,4 +32,6 @@ class ExtraAttempt extends Entity
      * @ORM\Column(type="smallInteger")
      */
     public $count;
+
+    public function __construct(){}
 }

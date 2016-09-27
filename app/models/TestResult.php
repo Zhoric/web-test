@@ -43,4 +43,6 @@ class TestResult extends Entity
      * @ORM\Column(type="dateTime", nullable=true)
      */
     public $dateTime;
+
+    public function __construct(){}
 }
