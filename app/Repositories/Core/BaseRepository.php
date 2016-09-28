@@ -45,4 +45,25 @@ abstract class BaseRepository implements IRepository
     {
         return $this->model->where($fieldName, $expression, $value)->get();
     }
+
+    public function findWith($id, $relatedEntityName)
+    {
+        return $this->model
+            ->where('id', '=', $id)
+            ->with($relatedEntityName)
+            ->get()->first();
+    }
+
+    public function whereWith($fieldName, $expression, $value, $relatedEntityName, $takeFirst = false)
+    {
+        $query =  $this->model
+            ->where($fieldName, $expression, $value)
+            ->with($relatedEntityName);
+
+        if ($takeFirst) {
+            return $query->get()->first();
+        } else{
+            return $query->get();
+        }
+    }
 }

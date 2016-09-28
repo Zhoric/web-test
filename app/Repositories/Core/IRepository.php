@@ -15,4 +15,6 @@ interface IRepository
     public function find($id);
 
     public function where($fieldName, $expression, $value);
+
+    public function whereWith($fieldName, $expression, $value, $relatedEntity, $takeFirst);
 }

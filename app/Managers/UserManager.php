@@ -17,6 +17,7 @@ class UserManager
 
     public function addUser($fullName, $login, $password, $userRole, $year = null, $groupId = null)
     {
+        //TODO: Проверять уникальность логина
         $user = new User();
 
         $user->fullName = $fullName;
@@ -47,6 +48,11 @@ class UserManager
         $this->_userRepo->update($user);
     }
 
+    public function getUser($id)
+    {
+        return $this->_userRepo->find($id);
+    }
+
     public function deleteUser($id){
 
         $userToDelete = $this->_userRepo->find($id);
@@ -65,5 +71,4 @@ class UserManager
     {
         return $this->_userRepo->where('role', '=', UserRole::Lecturer);
     }
-
 }

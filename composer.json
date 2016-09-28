@@ -32,7 +32,8 @@
             "tests/TestCase.php",
 	    "app/models",
 	    "app/Repositories",
-        "app/Managers"
+        "app/Managers",
+        "app/Helpers"
         ]
     },
     "scripts": {

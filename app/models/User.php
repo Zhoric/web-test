@@ -34,6 +34,12 @@ class User extends Entity
     public $password;
 
     /**
+     * @ORM\Relation(type="belongsToMany", relatedEntity="App\models\Discipline",
+     *     pivotTable="discipline_lecturer", inverse=true)
+     */
+    public $disciplines;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     public $fullName;

@@ -24,6 +24,11 @@ class Discipline extends Entity
     public $lecturers;
 
     /**
+     * @ORM\Relation(type="belongsToMany", relatedEntity="App\models\Profile", inverse=true)
+     */
+    public $profiles;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     public $name;

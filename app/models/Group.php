@@ -26,7 +26,7 @@ class Group extends Entity
 
     /**
      * @ORM\Relation(type="hasMany", relatedEntity="App\models\User",
-     *     localForeignKey="groupId", inverse=true, relation="group");
+     *     localForeignKey="group_id", inverse=true);
      */
     public $students;
 
@@ -54,4 +54,6 @@ class Group extends Entity
      * @ORM\Column(type="string", length=20)
      */
     public $name;
+
+    public function __construct(){}
 }
