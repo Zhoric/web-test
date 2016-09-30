@@ -53,6 +53,10 @@ class UserManager
         return $this->_userRepo->find($id);
     }
 
+    public function getUserByRememberToken($id,$token){
+        return $this->_userRepo->findByRememberToken($id,$token);
+    }
+
     public function deleteUser($id){
 
         $userToDelete = $this->_userRepo->find($id);

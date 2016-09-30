@@ -32,15 +32,25 @@ class DemoController extends BaseController
     }
 
 
-    public function index(){
 
-    //   $container_id = exec("docker run -d -i -t baseimage-ssh /sbin/my_init",$output);
-
+    public function docker(){
         error_reporting(E_ALL);
         ini_set('display_errors',1);
         $command_pattern = 'docker run -v $PWD/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet';
         $command = 'echo hello wold';
-        //$result =  exec("$command_pattern $command",$output);
+        $result =  exec("$command_pattern $command",$output);
+
+
+        dd($result);
+    }
+    public function index(){
+
+
+
+
+        $user = $this->_userManager->getUserByRememberToken('1','1234');
+
+        dd($user);
 
 
 

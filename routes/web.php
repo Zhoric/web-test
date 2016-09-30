@@ -11,10 +11,14 @@
 |
 */
 
+
 Route::get('/','HomeController@index');
+
+Route::get('/demo','DemoController@index');
+Route::get('/docker','DemoController@docker');
 Route::get('editor','DemoController@editor');
 Route::get('getProfiles', 'DemoController@getProfiles');
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index');
+

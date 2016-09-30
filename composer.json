@@ -21,7 +21,10 @@
     "autoload": {
         "classmap": [
             "database",
-	    "app/models"
+	    "app/models",
+            "app/Repositories",
+            "app/Managers",
+            "app/Helpers"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -32,8 +35,8 @@
             "tests/TestCase.php",
 	    "app/models",
 	    "app/Repositories",
-        "app/Managers",
-        "app/Helpers"
+            "app/Managers",
+            "app/Helpers"
         ]
     },
     "scripts": {
@@ -45,11 +48,11 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "php5.6 artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "php5.6 artisan optimize"
         ]
     },
     "config": {

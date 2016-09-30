@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
+use Repositories\UserRepository;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -27,15 +28,19 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
+
+    protected $user_repo;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserRepository $user_repo)
     {
+
+        $this->user_repo = $user_repo;
         $this->middleware('guest');
     }
 
@@ -47,9 +52,10 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+
+
+       return Validator::make($data, [
+            'login' => 'required|max:255',
             'password' => 'required|min:6|confirmed',
         ]);
     }
@@ -62,10 +68,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+
+
+        $user = new User();
+        $user->login = $data['login'];
+        $user->password = bcrypt($data['password']);
+        $user->fullName = 'TEST';
+        $user->groupId = 1;
+        $user->admissionYear = 2013;
+        $user->role = 1;
+
+         $this->user_repo->create($user);
+        return $this->user_repo->findByLogin($user->login);
+
+       /* return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-        ]);
+        ]);*/
     }
 }
