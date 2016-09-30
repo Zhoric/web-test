@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\models\UserRole;
 use Managers\DisciplineManager;
 use Managers\GroupManager;
+use Managers\ProfileManager;
 use Managers\UserManager;
 use Repositories\UserRepository;
 
@@ -17,14 +18,17 @@ class DemoController extends BaseController
     public $_userManager;
     public $_groupManager;
     public $_disciplineManager;
+    public $_profileManager;
 
     public function __construct(UserManager $userManager,
                                 GroupManager $groupManager,
-                                DisciplineManager $disciplineManager)
+                                DisciplineManager $disciplineManager,
+                                ProfileManager $profileManager)
     {
         $this->_userManager = $userManager;
         $this->_groupManager = $groupManager;
         $this->_disciplineManager = $disciplineManager;
+        $this->_profileManager = $profileManager;
     }
 
 
@@ -51,9 +55,9 @@ class DemoController extends BaseController
 
     }
 
-    public function editor(){
+    public function getProfiles(){
 
-        return view('editor');
+        return json_encode($this->_profileManager->getAllProfiles());
     }
 
 

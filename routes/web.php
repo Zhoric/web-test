@@ -13,7 +13,7 @@
 
 Route::get('/','HomeController@index');
 Route::get('editor','DemoController@editor');
-
+Route::get('getProfiles', 'DemoController@getProfiles');
 
 Auth::routes();
 
