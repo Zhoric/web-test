@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/','DemoController@index');
+Route::get('/demo','DemoController@index');
 Route::get('editor','DemoController@editor');
 
+
+Auth::routes();
+
+Route::get('/', 'HomeController@index');

@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Process;
-use Illuminate\Foundation\Bus\DispatchesJobs;
+
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\models\UserRole;
 use Managers\DisciplineManager;
 use Managers\GroupManager;
 use Managers\UserManager;
-use Mockery\CountValidator\Exception;
-use phpseclib\Crypt\RSA;
-use phpseclib\Net\SSH2;
-use Collective\Remote\RemoteServiceProvider;
+use Repositories\UserRepository;
 
 class DemoController extends BaseController
 {
@@ -31,6 +27,7 @@ class DemoController extends BaseController
         $this->_disciplineManager = $disciplineManager;
     }
 
+
     public function index(){
 
     //   $container_id = exec("docker run -d -i -t baseimage-ssh /sbin/my_init",$output);
@@ -42,13 +39,15 @@ class DemoController extends BaseController
         //$result =  exec("$command_pattern $command",$output);
 
 
-        //$this->_userManager->addUser('Иван Петрович','vasya','123456',UserRole::Lecturer, 2013, 1);
 
-        //$usersRepo->create($user);
-        //$this->_userManager->updateUser(20,'Колян', 2055, 3);
+       // $this->_userManager->addUser('Иван Петрович','vasya','123456',UserRole::Lecturer, 2013, 1);
 
-        //dd($this->_groupManager->addGroup(0,'ИСб',4,true,1));
-        dd($this->_disciplineManager->getLecturerWithDisciplines(1));
+
+      //  $this->_userManager->updateUser(20,'Колян', 2055, 3);
+
+       // dd($this->_groupManager->addGroup(0,'ИСб',4,true,1));
+       // dd($this->_disciplineManager->getLecturerWithDisciplines(1));
+
 
     }
 
