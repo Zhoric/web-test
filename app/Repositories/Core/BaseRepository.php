@@ -16,9 +16,13 @@ abstract class BaseRepository implements IRepository
         $this->model = $this->em->entity($entityName);
     }
 
-    public function all()
+    public function all($relatedEntityName = null)
     {
-        return $this->model->get()->all();
+        if ($relatedEntityName == null){
+            return $this->model->get()->all();
+        } else {
+            return $this->model->with($relatedEntityName)->get()->all();
+        }
     }
 
     public function create($entity)

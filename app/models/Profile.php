@@ -24,7 +24,7 @@ class Profile extends Entity
     public $disciplines;
 
     /**
-     * @ORM\Relation(type="hasMany", relatedEntity="App\models\Discipline", inverse=true)
+     * @ORM\Relation(type="hasMany", relatedEntity="App\models\Group", inverse=true)
      */
     public $groups;
 

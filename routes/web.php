@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/demo','DemoController@index');
+Route::get('/','HomeController@index');
 Route::get('editor','DemoController@editor');
 
 
