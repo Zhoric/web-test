@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 
 use App\Process;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use App\models\UserRole;
+use Illuminate\Support\Facades\Input;
 use Managers\DisciplineManager;
 use Managers\GroupManager;
 use Managers\ProfileManager;
@@ -68,6 +70,11 @@ class DemoController extends BaseController
     public function getProfiles(){
 
         return json_encode($this->_profileManager->getAllProfiles());
+    }
+
+    public function addProfile(Request $request)
+    {
+        dd(Input::json('profile'));
     }
 
 

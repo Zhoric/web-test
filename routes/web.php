@@ -13,15 +13,15 @@
 
 
 Route::get('/','HomeController@index');
-
-Route::get('/demo','DemoController@index');
-Route::get('/docker','DemoController@docker');
 Route::get('editor','DemoController@editor');
 Route::get('getProfiles', 'DemoController@getProfiles');
-Route::get('profiles',function (){
-   return View('admin.index');
-});
 
 Auth::routes();
 
+Route::get('/', 'HomeController@index');
 
+Route::get('welcome',function (){
+   return View('welcome');
+});
+
+Route::resource('profiles', 'ProfileController');

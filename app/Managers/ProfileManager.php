@@ -20,7 +20,7 @@ class ProfileManager
 
     public function getAllProfiles()
     {
-        return $this->_profileRepo->all('groups');
+        return $this->_profileRepo->all();
     }
 
     public function addProfile($profileName, $semestersCount)
@@ -38,6 +38,11 @@ class ProfileManager
         if ($profile != null){
             $this->_profileRepo->delete($profile);
         }
+    }
+
+    public function getProfile($id)
+    {
+        return $this->_profileRepo->findWith($id, 'groups');
     }
 
     public function updateProfile($id, $name, $semesters)
