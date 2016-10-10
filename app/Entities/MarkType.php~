@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * MarkType
+ */
+class MarkType
+{
+/**
+ * @var string
+ */
+private $name;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \DisciplinePlan
+ */
+private $disciplinePlan;
+
+
+/**
+ * Set name
+ *
+ * @param string $name
+ *
+ * @return MarkType
+ */
+public function setName($name)
+{
+$this->name = $name;
+
+return $this;
+}
+
+/**
+ * Get name
+ *
+ * @return string
+ */
+public function getName()
+{
+return $this->name;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set disciplinePlan
+ *
+ * @param \DisciplinePlan $disciplinePlan
+ *
+ * @return MarkType
+ */
+public function setDisciplinePlan(\DisciplinePlan $disciplinePlan = null)
+{
+$this->disciplinePlan = $disciplinePlan;
+
+return $this;
+}
+
+/**
+ * Get disciplinePlan
+ *
+ * @return \DisciplinePlan
+ */
+public function getDisciplinePlan()
+{
+return $this->disciplinePlan;
+}
+}

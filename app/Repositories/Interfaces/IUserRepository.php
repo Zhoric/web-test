@@ -7,6 +7,6 @@ interface IUserRepository extends IRepository
 
     public function findByRememberToken($id,$token);
     public function findByCredentials(array $credentials);
-    public function findByLogin($login);
+    public function findByEmail($login);
 
 }

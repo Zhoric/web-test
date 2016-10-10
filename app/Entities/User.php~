@@ -1,0 +1,228 @@
+<?php
+
+
+
+/**
+ * User
+ */
+class User
+{
+/**
+ * @var string
+ */
+private $firstname;
+
+/**
+ * @var string
+ */
+private $patronymic;
+
+/**
+ * @var string
+ */
+private $lastname;
+
+/**
+ * @var string
+ */
+private $email;
+
+/**
+ * @var string
+ */
+private $password;
+
+/**
+ * @var boolean
+ */
+private $active;
+
+/**
+ * @var string
+ */
+private $rememberToken;
+
+/**
+ * @var integer
+ */
+private $id;
+
+
+/**
+ * Set firstname
+ *
+ * @param string $firstname
+ *
+ * @return User
+ */
+public function setFirstname($firstname)
+{
+$this->firstname = $firstname;
+
+return $this;
+}
+
+/**
+ * Get firstname
+ *
+ * @return string
+ */
+public function getFirstname()
+{
+return $this->firstname;
+}
+
+/**
+ * Set patronymic
+ *
+ * @param string $patronymic
+ *
+ * @return User
+ */
+public function setPatronymic($patronymic)
+{
+$this->patronymic = $patronymic;
+
+return $this;
+}
+
+/**
+ * Get patronymic
+ *
+ * @return string
+ */
+public function getPatronymic()
+{
+return $this->patronymic;
+}
+
+/**
+ * Set lastname
+ *
+ * @param string $lastname
+ *
+ * @return User
+ */
+public function setLastname($lastname)
+{
+$this->lastname = $lastname;
+
+return $this;
+}
+
+/**
+ * Get lastname
+ *
+ * @return string
+ */
+public function getLastname()
+{
+return $this->lastname;
+}
+
+/**
+ * Set email
+ *
+ * @param string $email
+ *
+ * @return User
+ */
+public function setEmail($email)
+{
+$this->email = $email;
+
+return $this;
+}
+
+/**
+ * Get email
+ *
+ * @return string
+ */
+public function getEmail()
+{
+return $this->email;
+}
+
+/**
+ * Set password
+ *
+ * @param string $password
+ *
+ * @return User
+ */
+public function setPassword($password)
+{
+$this->password = $password;
+
+return $this;
+}
+
+/**
+ * Get password
+ *
+ * @return string
+ */
+public function getPassword()
+{
+return $this->password;
+}
+
+/**
+ * Set active
+ *
+ * @param boolean $active
+ *
+ * @return User
+ */
+public function setActive($active)
+{
+$this->active = $active;
+
+return $this;
+}
+
+/**
+ * Get active
+ *
+ * @return boolean
+ */
+public function getActive()
+{
+return $this->active;
+}
+
+/**
+ * Set rememberToken
+ *
+ * @param string $rememberToken
+ *
+ * @return User
+ */
+public function setRememberToken($rememberToken)
+{
+$this->rememberToken = $rememberToken;
+
+return $this;
+}
+
+/**
+ * Get rememberToken
+ *
+ * @return string
+ */
+public function getRememberToken()
+{
+return $this->rememberToken;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+}

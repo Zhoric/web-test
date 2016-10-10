@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * StudentGroup
+ */
+class StudentGroup
+{
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Group
+ */
+private $group;
+
+/**
+ * @var \User
+ */
+private $student;
+
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set group
+ *
+ * @param \Group $group
+ *
+ * @return StudentGroup
+ */
+public function setGroup(\Group $group = null)
+{
+$this->group = $group;
+
+return $this;
+}
+
+/**
+ * Get group
+ *
+ * @return \Group
+ */
+public function getGroup()
+{
+return $this->group;
+}
+
+/**
+ * Set student
+ *
+ * @param \User $student
+ *
+ * @return StudentGroup
+ */
+public function setStudent(\User $student = null)
+{
+$this->student = $student;
+
+return $this;
+}
+
+/**
+ * Get student
+ *
+ * @return \User
+ */
+public function getStudent()
+{
+return $this->student;
+}
+}

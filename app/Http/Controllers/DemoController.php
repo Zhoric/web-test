@@ -3,34 +3,28 @@
 namespace App\Http\Controllers;
 
 
+
 use App\Process;
 
-use Illuminate\Http\Request;
+use Doctrine\ORM\EntityManager;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
-use App\models\UserRole;
 use Illuminate\Support\Facades\Input;
 use Managers\DisciplineManager;
 use Managers\GroupManager;
 use Managers\ProfileManager;
 use Managers\UserManager;
+use Repositories\UnitOfWork;
 use Repositories\UserRepository;
+use User;
 
 class DemoController extends BaseController
 {
-    public $_userManager;
-    public $_groupManager;
-    public $_disciplineManager;
-    public $_profileManager;
+    private $_uow;
 
-    public function __construct(UserManager $userManager,
-                                GroupManager $groupManager,
-                                DisciplineManager $disciplineManager,
-                                ProfileManager $profileManager)
+    public function __construct(UnitOfWork $uow)
     {
-        $this->_userManager = $userManager;
-        $this->_groupManager = $groupManager;
-        $this->_disciplineManager = $disciplineManager;
-        $this->_profileManager = $profileManager;
+        $this->_uow = $uow;
     }
 
 
@@ -46,15 +40,7 @@ class DemoController extends BaseController
         dd($result);
     }
     public function index(){
-
-
-
-
-        $user = $this->_userManager->getUserByRememberToken('1','1234');
-
-        dd($user);
-
-
+       // $user = $this->_userManager->getUserByRememberToken('1','1234');
 
        // $this->_userManager->addUser('Иван Петрович','vasya','123456',UserRole::Lecturer, 2013, 1);
 
@@ -65,18 +51,7 @@ class DemoController extends BaseController
        // dd($this->_disciplineManager->getLecturerWithDisciplines(1));
 
 
+        //return new JsonResponse($users);
+        //return json_encode($this->_userRepo->all());
     }
-
-    public function getProfiles(){
-
-        return json_encode($this->_profileManager->getAllProfiles());
-    }
-
-    public function addProfile(Request $request)
-    {
-        dd(Input::json('profile'));
-    }
-
-
-
 }

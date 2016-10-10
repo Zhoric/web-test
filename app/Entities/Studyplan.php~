@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * Studyplan
+ */
+class Studyplan
+{
+/**
+ * @var string
+ */
+private $name;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Profile
+ */
+private $profile;
+
+
+/**
+ * Set name
+ *
+ * @param string $name
+ *
+ * @return Studyplan
+ */
+public function setName($name)
+{
+$this->name = $name;
+
+return $this;
+}
+
+/**
+ * Get name
+ *
+ * @return string
+ */
+public function getName()
+{
+return $this->name;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set profile
+ *
+ * @param \Profile $profile
+ *
+ * @return Studyplan
+ */
+public function setProfile(\Profile $profile = null)
+{
+$this->profile = $profile;
+
+return $this;
+}
+
+/**
+ * Get profile
+ *
+ * @return \Profile
+ */
+public function getProfile()
+{
+return $this->profile;
+}
+}

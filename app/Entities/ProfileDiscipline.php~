@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * ProfileDiscipline
+ */
+class ProfileDiscipline
+{
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Discipline
+ */
+private $discipline;
+
+/**
+ * @var \Profile
+ */
+private $profile;
+
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set discipline
+ *
+ * @param \Discipline $discipline
+ *
+ * @return ProfileDiscipline
+ */
+public function setDiscipline(\Discipline $discipline = null)
+{
+$this->discipline = $discipline;
+
+return $this;
+}
+
+/**
+ * Get discipline
+ *
+ * @return \Discipline
+ */
+public function getDiscipline()
+{
+return $this->discipline;
+}
+
+/**
+ * Set profile
+ *
+ * @param \Profile $profile
+ *
+ * @return ProfileDiscipline
+ */
+public function setProfile(\Profile $profile = null)
+{
+$this->profile = $profile;
+
+return $this;
+}
+
+/**
+ * Get profile
+ *
+ * @return \Profile
+ */
+public function getProfile()
+{
+return $this->profile;
+}
+}

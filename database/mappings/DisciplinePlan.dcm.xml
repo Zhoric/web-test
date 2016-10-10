@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="DisciplinePlan" table="discipline_plan">
+    <indexes>
+      <index name="discipline_plan_discipline_id_foreign" columns="discipline_id"/>
+      <index name="discipline_plan_studyplan_id_foreign" columns="studyplan_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="startSemester" type="boolean" column="start_semester" nullable="true"/>
+    <field name="semestersCount" type="boolean" column="semesters_count" nullable="true"/>
+    <field name="hours" type="smallint" column="hours" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="hasProject" type="boolean" column="has_project" nullable="true"/>
+    <field name="hasExam" type="boolean" column="has_exam" nullable="true"/>
+    <many-to-one field="discipline" target-entity="Discipline" fetch="LAZY">
+      <join-columns>
+        <join-column name="discipline_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="studyplan" target-entity="Studyplan" fetch="LAZY">
+      <join-columns>
+        <join-column name="studyplan_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -2,15 +2,16 @@
 
 namespace Repositories;
 
+use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Str;
-use ProAI\Datamapper\EntityManager;
 use Repositories\Interfaces\IUserRepository;
+use User;
 
 class UserRepository extends BaseRepository implements IUserRepository
 {
     public function __construct(EntityManager $em)
     {
-        parent::__construct($em, 'User');
+        parent::__construct($em, User::class);
     }
 
     public function findByRememberToken($id,$token){
@@ -32,8 +33,8 @@ class UserRepository extends BaseRepository implements IUserRepository
         return $query->first();
     }
 
-    public function findByLogin($login)
+    public function findByEmail($login)
     {
-        return $this->where('login','=',$login)->first();
+        return $this->where('email','=',$login)->first();
     }
 }

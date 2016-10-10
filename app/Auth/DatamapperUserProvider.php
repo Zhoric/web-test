@@ -1,9 +1,7 @@
 <?php namespace App\Auth;
 
-use App\models\User;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Contracts\Auth\UserProvider;
-use ProAI\Datamapper\EntityManager;
 use Repositories\UserRepository;
 
 

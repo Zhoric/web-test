@@ -1,0 +1,228 @@
+<?php
+
+
+
+/**
+ * DisciplinePlan
+ */
+class DisciplinePlan
+{
+/**
+ * @var boolean
+ */
+private $startSemester;
+
+/**
+ * @var boolean
+ */
+private $semestersCount;
+
+/**
+ * @var integer
+ */
+private $hours;
+
+/**
+ * @var boolean
+ */
+private $hasProject;
+
+/**
+ * @var boolean
+ */
+private $hasExam;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Discipline
+ */
+private $discipline;
+
+/**
+ * @var \Studyplan
+ */
+private $studyplan;
+
+
+/**
+ * Set startSemester
+ *
+ * @param boolean $startSemester
+ *
+ * @return DisciplinePlan
+ */
+public function setStartSemester($startSemester)
+{
+$this->startSemester = $startSemester;
+
+return $this;
+}
+
+/**
+ * Get startSemester
+ *
+ * @return boolean
+ */
+public function getStartSemester()
+{
+return $this->startSemester;
+}
+
+/**
+ * Set semestersCount
+ *
+ * @param boolean $semestersCount
+ *
+ * @return DisciplinePlan
+ */
+public function setSemestersCount($semestersCount)
+{
+$this->semestersCount = $semestersCount;
+
+return $this;
+}
+
+/**
+ * Get semestersCount
+ *
+ * @return boolean
+ */
+public function getSemestersCount()
+{
+return $this->semestersCount;
+}
+
+/**
+ * Set hours
+ *
+ * @param integer $hours
+ *
+ * @return DisciplinePlan
+ */
+public function setHours($hours)
+{
+$this->hours = $hours;
+
+return $this;
+}
+
+/**
+ * Get hours
+ *
+ * @return integer
+ */
+public function getHours()
+{
+return $this->hours;
+}
+
+/**
+ * Set hasProject
+ *
+ * @param boolean $hasProject
+ *
+ * @return DisciplinePlan
+ */
+public function setHasProject($hasProject)
+{
+$this->hasProject = $hasProject;
+
+return $this;
+}
+
+/**
+ * Get hasProject
+ *
+ * @return boolean
+ */
+public function getHasProject()
+{
+return $this->hasProject;
+}
+
+/**
+ * Set hasExam
+ *
+ * @param boolean $hasExam
+ *
+ * @return DisciplinePlan
+ */
+public function setHasExam($hasExam)
+{
+$this->hasExam = $hasExam;
+
+return $this;
+}
+
+/**
+ * Get hasExam
+ *
+ * @return boolean
+ */
+public function getHasExam()
+{
+return $this->hasExam;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set discipline
+ *
+ * @param \Discipline $discipline
+ *
+ * @return DisciplinePlan
+ */
+public function setDiscipline(\Discipline $discipline = null)
+{
+$this->discipline = $discipline;
+
+return $this;
+}
+
+/**
+ * Get discipline
+ *
+ * @return \Discipline
+ */
+public function getDiscipline()
+{
+return $this->discipline;
+}
+
+/**
+ * Set studyplan
+ *
+ * @param \Studyplan $studyplan
+ *
+ * @return DisciplinePlan
+ */
+public function setStudyplan(\Studyplan $studyplan = null)
+{
+$this->studyplan = $studyplan;
+
+return $this;
+}
+
+/**
+ * Get studyplan
+ *
+ * @return \Studyplan
+ */
+public function getStudyplan()
+{
+return $this->studyplan;
+}
+}

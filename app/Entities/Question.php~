@@ -1,0 +1,199 @@
+<?php
+
+
+
+/**
+ * Question
+ */
+class Question
+{
+/**
+ * @var boolean
+ */
+private $type;
+
+/**
+ * @var string
+ */
+private $text;
+
+/**
+ * @var string
+ */
+private $image;
+
+/**
+ * @var boolean
+ */
+private $complexity;
+
+/**
+ * @var integer
+ */
+private $time;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Theme
+ */
+private $theme;
+
+
+/**
+ * Set type
+ *
+ * @param boolean $type
+ *
+ * @return Question
+ */
+public function setType($type)
+{
+$this->type = $type;
+
+return $this;
+}
+
+/**
+ * Get type
+ *
+ * @return boolean
+ */
+public function getType()
+{
+return $this->type;
+}
+
+/**
+ * Set text
+ *
+ * @param string $text
+ *
+ * @return Question
+ */
+public function setText($text)
+{
+$this->text = $text;
+
+return $this;
+}
+
+/**
+ * Get text
+ *
+ * @return string
+ */
+public function getText()
+{
+return $this->text;
+}
+
+/**
+ * Set image
+ *
+ * @param string $image
+ *
+ * @return Question
+ */
+public function setImage($image)
+{
+$this->image = $image;
+
+return $this;
+}
+
+/**
+ * Get image
+ *
+ * @return string
+ */
+public function getImage()
+{
+return $this->image;
+}
+
+/**
+ * Set complexity
+ *
+ * @param boolean $complexity
+ *
+ * @return Question
+ */
+public function setComplexity($complexity)
+{
+$this->complexity = $complexity;
+
+return $this;
+}
+
+/**
+ * Get complexity
+ *
+ * @return boolean
+ */
+public function getComplexity()
+{
+return $this->complexity;
+}
+
+/**
+ * Set time
+ *
+ * @param integer $time
+ *
+ * @return Question
+ */
+public function setTime($time)
+{
+$this->time = $time;
+
+return $this;
+}
+
+/**
+ * Get time
+ *
+ * @return integer
+ */
+public function getTime()
+{
+return $this->time;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set theme
+ *
+ * @param \Theme $theme
+ *
+ * @return Question
+ */
+public function setTheme(\Theme $theme = null)
+{
+$this->theme = $theme;
+
+return $this;
+}
+
+/**
+ * Get theme
+ *
+ * @return \Theme
+ */
+public function getTheme()
+{
+return $this->theme;
+}
+}

@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * Theme
+ */
+class Theme
+{
+/**
+ * @var string
+ */
+private $name;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Discipline
+ */
+private $discipline;
+
+
+/**
+ * Set name
+ *
+ * @param string $name
+ *
+ * @return Theme
+ */
+public function setName($name)
+{
+$this->name = $name;
+
+return $this;
+}
+
+/**
+ * Get name
+ *
+ * @return string
+ */
+public function getName()
+{
+return $this->name;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set discipline
+ *
+ * @param \Discipline $discipline
+ *
+ * @return Theme
+ */
+public function setDiscipline(\Discipline $discipline = null)
+{
+$this->discipline = $discipline;
+
+return $this;
+}
+
+/**
+ * Get discipline
+ *
+ * @return \Discipline
+ */
+public function getDiscipline()
+{
+return $this->discipline;
+}
+}

@@ -2,72 +2,61 @@
 
 namespace Repositories;
 
-use ProAI\Datamapper\EntityManager;
+use App\Entities;
+use Doctrine\ORM\EntityManager;
 use Repositories\Interfaces\IRepository;
 
 abstract class BaseRepository implements IRepository
 {
     protected $em;
     protected $model;
+    protected $repo;
 
     public function __construct(EntityManager $entityManager, $entityName)
     {
         $this->em = $entityManager;
-        $this->model = $this->em->entity($entityName);
+        $this->model = $entityName;
+        $this->repo = $this->em->getRepository($this->model);
     }
 
-    public function all($relatedEntityName = null)
+    public function all()
     {
-        if ($relatedEntityName == null){
-            return $this->model->get()->all();
-        } else {
-            return $this->model->with($relatedEntityName)->get()->all();
-        }
+        return $this->repo->findAll();
+    }
+
+    public function paginate(){
+        //return $this->em->getRepository($this->model)->
     }
 
     public function create($entity)
     {
-        return $this->em->insert($entity);
+        return $this->em->persist($entity);
     }
 
     public function update($entity)
     {
-        $this->em->update($entity);
+        $this->em->merge($entity);
     }
 
     public function delete($entity)
     {
-        return $this->em->delete($entity);
+        return $this->em->remove($entity);
     }
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->em->find($this->model, $id);
     }
 
-    public function where($fieldName, $expression, $value)
+    /*
+     * Примеры использования:
+     * _userRepo->where('User.id = 5');
+     * _userRepo->where("User.firstname like '%Алекс%'");
+     */
+    public function where($predicate)
     {
-        return $this->model->where($fieldName, $expression, $value)->get();
-    }
+        $query = $this->repo->createQueryBuilder($this->model)->where($predicate);
 
-    public function findWith($id, $relatedEntityName)
-    {
-        return $this->model
-            ->where('id', '=', $id)
-            ->with($relatedEntityName)
-            ->get()->first();
-    }
-
-    public function whereWith($fieldName, $expression, $value, $relatedEntityName, $takeFirst = false)
-    {
-        $query =  $this->model
-            ->where($fieldName, $expression, $value)
-            ->with($relatedEntityName);
-
-        if ($takeFirst) {
-            return $query->get()->first();
-        } else{
-            return $query->get();
-        }
+        return $query->getQuery()->getArrayResult();
     }
 }

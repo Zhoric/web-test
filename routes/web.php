@@ -15,6 +15,7 @@
 Route::get('/','HomeController@index');
 Route::get('editor','DemoController@editor');
 Route::get('getProfiles', 'DemoController@getProfiles');
+Route::get('test', 'DemoController@index');
 
 Auth::routes();
 
@@ -24,4 +25,6 @@ Route::get('welcome',function (){
    return View('welcome');
 });
 
+
+Route::get('profiles/withgroups/{id}', 'ProfileController@showWithGroups');
 Route::resource('profiles', 'ProfileController');

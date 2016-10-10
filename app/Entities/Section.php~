@@ -1,0 +1,112 @@
+<?php
+
+
+
+/**
+ * Section
+ */
+class Section
+{
+/**
+ * @var string
+ */
+private $name;
+
+/**
+ * @var string
+ */
+private $content;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Theme
+ */
+private $theme;
+
+
+/**
+ * Set name
+ *
+ * @param string $name
+ *
+ * @return Section
+ */
+public function setName($name)
+{
+$this->name = $name;
+
+return $this;
+}
+
+/**
+ * Get name
+ *
+ * @return string
+ */
+public function getName()
+{
+return $this->name;
+}
+
+/**
+ * Set content
+ *
+ * @param string $content
+ *
+ * @return Section
+ */
+public function setContent($content)
+{
+$this->content = $content;
+
+return $this;
+}
+
+/**
+ * Get content
+ *
+ * @return string
+ */
+public function getContent()
+{
+return $this->content;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set theme
+ *
+ * @param \Theme $theme
+ *
+ * @return Section
+ */
+public function setTheme(\Theme $theme = null)
+{
+$this->theme = $theme;
+
+return $this;
+}
+
+/**
+ * Get theme
+ *
+ * @return \Theme
+ */
+public function getTheme()
+{
+return $this->theme;
+}
+}

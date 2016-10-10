@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * TestTheme
+ */
+class TestTheme
+{
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Test
+ */
+private $test;
+
+/**
+ * @var \Theme
+ */
+private $theme;
+
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set test
+ *
+ * @param \Test $test
+ *
+ * @return TestTheme
+ */
+public function setTest(\Test $test = null)
+{
+$this->test = $test;
+
+return $this;
+}
+
+/**
+ * Get test
+ *
+ * @return \Test
+ */
+public function getTest()
+{
+return $this->test;
+}
+
+/**
+ * Set theme
+ *
+ * @param \Theme $theme
+ *
+ * @return TestTheme
+ */
+public function setTheme(\Theme $theme = null)
+{
+$this->theme = $theme;
+
+return $this;
+}
+
+/**
+ * Get theme
+ *
+ * @return \Theme
+ */
+public function getTheme()
+{
+return $this->theme;
+}
+}

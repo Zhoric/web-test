@@ -1,0 +1,112 @@
+<?php
+
+
+
+/**
+ * Discipline
+ */
+class Discipline
+{
+/**
+ * @var string
+ */
+private $name;
+
+/**
+ * @var string
+ */
+private $abbreviation;
+
+/**
+ * @var string
+ */
+private $description;
+
+/**
+ * @var integer
+ */
+private $id;
+
+
+/**
+ * Set name
+ *
+ * @param string $name
+ *
+ * @return Discipline
+ */
+public function setName($name)
+{
+$this->name = $name;
+
+return $this;
+}
+
+/**
+ * Get name
+ *
+ * @return string
+ */
+public function getName()
+{
+return $this->name;
+}
+
+/**
+ * Set abbreviation
+ *
+ * @param string $abbreviation
+ *
+ * @return Discipline
+ */
+public function setAbbreviation($abbreviation)
+{
+$this->abbreviation = $abbreviation;
+
+return $this;
+}
+
+/**
+ * Get abbreviation
+ *
+ * @return string
+ */
+public function getAbbreviation()
+{
+return $this->abbreviation;
+}
+
+/**
+ * Set description
+ *
+ * @param string $description
+ *
+ * @return Discipline
+ */
+public function setDescription($description)
+{
+$this->description = $description;
+
+return $this;
+}
+
+/**
+ * Get description
+ *
+ * @return string
+ */
+public function getDescription()
+{
+return $this->description;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+}

@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * DisciplineLecturer
+ */
+class DisciplineLecturer
+{
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Discipline
+ */
+private $discipline;
+
+/**
+ * @var \User
+ */
+private $lecturer;
+
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set discipline
+ *
+ * @param \Discipline $discipline
+ *
+ * @return DisciplineLecturer
+ */
+public function setDiscipline(\Discipline $discipline = null)
+{
+$this->discipline = $discipline;
+
+return $this;
+}
+
+/**
+ * Get discipline
+ *
+ * @return \Discipline
+ */
+public function getDiscipline()
+{
+return $this->discipline;
+}
+
+/**
+ * Set lecturer
+ *
+ * @param \User $lecturer
+ *
+ * @return DisciplineLecturer
+ */
+public function setLecturer(\User $lecturer = null)
+{
+$this->lecturer = $lecturer;
+
+return $this;
+}
+
+/**
+ * Get lecturer
+ *
+ * @return \User
+ */
+public function getLecturer()
+{
+return $this->lecturer;
+}
+}

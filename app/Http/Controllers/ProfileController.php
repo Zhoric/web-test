@@ -24,19 +24,26 @@ class ProfileController extends Controller
     public function store(Request $request)
     {
         $profile = $request->json('profile');
-        $this->_profileManager->addProfile($profile['name'], $profile['semesters']);
+        $this->_profileManager->addProfile($profile['name'],
+            $profile['semesters']);
     }
-
 
     public function show($id)
     {
         return json_encode($this->_profileManager->getProfile($id));
     }
 
+    public function showWithGroups($id)
+    {
+        return json_encode($this->_profileManager->getProfileWithGroups($id));
+    }
+
     public function update(Request $request, $id)
     {
         $profile = $request->json('profile');
-        $this->_profileManager->updateProfile($id, $profile['name'], $profile['semesters']);
+        $this->_profileManager->updateProfile($id,
+            $profile['name'],
+            $profile['semesters']);
     }
 
     public function destroy($id)

@@ -7,7 +7,8 @@
     "require": {
         "php": ">=5.6.4",
         "laravel/framework": "5.3.*",
-	"laravelcollective/remote": "5.3.*"
+	"laravelcollective/remote": "5.3.*",
+        "laravel-doctrine/orm": "1.2.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -16,15 +17,15 @@
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
 	    "laravelcollective/remote": "5.3.*",
-        "proai/laravel-datamapper": "~1.0@dev"
+        "laravel-doctrine/orm": "1.2.*"
     },
     "autoload": {
         "classmap": [
             "database",
-	    "app/models",
             "app/Repositories",
             "app/Managers",
-            "app/Helpers"
+            "app/Helpers",
+            "app/Entities"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -33,11 +34,14 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php",
-	    "app/models",
 	    "app/Repositories",
             "app/Managers",
-            "app/Helpers"
-        ]
+            "app/Helpers",
+            "app/Entities"
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        }
     },
     "scripts": {
         "post-root-package-install": [
@@ -48,11 +52,11 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php5.6 artisan optimize"
+            "php7.0 artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php5.6 artisan optimize"
+            "php7.0 artisan optimize"
         ]
     },
     "config": {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Test" table="test">
+    <indexes>
+      <index name="test_discipline_id_foreign" columns="discipline_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="subject" type="string" column="subject" length="200" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="timeTotal" type="smallint" column="time_total" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="attempts" type="boolean" column="attempts" nullable="true"/>
+    <field name="orderNumber" type="boolean" column="order_number" nullable="true"/>
+    <field name="fulltimeStart" type="boolean" column="fulltime_start" nullable="true"/>
+    <field name="extramuralStart" type="boolean" column="extramural_start" nullable="true"/>
+    <many-to-one field="discipline" target-entity="Discipline" fetch="LAZY">
+      <join-columns>
+        <join-column name="discipline_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,6 +1,4 @@
 <?php
-/*
-namespace App\Models;
 
 use Illuminate\Database\Seeder;
 
@@ -8,6 +6,13 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        $this->call('InstituteTableSeeder');
+        $this->call('ProfileTableSeeder');
+        $this->call('UserTableSeeder');
+        $this->call('RoleTableSeeder');
+        $this->call('DisciplineTableSeeder');
+        $this->call('StudyPlanTableSeeder');
+        $this->call('GroupTableSeeder');
+
     }
 }

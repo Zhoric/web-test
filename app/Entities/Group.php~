@@ -1,0 +1,199 @@
+<?php
+
+
+
+/**
+ * Group
+ */
+class Group
+{
+/**
+ * @var string
+ */
+private $prefix;
+
+/**
+ * @var integer
+ */
+private $course;
+
+/**
+ * @var boolean
+ */
+private $number;
+
+/**
+ * @var boolean
+ */
+private $isFulltime;
+
+/**
+ * @var string
+ */
+private $name;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Studyplan
+ */
+private $studyplan;
+
+
+/**
+ * Set prefix
+ *
+ * @param string $prefix
+ *
+ * @return Group
+ */
+public function setPrefix($prefix)
+{
+$this->prefix = $prefix;
+
+return $this;
+}
+
+/**
+ * Get prefix
+ *
+ * @return string
+ */
+public function getPrefix()
+{
+return $this->prefix;
+}
+
+/**
+ * Set course
+ *
+ * @param integer $course
+ *
+ * @return Group
+ */
+public function setCourse($course)
+{
+$this->course = $course;
+
+return $this;
+}
+
+/**
+ * Get course
+ *
+ * @return integer
+ */
+public function getCourse()
+{
+return $this->course;
+}
+
+/**
+ * Set number
+ *
+ * @param boolean $number
+ *
+ * @return Group
+ */
+public function setNumber($number)
+{
+$this->number = $number;
+
+return $this;
+}
+
+/**
+ * Get number
+ *
+ * @return boolean
+ */
+public function getNumber()
+{
+return $this->number;
+}
+
+/**
+ * Set isFulltime
+ *
+ * @param boolean $isFulltime
+ *
+ * @return Group
+ */
+public function setIsFulltime($isFulltime)
+{
+$this->isFulltime = $isFulltime;
+
+return $this;
+}
+
+/**
+ * Get isFulltime
+ *
+ * @return boolean
+ */
+public function getIsFulltime()
+{
+return $this->isFulltime;
+}
+
+/**
+ * Set name
+ *
+ * @param string $name
+ *
+ * @return Group
+ */
+public function setName($name)
+{
+$this->name = $name;
+
+return $this;
+}
+
+/**
+ * Get name
+ *
+ * @return string
+ */
+public function getName()
+{
+return $this->name;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set studyplan
+ *
+ * @param \Studyplan $studyplan
+ *
+ * @return Group
+ */
+public function setStudyplan(\Studyplan $studyplan = null)
+{
+$this->studyplan = $studyplan;
+
+return $this;
+}
+
+/**
+ * Get studyplan
+ *
+ * @return \Studyplan
+ */
+public function getStudyplan()
+{
+return $this->studyplan;
+}
+}

@@ -15,18 +15,17 @@ class UserManager
         $this->_userRepo = $userRepo;
     }
 
-    public function addUser($fullName, $login, $password, $userRole, $year = null, $groupId = null)
+    public function addUser($firstName, $lastName, $patronymic, $email, $password, $active)
     {
-        //TODO: Проверять уникальность логина
+        //TODO: Проверять уникальность email'a
         $user = new User();
 
-        $user->fullName = $fullName;
-        $user->login = $login;
-        $user->role = $userRole;
+        $user->$firstName = $firstName;
+        $user->lastName = $lastName;
+        $user->patronymic = $patronymic;
+        $user->email = $email;
         $user->password = $password;
-        $user->admissionYear = $year;
-        $user->groupId = $groupId;
-
+        $user->active = $active;
         $this->_userRepo->create($user);
     }
 

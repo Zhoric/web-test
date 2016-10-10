@@ -1,0 +1,83 @@
+<?php
+
+
+
+/**
+ * ParamsSet
+ */
+class ParamsSet
+{
+/**
+ * @var string
+ */
+private $expectedOutput;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Program
+ */
+private $program;
+
+
+/**
+ * Set expectedOutput
+ *
+ * @param string $expectedOutput
+ *
+ * @return ParamsSet
+ */
+public function setExpectedOutput($expectedOutput)
+{
+$this->expectedOutput = $expectedOutput;
+
+return $this;
+}
+
+/**
+ * Get expectedOutput
+ *
+ * @return string
+ */
+public function getExpectedOutput()
+{
+return $this->expectedOutput;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set program
+ *
+ * @param \Program $program
+ *
+ * @return ParamsSet
+ */
+public function setProgram(\Program $program = null)
+{
+$this->program = $program;
+
+return $this;
+}
+
+/**
+ * Get program
+ *
+ * @return \Program
+ */
+public function getProgram()
+{
+return $this->program;
+}
+}

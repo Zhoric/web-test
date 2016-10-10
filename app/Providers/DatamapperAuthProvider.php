@@ -1,9 +1,9 @@
 <?php namespace App\Providers;
 
-use App\models\User;
+use App\Entities\User;
 use App\Auth\DatamapperUserProvider;
+use Doctrine\ORM\EntityManager;
 use Illuminate\Support\ServiceProvider;
-use ProAI\Datamapper\EntityManager;
 use Repositories\UserRepository;
 
 class DatamapperAuthProvider extends ServiceProvider {
@@ -13,12 +13,14 @@ class DatamapperAuthProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot()
+
+    private $_em;
+
+    public function boot(EntityManager $em)
     {
         $this->app['auth']->provider('datamapper',function()
         {
-            $em = new EntityManager();
-            return new DatamapperUserProvider(new UserRepository($em));
+            return new DatamapperUserProvider(new UserRepository(app(EntityManager::class)));
         });
 
     }

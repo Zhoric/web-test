@@ -1,0 +1,141 @@
+<?php
+
+
+
+/**
+ * GivenAnswer
+ */
+class GivenAnswer
+{
+/**
+ * @var string
+ */
+private $answer;
+
+/**
+ * @var boolean
+ */
+private $rightPercentage;
+
+/**
+ * @var integer
+ */
+private $id;
+
+/**
+ * @var \Question
+ */
+private $question;
+
+/**
+ * @var \TestResult
+ */
+private $testResult;
+
+
+/**
+ * Set answer
+ *
+ * @param string $answer
+ *
+ * @return GivenAnswer
+ */
+public function setAnswer($answer)
+{
+$this->answer = $answer;
+
+return $this;
+}
+
+/**
+ * Get answer
+ *
+ * @return string
+ */
+public function getAnswer()
+{
+return $this->answer;
+}
+
+/**
+ * Set rightPercentage
+ *
+ * @param boolean $rightPercentage
+ *
+ * @return GivenAnswer
+ */
+public function setRightPercentage($rightPercentage)
+{
+$this->rightPercentage = $rightPercentage;
+
+return $this;
+}
+
+/**
+ * Get rightPercentage
+ *
+ * @return boolean
+ */
+public function getRightPercentage()
+{
+return $this->rightPercentage;
+}
+
+/**
+ * Get id
+ *
+ * @return integer
+ */
+public function getId()
+{
+return $this->id;
+}
+
+/**
+ * Set question
+ *
+ * @param \Question $question
+ *
+ * @return GivenAnswer
+ */
+public function setQuestion(\Question $question = null)
+{
+$this->question = $question;
+
+return $this;
+}
+
+/**
+ * Get question
+ *
+ * @return \Question
+ */
+public function getQuestion()
+{
+return $this->question;
+}
+
+/**
+ * Set testResult
+ *
+ * @param \TestResult $testResult
+ *
+ * @return GivenAnswer
+ */
+public function setTestResult(\TestResult $testResult = null)
+{
+$this->testResult = $testResult;
+
+return $this;
+}
+
+/**
+ * Get testResult
+ *
+ * @return \TestResult
+ */
+public function getTestResult()
+{
+return $this->testResult;
+}
+}
