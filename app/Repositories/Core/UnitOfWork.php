@@ -29,6 +29,7 @@ class UnitOfWork
     private $_studyPlanRepo;
     private $_themeRepo;
     private $_roleUserRepo;
+    private $_groupRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -84,6 +85,13 @@ class UnitOfWork
             $this->_roleUserRepo = new RoleUserRepository($this->_em);
         }
         return $this->_roleUserRepo;
+    }
+
+    public function groups(){
+        if ($this->_groupRepo == null){
+            $this->_groupRepo = new GroupRepository($this->_em);
+        }
+        return $this->_groupRepo;
     }
 
     public function commit(){

@@ -28,3 +28,6 @@ Route::get('welcome',function (){
 Route::get('admin/main', function(){return View('admin.main');});
 Route::get('/api/org/profilesOf/{id}', 'OrgStructureController@getInstituteProfiles');
 Route::resource('/api/org/institutes', 'OrgStructureController');
+
+Route::get('/api/group/byProfile/{id}', 'GroupController@getProfileGroups');
+Route::resource('/api/group/', 'GroupController');
