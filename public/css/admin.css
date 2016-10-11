@@ -95,63 +95,53 @@ input {
   margin: 100px auto;
   background: #ecf0f1;
 }
-.profiles {
-  background: #16a085;
+.institutes {
+  width: 100%;
   height: 100%;
-  width: 20%;
-  display: inline-block;
 }
-.groups {
-  width: 80%;
-  height: 100%;
-  float: right;
+.institutes .institute {
+  width: 100%;
+  line-height: 45px;
+  height: 50px;
+  background: #16a085;
+  color: #ecf0f1;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-bottom: 1px solid #ecf0f1;
+}
+.institutes .institute:hover {
+  background: #1abc9c;
+}
+.institutes .institute:active {
+  background: #34495e;
+}
+.institutes .institute-current {
+  background: #34495e;
+}
+.institutes .institute-current:hover {
+  background: #34495e;
+}
+.institutes .profiles {
+  width: 100%;
   background: #e4e4e4;
 }
-.profile-item {
+.institutes .profiles .profile {
   background: #16a085;
   color: #ecf0f1;
-  width: 100%;
-  height: 50px;
-  text-align: center;
-  cursor: pointer;
-}
-.profile-item:hover {
-  background: #1abc9c;
-}
-.profile-item:active {
-  background: #34495e;
-}
-.profile-item span {
-  line-height: 50px;
-}
-.current-profile {
-  background: #34495e;
-}
-.current-profile:hover {
-  background: #34495e;
-}
-.group-item {
-  background: #16a085;
-  color: #ecf0f1;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-  width: 100px;
-  height: 50px;
+  width: 200px;
+  height: 100px;
+  margin: 5px 10px 5px 0px;
+  line-height: 90px;
   float: left;
-  margin: 20px;
+  text-align: center;
+  cursor: pointer;
 }
-.group-item:hover {
+.institutes .profiles .profile:hover {
   background: #1abc9c;
 }
-.group-item:active {
+.institutes .profiles .profile:active {
   background: #34495e;
-}
-.group-item span {
-  line-height: 50px;
-}
-.group-item span {
-  line-height: 50px;
 }
 
 /*# sourceMappingURL=admin.css.map */

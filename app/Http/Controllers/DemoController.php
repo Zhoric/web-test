@@ -10,6 +10,9 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Input;
+use Managers\DisciplineManager;
+use Managers\GroupManager;
+use Managers\ProfileManager;
 use Managers\UserManager;
 use Repositories\UnitOfWork;
 use Repositories\UserRepository;
@@ -44,9 +47,8 @@ class DemoController extends BaseController
        // dd($this->_groupManager->addGroup(0,'ИСб',4,true,1));
        // dd($this->_disciplineManager->getLecturerWithDisciplines(1));
 
-        $users = $this->_uow->users()->paginate(12,2, null,'firstname');
 
-        dd($users);
         //return new JsonResponse($users);
+        return json_encode($this->_uow->getUsersRepo()->all());
     }
 }

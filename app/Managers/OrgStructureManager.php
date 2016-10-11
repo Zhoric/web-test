@@ -2,8 +2,6 @@
 
 namespace Managers;
 
-use App\models\User;
-use App\models\UserRole;
 use Repositories\UnitOfWork;
 use Repositories\UserRepository;
 

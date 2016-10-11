@@ -25,6 +25,6 @@ Route::get('welcome',function (){
    return View('welcome');
 });
 
-
+Route::get('admin/main', function(){return View('admin.main');});
 Route::get('/api/org/profilesOf/{id}', 'OrgStructureController@getInstituteProfiles');
 Route::resource('/api/org/institutes', 'OrgStructureController');
