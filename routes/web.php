@@ -20,11 +20,10 @@ Route::get('test', 'DemoController@index');
 Auth::routes();
 
 Route::get('/', 'HomeController@index');
-
+Route::get('/profiles', function(){return View('admin.index');});
+Route::get('/students', function(){return View('admin.students');});
 Route::get('welcome',function (){
    return View('welcome');
 });
 
-
-Route::get('profiles/withgroups/{id}', 'ProfileController@showWithGroups');
-Route::resource('profiles', 'ProfileController');
+Route::resource('profile', 'ProfileController');

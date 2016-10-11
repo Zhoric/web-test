@@ -8,10 +8,17 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    {{--<title>{{ config('app.name', 'Laravel') }}</title>--}}
+    <title>@yield('title')</title>
 
-    <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
+    {{--<link rel="stylesheet" href="{{ URL::asset('css/common.css')}}" />--}}
+    <link rel="stylesheet" href="{{ URL::asset('css/auth.css')}}" />
+
+    <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    @yield('javascript')
 
     <!-- Scripts -->
     <script>

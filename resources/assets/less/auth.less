@@ -1,0 +1,49 @@
+@import (less) "common.less";
+
+body{
+  background-color: @body-green;
+//  background-color: #eb2c3b;
+  -webkit-transition: background-color 0.2s ease-out 1s;
+  //&.unpass-validation{
+  //  background-color: @body-red;
+  //}
+}
+
+.register{
+  margin: 0 auto;
+  height: 450px;
+  width: 430px;
+  background: @clouds;
+  input{
+    height: 40px;
+    width: 350px;
+  }
+  div{
+    margin: 15px 35px;
+    text-align: center;
+    &:last-child{
+      text-align: inherit;
+      margin-top: 30px;
+      padding: 0 6px;
+    }
+  }
+  h2{
+    padding: 20px 0 0 0;
+  }
+  button{
+    float: left;
+  }
+  a{
+    float: right;
+    font-size: 15px;
+    padding-top: 10px;
+  }
+}
+
+.login{
+  height: 280px;
+  input{
+    height: 0;
+    width: 310px;
+  }
+}

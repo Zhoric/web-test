@@ -55,5 +55,46 @@ input {
   padding: 10px;
   font-weight: bold;
 }
+body {
+  background-color: #4aa272;
+  -webkit-transition: background-color 0.2s ease-out 1s;
+}
+.register {
+  margin: 0 auto;
+  height: 450px;
+  width: 430px;
+  background: #ecf0f1;
+}
+.register input {
+  height: 40px;
+  width: 350px;
+}
+.register div {
+  margin: 15px 35px;
+  text-align: center;
+}
+.register div:last-child {
+  text-align: inherit;
+  margin-top: 30px;
+  padding: 0 6px;
+}
+.register h2 {
+  padding: 20px 0 0 0;
+}
+.register button {
+  float: left;
+}
+.register a {
+  float: right;
+  font-size: 15px;
+  padding-top: 10px;
+}
+.login {
+  height: 280px;
+}
+.login input {
+  height: 0;
+  width: 310px;
+}
 
-/*# sourceMappingURL=common.css.map */
+/*# sourceMappingURL=auth.css.map */

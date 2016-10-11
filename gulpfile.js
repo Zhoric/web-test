@@ -20,4 +20,6 @@ elixir(mix => {
 
 elixir(function(mix){
     mix.less('common.less');
+    mix.less('auth.less');
+    mix.less('admin.less');
 });

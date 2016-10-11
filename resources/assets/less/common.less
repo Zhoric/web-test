@@ -1,6 +1,9 @@
 @white: #fff;
+@black: #000;
 @normal-grey: #d3d3d3;
 @light-grey: #e4e4e4;
+@body-green: #4aa272;
+@body-red: #d32f2f;
 @turquoise: #1abc9c;
 @greensea: #16a085;
 @emerland: #2ecc71;
@@ -44,96 +47,56 @@ body{
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
 }
+.transition(){
 
-.menu{
-  top: 0;
-  background: #fff;
-  height: 67px;
-  width: 100%;
-  margin: 0 auto;
-  position: fixed;
-  &-shortened{
-    //width: 90%;
-    border-bottom: 1px solid @light-grey;
-  }
-  img{
-    float: left;
-    padding: 10px 20px;
-  }
-  ul{
-    float: right;
-  }
-  li {
-    color: @midnightblue;
-    list-style: none;
-    display: inline;
-    padding: 25px 20px;
-    font-size: 17px;
-    text-transform: uppercase;
-    vertical-align: sub;
-    &:hover{
-      color: @white;
-      background: @midnightblue;
-      cursor: pointer;
-    }
-  }
-  div{
-    .clear();
-  }
 }
 
-.content{
-  width: 85%;
-  margin: 100px auto;
-  background: @clouds;
-}
-
-.profiles{
-  background: @greensea;
-  height: 100%;
-  width: 20%;
-  display: inline-block;
-}
-
-.groups{
-  width: 80%;
-  height: 100%;
-  float: right;
-  background: @light-grey;
-}
-
-.profile-item{
-  background: @greensea;
+button{
+  height: 40px;
+  width: 150px;
   color: @clouds;
+  background: @nephritis;
+  border: 0;
+  font-size: 16px;
+  &:hover{
+    background: @black;
+  }
+}
+a{
+  color: @black;
+  text-decoration: none;
+  border-bottom: 1px dotted @greensea;
+  &:hover{
+    color: @greensea;
+  }
+}
+input{
+  background: @white;
+  border: 1px solid @normal-grey;
+  padding: 20px;
+  font-size: 15px;
+  font-family: 'Roboto Regular';
+}
+
+.centered{
+
+}
+.pager-wrap{
   width: 100%;
-  height: 50px;
-  text-align: center;
-  cursor: pointer;
-  &:hover{
-    background: @turquoise;
-  }
-  &:active{
-    background: @wetasphalt;
-  }
-  span{
-    line-height: 50px;
-  }
-}
-.current-profile{
-  background: @wetasphalt;
-  &:hover{
-    background: @wetasphalt;
-  }
-}
-
-.group-item{
-  .profile-item();
-  width: 100px;
-  height: 50px;
-  float: left;
-  margin: 20px;
-
-  span{
-    line-height: 50px;
+  .pager{
+    button{
+      background: @peterriver;
+      width:40px;
+      &:hover{
+        background: @black;
+      }
+    }
+    .current{
+      background: @black;
+    }
+    span{
+      padding: 10px;
+      font-weight: bold;
+    }
   }
 }
