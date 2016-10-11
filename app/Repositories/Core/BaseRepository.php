@@ -4,6 +4,7 @@ namespace Repositories;
 
 use App\Entities;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Repositories\Interfaces\IRepository;
 
 abstract class BaseRepository implements IRepository
@@ -24,8 +25,13 @@ abstract class BaseRepository implements IRepository
         return $this->repo->findAll();
     }
 
-    public function paginate(){
-        //return $this->em->getRepository($this->model)->
+    public function paginate($pageSize, $pageNum, QueryBuilder $query = null, $orderBy = null){
+        $query = ($query == null) ? $this->repo->createQueryBuilder($this->model) : $query;
+        $orderBy = ($orderBy == null) ? $this->model.'.id' : $orderBy;
+        $query = $query->orderBy($this->model.'.'.$orderBy)
+            ->setMaxResults($pageSize)
+            ->setFirstResult($pageSize * ($pageNum - 1));
+        return $query->getQuery()->getArrayResult();
     }
 
     public function create($entity)

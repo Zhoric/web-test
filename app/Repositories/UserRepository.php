@@ -37,4 +37,6 @@ class UserRepository extends BaseRepository implements IUserRepository
     {
         return $this->where('email','=',$login)->first();
     }
+
+
 }

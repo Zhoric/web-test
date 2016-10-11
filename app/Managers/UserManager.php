@@ -4,29 +4,24 @@ namespace Managers;
 
 use App\models\User;
 use App\models\UserRole;
+use Repositories\UnitOfWork;
 use Repositories\UserRepository;
 
 class UserManager
 {
-    private $_userRepo;
+    private $_unitOfWork;
 
-    public function __construct(UserRepository $userRepo)
+    public function __construct(UnitOfWork $unitOfWork)
     {
-        $this->_userRepo = $userRepo;
+        $this->_unitOfWork = $unitOfWork;
     }
 
-    public function addUser($firstName, $lastName, $patronymic, $email, $password, $active)
+    public function addUser(User $user)
     {
         //TODO: Проверять уникальность email'a
-        $user = new User();
+        $this->_unitOfWork->getUsersRepo()->create($user);
+        $this->_unitOfWork->commit();
 
-        $user->$firstName = $firstName;
-        $user->lastName = $lastName;
-        $user->patronymic = $patronymic;
-        $user->email = $email;
-        $user->password = $password;
-        $user->active = $active;
-        $this->_userRepo->create($user);
     }
 
     public function updateUser($id, $fullName, $year, $groupId)
