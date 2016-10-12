@@ -10,35 +10,35 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="profile", indexes={@ORM\Index(name="profile_institute_id_foreign", columns={"institute_id"})})
  * @ORM\Entity
  */
-class Profile implements JsonSerializable
+class Profile extends BaseEntity implements JsonSerializable
 {
     /**
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=50, nullable=true)
      */
-    private $code;
+    protected $code;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="fullname", type="string", length=255, nullable=true)
      */
-    private $fullname;
+    protected $fullname;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="semesters", type="boolean", nullable=true)
+     * @ORM\Column(name="semesters", type="smallint", nullable=true)
      */
-    private $semesters;
+    protected $semesters;
 
     /**
      * @var integer
@@ -47,7 +47,7 @@ class Profile implements JsonSerializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \Institute
@@ -57,7 +57,7 @@ class Profile implements JsonSerializable
      *   @ORM\JoinColumn(name="institute_id", referencedColumnName="id")
      * })
      */
-    private $institute;
+    protected $institute;
 
 
     /**
@@ -69,9 +69,9 @@ class Profile implements JsonSerializable
      */
     public function setCode($code)
     {
-    $this->code = $code;
+        $this->code = $code;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -81,7 +81,7 @@ class Profile implements JsonSerializable
      */
     public function getCode()
     {
-    return $this->code;
+        return $this->code;
     }
 
     /**
@@ -93,9 +93,9 @@ class Profile implements JsonSerializable
      */
     public function setName($name)
     {
-    $this->name = $name;
+        $this->name = $name;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -105,7 +105,7 @@ class Profile implements JsonSerializable
      */
     public function getName()
     {
-    return $this->name;
+        return $this->name;
     }
 
     /**
@@ -117,9 +117,9 @@ class Profile implements JsonSerializable
      */
     public function setFullname($fullname)
     {
-    $this->fullname = $fullname;
+        $this->fullname = $fullname;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -129,31 +129,31 @@ class Profile implements JsonSerializable
      */
     public function getFullname()
     {
-    return $this->fullname;
+        return $this->fullname;
     }
 
     /**
      * Set semesters
      *
-     * @param boolean $semesters
+     * @param smallint $semesters
      *
      * @return Profile
      */
     public function setSemesters($semesters)
     {
-    $this->semesters = $semesters;
+        $this->semesters = $semesters;
 
-    return $this;
+        return $this;
     }
 
     /**
      * Get semesters
      *
-     * @return boolean
+     * @return smallint
      */
     public function getSemesters()
     {
-    return $this->semesters;
+        return $this->semesters;
     }
 
     /**
@@ -163,7 +163,7 @@ class Profile implements JsonSerializable
      */
     public function getId()
     {
-    return $this->id;
+        return $this->id;
     }
 
     /**
@@ -175,9 +175,9 @@ class Profile implements JsonSerializable
      */
     public function setInstitute(\Institute $institute = null)
     {
-    $this->institute = $institute;
+        $this->institute = $institute;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -187,7 +187,7 @@ class Profile implements JsonSerializable
      */
     public function getInstitute()
     {
-    return $this->institute;
+        return $this->institute;
     }
 
     public function jsonSerialize()
@@ -195,7 +195,7 @@ class Profile implements JsonSerializable
         return array(
             'id' => $this->id,
             'name' => $this->name,
-            'fullname'=> $this->fullname,
+            'fullname' => $this->fullname,
             'code' => $this->code,
             'semesters' => $this->semesters
         );

@@ -16,7 +16,7 @@ class CreateMarkTable extends Migration
             $table->increments('id');
             $table->integer('mark_type_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->tinyInteger('value')->nullable()->default(NULL);
+            $table->smallInteger('value')->nullable()->default(NULL);
 
             $table->foreign('mark_type_id')->references('id')->on('mark_type')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');

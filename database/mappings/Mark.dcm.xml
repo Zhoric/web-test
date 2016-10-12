@@ -8,7 +8,7 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="value" type="boolean" column="value" nullable="true"/>
+    <field name="value" type="smallint" column="value" nullable="true"/>
     <many-to-one field="markType" target-entity="MarkType" fetch="LAZY">
       <join-columns>
         <join-column name="mark_type_id" referenced-column-name="id"/>

@@ -10,56 +10,56 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User implements JsonSerializable
+class User extends BaseEntity implements JsonSerializable
 {
     /**
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
      */
-    private $firstname;
+    protected $firstname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="patronymic", type="string", length=255, nullable=true)
      */
-    private $patronymic;
+    protected $patronymic;
 
     /**
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
      */
-    private $lastname;
+    protected $lastname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
-    private $email;
+    protected $email;
 
     /**
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=60, nullable=true)
      */
-    private $password;
+    protected $password;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="active", type="boolean", nullable=true)
      */
-    private $active;
+    protected $active;
 
     /**
      * @var string
      *
      * @ORM\Column(name="remember_token", type="string", length=100, nullable=true)
      */
-    private $rememberToken;
+    protected $rememberToken;
 
     /**
      * @var integer
@@ -68,7 +68,7 @@ class User implements JsonSerializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    protected $id;
 
 
     /**
@@ -80,9 +80,9 @@ class User implements JsonSerializable
      */
     public function setFirstname($firstname)
     {
-    $this->firstname = $firstname;
+        $this->firstname = $firstname;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -92,7 +92,7 @@ class User implements JsonSerializable
      */
     public function getFirstname()
     {
-    return $this->firstname;
+        return $this->firstname;
     }
 
     /**
@@ -104,9 +104,9 @@ class User implements JsonSerializable
      */
     public function setPatronymic($patronymic)
     {
-    $this->patronymic = $patronymic;
+        $this->patronymic = $patronymic;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -116,7 +116,7 @@ class User implements JsonSerializable
      */
     public function getPatronymic()
     {
-    return $this->patronymic;
+        return $this->patronymic;
     }
 
     /**
@@ -128,9 +128,9 @@ class User implements JsonSerializable
      */
     public function setLastname($lastname)
     {
-    $this->lastname = $lastname;
+        $this->lastname = $lastname;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -140,7 +140,7 @@ class User implements JsonSerializable
      */
     public function getLastname()
     {
-    return $this->lastname;
+        return $this->lastname;
     }
 
     /**
@@ -152,9 +152,9 @@ class User implements JsonSerializable
      */
     public function setEmail($email)
     {
-    $this->email = $email;
+        $this->email = $email;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -164,7 +164,7 @@ class User implements JsonSerializable
      */
     public function getEmail()
     {
-    return $this->email;
+        return $this->email;
     }
 
     /**
@@ -176,9 +176,9 @@ class User implements JsonSerializable
      */
     public function setPassword($password)
     {
-    $this->password = $password;
+        $this->password = $password;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -188,7 +188,7 @@ class User implements JsonSerializable
      */
     public function getPassword()
     {
-    return $this->password;
+        return $this->password;
     }
 
     /**
@@ -200,9 +200,9 @@ class User implements JsonSerializable
      */
     public function setActive($active)
     {
-    $this->active = $active;
+        $this->active = $active;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -212,7 +212,7 @@ class User implements JsonSerializable
      */
     public function getActive()
     {
-    return $this->active;
+        return $this->active;
     }
 
     /**
@@ -224,9 +224,9 @@ class User implements JsonSerializable
      */
     public function setRememberToken($rememberToken)
     {
-    $this->rememberToken = $rememberToken;
+        $this->rememberToken = $rememberToken;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -236,7 +236,7 @@ class User implements JsonSerializable
      */
     public function getRememberToken()
     {
-    return $this->rememberToken;
+        return $this->rememberToken;
     }
 
     /**
@@ -246,7 +246,7 @@ class User implements JsonSerializable
      */
     public function getId()
     {
-    return $this->id;
+        return $this->id;
     }
 
     public function jsonSerialize()
@@ -254,7 +254,7 @@ class User implements JsonSerializable
         return array(
             'id' => $this->id,
             'firstName' => $this->firstname,
-            'patronymic'=> $this->patronymic,
+            'patronymic' => $this->patronymic,
             'lastName' => $this->lastname,
             'email' => $this->email,
             'active' => $this->active,

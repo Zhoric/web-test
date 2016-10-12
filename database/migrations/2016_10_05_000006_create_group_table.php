@@ -17,8 +17,8 @@ class CreateGroupTable extends Migration
             $table->integer('studyplan_id')->unsigned()->nullable()->default(NULL);
             $table->string('prefix', 50)->nullable()->default(NULL);
             $table->smallInteger('course')->nullable()->default(NULL);
-            $table->tinyInteger('number');
-            $table->tinyInteger('is_fulltime');
+            $table->smallInteger('number');
+            $table->smallInteger('is_fulltime');
             $table->string('name', 100)->nullable()->default(NULL);
         });
     }

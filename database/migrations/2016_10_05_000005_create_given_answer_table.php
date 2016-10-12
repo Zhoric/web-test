@@ -17,7 +17,7 @@ class CreateGivenAnswerTable extends Migration
             $table->integer('test_result_id')->unsigned();
             $table->integer('question_id')->unsigned()->nullable()->default(NULL);
             $table->text('answer');
-            $table->tinyInteger('right_percentage');
+            $table->smallInteger('right_percentage');
         });
     }
 

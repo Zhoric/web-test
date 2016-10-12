@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Managers\OrgStructureManager;
-use Profile;
+use Managers\StudyPlanManager;
+use Studyplan;
+use DisciplinePlan;
 
-class OrgStructureController extends Controller
+class StudyPlanController extends Controller
 {
-    private $_orgStructureManager;
+    private $_studyPlanManager;
 
-    public function __construct(OrgStructureManager $orgStructureManager)
+    public function __construct(StudyPlanManager $studyPlanManager)
     {
-        $this->_orgStructureManager = $orgStructureManager;
+        $this->_studyPlanManager = $studyPlanManager;
     }
 
     public function getAllInstitutes()

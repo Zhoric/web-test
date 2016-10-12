@@ -10,21 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="institute")
  * @ORM\Entity
  */
-class Institute implements JsonSerializable
+class Institute extends BaseEntity implements JsonSerializable
 {
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
-    private $description;
+    protected $description;
 
     /**
      * @var integer
@@ -33,7 +33,7 @@ class Institute implements JsonSerializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    protected $id;
 
 
     /**
@@ -45,9 +45,9 @@ class Institute implements JsonSerializable
      */
     public function setName($name)
     {
-    $this->name = $name;
+        $this->name = $name;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -57,7 +57,7 @@ class Institute implements JsonSerializable
      */
     public function getName()
     {
-    return $this->name;
+        return $this->name;
     }
 
     /**
@@ -69,9 +69,9 @@ class Institute implements JsonSerializable
      */
     public function setDescription($description)
     {
-    $this->description = $description;
+        $this->description = $description;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -81,7 +81,7 @@ class Institute implements JsonSerializable
      */
     public function getDescription()
     {
-    return $this->description;
+        return $this->description;
     }
 
     /**
@@ -91,7 +91,7 @@ class Institute implements JsonSerializable
      */
     public function getId()
     {
-    return $this->id;
+        return $this->id;
     }
 
     public function jsonSerialize()
@@ -99,7 +99,7 @@ class Institute implements JsonSerializable
         return array(
             'id' => $this->id,
             'name' => $this->name,
-            'description'=> $this->description,
+            'description' => $this->description,
         );
     }
 }

@@ -13,7 +13,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="rightPercentage" type="boolean" column="right_percentage" nullable="false"/>
+    <field name="rightPercentage" type="smallint" column="right_percentage" nullable="false"/>
     <many-to-one field="question" target-entity="Question" fetch="LAZY">
       <join-columns>
         <join-column name="question_id" referenced-column-name="id"/>

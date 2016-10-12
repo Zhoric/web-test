@@ -10,42 +10,42 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="`group`", indexes={@ORM\Index(name="group_studyplan_id_foreign", columns={"studyplan_id"})})
  * @ORM\Entity
  */
-class Group implements JsonSerializable
+class Group  extends BaseEntity implements JsonSerializable
 {
     /**
      * @var string
      *
      * @ORM\Column(name="prefix", type="string", length=50, nullable=true)
      */
-    private $prefix;
+    protected $prefix;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="course", type="smallint", nullable=true)
      */
-    private $course;
+    protected $course;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="number", type="boolean", nullable=false)
+     * @ORM\Column(name="number", type="smallint", nullable=false)
      */
-    private $number;
+    protected $number;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_fulltime", type="boolean", nullable=false)
      */
-    private $isFulltime;
+    protected $isFulltime;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=true)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var integer
@@ -54,7 +54,7 @@ class Group implements JsonSerializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \Studyplan
@@ -64,7 +64,7 @@ class Group implements JsonSerializable
      *   @ORM\JoinColumn(name="studyplan_id", referencedColumnName="id")
      * })
      */
-    private $studyplan;
+    protected $studyplan;
 
 
     /**
@@ -76,9 +76,9 @@ class Group implements JsonSerializable
      */
     public function setPrefix($prefix)
     {
-    $this->prefix = $prefix;
+        $this->prefix = $prefix;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -88,7 +88,7 @@ class Group implements JsonSerializable
      */
     public function getPrefix()
     {
-    return $this->prefix;
+        return $this->prefix;
     }
 
     /**
@@ -100,9 +100,9 @@ class Group implements JsonSerializable
      */
     public function setCourse($course)
     {
-    $this->course = $course;
+        $this->course = $course;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -112,31 +112,31 @@ class Group implements JsonSerializable
      */
     public function getCourse()
     {
-    return $this->course;
+        return $this->course;
     }
 
     /**
      * Set number
      *
-     * @param boolean $number
+     * @param integer $number
      *
      * @return Group
      */
     public function setNumber($number)
     {
-    $this->number = $number;
+        $this->number = $number;
 
-    return $this;
+        return $this;
     }
 
     /**
      * Get number
      *
-     * @return boolean
+     * @return integer
      */
     public function getNumber()
     {
-    return $this->number;
+        return $this->number;
     }
 
     /**
@@ -148,9 +148,9 @@ class Group implements JsonSerializable
      */
     public function setIsFulltime($isFulltime)
     {
-    $this->isFulltime = $isFulltime;
+        $this->isFulltime = $isFulltime;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -160,7 +160,7 @@ class Group implements JsonSerializable
      */
     public function getIsFulltime()
     {
-    return $this->isFulltime;
+        return $this->isFulltime;
     }
 
     /**
@@ -172,9 +172,9 @@ class Group implements JsonSerializable
      */
     public function setName($name)
     {
-    $this->name = $name;
+        $this->name = $name;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -184,7 +184,7 @@ class Group implements JsonSerializable
      */
     public function getName()
     {
-    return $this->name;
+        return $this->name;
     }
 
     /**
@@ -194,7 +194,7 @@ class Group implements JsonSerializable
      */
     public function getId()
     {
-    return $this->id;
+        return $this->id;
     }
 
     /**
@@ -206,9 +206,9 @@ class Group implements JsonSerializable
      */
     public function setStudyplan(\Studyplan $studyplan = null)
     {
-    $this->studyplan = $studyplan;
+        $this->studyplan = $studyplan;
 
-    return $this;
+        return $this;
     }
 
     /**
@@ -218,7 +218,7 @@ class Group implements JsonSerializable
      */
     public function getStudyplan()
     {
-    return $this->studyplan;
+        return $this->studyplan;
     }
 
     public function jsonSerialize()

@@ -24,10 +24,19 @@ Route::get('/', 'HomeController@index');
 Route::get('welcome',function (){
    return View('welcome');
 });
-
 Route::get('admin/main', function(){return View('admin.main');});
-Route::get('/api/org/profilesOf/{id}', 'OrgStructureController@getInstituteProfiles');
-Route::resource('/api/org/institutes', 'OrgStructureController');
 
-Route::get('/api/group/byProfile/{id}', 'GroupController@getProfileGroups');
-Route::resource('/api/group/', 'GroupController');
+
+Route::group(['prefix' => 'api'], function(){
+
+    Route::group(['prefix' => 'org'], function (){
+        Route::get('institute/profiles/{id}', 'OrgStructureController@getInstituteProfiles');
+        Route::get('profile/groups/{id}', 'OrgStructureController@getProfileGroups');
+        Route::get('profile/plans/{id}', 'OrgStructureController@getInstituteProfiles');
+        Route::get('institutes', 'OrgStructureController@getAllInstitutes');
+        Route::post('profile/create', 'OrgStructureController@createProfile');
+        Route::post('profile/update', 'OrgStructureController@updateProfile');
+        Route::post('profile/delete/{id}', 'OrgStructureController@deleteProfile');
+    });
+
+});

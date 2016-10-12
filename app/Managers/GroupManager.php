@@ -2,10 +2,7 @@
 
 namespace Managers;
 
-use App\models\User;
-use App\models\UserRole;
 use Repositories\UnitOfWork;
-use Repositories\UserRepository;
 
 class GroupManager
 {
@@ -20,7 +17,27 @@ class GroupManager
         return $this->_unitOfWork->groups()->all();
     }
 
-    public function getProfileGroups($profileId){
-        return $this->_unitOfWork->groups()->getGroupsByProfile($profileId);
+    public function addGroup(\Group $group){
+        $this->_unitOfWork->groups()->create($group);
+        $this->_unitOfWork->commit();
     }
+
+    public function updateGroup(\Group $group){
+        $this->_unitOfWork->groups()->update($group);
+        $this->_unitOfWork->commit();
+    }
+
+    public function setStudentGroup($groupId, $studentId){
+
+    }
+
+    public function deleteStudent($studentId){
+
+    }
+
+    public function addStudent(User $user){
+
+    }
+
+
 }

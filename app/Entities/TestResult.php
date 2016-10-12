@@ -10,190 +10,202 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="test_result", indexes={@ORM\Index(name="test_result_user_id_foreign", columns={"user_id"}), @ORM\Index(name="test_result_test_id_foreign", columns={"test_id"}), @ORM\Index(name="test_result_mark_type_id_foreign", columns={"mark_type_id"})})
  * @ORM\Entity
  */
-class TestResult
+class TestResult extends BaseEntity implements JsonSerializable
 {
-/**
- * @var boolean
- *
- * @ORM\Column(name="attempt", type="boolean", nullable=true)
- */
-private $attempt;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="attempt", type="smallint", nullable=true)
+     */
+    protected $attempt;
 
-/**
- * @var \DateTime
- *
- * @ORM\Column(name="date_time", type="datetime", nullable=false)
- */
-private $dateTime;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_time", type="datetime", nullable=false)
+     */
+    protected $dateTime;
 
-/**
- * @var integer
- *
- * @ORM\Column(name="id", type="integer")
- * @ORM\Id
- * @ORM\GeneratedValue(strategy="IDENTITY")
- */
-private $id;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
 
-/**
- * @var \MarkType
- *
- * @ORM\ManyToOne(targetEntity="MarkType")
- * @ORM\JoinColumns({
- *   @ORM\JoinColumn(name="mark_type_id", referencedColumnName="id")
- * })
- */
-private $markType;
+    /**
+     * @var \MarkType
+     *
+     * @ORM\ManyToOne(targetEntity="MarkType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="mark_type_id", referencedColumnName="id")
+     * })
+     */
+    protected $markType;
 
-/**
- * @var \Test
- *
- * @ORM\ManyToOne(targetEntity="Test")
- * @ORM\JoinColumns({
- *   @ORM\JoinColumn(name="test_id", referencedColumnName="id")
- * })
- */
-private $test;
+    /**
+     * @var \Test
+     *
+     * @ORM\ManyToOne(targetEntity="Test")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="test_id", referencedColumnName="id")
+     * })
+     */
+    protected $test;
 
-/**
- * @var \User
- *
- * @ORM\ManyToOne(targetEntity="User")
- * @ORM\JoinColumns({
- *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
- * })
- */
-private $user;
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    protected $user;
 
 
-/**
- * Set attempt
- *
- * @param boolean $attempt
- *
- * @return TestResult
- */
-public function setAttempt($attempt)
-{
-$this->attempt = $attempt;
+    /**
+     * Set attempt
+     *
+     * @param integer $attempt
+     *
+     * @return TestResult
+     */
+    public function setAttempt($attempt)
+    {
+        $this->attempt = $attempt;
 
-return $this;
-}
+        return $this;
+    }
 
-/**
- * Get attempt
- *
- * @return boolean
- */
-public function getAttempt()
-{
-return $this->attempt;
-}
+    /**
+     * Get attempt
+     *
+     * @return integer
+     */
+    public function getAttempt()
+    {
+        return $this->attempt;
+    }
 
-/**
- * Set dateTime
- *
- * @param \DateTime $dateTime
- *
- * @return TestResult
- */
-public function setDateTime($dateTime)
-{
-$this->dateTime = $dateTime;
+    /**
+     * Set dateTime
+     *
+     * @param \DateTime $dateTime
+     *
+     * @return TestResult
+     */
+    public function setDateTime($dateTime)
+    {
+        $this->dateTime = $dateTime;
 
-return $this;
-}
+        return $this;
+    }
 
-/**
- * Get dateTime
- *
- * @return \DateTime
- */
-public function getDateTime()
-{
-return $this->dateTime;
-}
+    /**
+     * Get dateTime
+     *
+     * @return \DateTime
+     */
+    public function getDateTime()
+    {
+        return $this->dateTime;
+    }
 
-/**
- * Get id
- *
- * @return integer
- */
-public function getId()
-{
-return $this->id;
-}
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-/**
- * Set markType
- *
- * @param \MarkType $markType
- *
- * @return TestResult
- */
-public function setMarkType(\MarkType $markType = null)
-{
-$this->markType = $markType;
+    /**
+     * Set markType
+     *
+     * @param \MarkType $markType
+     *
+     * @return TestResult
+     */
+    public function setMarkType(\MarkType $markType = null)
+    {
+        $this->markType = $markType;
 
-return $this;
-}
+        return $this;
+    }
 
-/**
- * Get markType
- *
- * @return \MarkType
- */
-public function getMarkType()
-{
-return $this->markType;
-}
+    /**
+     * Get markType
+     *
+     * @return \MarkType
+     */
+    public function getMarkType()
+    {
+        return $this->markType;
+    }
 
-/**
- * Set test
- *
- * @param \Test $test
- *
- * @return TestResult
- */
-public function setTest(\Test $test = null)
-{
-$this->test = $test;
+    /**
+     * Set test
+     *
+     * @param \Test $test
+     *
+     * @return TestResult
+     */
+    public function setTest(\Test $test = null)
+    {
+        $this->test = $test;
 
-return $this;
-}
+        return $this;
+    }
 
-/**
- * Get test
- *
- * @return \Test
- */
-public function getTest()
-{
-return $this->test;
-}
+    /**
+     * Get test
+     *
+     * @return \Test
+     */
+    public function getTest()
+    {
+        return $this->test;
+    }
 
-/**
- * Set user
- *
- * @param \User $user
- *
- * @return TestResult
- */
-public function setUser(\User $user = null)
-{
-$this->user = $user;
+    /**
+     * Set user
+     *
+     * @param \User $user
+     *
+     * @return TestResult
+     */
+    public function setUser(\User $user = null)
+    {
+        $this->user = $user;
 
-return $this;
-}
+        return $this;
+    }
 
-/**
- * Get user
- *
- * @return \User
- */
-public function getUser()
-{
-return $this->user;
-}
+    /**
+     * Get user
+     *
+     * @return \User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    function jsonSerialize()
+    {
+        // TODO: Implement jsonSerialize() method.
+    }
 }
 

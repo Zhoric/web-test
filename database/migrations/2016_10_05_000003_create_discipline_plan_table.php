@@ -16,8 +16,8 @@ class CreateDisciplinePlanTable extends Migration
             $table->increments('id');
             $table->integer('discipline_id')->unsigned();
             $table->integer('studyplan_id')->unsigned();
-            $table->tinyInteger('start_semester')->nullable()->default(NULL);
-            $table->tinyInteger('semesters_count')->nullable()->default(NULL);
+            $table->smallInteger('start_semester')->nullable()->default(NULL);
+            $table->smallInteger('semesters_count')->nullable()->default(NULL);
             $table->smallInteger('hours')->nullable()->default(NULL);
             $table->tinyInteger('has_project')->nullable()->default(NULL);
             $table->tinyInteger('has_exam')->nullable()->default(NULL);

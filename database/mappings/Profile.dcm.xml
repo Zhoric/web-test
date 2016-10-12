@@ -22,7 +22,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="semesters" type="boolean" column="semesters" nullable="true"/>
+    <field name="semesters" type="smallint" column="semesters" nullable="true"/>
     <many-to-one field="institute" target-entity="Institute" fetch="LAZY">
       <join-columns>
         <join-column name="institute_id" referenced-column-name="id"/>

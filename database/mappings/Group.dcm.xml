@@ -17,7 +17,7 @@
         <option name="unsigned"/>
       </options>
     </field>
-    <field name="number" type="boolean" column="number" nullable="false"/>
+    <field name="number" type="smallint" column="number" nullable="false"/>
     <field name="isFulltime" type="boolean" column="is_fulltime" nullable="false"/>
     <field name="name" type="string" column="name" length="100" nullable="true">
       <options>

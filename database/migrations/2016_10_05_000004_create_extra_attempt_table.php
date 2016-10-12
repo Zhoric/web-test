@@ -16,7 +16,7 @@ class CreateExtraAttemptTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('test_id')->unsigned();
-            $table->tinyInteger('count')->nullable()->default(NULL);
+            $table->smallInteger('count')->nullable()->default(NULL);
         });
     }
 

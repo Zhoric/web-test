@@ -15,10 +15,10 @@ class CreateQuestionTable extends Migration
         Schema::create('question', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('theme_id')->unsigned()->nullable()->default(NULL);
-            $table->tinyInteger('type');
+            $table->smallInteger('type');
             $table->text('text');
             $table->string('image', 100);
-            $table->tinyInteger('complexity');
+            $table->smallInteger('complexity');
             $table->smallInteger('time');
         });
 

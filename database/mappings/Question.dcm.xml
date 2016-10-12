@@ -7,7 +7,7 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="type" type="boolean" column="type" nullable="false"/>
+    <field name="type" type="smallint" column="type" nullable="false"/>
     <field name="text" type="text" column="text" length="65535" nullable="false">
       <options>
         <option name="fixed"/>
@@ -18,7 +18,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="complexity" type="boolean" column="complexity" nullable="false"/>
+    <field name="complexity" type="smallint" column="complexity" nullable="false"/>
     <field name="time" type="smallint" column="time" nullable="false">
       <options>
         <option name="unsigned"/>

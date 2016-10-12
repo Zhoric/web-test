@@ -17,10 +17,10 @@ class CreateTestTable extends Migration
             $table->integer('discipline_id')->unsigned();
             $table->string('subject', 200)->nullable()->default(NULL);
             $table->smallInteger('time_total')->nullable()->default(NULL);
-            $table->tinyInteger('attempts')->nullable()->default(NULL);
-            $table->tinyInteger('order_number')->nullable()->default(NULL);
-            $table->tinyInteger('fulltime_start')->nullable()->default(NULL);
-            $table->tinyInteger('extramural_start')->nullable()->default(NULL);
+            $table->smallInteger('attempts')->nullable()->default(NULL);
+            $table->smallInteger('order_number')->nullable()->default(NULL);
+            $table->smallInteger('fulltime_start')->nullable()->default(NULL);
+            $table->smallInteger('extramural_start')->nullable()->default(NULL);
 
             $table->foreign('discipline_id')->references('id')->on('discipline')->onDelete('cascade');
         });

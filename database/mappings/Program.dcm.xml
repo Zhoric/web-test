@@ -12,7 +12,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="lang" type="boolean" column="lang" nullable="false"/>
+    <field name="lang" type="smallint" column="lang" nullable="false"/>
     <many-to-one field="question" target-entity="Question" fetch="LAZY">
       <join-columns>
         <join-column name="question_id" referenced-column-name="id"/>

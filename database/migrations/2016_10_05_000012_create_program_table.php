@@ -16,7 +16,7 @@ class CreateProgramTable extends Migration
             $table->increments('id');
             $table->integer('question_id')->unsigned()->nullable()->default(NULL);
             $table->text('template');
-            $table->tinyInteger('lang');
+            $table->smallInteger('lang');
         });
 
         Schema::table('params_set', function (Blueprint $table) {

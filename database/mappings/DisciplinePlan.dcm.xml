@@ -8,8 +8,8 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="startSemester" type="boolean" column="start_semester" nullable="true"/>
-    <field name="semestersCount" type="boolean" column="semesters_count" nullable="true"/>
+    <field name="startSemester" type="smallint" column="start_semester" nullable="true"/>
+    <field name="semestersCount" type="smallint" column="semesters_count" nullable="true"/>
     <field name="hours" type="smallint" column="hours" nullable="true">
       <options>
         <option name="unsigned"/>

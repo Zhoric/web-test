@@ -18,7 +18,7 @@ class CreateProfileTable extends Migration
             $table->string('code', 50)->nullable()->default(NULL);
             $table->string('name', 100);
             $table->string('fullname', 255)->nullable()->default(NULL);
-            $table->tinyInteger('semesters')->nullable()->default(NULL);
+            $table->smallInteger('semesters')->nullable()->default(NULL);
 
             $table->foreign('institute_id')->references('id')->on('institute')->onDelete('set null');
         });

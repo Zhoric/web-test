@@ -17,10 +17,10 @@
         <option name="unsigned"/>
       </options>
     </field>
-    <field name="attempts" type="boolean" column="attempts" nullable="true"/>
-    <field name="orderNumber" type="boolean" column="order_number" nullable="true"/>
-    <field name="fulltimeStart" type="boolean" column="fulltime_start" nullable="true"/>
-    <field name="extramuralStart" type="boolean" column="extramural_start" nullable="true"/>
+    <field name="attempts" type="smallint" column="attempts" nullable="true"/>
+    <field name="orderNumber" type="smallint" column="order_number" nullable="true"/>
+    <field name="fulltimeStart" type="smallint" column="fulltime_start" nullable="true"/>
+    <field name="extramuralStart" type="smallint" column="extramural_start" nullable="true"/>
     <many-to-one field="discipline" target-entity="Discipline" fetch="LAZY">
       <join-columns>
         <join-column name="discipline_id" referenced-column-name="id"/>

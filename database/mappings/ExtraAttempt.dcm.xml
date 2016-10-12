@@ -8,7 +8,7 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="count" type="boolean" column="count" nullable="true"/>
+    <field name="count" type="smallint" column="count" nullable="true"/>
     <many-to-one field="test" target-entity="Test" fetch="LAZY">
       <join-columns>
         <join-column name="test_id" referenced-column-name="id"/>
