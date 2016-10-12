@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Managers\StudyPlanManager;
+use MarkType;
 use Studyplan;
 use DisciplinePlan;
 
@@ -17,46 +18,75 @@ class StudyPlanController extends Controller
         $this->_studyPlanManager = $studyPlanManager;
     }
 
-    public function getAllInstitutes()
-    {
-        return json_encode($this->_orgStructureManager->getInstitutes());
+    // Работа с учебными планами
+    public function getPlan($id){
+        return json_encode($this->_studyPlanManager->getPlan($id));
     }
 
-    public function getInstituteProfiles($id)
-    {
-        return json_encode($this->_orgStructureManager->getInstituteProfiles($id));
+    public function create(Request $request){
+        $planData = $request->json('studyPlan');
+        $studyPlan = new Studyplan();
+        $studyPlan->fillFromJson($planData);
+        $this->_studyPlanManager->create($studyPlan);
     }
 
-    public function getProfileGroups($id){
-        return json_encode($this->_orgStructureManager->getProfileGroups($id));
+    public function update(Request $request){
+        $planData = $request->json('studyPlan');
+        $studyPlan = new Studyplan();
+        $studyPlan->fillFromJson($planData);
+        $this->_studyPlanManager->update($studyPlan);
     }
 
-    public function getProfilePlans($id){
-        return json_encode($this->_orgStructureManager->getProfilePlans($id));
+    public function delete($id){
+        $this->_studyPlanManager->delete($id);
     }
 
-    public function deleteProfile($id){
-        $this->_orgStructureManager->deleteProfile($id);
+    // Работа с планами дисциплин
+    public function getPlanDisciplines($planId){
+        return json_encode($this->_studyPlanManager
+            ->getPlanDisciplines($planId));
     }
 
-    /*
-     * Пример валидного JSON:
-     * method: POST
-     * url: http://www.web-test.ru/api/org/profile/create
-     * body: { "profile": {"name":"test","semesters":5,"fullname":"fullnameTEST"} }
-     */
-    public function createProfile(Request $request){
-        $profileData = $request->json('profile');
-        $profile = new Profile();
-        $profile->fillFromJson($profileData);
-        $this->_orgStructureManager->addProfile($profile);
+    public function addDisciplinePlan(Request $request){
+        $planData = $request->json('disciplinePlan');
+        $disciplinePlan = new DisciplinePlan();
+        $disciplinePlan->fillFromJson($planData);
+        $this->_studyPlanManager->addDisciplinePlan($disciplinePlan);
     }
 
-    public function updateProfile(Request $request){
-        $profileData = $request->json('profile');
-        $profile = new Profile();
-        $profile->fillFromJson($profileData);
-        $this->_orgStructureManager->updateProfile($profile);
+    public function updateDisciplinePlan(Request $request){
+        $planData = $request->json('disciplinePlan');
+        $disciplinePlan = new DisciplinePlan();
+        $disciplinePlan->fillFromJson($planData);
+        $this->_studyPlanManager->updateDisciplinePlan($disciplinePlan);
+    }
+
+    public function deleteDisciplinePlan($id){
+        $this->_studyPlanManager->deleteDisciplinePlan($id);
+    }
+
+    // Работа с типами оценок
+    public function getDisciplinePlanMarkTypes($disciplinePlanId){
+        return json_encode($this->_studyPlanManager
+            ->getDisciplinePlanMarkTypes($disciplinePlanId));
+    }
+
+    public function addMarkType(Request $request){
+        $markData = $request->json('markType');
+        $markType = new MarkType();
+        $markType->fillFromJson($markData);
+        $this->_studyPlanManager->addMarkType($markType);
+    }
+
+    public function updateMarkType(Request $request){
+        $markData = $request->json('markType');
+        $markType = new MarkType();
+        $markType->fillFromJson($markData);
+        $this->_studyPlanManager->updateMarkType($markType);
+    }
+
+    public function deleteMarkType($id){
+        $this->_studyPlanManager->deleteMarkType($id);
     }
 
 }

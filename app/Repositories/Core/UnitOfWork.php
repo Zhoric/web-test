@@ -30,6 +30,7 @@ class UnitOfWork
     private $_themeRepo;
     private $_roleUserRepo;
     private $_groupRepo;
+    private $_markTypeRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -92,6 +93,13 @@ class UnitOfWork
             $this->_groupRepo = new GroupRepository($this->_em);
         }
         return $this->_groupRepo;
+    }
+
+    public function markTypes(){
+        if ($this->_markTypeRepo == null){
+            $this->_markTypeRepo = new MarkTypeRepository($this->_em);
+        }
+        return $this->_markTypeRepo;
     }
 
     public function commit(){

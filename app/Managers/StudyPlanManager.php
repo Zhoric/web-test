@@ -3,6 +3,7 @@
 namespace Managers;
 
 use DisciplinePlan;
+use MarkType;
 use Repositories\UnitOfWork;
 use Studyplan;
 
@@ -15,8 +16,9 @@ class StudyPlanManager
         $this->_unitOfWork = $unitOfWork;
     }
 
+    // Работа с учебными планами
     public function getPlan($id){
-        return $this->_unitOfWork->disciplinePlans()->find($id);
+        return $this->_unitOfWork->studyPlans()->find($id);
     }
 
     public function create(Studyplan $studyplan){
@@ -37,6 +39,12 @@ class StudyPlanManager
         }
     }
 
+    // Работа с планами дисциплин
+    public function getPlanDisciplines($planId){
+        return $this->_unitOfWork->disciplinePlans()
+            ->where('DisciplinePlan.studyPlan = '.$planId);
+    }
+
     public function addDisciplinePlan(DisciplinePlan $disciplinePlan){
         $this->_unitOfWork->disciplinePlans()->create($disciplinePlan);
         $this->_unitOfWork->commit();
@@ -54,4 +62,29 @@ class StudyPlanManager
             $this->_unitOfWork->commit();
         }
     }
+
+    // Работа с типами оценок
+    public function getDisciplinePlanMarkTypes($disciplinePlanId){
+        return $this->_unitOfWork->markTypes()
+            ->where('MarkType.disciplinePlan = '.$disciplinePlanId);
+    }
+
+    public function addMarkType(MarkType $markType){
+        $this->_unitOfWork->markTypes()->create($markType);
+        $this->_unitOfWork->commit();
+    }
+
+    public function updateMarkType(DisciplinePlan $disciplinePlan){
+        $this->_unitOfWork->disciplinePlans()->update($disciplinePlan);
+        $this->_unitOfWork->commit();
+    }
+
+    public function deleteMarkType($id){
+        $disciplinePlan = $this->_unitOfWork->disciplinePlans()->find($id);
+        if ($disciplinePlan != null){
+            $this->_unitOfWork->disciplinePlans()->delete($disciplinePlan);
+            $this->_unitOfWork->commit();
+        }
+    }
+
 }
