@@ -64,10 +64,10 @@ class DisciplinePlan extends \DisciplinePlan implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'DisciplinePlan' . "\0" . 'startSemester', '' . "\0" . 'DisciplinePlan' . "\0" . 'semestersCount', '' . "\0" . 'DisciplinePlan' . "\0" . 'hours', '' . "\0" . 'DisciplinePlan' . "\0" . 'hasProject', '' . "\0" . 'DisciplinePlan' . "\0" . 'hasExam', '' . "\0" . 'DisciplinePlan' . "\0" . 'id', '' . "\0" . 'DisciplinePlan' . "\0" . 'discipline', '' . "\0" . 'DisciplinePlan' . "\0" . 'studyplan'];
+            return ['__isInitialized__', 'startSemester', 'semestersCount', 'hours', 'hasProject', 'hasExam', 'id', 'discipline', 'studyplan'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'DisciplinePlan' . "\0" . 'startSemester', '' . "\0" . 'DisciplinePlan' . "\0" . 'semestersCount', '' . "\0" . 'DisciplinePlan' . "\0" . 'hours', '' . "\0" . 'DisciplinePlan' . "\0" . 'hasProject', '' . "\0" . 'DisciplinePlan' . "\0" . 'hasExam', '' . "\0" . 'DisciplinePlan' . "\0" . 'id', '' . "\0" . 'DisciplinePlan' . "\0" . 'discipline', '' . "\0" . 'DisciplinePlan' . "\0" . 'studyplan'];
+        return ['__isInitialized__', 'startSemester', 'semestersCount', 'hours', 'hasProject', 'hasExam', 'id', 'discipline', 'studyplan'];
     }
 
     /**
@@ -340,6 +340,28 @@ class DisciplinePlan extends \DisciplinePlan implements \Doctrine\ORM\Proxy\Prox
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStudyplan', []);
 
         return parent::getStudyplan();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

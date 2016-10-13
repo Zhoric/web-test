@@ -64,10 +64,10 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Test' . "\0" . 'subject', '' . "\0" . 'Test' . "\0" . 'timeTotal', '' . "\0" . 'Test' . "\0" . 'attempts', '' . "\0" . 'Test' . "\0" . 'orderNumber', '' . "\0" . 'Test' . "\0" . 'fulltimeStart', '' . "\0" . 'Test' . "\0" . 'extramuralStart', '' . "\0" . 'Test' . "\0" . 'id', '' . "\0" . 'Test' . "\0" . 'discipline'];
+            return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'orderNumber', 'fulltimeStart', 'extramuralStart', 'id', 'discipline'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Test' . "\0" . 'subject', '' . "\0" . 'Test' . "\0" . 'timeTotal', '' . "\0" . 'Test' . "\0" . 'attempts', '' . "\0" . 'Test' . "\0" . 'orderNumber', '' . "\0" . 'Test' . "\0" . 'fulltimeStart', '' . "\0" . 'Test' . "\0" . 'extramuralStart', '' . "\0" . 'Test' . "\0" . 'id', '' . "\0" . 'Test' . "\0" . 'discipline'];
+        return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'orderNumber', 'fulltimeStart', 'extramuralStart', 'id', 'discipline'];
     }
 
     /**
@@ -340,6 +340,28 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDiscipline', []);
 
         return parent::getDiscipline();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

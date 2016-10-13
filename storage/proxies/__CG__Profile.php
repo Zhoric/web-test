@@ -64,10 +64,10 @@ class Profile extends \Profile implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Profile' . "\0" . 'code', '' . "\0" . 'Profile' . "\0" . 'name', '' . "\0" . 'Profile' . "\0" . 'fullname', '' . "\0" . 'Profile' . "\0" . 'semesters', '' . "\0" . 'Profile' . "\0" . 'id', '' . "\0" . 'Profile' . "\0" . 'institute'];
+            return ['__isInitialized__', 'code', 'name', 'fullname', 'semesters', 'id', 'institute'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Profile' . "\0" . 'code', '' . "\0" . 'Profile' . "\0" . 'name', '' . "\0" . 'Profile' . "\0" . 'fullname', '' . "\0" . 'Profile' . "\0" . 'semesters', '' . "\0" . 'Profile' . "\0" . 'id', '' . "\0" . 'Profile' . "\0" . 'institute'];
+        return ['__isInitialized__', 'code', 'name', 'fullname', 'semesters', 'id', 'institute'];
     }
 
     /**
@@ -307,6 +307,17 @@ class Profile extends \Profile implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
 
         return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

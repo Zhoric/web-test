@@ -64,10 +64,10 @@ class Program extends \Program implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Program' . "\0" . 'template', '' . "\0" . 'Program' . "\0" . 'lang', '' . "\0" . 'Program' . "\0" . 'id', '' . "\0" . 'Program' . "\0" . 'question'];
+            return ['__isInitialized__', 'template', 'lang', 'id', 'question'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Program' . "\0" . 'template', '' . "\0" . 'Program' . "\0" . 'lang', '' . "\0" . 'Program' . "\0" . 'id', '' . "\0" . 'Program' . "\0" . 'question'];
+        return ['__isInitialized__', 'template', 'lang', 'id', 'question'];
     }
 
     /**

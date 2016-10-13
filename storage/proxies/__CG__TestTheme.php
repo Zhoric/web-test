@@ -64,10 +64,10 @@ class TestTheme extends \TestTheme implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'TestTheme' . "\0" . 'id', '' . "\0" . 'TestTheme' . "\0" . 'test', '' . "\0" . 'TestTheme' . "\0" . 'theme'];
+            return ['__isInitialized__', 'id', 'test', 'theme'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'TestTheme' . "\0" . 'id', '' . "\0" . 'TestTheme' . "\0" . 'test', '' . "\0" . 'TestTheme' . "\0" . 'theme'];
+        return ['__isInitialized__', 'id', 'test', 'theme'];
     }
 
     /**
@@ -230,6 +230,17 @@ class TestTheme extends \TestTheme implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTheme', []);
 
         return parent::getTheme();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

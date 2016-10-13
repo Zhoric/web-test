@@ -64,10 +64,10 @@ class Group extends \Group implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Group' . "\0" . 'prefix', '' . "\0" . 'Group' . "\0" . 'course', '' . "\0" . 'Group' . "\0" . 'number', '' . "\0" . 'Group' . "\0" . 'isFulltime', '' . "\0" . 'Group' . "\0" . 'name', '' . "\0" . 'Group' . "\0" . 'id', '' . "\0" . 'Group' . "\0" . 'studyplan'];
+            return ['__isInitialized__', 'prefix', 'course', 'number', 'isFulltime', 'name', 'id', 'studyplan'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Group' . "\0" . 'prefix', '' . "\0" . 'Group' . "\0" . 'course', '' . "\0" . 'Group' . "\0" . 'number', '' . "\0" . 'Group' . "\0" . 'isFulltime', '' . "\0" . 'Group' . "\0" . 'name', '' . "\0" . 'Group' . "\0" . 'id', '' . "\0" . 'Group' . "\0" . 'studyplan'];
+        return ['__isInitialized__', 'prefix', 'course', 'number', 'isFulltime', 'name', 'id', 'studyplan'];
     }
 
     /**
@@ -318,6 +318,28 @@ class Group extends \Group implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStudyplan', []);
 
         return parent::getStudyplan();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

@@ -64,10 +64,10 @@ class ParamsSet extends \ParamsSet implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'ParamsSet' . "\0" . 'expectedOutput', '' . "\0" . 'ParamsSet' . "\0" . 'id', '' . "\0" . 'ParamsSet' . "\0" . 'program'];
+            return ['__isInitialized__', 'expectedOutput', 'id', 'program'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'ParamsSet' . "\0" . 'expectedOutput', '' . "\0" . 'ParamsSet' . "\0" . 'id', '' . "\0" . 'ParamsSet' . "\0" . 'program'];
+        return ['__isInitialized__', 'expectedOutput', 'id', 'program'];
     }
 
     /**
@@ -230,6 +230,28 @@ class ParamsSet extends \ParamsSet implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProgram', []);
 
         return parent::getProgram();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

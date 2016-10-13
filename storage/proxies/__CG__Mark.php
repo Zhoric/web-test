@@ -64,10 +64,10 @@ class Mark extends \Mark implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Mark' . "\0" . 'value', '' . "\0" . 'Mark' . "\0" . 'id', '' . "\0" . 'Mark' . "\0" . 'markType', '' . "\0" . 'Mark' . "\0" . 'user'];
+            return ['__isInitialized__', 'value', 'id', 'markType', 'user'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Mark' . "\0" . 'value', '' . "\0" . 'Mark' . "\0" . 'id', '' . "\0" . 'Mark' . "\0" . 'markType', '' . "\0" . 'Mark' . "\0" . 'user'];
+        return ['__isInitialized__', 'value', 'id', 'markType', 'user'];
     }
 
     /**
@@ -252,6 +252,28 @@ class Mark extends \Mark implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', []);
 
         return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

@@ -64,10 +64,10 @@ class InputParam extends \InputParam implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'InputParam' . "\0" . 'number', '' . "\0" . 'InputParam' . "\0" . 'type', '' . "\0" . 'InputParam' . "\0" . 'value', '' . "\0" . 'InputParam' . "\0" . 'id', '' . "\0" . 'InputParam' . "\0" . 'paramsSet'];
+            return ['__isInitialized__', 'number', 'type', 'value', 'id', 'paramsSet'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'InputParam' . "\0" . 'number', '' . "\0" . 'InputParam' . "\0" . 'type', '' . "\0" . 'InputParam' . "\0" . 'value', '' . "\0" . 'InputParam' . "\0" . 'id', '' . "\0" . 'InputParam' . "\0" . 'paramsSet'];
+        return ['__isInitialized__', 'number', 'type', 'value', 'id', 'paramsSet'];
     }
 
     /**
@@ -274,6 +274,28 @@ class InputParam extends \InputParam implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getParamsSet', []);
 
         return parent::getParamsSet();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

@@ -64,10 +64,10 @@ class Studyplan extends \Studyplan implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Studyplan' . "\0" . 'name', '' . "\0" . 'Studyplan' . "\0" . 'id', '' . "\0" . 'Studyplan' . "\0" . 'profile'];
+            return ['__isInitialized__', 'name', 'id', 'profile'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Studyplan' . "\0" . 'name', '' . "\0" . 'Studyplan' . "\0" . 'id', '' . "\0" . 'Studyplan' . "\0" . 'profile'];
+        return ['__isInitialized__', 'name', 'id', 'profile'];
     }
 
     /**
@@ -230,6 +230,28 @@ class Studyplan extends \Studyplan implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProfile', []);
 
         return parent::getProfile();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

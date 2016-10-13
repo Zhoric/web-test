@@ -64,10 +64,10 @@ class ExtraAttempt extends \ExtraAttempt implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'ExtraAttempt' . "\0" . 'count', '' . "\0" . 'ExtraAttempt' . "\0" . 'id', '' . "\0" . 'ExtraAttempt' . "\0" . 'test', '' . "\0" . 'ExtraAttempt' . "\0" . 'user'];
+            return ['__isInitialized__', 'count', 'id', 'test', 'user'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'ExtraAttempt' . "\0" . 'count', '' . "\0" . 'ExtraAttempt' . "\0" . 'id', '' . "\0" . 'ExtraAttempt' . "\0" . 'test', '' . "\0" . 'ExtraAttempt' . "\0" . 'user'];
+        return ['__isInitialized__', 'count', 'id', 'test', 'user'];
     }
 
     /**
@@ -252,6 +252,28 @@ class ExtraAttempt extends \ExtraAttempt implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', []);
 
         return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

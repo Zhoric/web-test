@@ -64,10 +64,10 @@ class Section extends \Section implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Section' . "\0" . 'name', '' . "\0" . 'Section' . "\0" . 'content', '' . "\0" . 'Section' . "\0" . 'id', '' . "\0" . 'Section' . "\0" . 'theme'];
+            return ['__isInitialized__', 'name', 'content', 'id', 'theme'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Section' . "\0" . 'name', '' . "\0" . 'Section' . "\0" . 'content', '' . "\0" . 'Section' . "\0" . 'id', '' . "\0" . 'Section' . "\0" . 'theme'];
+        return ['__isInitialized__', 'name', 'content', 'id', 'theme'];
     }
 
     /**
@@ -252,6 +252,28 @@ class Section extends \Section implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTheme', []);
 
         return parent::getTheme();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

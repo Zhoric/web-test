@@ -64,10 +64,10 @@ class User extends \User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'User' . "\0" . 'firstname', '' . "\0" . 'User' . "\0" . 'patronymic', '' . "\0" . 'User' . "\0" . 'lastname', '' . "\0" . 'User' . "\0" . 'email', '' . "\0" . 'User' . "\0" . 'password', '' . "\0" . 'User' . "\0" . 'active', '' . "\0" . 'User' . "\0" . 'rememberToken', '' . "\0" . 'User' . "\0" . 'id'];
+            return ['__isInitialized__', 'firstname', 'patronymic', 'lastname', 'email', 'password', 'active', 'rememberToken', 'id'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'User' . "\0" . 'firstname', '' . "\0" . 'User' . "\0" . 'patronymic', '' . "\0" . 'User' . "\0" . 'lastname', '' . "\0" . 'User' . "\0" . 'email', '' . "\0" . 'User' . "\0" . 'password', '' . "\0" . 'User' . "\0" . 'active', '' . "\0" . 'User' . "\0" . 'rememberToken', '' . "\0" . 'User' . "\0" . 'id'];
+        return ['__isInitialized__', 'firstname', 'patronymic', 'lastname', 'email', 'password', 'active', 'rememberToken', 'id'];
     }
 
     /**
@@ -351,6 +351,17 @@ class User extends \User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
 
         return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

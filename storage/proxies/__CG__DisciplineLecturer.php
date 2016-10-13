@@ -64,10 +64,10 @@ class DisciplineLecturer extends \DisciplineLecturer implements \Doctrine\ORM\Pr
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'DisciplineLecturer' . "\0" . 'id', '' . "\0" . 'DisciplineLecturer' . "\0" . 'discipline', '' . "\0" . 'DisciplineLecturer' . "\0" . 'lecturer'];
+            return ['__isInitialized__', 'id', 'discipline', 'lecturer'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'DisciplineLecturer' . "\0" . 'id', '' . "\0" . 'DisciplineLecturer' . "\0" . 'discipline', '' . "\0" . 'DisciplineLecturer' . "\0" . 'lecturer'];
+        return ['__isInitialized__', 'id', 'discipline', 'lecturer'];
     }
 
     /**
@@ -230,6 +230,17 @@ class DisciplineLecturer extends \DisciplineLecturer implements \Doctrine\ORM\Pr
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLecturer', []);
 
         return parent::getLecturer();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

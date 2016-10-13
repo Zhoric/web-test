@@ -64,10 +64,10 @@ class Answer extends \Answer implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Answer' . "\0" . 'text', '' . "\0" . 'Answer' . "\0" . 'isRight', '' . "\0" . 'Answer' . "\0" . 'id', '' . "\0" . 'Answer' . "\0" . 'question'];
+            return ['__isInitialized__', 'text', 'isRight', 'id', 'question'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Answer' . "\0" . 'text', '' . "\0" . 'Answer' . "\0" . 'isRight', '' . "\0" . 'Answer' . "\0" . 'id', '' . "\0" . 'Answer' . "\0" . 'question'];
+        return ['__isInitialized__', 'text', 'isRight', 'id', 'question'];
     }
 
     /**
@@ -252,6 +252,28 @@ class Answer extends \Answer implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getQuestion', []);
 
         return parent::getQuestion();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

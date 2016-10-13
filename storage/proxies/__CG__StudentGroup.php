@@ -64,10 +64,10 @@ class StudentGroup extends \StudentGroup implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'StudentGroup' . "\0" . 'id', '' . "\0" . 'StudentGroup' . "\0" . 'group', '' . "\0" . 'StudentGroup' . "\0" . 'student'];
+            return ['__isInitialized__', 'id', 'group', 'student'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'StudentGroup' . "\0" . 'id', '' . "\0" . 'StudentGroup' . "\0" . 'group', '' . "\0" . 'StudentGroup' . "\0" . 'student'];
+        return ['__isInitialized__', 'id', 'group', 'student'];
     }
 
     /**
@@ -230,6 +230,17 @@ class StudentGroup extends \StudentGroup implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStudent', []);
 
         return parent::getStudent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

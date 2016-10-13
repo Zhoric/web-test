@@ -64,10 +64,10 @@ class GivenAnswer extends \GivenAnswer implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'GivenAnswer' . "\0" . 'answer', '' . "\0" . 'GivenAnswer' . "\0" . 'rightPercentage', '' . "\0" . 'GivenAnswer' . "\0" . 'id', '' . "\0" . 'GivenAnswer' . "\0" . 'question', '' . "\0" . 'GivenAnswer' . "\0" . 'testResult'];
+            return ['__isInitialized__', 'answer', 'rightPercentage', 'id', 'question', 'testResult'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'GivenAnswer' . "\0" . 'answer', '' . "\0" . 'GivenAnswer' . "\0" . 'rightPercentage', '' . "\0" . 'GivenAnswer' . "\0" . 'id', '' . "\0" . 'GivenAnswer' . "\0" . 'question', '' . "\0" . 'GivenAnswer' . "\0" . 'testResult'];
+        return ['__isInitialized__', 'answer', 'rightPercentage', 'id', 'question', 'testResult'];
     }
 
     /**
@@ -274,6 +274,28 @@ class GivenAnswer extends \GivenAnswer implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTestResult', []);
 
         return parent::getTestResult();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

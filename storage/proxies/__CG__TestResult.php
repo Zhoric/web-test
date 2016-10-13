@@ -64,10 +64,10 @@ class TestResult extends \TestResult implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'TestResult' . "\0" . 'attempt', '' . "\0" . 'TestResult' . "\0" . 'dateTime', '' . "\0" . 'TestResult' . "\0" . 'id', '' . "\0" . 'TestResult' . "\0" . 'markType', '' . "\0" . 'TestResult' . "\0" . 'test', '' . "\0" . 'TestResult' . "\0" . 'user'];
+            return ['__isInitialized__', 'attempt', 'dateTime', 'id', 'markType', 'test', 'user'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'TestResult' . "\0" . 'attempt', '' . "\0" . 'TestResult' . "\0" . 'dateTime', '' . "\0" . 'TestResult' . "\0" . 'id', '' . "\0" . 'TestResult' . "\0" . 'markType', '' . "\0" . 'TestResult' . "\0" . 'test', '' . "\0" . 'TestResult' . "\0" . 'user'];
+        return ['__isInitialized__', 'attempt', 'dateTime', 'id', 'markType', 'test', 'user'];
     }
 
     /**
@@ -296,6 +296,28 @@ class TestResult extends \TestResult implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', []);
 
         return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }

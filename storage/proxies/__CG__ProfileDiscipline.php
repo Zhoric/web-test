@@ -64,10 +64,10 @@ class ProfileDiscipline extends \ProfileDiscipline implements \Doctrine\ORM\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'ProfileDiscipline' . "\0" . 'id', '' . "\0" . 'ProfileDiscipline' . "\0" . 'discipline', '' . "\0" . 'ProfileDiscipline' . "\0" . 'profile'];
+            return ['__isInitialized__', 'id', 'discipline', 'profile'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'ProfileDiscipline' . "\0" . 'id', '' . "\0" . 'ProfileDiscipline' . "\0" . 'discipline', '' . "\0" . 'ProfileDiscipline' . "\0" . 'profile'];
+        return ['__isInitialized__', 'id', 'discipline', 'profile'];
     }
 
     /**
@@ -230,6 +230,17 @@ class ProfileDiscipline extends \ProfileDiscipline implements \Doctrine\ORM\Prox
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProfile', []);
 
         return parent::getProfile();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
     }
 
 }
