@@ -29,8 +29,9 @@ Route::get('admin/main', function(){return View('admin.main');});
 
 Route::group(['prefix' => 'api'], function() {
 
-    /*
-     *  Организационная структура ВУЗа (Институты, профили)
+    /*--------------------------------------------------------------------------------
+     *      Организационная структура ВУЗа (Институты, профили)
+     * -------------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'org'], function () {
         Route::get('institute/{id}/profiles', 'OrgStructureController@getInstituteProfiles');
@@ -46,8 +47,9 @@ Route::group(['prefix' => 'api'], function() {
         });
     });
 
-    /*
-     * Учебные планы
+    /*------------------------------------------------------------------------------
+     *              УЧЕБНЫЕ ПЛАНЫ
+     * -----------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'plan'], function () {
         Route::get('{id}', 'StudyPlanController@getPlan');
@@ -67,6 +69,27 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('create', 'StudyPlanController@addDisciplinePlan');
             Route::post('update', 'StudyPlanController@updateDisciplinePlan');
             Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
+        });
+    });
+
+    /*-----------------------------------------------------------------------------
+     *                           ГРУППЫ
+     *-----------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'group'], function(){
+        Route::get('{id}', 'GroupController@getGroup');
+        Route::post('create', 'GroupController@create');
+        Route::post('update', 'GroupController@update');
+        Route::post('delete/{id}', 'GroupController@delete');
+        Route::get('/', 'GroupController@getAll');
+        Route::get('{id}/students', 'GroupController@getGroupStudents');
+
+        Route::group(['prefix' => 'student'], function () {
+
+            Route::post('create', 'GroupController@createStudent');
+            Route::post('update', 'GroupController@updateStudent');
+            Route::post('delete/{id}', 'GroupController@deleteStudent');
+            Route::post('setGroup', 'GroupController@setStudentGroup');
         });
     });
 

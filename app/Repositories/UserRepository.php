@@ -5,6 +5,7 @@ namespace Repositories;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Str;
 use Repositories\Interfaces\IUserRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use User;
 
 class UserRepository extends BaseRepository implements IUserRepository
@@ -38,5 +39,17 @@ class UserRepository extends BaseRepository implements IUserRepository
         return $this->where('email','=',$login)->first();
     }
 
+    public function getGroupsByProfile($profileId){
+        $query = $this->repo->createQueryBuilder('g')
+            ->join(\Studyplan::class, 'sp', Join::WITH,
+                'g.studyplan = sp.id AND sp.profile = '.$profileId);
+        return $query->getQuery()->execute();
+    }
 
+    public function getGroupStudents($groupId){
+        $query = $this->repo->createQueryBuilder('u')
+            ->join(\StudentGroup::class, 'sg', Join::WITH,
+            'u.id = sg.student AND sg.group = '.$groupId);
+        return $query->getQuery()->execute();
+    }
 }
