@@ -23,18 +23,24 @@ class StudyPlanController extends Controller
         return json_encode($this->_studyPlanManager->getPlan($id));
     }
 
+
+    /* Пример валидных данных:
+     * { "studyPlan": {"name":"Тестовый план"}, "profileId": 1}
+     */
     public function create(Request $request){
         $planData = $request->json('studyPlan');
+        $profileId = $request->json('profileId');
         $studyPlan = new Studyplan();
         $studyPlan->fillFromJson($planData);
-        $this->_studyPlanManager->create($studyPlan);
+        $this->_studyPlanManager->create($studyPlan, $profileId);
     }
 
     public function update(Request $request){
         $planData = $request->json('studyPlan');
+        $profileId = $request->json('profileId');
         $studyPlan = new Studyplan();
         $studyPlan->fillFromJson($planData);
-        $this->_studyPlanManager->update($studyPlan);
+        $this->_studyPlanManager->update($studyPlan, $profileId);
     }
 
     public function delete($id){
@@ -49,16 +55,20 @@ class StudyPlanController extends Controller
 
     public function addDisciplinePlan(Request $request){
         $planData = $request->json('disciplinePlan');
+        $studyPlanId = $request->json('studyPlanId');
+
         $disciplinePlan = new DisciplinePlan();
         $disciplinePlan->fillFromJson($planData);
-        $this->_studyPlanManager->addDisciplinePlan($disciplinePlan);
+        $this->_studyPlanManager->createDisciplinePlan($disciplinePlan, $studyPlanId);
     }
 
     public function updateDisciplinePlan(Request $request){
         $planData = $request->json('disciplinePlan');
+        $studyPlanId = $request->json('studyPlanId');
+
         $disciplinePlan = new DisciplinePlan();
         $disciplinePlan->fillFromJson($planData);
-        $this->_studyPlanManager->updateDisciplinePlan($disciplinePlan);
+        $this->_studyPlanManager->updateDisciplinePlan($disciplinePlan, $studyPlanId);
     }
 
     public function deleteDisciplinePlan($id){
@@ -73,16 +83,20 @@ class StudyPlanController extends Controller
 
     public function addMarkType(Request $request){
         $markData = $request->json('markType');
+        $disciplinePlanId = $request->json('disciplinePlanId');
+
         $markType = new MarkType();
         $markType->fillFromJson($markData);
-        $this->_studyPlanManager->addMarkType($markType);
+        $this->_studyPlanManager->createMarkType($markType, $disciplinePlanId);
     }
 
     public function updateMarkType(Request $request){
         $markData = $request->json('markType');
         $markType = new MarkType();
         $markType->fillFromJson($markData);
-        $this->_studyPlanManager->updateMarkType($markType);
+
+        $disciplinePlanId = $request->json('disciplinePlanId');
+        $this->_studyPlanManager->updateMarkType($markType, $disciplinePlanId);
     }
 
     public function deleteMarkType($id){

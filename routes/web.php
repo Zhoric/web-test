@@ -52,20 +52,20 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'plan'], function () {
         Route::get('{id}', 'StudyPlanController@getPlan');
         Route::get('{id}/disciplines', 'StudyPlanController@getPlanDisciplines');
-        Route::get('create', 'StudyPlanController@getPlan@create');
-        Route::get('update', 'StudyPlanController@getPlan@update');
+        Route::post('create', 'StudyPlanController@create');
+        Route::post('update', 'StudyPlanController@update');
         Route::post('delete/{id}', 'StudyPlanController@delete');
 
         Route::group(['prefix' => 'discipline'], function () {
-            Route::get('{id}/marks', 'StudyPlanController@getPlan@getDisciplinePlanMarkTypes');
-            Route::get('create', 'StudyPlanController@getPlan@addDisciplinePlan');
-            Route::get('update', 'StudyPlanController@getPlan@updateDisciplinePlan');
+            Route::get('{id}/marks', 'StudyPlanController@getDisciplinePlanMarkTypes');
+            Route::post('create', 'StudyPlanController@addDisciplinePlan');
+            Route::post('update', 'StudyPlanController@updateDisciplinePlan');
             Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
         });
 
         Route::group(['prefix' => 'mark'], function () {
-            Route::get('create', 'StudyPlanController@getPlan@addDisciplinePlan');
-            Route::get('update', 'StudyPlanController@getPlan@updateDisciplinePlan');
+            Route::post('create', 'StudyPlanController@addDisciplinePlan');
+            Route::post('update', 'StudyPlanController@updateDisciplinePlan');
             Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
         });
     });

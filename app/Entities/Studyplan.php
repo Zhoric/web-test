@@ -102,7 +102,7 @@ class Studyplan extends BaseEntity implements JsonSerializable
         return array(
             'id' => $this->id,
             'name' => $this->name,
-            'profileId' => $this->profile->getId(),
+            'profile' => $this->profile->getId(),
         );
     }
 }

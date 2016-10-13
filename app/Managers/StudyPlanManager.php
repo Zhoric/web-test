@@ -21,12 +21,18 @@ class StudyPlanManager
         return $this->_unitOfWork->studyPlans()->find($id);
     }
 
-    public function create(Studyplan $studyplan){
+    public function create(Studyplan $studyplan, $profileId){
+        $profile = $this->_unitOfWork->profiles()->find($profileId);
+        $studyplan->setProfile($profile);
+
         $this->_unitOfWork->studyPlans()->create($studyplan);
         $this->_unitOfWork->commit();
     }
 
-    public function update(Studyplan $studyplan){
+    public function update(Studyplan $studyplan, $profileId){
+        $profile = $this->_unitOfWork->profiles()->find($profileId);
+        $studyplan->setProfile($profile);
+
         $this->_unitOfWork->studyPlans()->update($studyplan);
         $this->_unitOfWork->commit();
     }
@@ -42,15 +48,21 @@ class StudyPlanManager
     // Работа с планами дисциплин
     public function getPlanDisciplines($planId){
         return $this->_unitOfWork->disciplinePlans()
-            ->where('DisciplinePlan.studyPlan = '.$planId);
+            ->where('DisciplinePlan.studyplan = '.$planId);
     }
 
-    public function addDisciplinePlan(DisciplinePlan $disciplinePlan){
+    public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId){
+        $studyPlan = $this->_unitOfWork->studyPlans()->find($studyPlanId);
+        $disciplinePlan->setStudyplan($studyPlan);
+
         $this->_unitOfWork->disciplinePlans()->create($disciplinePlan);
         $this->_unitOfWork->commit();
     }
 
-    public function updateDisciplinePlan(DisciplinePlan $disciplinePlan){
+    public function updateDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId){
+        $studyPlan = $this->_unitOfWork->studyPlans()->find($studyPlanId);
+        $disciplinePlan->setStudyplan($studyPlan);
+
         $this->_unitOfWork->disciplinePlans()->update($disciplinePlan);
         $this->_unitOfWork->commit();
     }
@@ -66,23 +78,29 @@ class StudyPlanManager
     // Работа с типами оценок
     public function getDisciplinePlanMarkTypes($disciplinePlanId){
         return $this->_unitOfWork->markTypes()
-            ->where('MarkType.disciplinePlan = '.$disciplinePlanId);
+            ->where('MarkType.disciplineplan = '.$disciplinePlanId);
     }
 
-    public function addMarkType(MarkType $markType){
+    public function createMarkType(MarkType $markType, $disciplinePlanId){
+        $disciplinePlan = $this->_unitOfWork->disciplinePlans()->find($disciplinePlanId);
+        $markType->setDisciplinePlan($disciplinePlan);
+
         $this->_unitOfWork->markTypes()->create($markType);
         $this->_unitOfWork->commit();
     }
 
-    public function updateMarkType(DisciplinePlan $disciplinePlan){
-        $this->_unitOfWork->disciplinePlans()->update($disciplinePlan);
+    public function updateMarkType(MarkType $markType, $disciplinePlanId){
+        $disciplinePlan = $this->_unitOfWork->disciplinePlans()->find($disciplinePlanId);
+        $markType->setDisciplinePlan($disciplinePlan);
+
+        $this->_unitOfWork->markTypes()->update($markType);
         $this->_unitOfWork->commit();
     }
 
     public function deleteMarkType($id){
-        $disciplinePlan = $this->_unitOfWork->disciplinePlans()->find($id);
-        if ($disciplinePlan != null){
-            $this->_unitOfWork->disciplinePlans()->delete($disciplinePlan);
+        $markType = $this->_unitOfWork->markTypes()->find($id);
+        if ($markType != null){
+            $this->_unitOfWork->markTypes()->delete($markType);
             $this->_unitOfWork->commit();
         }
     }
