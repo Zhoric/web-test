@@ -21,6 +21,10 @@ class OrgStructureController extends Controller
         return json_encode($this->_orgStructureManager->getInstitutes());
     }
 
+    public function getAllProfiles(){
+        return json_encode($this->_orgStructureManager->getProfiles());
+    }
+
     public function getInstituteProfiles($id)
     {
         return json_encode($this->_orgStructureManager->getInstituteProfiles($id));

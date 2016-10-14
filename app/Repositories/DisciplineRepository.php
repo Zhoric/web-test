@@ -5,6 +5,7 @@ namespace Repositories;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Discipline;
+use PaginationResult;
 use ProfileDiscipline;
 
 class DisciplineRepository extends BaseRepository
@@ -14,12 +15,9 @@ class DisciplineRepository extends BaseRepository
         parent::__construct($em, Discipline::class);
     }
 
-    public function getByNameAndProfilePaginated($disciplineName, $pageSize,
-                                                 $pageNumber, $profileId = null)
-    {
+    public function getByNameAndProfilePaginated($pageSize, $pageNum, $profileId = null, $name = null){
         $qb = $this->repo->createQueryBuilder('d');
-        $query = $qb->where('Discipline.name LIKE :disciplineName')
-            ->setParameter('disciplineName', '%'.$disciplineName.'%');
+        $query = $qb;
 
         if ($profileId != null){
             $query = $query->join(ProfileDiscipline::class, 'pd', Join::WITH,
@@ -27,7 +25,22 @@ class DisciplineRepository extends BaseRepository
                 ->setParameter('profileId', $profileId);
         }
 
-        return $this->paginate($pageSize, $pageNumber, $query, 'name');
+        if ($name != null || $name != ''){
+            $query = $query->where('d.name LIKE :name')
+                ->orWhere('d.abbreviation LIKE :name')
+                ->setParameter('name', '%'.$name.'%');
+        }
+
+        $countQuery = clone $query;
+        $data =  $this->paginate($pageSize, $pageNum, $query, 'd.name');
+
+        $count = $countQuery->select(
+            $qb->expr()
+                ->count('d.id'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return new PaginationResult($data, $count);
     }
 
 }

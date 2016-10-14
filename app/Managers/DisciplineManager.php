@@ -18,10 +18,9 @@ class DisciplineManager
         return $this->_unitOfWork->groups()->all();
     }
 
-    public function getByNameAndProfilePaginated($disciplineName, $pageSize, $pageNumber, $profileId = null){
+    public function getByNameAndProfilePaginated($pageNum, $pageSize, $name, $profileId){
         return $this->_unitOfWork->disciplines()
-            ->getByNameAndProfilePaginated($disciplineName,
-                $pageSize, $pageNumber, $profileId = null);
+            ->getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name);
     }
 
     public function addDiscipline(Discipline $discipline, array $profileIds){
@@ -31,7 +30,7 @@ class DisciplineManager
         //TODO: добавление связей с профилями
     }
 
-    public function updateDiscipline(User $student){
+    public function updateDiscipline(Discipline $student){
         $this->_unitOfWork->disciplines()->update($student);
         $this->_unitOfWork->commit();
 

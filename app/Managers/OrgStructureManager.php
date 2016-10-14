@@ -21,6 +21,10 @@ class OrgStructureManager
         return $this->_unitOfWork->institutes()->all();
     }
 
+    public function getProfiles(){
+        return $this->_unitOfWork->profiles()->all();
+    }
+
     public function getInstituteProfiles($instituteId){
         return $this->_unitOfWork->profiles()->getByInstitute($instituteId);
     }

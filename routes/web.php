@@ -35,6 +35,8 @@ Route::group(['prefix' => 'api'], function() {
      */
     Route::get('institute/{id}/profiles', 'OrgStructureController@getInstituteProfiles');
     Route::get('institutes', 'OrgStructureController@getAllInstitutes');
+    Route::get('profiles', 'OrgStructureController@getAllProfiles');
+
 
     Route::group(['prefix' => 'profile'], function () {
         Route::get('{id}/groups', 'OrgStructureController@getProfileGroups');
@@ -47,7 +49,7 @@ Route::group(['prefix' => 'api'], function() {
 
 
     /*------------------------------------------------------------------------------
-     *              УЧЕБНЫЕ ПЛАНЫ
+     *                       УЧЕБНЫЕ ПЛАНЫ
      * -----------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'plan'], function () {
@@ -57,12 +59,18 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'StudyPlanController@update');
         Route::post('delete/{id}', 'StudyPlanController@delete');
 
+        /*------------------------------------------------------------------------
+        *                      Работа с дисциплинами планов                      */
+
         Route::group(['prefix' => 'discipline'], function () {
             Route::get('{id}/marks', 'StudyPlanController@getDisciplinePlanMarkTypes');
             Route::post('create', 'StudyPlanController@addDisciplinePlan');
             Route::post('update', 'StudyPlanController@updateDisciplinePlan');
             Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
         });
+
+        /*------------------------------------------------------------------------
+*                      Работа с оценками по дисциплинам планов                     */
 
         Route::group(['prefix' => 'mark'], function () {
             Route::post('create', 'StudyPlanController@addDisciplinePlan');
@@ -75,7 +83,7 @@ Route::group(['prefix' => 'api'], function() {
      *                           ГРУППЫ
      *-----------------------------------------------------------------------------
      */
-    Route::group(['prefix' => 'groups'], function(){
+    Route::group(['prefix' => 'groups'], function () {
         Route::get('show', 'GroupController@getProfileGroupsByNamePaginated');
         Route::get('{id}', 'GroupController@getGroup');
         Route::post('create', 'GroupController@create');
@@ -86,6 +94,7 @@ Route::group(['prefix' => 'api'], function() {
 
         /*------------------------------------------------------------------------
         *                      Работа со студентами группы                       */
+
         Route::group(['prefix' => 'student'], function () {
 
             Route::post('create', 'GroupController@createStudent');
@@ -93,6 +102,17 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('delete/{id}', 'GroupController@deleteStudent');
             Route::post('setGroup', 'GroupController@setStudentGroup');
         });
+    });
+
+    /*-----------------------------------------------------------------------------
+     *                           ДИСЦИПЛИНЫ
+     *-----------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'disciplines'], function () {
+        Route::post('create', 'DisciplineController@create');
+        Route::post('update', 'DisciplineController@update');
+        Route::post('delete/{id}', 'DisciplineController@delete');
+        Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
     });
 
 
