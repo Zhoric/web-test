@@ -28,10 +28,12 @@ abstract class BaseRepository implements IRepository
     public function paginate($pageSize, $pageNum, QueryBuilder $query = null, $orderBy = null){
         $query = ($query == null) ? $this->repo->createQueryBuilder($this->model) : $query;
         $orderBy = ($orderBy == null) ? $this->model.'.id' : $orderBy;
-        $query = $query->orderBy($this->model.'.'.$orderBy)
+        $query = $query->orderBy($orderBy)
             ->setMaxResults($pageSize)
-            ->setFirstResult($pageSize * ($pageNum - 1));
-        return $query->getQuery()->getArrayResult();
+            ->setFirstResult($pageSize * ($pageNum - 1))
+            ->getQuery();
+
+        return $query->getArrayResult();
     }
 
     public function create($entity)

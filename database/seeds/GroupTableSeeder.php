@@ -15,7 +15,7 @@ class GroupTableSeeder extends Seeder
             'course' => 4,
             'number' => 1,
             'is_fulltime' => true,
-            'name' => 'ИCб-41о'));
+            'name' => 'ИСб-41о'));
 
         DB::table('group')->insert(array(
             'studyplan_id' => 1,
@@ -23,7 +23,7 @@ class GroupTableSeeder extends Seeder
             'course' => 4,
             'number' => 2,
             'is_fulltime' => true,
-            'name' => 'ИCб-42о'));
+            'name' => 'ИСб-42о'));
 
         DB::table('group')->insert(array(
             'studyplan_id' => 2,
@@ -31,7 +31,7 @@ class GroupTableSeeder extends Seeder
             'course' => 4,
             'number' => 3,
             'is_fulltime' => true,
-            'name' => 'ИCб-43о'));
+            'name' => 'ИСб-43о'));
 
         for ($i=1; $i<=70; $i++)
         {

@@ -19,6 +19,11 @@ class GroupManager
         return $this->_unitOfWork->groups()->all();
     }
 
+    public function getProfileGroupsByNamePaginated($pageNum, $pageSize, $name, $profileId){
+        return $this->_unitOfWork->groups()
+            ->getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name);
+    }
+
     public function getGroup($id){
         return $this->_unitOfWork->groups()->find($id);
     }

@@ -22,7 +22,19 @@ class GroupController extends Controller
         return json_encode($this->_groupManager->getAll());
     }
 
-    public function getGroup($id){
+    public function getProfileGroupsByNamePaginated(Request $request){
+        $pageNum =  $request->query('page');
+        $pageSize = $request->query('pageSize');
+        $profileId = $request->query('profile');
+        $groupName = $request->query('name');
+
+        $paginationResult = $this->_groupManager
+            ->getProfileGroupsByNamePaginated($pageNum, $pageSize, $groupName, $profileId);
+
+        return json_encode($paginationResult);
+    }
+
+        public function getGroup($id){
         return json_encode($this->_groupManager->getGroup($id));
     }
 

@@ -33,19 +33,18 @@ Route::group(['prefix' => 'api'], function() {
      *      Организационная структура ВУЗа (Институты, профили)
      * -------------------------------------------------------------------------------
      */
-    Route::group(['prefix' => 'org'], function () {
-        Route::get('institute/{id}/profiles', 'OrgStructureController@getInstituteProfiles');
-        Route::get('institutes', 'OrgStructureController@getAllInstitutes');
+    Route::get('institute/{id}/profiles', 'OrgStructureController@getInstituteProfiles');
+    Route::get('institutes', 'OrgStructureController@getAllInstitutes');
 
-        Route::group(['prefix' => 'profile'], function () {
-            Route::get('{id}/groups', 'OrgStructureController@getProfileGroups');
-            Route::get('{id}/plans', 'OrgStructureController@getProfilePlans');
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('{id}/groups', 'OrgStructureController@getProfileGroups');
+        Route::get('{id}/plans', 'OrgStructureController@getProfilePlans');
 
-            Route::post('create', 'OrgStructureController@createProfile');
-            Route::post('update', 'OrgStructureController@updateProfile');
-            Route::post('delete/{id}', 'OrgStructureController@deleteProfile');
-        });
+        Route::post('create', 'OrgStructureController@createProfile');
+        Route::post('update', 'OrgStructureController@updateProfile');
+        Route::post('delete/{id}', 'OrgStructureController@deleteProfile');
     });
+
 
     /*------------------------------------------------------------------------------
      *              УЧЕБНЫЕ ПЛАНЫ
@@ -76,7 +75,8 @@ Route::group(['prefix' => 'api'], function() {
      *                           ГРУППЫ
      *-----------------------------------------------------------------------------
      */
-    Route::group(['prefix' => 'group'], function(){
+    Route::group(['prefix' => 'groups'], function(){
+        Route::get('show', 'GroupController@getProfileGroupsByNamePaginated');
         Route::get('{id}', 'GroupController@getGroup');
         Route::post('create', 'GroupController@create');
         Route::post('update', 'GroupController@update');
@@ -84,6 +84,8 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/', 'GroupController@getAll');
         Route::get('{id}/students', 'GroupController@getGroupStudents');
 
+        /*------------------------------------------------------------------------
+        *                      Работа со студентами группы                       */
         Route::group(['prefix' => 'student'], function () {
 
             Route::post('create', 'GroupController@createStudent');
