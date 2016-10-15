@@ -8,15 +8,15 @@ $(document).ready(function(){
 
             self.groups = ko.observableArray([]);
             self.currentGroupStudents = ko.observable([]);
-            self.currentProfileId = ko.observable(0);
+            self.currentProfileId = ko.observable('');
             self.currentGroup = ko.observable({
                 id: ko.observable(0),
                 name: ko.observable(''),
                 prefix: ko.observable(''),
-                number: ko.observable(0),
-                isFullTime: ko.observable(false),
-                course: ko.observable(0),
-                studyplan: ko.observable(''),
+                number: ko.observable(1),
+                isFullTime: ko.observable(true),
+                course: ko.observable(1),
+                studyplan: ko.observable('Указать'),
                 studyplanId: ko.observable(0)
             });
             self.groupStudyForm = ko.observable('Очная');
@@ -69,26 +69,14 @@ $(document).ready(function(){
                 self.toggleModal('#select-plan-modal', 'close');
             };
 
-            self.getGroups = function(){
-                var url = window.location.href;
-                var profileId = +url.substr(url.lastIndexOf('/')+1);
-                url = url.substr(0, url.indexOf('/a'));
-                if ($.isNumeric(profileId)){
-                    url += '/api/profile/' + profileId + '/groups';
-                    self.currentProfileId(profileId);
-                }
-                else{
-                    url += '/api/groups';
-                }
-
-                $.get(url, function(data){
-                    var res = ko.mapping.fromJSON(data);
-                    self.groups(res());
-                });
-
-
+            self.generateGroupName = function(){
+                var group = self.currentGroup();
+                var name = group.prefix() + '-' +
+                    group.course() +
+                    group.number();
+                name += group.isFullTime() ? 'о' : 'з';
+                group.name(name);
             };
-            self.getGroups();
 
             self.fillCurrentGroup = function(data, mode){
                 self.currentGroup()
@@ -108,13 +96,37 @@ $(document).ready(function(){
                     .id(0)
                     .name('')
                     .prefix('')
-                    .number(0)
-                    .isFullTime(false)
-                    .course(0)
-                    .studyplan('')
+                    .number(1)
+                    .isFullTime(true)
+                    .course(1)
+                    .studyplan('Указать')
                     .studyplanId(0);
                 self.mode('none');
             };
+
+            self.getGroups = function(){
+                var url = window.location.href;
+                var profileId = +url.substr(url.lastIndexOf('/')+1);
+                url = url.substr(0, url.indexOf('/a'));
+                if ($.isNumeric(profileId)){
+                    url += '/api/profile/' + profileId + '/groups';
+                    self.currentProfileId(profileId);
+                }
+                else{
+                    url += '/api/groups';
+                }
+
+                $.get(url, function(data){
+                    var res = ko.mapping.fromJSON(data);
+                    self.groups(res());
+                    console.log('loading groups');
+                });
+
+
+            };
+            self.getGroups();
+
+
 
             self.getStudents = function(){
                 var url = '/api/groups/' + self.currentGroup().id() + '/students';
@@ -148,16 +160,60 @@ $(document).ready(function(){
             self.editStudent = function(){};
             self.deleteStudent = function(){};
 
-
-            self.changeForm = function(data, e){
-                var form = $(e.target).text();
-                self.groupStudyForm(form);
-            };
-
             self.approve = function(){
-                if (self.mode() === 'edit'){
-
+                var edit = self.currentGroup();
+                if (self.mode() === 'delete'){
+                    $.post(
+                        '/api/groups/delete/' + edit.id(),
+                        {},
+                        function(result){});
+                    self.groups.remove(function(item){
+                        if (item.id() === edit.id())
+                            return item;
+                    });
+                    self.toggleModal('#delete-group-modal', 'close');
+                    self.emptyCurrentGroup();
+                    return;
                 }
+                var group = {
+                    prefix: edit.prefix(),
+                    course: edit.course(),
+                    name: edit.name(),
+                    number: edit.number(),
+                    isFulltime: edit.isFullTime()
+                };
+                var planId = edit.studyplanId();
+
+                if (self.mode() === 'edit'){
+                    group.id = edit.id();
+                    $.post(
+                        '/api/groups/update',
+                        JSON.stringify({group: group, studyPlanId: planId}),
+                        function(result){});
+                    self.groups().find(function(item){
+                        if (item.id() === edit.id()){
+                            item.prefix(edit.prefix())
+                                .course(edit.course())
+                                .name(edit.name())
+                                .number(edit.number())
+                                .isFullTime(edit.isFullTime());
+                            return item;
+                        }
+                    });
+                    self.mode('info');
+                    return;
+                }
+                if (self.mode() === 'add'){
+                    $.post(
+                        '/api/groups/create',
+                        JSON.stringify({group: group, studyPlanId: planId}),
+                        function(result){});
+                    self.groups([]);
+                    self.emptyCurrentGroup();
+                    self.getGroups();
+                }
+
+
             };
             self.cancel = function(){
                 var m = self.mode();
@@ -184,13 +240,14 @@ $(document).ready(function(){
                 studyplanSelect: self.studyplanSelect,
 
                 showGroup: self.showGroup,
-                changeForm: self.changeForm,
+                addGroup: self.addGroup,
                 editGroup: self.editGroup,
                 deleteGroup: self.deleteGroup,
                 approve: self.approve,
                 cancel: self.cancel,
                 selectStudyPlan: self.selectStudyPlan,
-                approveStudyPlan: self.approveStudyPlan
+                approveStudyPlan: self.approveStudyPlan,
+                generateGroupName: self.generateGroupName
             };
         };
     };

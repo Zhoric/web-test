@@ -121,6 +121,11 @@ select {
   cursor: pointer;
   border-bottom: 1px solid #ecf0f1;
 }
+.institutes .institute.font-settings {
+  text-transform: none;
+  font-size: 17px;
+  font-weight: bold;
+}
 .institutes .institute:hover {
   background: #1abc9c;
 }
