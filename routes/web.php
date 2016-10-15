@@ -14,6 +14,7 @@
 
 Route::get('/','HomeController@index');
 Route::get('editor','DemoController@editor');
+Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
 
@@ -118,6 +119,17 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'DisciplineController@update');
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
+    });
+
+    /*-----------------------------------------------------------------------------
+     *                           ПРЕПОДАВАТЕЛИ
+     *-----------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'lecturers'], function () {
+        Route::post('create', 'LecturerController@create');
+        Route::post('update', 'LecturerController@update');
+        Route::post('delete/{id}', 'LecturerController@delete');
+        Route::get('show', 'LecturerController@getByNamePaginated');
     });
 
 

@@ -2,6 +2,7 @@
 
 namespace Repositories;
 
+use DisciplineLecturer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Discipline;
@@ -45,7 +46,6 @@ class DisciplineRepository extends BaseRepository
     }
 
     function setDisciplineProfiles($disciplineId, array $profileIds){
-
         $qb = $this->em->getRepository(ProfileDiscipline::class)->createQueryBuilder('pd');
         $deleteQuery = $qb->delete()
             ->where('pd.discipline = :discipline')
@@ -59,6 +59,24 @@ class DisciplineRepository extends BaseRepository
                 ->insert(  array(
                     'profile_id' => $profileId,
                     'discipline_id' => $disciplineId
+                ));
+        }
+    }
+
+    function setLecturerDisciplines($lecturerId, array $disciplineIds){
+        $qb = $this->em->getRepository(DisciplineLecturer::class)->createQueryBuilder('dl');
+        $deleteQuery = $qb->delete()
+            ->where('dl.lecturer = :lecturer')
+            ->setParameter('lecturer', $lecturerId)
+            ->getQuery();
+
+        $deleteQuery->execute();
+
+        foreach ($disciplineIds as $disciplineId){
+            DB::table('discipline_lecturer')
+                ->insert(  array(
+                    'discipline_id' => $disciplineId,
+                    'lecturer_id' => $lecturerId
                 ));
         }
     }

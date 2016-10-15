@@ -5,6 +5,7 @@ namespace Managers;
 use Group;
 use Repositories\UnitOfWork;
 use User;
+use UserRole;
 
 class GroupManager
 {
@@ -67,8 +68,11 @@ class GroupManager
         $this->_unitOfWork->users()->create($student);
         $this->_unitOfWork->commit();
 
+        $studentId = $student->getId();
+        $this->_unitOfWork->users()->setUserRole($studentId, UserRole::Student);
+
         $this->_unitOfWork->groups()
-            ->setStudentsGroup($student->getId(), $groupId);
+            ->setStudentsGroup($studentId, $groupId);
         $this->_unitOfWork->commit();
     }
 
