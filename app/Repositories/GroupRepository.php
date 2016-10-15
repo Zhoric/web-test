@@ -44,7 +44,7 @@ class GroupRepository extends BaseRepository
                 ->setParameter('profileId', $profileId);
         }
 
-        if ($name != null || $name != ''){
+        if ($name != null && $name != ''){
             $query = $query->where('g.name LIKE :name')
                 ->setParameter('name', '%'.$name.'%');
         }

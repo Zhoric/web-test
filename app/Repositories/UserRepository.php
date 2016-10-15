@@ -73,7 +73,7 @@ class UserRepository extends BaseRepository implements IUserRepository
             ->setParameter('roleId', $roleId);
 
 
-        if ($name != null || $name != ''){
+        if ($name != null && $name != ''){
             $query = $query->where('u.firstname LIKE :name')
                 ->orWhere('u.lastname LIKE :name')
                 ->orWhere('u.patronymic LIKE :name')

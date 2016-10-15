@@ -121,7 +121,15 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'DisciplineController@update');
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
+        Route::get('{id}/profiles','DisciplineController@getDisciplineProfilesIds');
+
+        /*------------------------------------------------------------------------
+        *                   Работа со темами дисциплин                          */
+
         Route::get('{id}/themes','DisciplineController@getThemes');
+        Route::post('create', 'DisciplineController@createTheme');
+        Route::post('update', 'DisciplineController@updateTheme');
+        Route::post('delete/{id}', 'DisciplineController@deleteTheme');
     });
 
     /*-----------------------------------------------------------------------------
@@ -135,6 +143,16 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'LecturerController@getByNamePaginated');
     });
 
+    /*-----------------------------------------------------------------------------
+     *                              ВОПРОСЫ
+     *-----------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'questions'], function () {
+        Route::post('create', 'QuestionController@create');
+        Route::post('update', 'QuestionController@update');
+        Route::post('delete/{id}', 'QuestionController@delete');
+        Route::get('show', 'QuestionController@getByThemeAndTextPaginated');
+    });
 
 });
 

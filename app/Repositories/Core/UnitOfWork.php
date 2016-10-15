@@ -31,6 +31,8 @@ class UnitOfWork
     private $_roleUserRepo;
     private $_groupRepo;
     private $_markTypeRepo;
+    private $_questionRepo;
+    private $_answerRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -100,6 +102,20 @@ class UnitOfWork
             $this->_markTypeRepo = new MarkTypeRepository($this->_em);
         }
         return $this->_markTypeRepo;
+    }
+
+    public function questions(){
+        if ($this->_questionRepo == null){
+            $this->_questionRepo = new QuestionRepository($this->_em);
+        }
+        return $this->_questionRepo;
+    }
+
+    public function answers(){
+        if ($this->_answerRepo == null){
+            $this->_answerRepo = new AnswerRepository($this->_em);
+        }
+        return $this->_answerRepo;
     }
 
     public function commit(){
