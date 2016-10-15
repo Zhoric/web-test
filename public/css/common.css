@@ -2,6 +2,10 @@
   font-family: 'Roboto Regular';
   src: url('/fonts/Roboto-Regular.ttf');
 }
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/fonts/fontawesome-webfont.ttf');
+}
 body {
   font-family: 'Roboto Regular';
   margin: 0;
@@ -26,6 +30,7 @@ button:hover {
 a {
   color: #000;
   text-decoration: none;
+  cursor: pointer;
   border-bottom: 1px dotted #16a085;
 }
 a:hover {
@@ -37,6 +42,12 @@ input {
   padding: 20px;
   font-size: 15px;
   font-family: 'Roboto Regular';
+}
+select {
+  width: 500px;
+  height: 30px;
+  background: #fff;
+  margin: 5px 0;
 }
 .pager-wrap {
   width: 100%;
@@ -54,6 +65,15 @@ input {
 .pager-wrap .pager span {
   padding: 10px;
   font-weight: bold;
+}
+.fa {
+  display: inline-block;
+  font: normal normal normal 20px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
 }
 
 /*# sourceMappingURL=common.css.map */

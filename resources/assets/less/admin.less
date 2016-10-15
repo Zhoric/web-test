@@ -3,27 +3,20 @@
 .menu{
   top: 0;
   background: #fff;
-  height: 67px;
+  height: 50px;
   width: 100%;
   margin: 0 auto;
   position: fixed;
-  &-shortened{
-    //width: 90%;
-    border-bottom: 1px solid @light-grey;
-  }
-  img{
-    float: left;
-    padding: 10px 20px;
-  }
+  border-bottom: 1px solid @wetasphalt;
   ul{
-    float: right;
+    text-align: center;
   }
   li {
     color: @midnightblue;
     list-style: none;
     display: inline;
-    padding: 25px 20px;
-    font-size: 17px;
+    padding: 20px 20px;
+    font-size: 15px;
     text-transform: uppercase;
     vertical-align: sub;
     &:hover{
@@ -31,9 +24,6 @@
       background: @midnightblue;
       cursor: pointer;
     }
-  }
-  div{
-    .clear();
   }
 }
 
@@ -95,7 +85,7 @@
   height: 100%;
   .institute{
     width: 100%;
-    line-height: 45px;
+    line-height: 50px;
     height: 50px;
     background: @greensea;
     color: @clouds;
@@ -123,13 +113,14 @@
     .profile{
       background: @greensea;
       color: @clouds;
-      width: 200px;
-      height: 100px;
+      width: 250px;
+      height: 150px;
       margin: 5px 10px 5px 0px;
-      line-height: 90px;
+      line-height: 45px;
       float: left;
       text-align: center;
       cursor: pointer;
+      font-weight: bold;
       &:hover{
         background: @turquoise;
       }
@@ -137,5 +128,85 @@
         background: @wetasphalt;
       }
     }
+  }
+}
+button{
+  background: @greensea;
+  width: 50px;
+}
+.info-group{
+  .details-group{
+    div{
+      display: inline-block;
+      margin: 10px 15px;
+    }
+  }
+  div{
+    display: inline-block;
+    margin: 10px 15px;
+  }
+  label{
+    font-size: 12px;
+    color: @asbestos;
+  }
+  .study-form{
+    &-selected{
+      font-size: 18px;
+      color: @greensea;
+    }
+    font-size: 13px;
+    color: @asbestos;
+    line-height: 1.8;
+    cursor: pointer;
+  }
+  .group-name{
+    input{
+      width: 200px;
+    }
+
+  }
+  input{
+    padding: 6px;
+    width: 70px;
+  }
+}
+
+.tyle-btn{
+  color: @clouds;
+  width: 170px;
+  background: @wetasphalt;
+  &-negative{
+    border: 2px solid @wetasphalt;
+    background: @greensea;
+  }
+}
+
+table{
+
+  border-top: 1px solid @light-grey;
+  padding: 15px 0;
+  &.students-table{
+    width: 100%;
+    tr > td{
+      &:first-child, &:last-child{
+        text-align: center;
+      }
+      &:first-child{
+        width: 100px;
+      }
+      &:last-child{
+        width: 250px;
+      }
+    }
+  }
+}
+
+a.active-link{
+  font-size: 13px;
+  color: @greensea;
+  float: right;
+  border-bottom: 0;
+  &:hover{
+    color: @black;
   }
 }

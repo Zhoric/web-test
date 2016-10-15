@@ -29,6 +29,10 @@
   font-family: 'Roboto Regular';
   src: url('/fonts/Roboto-Regular.ttf');
 }
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/fonts/fontawesome-webfont.ttf');
+}
 
 body{
   font-family: 'Roboto Regular';
@@ -65,6 +69,7 @@ button{
 a{
   color: @black;
   text-decoration: none;
+  cursor: pointer;
   border-bottom: 1px dotted @greensea;
   &:hover{
     color: @greensea;
@@ -78,9 +83,17 @@ input{
   font-family: 'Roboto Regular';
 }
 
-.centered{
-
+select{
+  width: 500px;
+  height: 30px;
+  background: @white;
+  margin: 5px 0;
 }
+
+//table{
+//  width: 100%;
+//}
+
 .pager-wrap{
   width: 100%;
   .pager{
@@ -99,4 +112,15 @@ input{
       font-weight: bold;
     }
   }
+}
+
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 20px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
 }

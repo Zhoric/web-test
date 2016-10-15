@@ -16,9 +16,7 @@
             <div class="profiles">
                 <!-- ko foreach: $root.currentProfiles-->
                 <div class="profile">
-                    <span data-bind="text: name"></span></br>
-                    <button data-bind="click: $root.showPlans" class="tyle-btn">Учебные планы</button>
-                    <button data-bind="click: $root.moveToGroup" class="tyle-btn tyle-btn-negative">Перейти к группам</button>
+                    <span data-bind="text: name"></span>
                 </div>
                 <!-- /ko -->
                 <div class="profile" data-bind="">
@@ -30,21 +28,6 @@
             <!-- /ko -->
             <div class="institute" data-bind="">
                 <span>+</span>
-            </div>
-        </div>
-
-        <div class="g-hidden">
-            <div class="box-modal" id="plans-modal">
-                <div class="box-modal_close arcticmodal-close">закрыть</div>
-                <div class="institutes">
-                    <h3>Учебные планы</h3> <h3 data-bind=""></h3>
-                    <div class="institute">+</div>
-                    <!-- ko foreach: $root.currentPlans -->
-                    <div class="institute" data-bind="click: $root.moveToPlan">
-                        <span data-bind="text: name"></span>
-                    </div>
-                    <!-- /ko -->
-                </div>
             </div>
         </div>
 

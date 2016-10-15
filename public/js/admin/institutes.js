@@ -8,12 +8,15 @@ $(document).ready(function(){
 
             self.institutes = ko.observableArray([]);
             self.currentProfiles = ko.observableArray([]);
+            self.currentProfile = ko.observable();
+            self.currentPlans = ko.observableArray([]);
             self.currentInstitute = ko.observable(0);
+
+
 
             self.getInstitutes = function(){
                 $.get('/api/org/institutes', function(data){
                     var res = ko.mapping.fromJSON(data);
-                    console.log(data);
                     self.institutes(res());
                 });
             };
@@ -25,19 +28,40 @@ $(document).ready(function(){
                     return;
                 }
                 self.currentInstitute(data.id());
-                $.get('/api/org/profilesOf/'+ data.id(), function(response){
+                $.get('/api/org/institute/'+ data.id() + '/profiles', function(response){
                     var res = ko.mapping.fromJSON(response);
                     self.currentProfiles(res());
-                    console.log(response);
                 });
+            };
+            self.getPlans = function(data){
+                $.get('/api/org/profile/'+ data.id() + '/plans', function(response){
+                    var res = ko.mapping.fromJSON(response);
+                    self.currentPlans(res());
+                });
+            };
+
+            self.moveToGroup = function(data){
+                var url = 'groups/' + data.id();
+                window.location.href = url;
+            };
+            self.moveToPlan = function(data){
+
+            };
+            self.showPlans = function(data){
+                self.getPlans(data);
+                $('#plans-modal').arcticmodal();
             };
 
             return {
                 institutes: self.institutes,
                 currentProfiles: self.currentProfiles,
                 currentInstitute: self.currentInstitute,
+                currentPlans: self.currentPlans,
 
-                getProfiles: self.getProfiles
+                getProfiles: self.getProfiles,
+                moveToGroup: self.moveToGroup,
+                showPlans: self.showPlans,
+                moveToPlan: self.moveToPlan
             };
         };
     };

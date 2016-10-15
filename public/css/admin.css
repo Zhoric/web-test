@@ -2,6 +2,10 @@
   font-family: 'Roboto Regular';
   src: url('/fonts/Roboto-Regular.ttf');
 }
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/fonts/fontawesome-webfont.ttf');
+}
 body {
   font-family: 'Roboto Regular';
   margin: 0;
@@ -26,6 +30,7 @@ button:hover {
 a {
   color: #000;
   text-decoration: none;
+  cursor: pointer;
   border-bottom: 1px dotted #16a085;
 }
 a:hover {
@@ -37,6 +42,12 @@ input {
   padding: 20px;
   font-size: 15px;
   font-family: 'Roboto Regular';
+}
+select {
+  width: 500px;
+  height: 30px;
+  background: #fff;
+  margin: 5px 0;
 }
 .pager-wrap {
   width: 100%;
@@ -55,30 +66,33 @@ input {
   padding: 10px;
   font-weight: bold;
 }
+.fa {
+  display: inline-block;
+  font: normal normal normal 20px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+}
 .menu {
   top: 0;
   background: #fff;
-  height: 67px;
+  height: 50px;
   width: 100%;
   margin: 0 auto;
   position: fixed;
-}
-.menu-shortened {
-  border-bottom: 1px solid #e4e4e4;
-}
-.menu img {
-  float: left;
-  padding: 10px 20px;
+  border-bottom: 1px solid #34495e;
 }
 .menu ul {
-  float: right;
+  text-align: center;
 }
 .menu li {
   color: #2c3e50;
   list-style: none;
   display: inline;
-  padding: 25px 20px;
-  font-size: 17px;
+  padding: 20px 20px;
+  font-size: 15px;
   text-transform: uppercase;
   vertical-align: sub;
 }
@@ -86,9 +100,6 @@ input {
   color: #fff;
   background: #2c3e50;
   cursor: pointer;
-}
-.menu div {
-  clear: both;
 }
 .content {
   width: 85%;
@@ -101,7 +112,7 @@ input {
 }
 .institutes .institute {
   width: 100%;
-  line-height: 45px;
+  line-height: 50px;
   height: 50px;
   background: #16a085;
   color: #ecf0f1;
@@ -129,19 +140,88 @@ input {
 .institutes .profiles .profile {
   background: #16a085;
   color: #ecf0f1;
-  width: 200px;
-  height: 100px;
+  width: 250px;
+  height: 150px;
   margin: 5px 10px 5px 0px;
-  line-height: 90px;
+  line-height: 45px;
   float: left;
   text-align: center;
   cursor: pointer;
+  font-weight: bold;
 }
 .institutes .profiles .profile:hover {
   background: #1abc9c;
 }
 .institutes .profiles .profile:active {
   background: #34495e;
+}
+button {
+  background: #16a085;
+  width: 50px;
+}
+.info-group .details-group div {
+  display: inline-block;
+  margin: 10px 15px;
+}
+.info-group div {
+  display: inline-block;
+  margin: 10px 15px;
+}
+.info-group label {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+.info-group .study-form {
+  font-size: 13px;
+  color: #7f8c8d;
+  line-height: 1.8;
+  cursor: pointer;
+}
+.info-group .study-form-selected {
+  font-size: 18px;
+  color: #16a085;
+}
+.info-group .group-name input {
+  width: 200px;
+}
+.info-group input {
+  padding: 6px;
+  width: 70px;
+}
+.tyle-btn {
+  color: #ecf0f1;
+  width: 170px;
+  background: #34495e;
+}
+.tyle-btn-negative {
+  border: 2px solid #34495e;
+  background: #16a085;
+}
+table {
+  border-top: 1px solid #e4e4e4;
+  padding: 15px 0;
+}
+table.students-table {
+  width: 100%;
+}
+table.students-table tr > td:first-child,
+table.students-table tr > td:last-child {
+  text-align: center;
+}
+table.students-table tr > td:first-child {
+  width: 100px;
+}
+table.students-table tr > td:last-child {
+  width: 250px;
+}
+a.active-link {
+  font-size: 13px;
+  color: #16a085;
+  float: right;
+  border-bottom: 0;
+}
+a.active-link:hover {
+  color: #000;
 }
 
 /*# sourceMappingURL=admin.css.map */

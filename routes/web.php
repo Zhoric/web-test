@@ -24,7 +24,12 @@ Route::get('/', 'HomeController@index');
 Route::get('welcome',function (){
    return View('welcome');
 });
-Route::get('admin/main', function(){return View('admin.main');});
+Route::group(['prefix' => 'admin'], function(){
+    Route::get('main', function(){return View('admin.main');});
+    Route::get('groups', function(){return View('admin.groups');});
+    Route::get('groups/{id}', function(){return View('admin.groups');});
+});
+
 
 
 Route::group(['prefix' => 'api'], function() {
