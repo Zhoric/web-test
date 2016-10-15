@@ -49,8 +49,23 @@ select {
   background: #fff;
   margin: 5px 0;
 }
+select[multiple='true'] {
+  height: auto;
+}
+select[multiple='true'] option {
+  font-size: 20px;
+  margin: 0 0 2px;
+}
+select[multiple='true'] option:checked {
+  background: #16a085 -webkit-linear-gradient(bottom, #16a085 0%, #16a085 100%);
+  background: #16a085 linear-gradient(0deg, #16a085 0%, #16a085 100%);
+}
 .pager-wrap {
   width: 100%;
+}
+.pager-wrap .pager {
+  text-align: center;
+  margin: 20px 0;
 }
 .pager-wrap .pager button {
   background: #3498db;
@@ -65,6 +80,9 @@ select {
 .pager-wrap .pager span {
   padding: 10px;
   font-weight: bold;
+}
+button.danger {
+  background: #e74c3c;
 }
 .fa {
   display: inline-block;

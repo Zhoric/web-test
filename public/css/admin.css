@@ -49,8 +49,23 @@ select {
   background: #fff;
   margin: 5px 0;
 }
+select[multiple='true'] {
+  height: auto;
+}
+select[multiple='true'] option {
+  font-size: 20px;
+  margin: 0 0 2px;
+}
+select[multiple='true'] option:checked {
+  background: #16a085 -webkit-linear-gradient(bottom, #16a085 0%, #16a085 100%);
+  background: #16a085 linear-gradient(0deg, #16a085 0%, #16a085 100%);
+}
 .pager-wrap {
   width: 100%;
+}
+.pager-wrap .pager {
+  text-align: center;
+  margin: 20px 0;
 }
 .pager-wrap .pager button {
   background: #3498db;
@@ -65,6 +80,9 @@ select {
 .pager-wrap .pager span {
   padding: 10px;
   font-weight: bold;
+}
+button.danger {
+  background: #e74c3c;
 }
 .fa {
   display: inline-block;
@@ -105,6 +123,51 @@ select {
   width: 85%;
   margin: 100px auto;
   background: #ecf0f1;
+}
+.org-accordion {
+  width: 100%;
+  height: 100%;
+}
+.org-accordion .org-item {
+  width: 100%;
+  line-height: 50px;
+  height: 50px;
+  background: #16a085;
+  color: #ecf0f1;
+  text-align: center;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ecf0f1;
+  cursor: pointer;
+}
+.org-accordion .org-item:active {
+  background: #34495e;
+}
+.org-accordion .org-item-current {
+  background: #34495e;
+}
+.org-accordion .org-item-current:hover {
+  background: #34495e;
+}
+.org-accordion .org-item.text-alternative {
+  text-transform: none;
+  font-size: 17px;
+  font-weight: bold;
+}
+.org-info-details div {
+  display: inline-block;
+  margin: 10px 15px;
+}
+.org-info div {
+  display: inline-block;
+  margin: 10px 15px;
+}
+.org-info label {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+.org-info input {
+  padding: 6px;
+  width: 70px;
 }
 .institutes {
   width: 100%;

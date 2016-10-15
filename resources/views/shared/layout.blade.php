@@ -19,7 +19,7 @@
             <li>Преподаватели</li>
             <li><a href="/admin/groups">Группы</a></li>
             <li>Студенты</li>
-            <li>Дисциплины</li>
+            <li><a href="/admin/disciplines">Дисциплины</a></li>
             <li>Тесты</li>
             <li>Результаты</li>
             <li>Выход</li>

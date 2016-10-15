@@ -89,10 +89,22 @@ select{
   background: @white;
   margin: 5px 0;
 }
+select[multiple='true']{
+  height: auto;
+  option{
+    font-size: 20px;
+    margin: 0 0 2px;
+    &:checked{
+      background: @greensea linear-gradient(0deg, @greensea 0%, @greensea 100%);
+    }
+  }
+}
 
 .pager-wrap{
   width: 100%;
   .pager{
+    text-align: center;
+    margin: 20px 0;
     button{
       background: @peterriver;
       width:40px;
@@ -110,6 +122,9 @@ select{
   }
 }
 
+button.danger{
+  background: @alizarin;
+}
 
 .fa {
   display: inline-block;

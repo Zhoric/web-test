@@ -1,5 +1,5 @@
 @extends('shared.layout')
-@section('title', 'Index')
+@section('title', 'Группы')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/groups.js')}}"></script>
 @endsection
@@ -40,7 +40,7 @@
                     <td>
                         <button class="fa">&#xf0ec;</button>
                         <button class="fa">&#xf040;</button>
-                        <button class="fa">&#xf014;</button>
+                        <button class="fa danger">&#xf014;</button>
                     </td>
                 </tr>
                 <!-- /ko -->
@@ -59,7 +59,7 @@
             <div><span>Удалить выбранную группу?</span></div>
             <div>
                 <button data-bind="click: $root.approve" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.cancel" class="fa">&#xf00d;</button>
+                <button data-bind="click: $root.cancel" class="fa danger">&#xf00d;</button>
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@
             </div>
             <div>
                 <button data-bind="click: $root.approveStudyPlan, enable: $root.studyplanSelect().studyplan()" class="fa">&#xf00c;</button>
-                <button class="fa arcticmodal-close">&#xf00d;</button>
+                <button class="fa arcticmodal-close danger">&#xf00d;</button>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@
                 <span data-bind="text: studyplan"></span>
             </div>
             <button data-bind="click: $root.editGroup" class="fa">&#xf040;</button>
-            <button data-bind="click: $root.deleteGroup" class="fa">&#xf014;</button>
+            <button data-bind="click: $root.deleteGroup" class="fa danger">&#xf014;</button>
         </div>
         <!-- /ko -->
     </div>
@@ -146,7 +146,7 @@
         </div>
         <div>
             <button data-bind="click: $root.approve" class="fa">&#xf00c;</button>
-            <button data-bind="click: $root.cancel" class="fa">&#xf00d;</button>
+            <button data-bind="click: $root.cancel" class="fa danger">&#xf00d;</button>
         </div>
     </div>
 </script>

@@ -126,8 +126,6 @@ $(document).ready(function(){
             };
             self.getGroups();
 
-
-
             self.getStudents = function(){
                 var url = '/api/groups/' + self.currentGroup().id() + '/students';
                 $.get(url, function(data){

@@ -1,5 +1,5 @@
 @extends('shared.layout')
-@section('title', 'Index')
+@section('title', 'Институты')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/institutes.js')}}"></script>
 @endsection
