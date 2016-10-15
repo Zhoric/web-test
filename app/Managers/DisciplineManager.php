@@ -27,14 +27,18 @@ class DisciplineManager
         $this->_unitOfWork->disciplines()->create($discipline);
         $this->_unitOfWork->commit();
 
-        //TODO: добавление связей с профилями
+        $this->_unitOfWork->disciplines()
+            ->setDisciplineProfiles($discipline->getId(), $profileIds);
+        $this->_unitOfWork->commit();
     }
 
-    public function updateDiscipline(Discipline $student){
-        $this->_unitOfWork->disciplines()->update($student);
+    public function updateDiscipline(Discipline $discipline, array $profileIds){
+        $this->_unitOfWork->disciplines()->update($discipline);
         $this->_unitOfWork->commit();
 
-        //TODO: добавление связей с профилями
+        $this->_unitOfWork->disciplines()
+            ->setDisciplineProfiles($discipline->getId(), $profileIds);
+        $this->_unitOfWork->commit();
     }
 
     public function deleteDiscipline($disciplineId){

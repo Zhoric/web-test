@@ -5,6 +5,7 @@ namespace Repositories;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Discipline;
+use Illuminate\Support\Facades\DB;
 use PaginationResult;
 use ProfileDiscipline;
 
@@ -41,6 +42,25 @@ class DisciplineRepository extends BaseRepository
             ->getSingleScalarResult();
 
         return new PaginationResult($data, $count);
+    }
+
+    function setDisciplineProfiles($disciplineId, array $profileIds){
+
+        $qb = $this->em->getRepository(ProfileDiscipline::class)->createQueryBuilder('pd');
+        $deleteQuery = $qb->delete()
+            ->where('pd.discipline = :discipline')
+            ->setParameter('discipline', $disciplineId)
+            ->getQuery();
+
+        $deleteQuery->execute();
+
+        foreach ($profileIds as $profileId){
+            DB::table('profile_discipline')
+                ->insert(  array(
+                    'profile_id' => $profileId,
+                    'discipline_id' => $disciplineId
+                ));
+        }
     }
 
 }

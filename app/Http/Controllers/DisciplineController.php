@@ -34,6 +34,11 @@ class DisciplineController extends Controller
 
     public function create(Request $request){
         $disciplineData = $request->json('discipline');
+        $profileIds = $request->json('profileIds');
+
+        $discipline = new Discipline();
+        $discipline->fillFromJson($disciplineData);
+        $this->_disciplineManager->addDiscipline($discipline, $profileIds);
 
         $group = new Discipline();
         $group->fillFromJson($disciplineData);
@@ -41,6 +46,11 @@ class DisciplineController extends Controller
 
     public function update(Request $request){
         $disciplineData = $request->json('discipline');
+        $profileIds = $request->json('profileIds');
+
+        $discipline = new Discipline();
+        $discipline->fillFromJson($disciplineData);
+        $this->_disciplineManager->updateDiscipline($discipline, $profileIds);
 
         $group = new Discipline();
         $group->fillFromJson($disciplineData);
