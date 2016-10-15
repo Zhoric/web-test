@@ -59,4 +59,8 @@ class DisciplineController extends Controller
     public function delete($id){
         $this->_disciplineManager->deleteDiscipline($id);
     }
+
+    public function getThemes($id){
+        return json_encode($this->_disciplineManager->getDisciplineThemes($id));
+    }
 }

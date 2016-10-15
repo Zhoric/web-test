@@ -11,4 +11,8 @@ class ThemeRepository extends BaseRepository
     {
         parent::__construct($em, Theme::class);
     }
+
+    public function getByDiscipline($disciplineId){
+        return $this->repo->findBy(['discipline' => $disciplineId]);
+    }
 }

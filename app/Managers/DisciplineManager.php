@@ -4,6 +4,7 @@ namespace Managers;
 
 use Discipline;
 use Repositories\UnitOfWork;
+use Theme;
 
 class DisciplineManager
 {
@@ -22,6 +23,7 @@ class DisciplineManager
         return $this->_unitOfWork->disciplines()
             ->getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name);
     }
+
 
     public function addDiscipline(Discipline $discipline, array $profileIds){
         $this->_unitOfWork->disciplines()->create($discipline);
@@ -50,4 +52,15 @@ class DisciplineManager
         }
     }
 
+    public function getDisciplineThemes($disciplineId){
+        return $this->_unitOfWork->themes()->getByDiscipline($disciplineId);
+    }
+
+    public function addTheme(Theme $theme, $disciplineId){
+        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+        $theme->setDiscipline($disciplineId);
+
+        $this->_unitOfWork->disciplines()->create($disciplineId);
+        $this->_unitOfWork->commit();
+    }
 }

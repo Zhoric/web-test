@@ -119,6 +119,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'DisciplineController@update');
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
+        Route::get('{id}/themes','DisciplineController@getThemes');
     });
 
     /*-----------------------------------------------------------------------------

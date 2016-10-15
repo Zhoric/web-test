@@ -106,7 +106,11 @@ class Theme extends BaseEntity implements JsonSerializable
      */
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return array(
+            'id' => $this->id,
+            'name' => $this->name,
+            'discipline' => $this->discipline->getId()
+        );
     }
 }
 
