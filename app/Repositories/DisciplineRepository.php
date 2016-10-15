@@ -27,7 +27,7 @@ class DisciplineRepository extends BaseRepository
                 ->setParameter('profileId', $profileId);
         }
 
-        if ($name != null || $name != ''){
+        if ($name != null && $name != ''){
             $query = $query->where('d.name LIKE :name')
                 ->orWhere('d.abbreviation LIKE :name')
                 ->setParameter('name', '%'.$name.'%');

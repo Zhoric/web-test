@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Discipline;
 use Illuminate\Http\Request;
 use Managers\DisciplineManager;
+use Theme;
 
 
 class DisciplineController extends Controller
@@ -62,5 +63,31 @@ class DisciplineController extends Controller
 
     public function getThemes($id){
         return json_encode($this->_disciplineManager->getDisciplineThemes($id));
+    }
+
+    public function addTheme(Request $request){
+        $themeData = $request->json('theme');
+        $disciplineId = $request->json('disciplineId');
+
+        $theme = new Theme();
+        $theme->fillFromJson($themeData);
+        $this->_disciplineManager->addTheme($theme, $disciplineId);
+    }
+
+    public function updateTheme(Request $request){
+        $themeData = $request->json('theme');
+        $disciplineId = $request->json('disciplineId');
+
+        $theme = new Theme();
+        $theme->fillFromJson($themeData);
+        $this->_disciplineManager->updateTheme($theme, $disciplineId);
+    }
+
+    public function deleteTheme($id){
+        $this->_disciplineManager->deleteTheme($id);
+    }
+
+    public function getDisciplineProfilesIds($id){
+        return json_encode($this->_disciplineManager->getDisciplineProfilesIds($id));
     }
 }

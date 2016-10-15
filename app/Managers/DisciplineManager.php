@@ -60,7 +60,27 @@ class DisciplineManager
         $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
         $theme->setDiscipline($disciplineId);
 
-        $this->_unitOfWork->disciplines()->create($disciplineId);
+        $this->_unitOfWork->disciplines()->create($discipline);
         $this->_unitOfWork->commit();
+    }
+
+    public function updateTheme(Theme $theme, $disciplineId){
+        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+        $theme->setDiscipline($disciplineId);
+
+        $this->_unitOfWork->disciplines()->update($discipline);
+        $this->_unitOfWork->commit();
+    }
+
+    public function deleteTheme($id){
+        $theme = $this->_unitOfWork->themes()->find($id);
+        if ($theme != null){
+            $this->_unitOfWork->themes()->update($theme);
+            $this->_unitOfWork->commit();
+        }
+    }
+
+    public function getDisciplineProfilesIds($id){
+        return $this->_unitOfWork->profiles()->getByDisciplineProfilesIds($id);
     }
 }
