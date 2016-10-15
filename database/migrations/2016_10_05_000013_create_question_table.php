@@ -16,10 +16,10 @@ class CreateQuestionTable extends Migration
             $table->increments('id');
             $table->integer('theme_id')->unsigned()->nullable()->default(NULL);
             $table->smallInteger('type');
-            $table->text('text');
-            $table->string('image', 100);
-            $table->smallInteger('complexity');
-            $table->smallInteger('time');
+            $table->text('text')->nullable()->default(NULL);
+            $table->string('image', 200)->nullable()->default(NULL);
+            $table->smallInteger('complexity')->nullable()->default(NULL);
+            $table->smallInteger('time')->nullable()->default(NULL);
         });
 
         Schema::table('answer', function (Blueprint $table) {

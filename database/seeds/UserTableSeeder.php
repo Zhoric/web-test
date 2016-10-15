@@ -23,6 +23,13 @@ class UserTableSeeder extends Seeder
             'email' => 'test@gmail.com',
             'password' => bcrypt('123456')));
 
+        DB::table('user')->insert(array(
+            'firstname' => 'Преподов',
+            'lastname' => 'Препод',
+            'patronymic' => 'Преподович',
+            'email' => 'test2@gmail.com',
+            'password' => bcrypt('123456')));
+
         $faker = Faker::create('ru_RU');
         foreach (range(1,70) as $index) {
             DB::table('user')->insert([

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
         $this->call('DisciplineTableSeeder');
         $this->call('StudyPlanTableSeeder');
         $this->call('GroupTableSeeder');
-
+        $this->call('ThemeTableSeeder');
+        $this->call('QuestionTableSeeder');
     }
 }

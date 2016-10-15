@@ -37,7 +37,7 @@ class GroupTableSeeder extends Seeder
         {
             DB::table('student_group')->insert(array(
                 'student_id' => $i,
-                'group_id' => ($i > 2 && i < 24) ? 1 : ($i < 54) ? 2 : 3
+                'group_id' => ($i > 3 && $i < 24) ? 1 : ($i < 54) ? 2 : 3
             ));
         }
     }

@@ -24,16 +24,21 @@ class RoleTableSeeder extends Seeder
         DB::table('role_user')->delete();
 
         DB::table('role_user')->insert([
-            'role_id' => 1,
+            'role_id' => UserRole::Admin,
             'user_id' => 1,
         ]);
 
         DB::table('role_user')->insert([
-            'role_id' => 2,
+            'role_id' => UserRole::Lecturer,
             'user_id' => 2,
         ]);
 
-        for ($i = 3; $i < 73; $i++){
+        DB::table('role_user')->insert([
+            'role_id' => UserRole::Lecturer,
+            'user_id' => 3,
+        ]);
+
+        for ($i = 3; $i <= 73; $i++){
             DB::table('role_user')->insert([
                 'role_id' => 3,
                 'user_id' => $i,
