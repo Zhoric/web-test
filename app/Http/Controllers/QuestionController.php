@@ -16,6 +16,10 @@ class QuestionController extends Controller
         $this->_questionManager = $questionManager;
     }
 
+    /*
+     *  Постраничное получение всех вопросов по теме и тексту
+     *  Текст - необязательный параметр
+     */
     public function getByThemeAndTextPaginated(Request $request){
         $pageNum =  $request->query('page');
         $pageSize = $request->query('pageSize');
@@ -28,6 +32,15 @@ class QuestionController extends Controller
         return json_encode($paginationResult);
     }
 
+    /*
+     *   Добавление вопроса вместе с ответами
+     *   Пример валидного JSON-запроса:
+     *   {"question" : {"type": 1, "text": "Текст вопроса?", "complexity": 2, "time": 30},
+     *    "theme" : 2,
+     *    "answers" : [{"text":"Правильный ответ","isRight":true},
+     *                 {"text":"Неправильный ответ","isRight":false}]
+     *    }
+     */
     public function create(Request $request){
         $questionData = $request->json('question');
         $answers = (array) $request->json('answers');
@@ -39,6 +52,16 @@ class QuestionController extends Controller
         $this->_questionManager->create($question,$themeId, $answers);
     }
 
+    /*
+     *   Обновление вопроса вместе с ответами
+     *   Пример валидного JSON-запроса:
+     *   {"question" : { "id":19,"type": 1, "text": "Текст вопроса?", "complexity": 2, "time": 30},
+     *    "theme" : 2,
+     *    "answers" : [{"text":"Правильный ответ","isRight":true},
+     *                 {"text":"Неправильный ответ1","isRight":false},
+     *                 {"text":"Неправильный ответ2","isRight":false}]
+     *    }
+     */
     public function update(Request $request){
         $questionData = $request->json('question');
         $answers = $request->json('answers');

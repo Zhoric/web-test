@@ -45,6 +45,8 @@ class QuestionManager
         $this->_unitOfWork->questions()->update($question);
         $this->_unitOfWork->commit();
 
+        $question = $this->_unitOfWork->questions()->find($question->getId());
+
         $this->_unitOfWork->answers()->deleteQuestionAnswers($question->getId());
 
         foreach ($answers as $answer){

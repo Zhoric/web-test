@@ -232,5 +232,10 @@ class Question extends BaseEntity implements JsonSerializable
     {
         // TODO: Implement jsonSerialize() method.
     }
+
+    public function __toString()
+    {
+        return 'QuestionId:'.$this->id;
+    }
 }
 
