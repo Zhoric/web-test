@@ -230,7 +230,7 @@ class Group  extends BaseEntity implements JsonSerializable
             'number' => $this->number,
             'isFullTime' => $this->isFulltime,
             'course' => $this->course,
-            'studyplan' => $this->studyplan->getId()
+            'studyplan' => $this->studyplan->getName()
         );
     }
 }
