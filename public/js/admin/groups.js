@@ -78,7 +78,7 @@ $(document).ready(function(){
                     self.currentProfileId(profileId);
                 }
                 else{
-                    url += '/api/group';
+                    url += '/api/groups';
                 }
 
                 $.get(url, function(data){

@@ -15,9 +15,9 @@
 <body>
     <div class="menu">
         <ul>
-            <li>Главная</li>
+            <li><a href="/admin/main">Главная</a></li>
             <li>Преподаватели</li>
-            <li>Группы</li>
+            <li><a href="/admin/groups">Группы</a></li>
             <li>Студенты</li>
             <li>Дисциплины</li>
             <li>Тесты</li>

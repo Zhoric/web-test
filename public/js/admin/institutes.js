@@ -15,7 +15,7 @@ $(document).ready(function(){
 
 
             self.getInstitutes = function(){
-                $.get('/api/org/institutes', function(data){
+                $.get('/api/institutes', function(data){
                     var res = ko.mapping.fromJSON(data);
                     self.institutes(res());
                 });
@@ -28,13 +28,13 @@ $(document).ready(function(){
                     return;
                 }
                 self.currentInstitute(data.id());
-                $.get('/api/org/institute/'+ data.id() + '/profiles', function(response){
+                $.get('/api/institute/'+ data.id() + '/profiles', function(response){
                     var res = ko.mapping.fromJSON(response);
                     self.currentProfiles(res());
                 });
             };
             self.getPlans = function(data){
-                $.get('/api/org/profile/'+ data.id() + '/plans', function(response){
+                $.get('/api/profile/'+ data.id() + '/plans', function(response){
                     var res = ko.mapping.fromJSON(response);
                     self.currentPlans(res());
                 });
