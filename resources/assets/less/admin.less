@@ -8,6 +8,42 @@
 @neutral: @clouds;
 @grey: @normal-grey;
 
+.label(){
+  font-size: 12px;
+  color: @unimportant;
+}
+.width100{
+  width: 100%;
+}
+.width60{
+
+}
+
+.filter{
+  height: 100px;
+  border-bottom: 20px solid @white;
+  padding: 20px 20px 0;
+  div{
+    display: inline-block;
+    margin: 10px 0px 0px 10px;
+    width: 48%;
+  }
+  label{
+    .label();
+  }
+  input{
+    padding: 6px;
+    min-width: 200px;
+    width: 95%;
+  }
+  select{
+    font-size: 15px;
+    height: 33px;
+    margin: 0;
+    min-width: 200px;
+    width: 100%;
+  }
+}
 
 .menu{
   top: 0;
@@ -76,28 +112,21 @@
 }
 
 .org-info{
-  &-details{
-    div{
-      display: inline-block;
-      margin: 10px 15px;
-    }
-  }
-  &-edit{
-
-  }
+  .width100();
   div{
     display: inline-block;
     margin: 10px 15px;
   }
   label{
-    font-size: 12px;
-    color: @unimportant;
+    .label();
   }
   input{
     padding: 6px;
-    width: 70px;
+    width: 150px;
   }
 }
+
+
 
 
 
@@ -157,8 +186,11 @@
   }
 }
 button{
-  background: @greensea;
+  background: @emerland;
   width: 50px;
+  &:hover{
+    background: @nephritis;
+  }
 }
 .info-group{
   .details-group{
@@ -208,11 +240,48 @@ button{
 }
 
 table{
-
-  border-top: 1px solid @light-grey;
-  padding: 15px 0;
+  &.theme{
+    width: 97%;
+    padding: 15px 0;
+    border-collapse: collapse;
+    border-top: 1px solid @light-grey;
+    cellpadding: 10px;
+    text-align:center;
+    th{
+      padding: 10px;
+    }
+    tbody tr{
+      &:nth-child(odd){
+        background: @light-grey;
+      }
+      &:nth-child(even){
+        background: @normal-grey;
+      }
+    }
+    td{
+      padding: 5px;
+      width: 7%;
+      &:nth-child(2){
+        width: 80%;
+        text-align: left;
+      }
+    }
+    button{
+      width: 35px;
+      height: 30px;
+    }
+    a{
+      border-bottom: 0;
+      &:hover{
+        color: @emerland;
+      }
+    }
+  }
   &.students-table{
     width: 100%;
+    padding: 15px 0;
+    border-collapse: collapse;
+    border-top: 1px solid @light-grey;
     tr > td{
       &:first-child, &:last-child{
         text-align: center;
@@ -235,5 +304,8 @@ a.active-link{
   &:hover{
     color: @black;
   }
+}
+button.move{
+  width: 150px;
 }
 

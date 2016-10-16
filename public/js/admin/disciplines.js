@@ -14,9 +14,20 @@ $(document).ready(function(){
                     abbreviation: ko.observable(''),
                     description: ko.observable('')
                 }),
-                profiles: ko.observableArray([]),
-                selectedProfiles: ko.observableArray([]),
-                themes: ko.observableArray([])
+                profile: ko.observable({
+                    profiles: ko.observableArray([]),
+                    selected: ko.observableArray([]),
+                    discipline: ko.observableArray([])
+                }),
+                themes: ko.observableArray([]),
+                theme: ko.observable({
+                    id: ko.observable(0),
+                    name: ko.observable('')
+                })
+            });
+            self.filter = ko.observable({
+                discipline: ko.observable(''),
+                profile : ko.observable()
             });
             self.toggleCurrent = ko.observable({
                 fill: function(data){
@@ -42,10 +53,25 @@ $(document).ready(function(){
                         description: edit.description()
                     };
                     self.mode() === 'edit' ? forpost.id = edit.id() : null;
-                    self.current().selectedProfiles().forEach(function(item){
+                    self.current().profile().selected().forEach(function(item){
                         profiles.push(item.id());
                     });
                     return JSON.stringify({discipline: forpost, profileIds: profiles});
+                },
+                setInitialProfiles: function(){
+                    var discipline = self.current().profile().discipline();
+                    var profiles = self.current().profile().profiles;
+                    var selected = self.current().profile().selected;
+                    if (discipline.length){
+                        discipline.forEach(function(disc){
+                            var profile = profiles().find(function(item){
+                                return  (item.id() == disc.profile_id()) ? item : null;
+                            });
+
+                            if (profile) selected.push(profile);
+                        });
+                    }
+                    //console.log(selected());
                 }
             });
             self.pagination = ko.observable({
@@ -83,6 +109,8 @@ $(document).ready(function(){
                     if (self.mode() === 'none' || self.current().discipline().id() !== data.id()){
                         self.mode('info');
                         self.toggleCurrent().fill(data);
+                        self.get().themes();
+                        self.get().disciplineProfiles();
                         return;
                     }
                     self.mode('none');
@@ -93,6 +121,7 @@ $(document).ready(function(){
                     self.mode() === 'add' ? self.mode('none') : self.mode('add');
                 },
                 startUpdate: function(){
+                    self.toggleCurrent().setInitialProfiles();
                     self.mode('edit');
                 },
                 startRemove: function(){
@@ -102,6 +131,7 @@ $(document).ready(function(){
                 update: function(){
                     var url = self.mode() === 'add' ? '/api/disciplines/create' : '/api/disciplines/update';
                     var json = self.toggleCurrent().stringify();
+                    console.log(url + ' : ' + json);
                     self.post(url, json);
                 },
                 remove: function(){
@@ -110,6 +140,7 @@ $(document).ready(function(){
                     self.post(url, '');
                 },
                 cancel: function(){
+                    console.log(self.current().profile().selected());
                     if (self.mode() === 'add'){
                         self.mode('none');
                         self.toggleCurrent().empty();
@@ -117,25 +148,75 @@ $(document).ready(function(){
                     }
                     self.mode('info');
                 },
+                theme: ko.observable({
+                    startAdd: function(){
+                        console.log('add theme');
+                        self.current().theme().id(0).name('');
+                        self.toggleModal('#add-theme-modal', '');
+                    },
+                    add: function(){
+                        var url = '/api/disciplines/themes/create';
+                        var json = JSON.stringify({
+                            theme: {
+                                name: self.current().theme().name()
+                            },
+                            disciplineId: self.current().discipline().id()
+                        });
+                        console.log(url + ' : ' + json);
+                        $.post(url, json, function(){
+                            self.toggleModal('#add-theme-modal', 'close');
+                            self.get().themes();
+                        });
+                    },
+                    startRemove: function(data){
+                        self.toggleModal('#remove-theme-modal', '');
+                        self.current().theme().id(data.id()).name(data.name());
+
+                    },
+                    remove: function(){
+                        var url = '/api/disciplines/themes/delete/' + self.current().theme().id();
+                        $.post(url, function(){
+                            self.toggleModal('#remove-theme-modal', 'close');
+                            self.get().themes();
+                        });
+                    }
+                })
             });
 
             self.get = ko.observable({
-                disciplines: function(){
+                disciplines: function(profileId){
+                    var filter = self.filter();
+                    var profile = 'profile=' + (filter.profile() ? filter.profile().id() : '');
+                    var name = 'name=' + filter.discipline();
                     var page = 'page=' + self.pagination().currentPage();
                     var pageSize = 'pageSize=' + self.pagination().pageSize();
-                    var url = '/api/disciplines/show?' + page + '&' + pageSize;
+                    var url = '/api/disciplines/show?' + page + '&' + pageSize + '&' + name + '&' + profile;
+
                     $.get(url, function(response){
                         var result = ko.mapping.fromJSON(response);
                         self.disciplines(result.data());
                         self.pagination().itemsCount(result.count());
                     });
                 },
+                disciplineProfiles: function(){
+                    var id = self.current().discipline().id();
+                    if (id){
+                        $.get('/api/disciplines/' + id + '/profiles', function(response){
+                            self.current().profile().discipline(ko.mapping.fromJSON(response)());
+                        });
+                    }
+                },
                 profiles: function(){
                     $.get('/api/profiles', function(response){
-                        self.current().profiles(ko.mapping.fromJSON(response)());
+                        self.current().profile().profiles(ko.mapping.fromJSON(response)());
                     });
                 },
-                themes: function(){}
+                themes: function(){
+                    var url = '/api/disciplines/' + self.current().discipline().id() +'/themes';
+                    $.get(url, function(response){
+                        self.current().themes(ko.mapping.fromJSON(response)());
+                    });
+                }
             });
             self.get().disciplines();
             self.get().profiles();
@@ -160,13 +241,21 @@ $(document).ready(function(){
                     ));
                 }
             });
+            self.filter().discipline.subscribe(function(){
+                self.get().disciplines();
+            });
+            self.filter().profile.subscribe(function(){
+                self.get().disciplines();
+            });
 
             return {
                 disciplines: self.disciplines,
                 pagination: self.pagination,
                 current: self.current,
                 mode: self.mode,
-                csed: self.csed
+                csed: self.csed,
+                filter: self.filter,
+                toggleModal: self.toggleModal
             };
         };
     };

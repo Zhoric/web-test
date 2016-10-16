@@ -35,7 +35,7 @@
 }
 
 body{
-  font-family: 'Roboto Regular';
+  font-family: 'Roboto Regular' !important;
   margin:0;
 }
 
@@ -56,6 +56,7 @@ body{
 }
 
 button{
+  font-family: 'Roboto Regular';
   height: 40px;
   width: 150px;
   color: @clouds;
@@ -78,7 +79,7 @@ a{
 input{
   background: @white;
   border: 1px solid @normal-grey;
-  padding: 20px;
+  padding: 6px;
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
@@ -124,6 +125,15 @@ select[multiple='true']{
 
 button.danger{
   background: @alizarin;
+  &:hover{
+    background: @pomegranade;
+  }
+}
+button.move{
+  background: @peterriver;
+  &:hover{
+    background: @belizehole;
+  }
 }
 
 .fa {
@@ -133,5 +143,6 @@ button.danger{
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 20px;
+  font-size: 19px;
 }
+

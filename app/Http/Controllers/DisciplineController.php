@@ -59,7 +59,7 @@ class DisciplineController extends Controller
         return json_encode($this->_disciplineManager->getDisciplineThemes($id));
     }
 
-    public function addTheme(Request $request){
+    public function createTheme(Request $request){
         $themeData = $request->json('theme');
         $disciplineId = $request->json('disciplineId');
 

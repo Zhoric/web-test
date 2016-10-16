@@ -7,7 +7,7 @@
   src: url('/fonts/fontawesome-webfont.ttf');
 }
 body {
-  font-family: 'Roboto Regular';
+  font-family: 'Roboto Regular' !important;
   margin: 0;
 }
 .clear {
@@ -17,6 +17,7 @@ body {
   display: none;
 }
 button {
+  font-family: 'Roboto Regular';
   height: 40px;
   width: 150px;
   color: #ecf0f1;
@@ -39,7 +40,7 @@ a:hover {
 input {
   background: #fff;
   border: 1px solid #d3d3d3;
-  padding: 20px;
+  padding: 6px;
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
@@ -84,6 +85,15 @@ select[multiple='true'] option:checked {
 button.danger {
   background: #e74c3c;
 }
+button.danger:hover {
+  background: #c0392b;
+}
+button.move {
+  background: #3498db;
+}
+button.move:hover {
+  background: #2980b9;
+}
 .fa {
   display: inline-block;
   font: normal normal normal 20px/1 FontAwesome;
@@ -91,7 +101,7 @@ button.danger {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 20px;
+  font-size: 19px;
 }
 body {
   background-color: #4aa272;
