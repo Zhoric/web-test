@@ -122,6 +122,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
         Route::get('{id}/profiles','DisciplineController@getDisciplineProfilesIds');
+        Route::get('{id}/tests','DisciplineController@getTestsByDiscipline');
 
         /*------------------------------------------------------------------------
         *                   Работа со темами дисциплин                          */
@@ -158,6 +159,16 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('{id}', 'QuestionController@get');
     });
 
+    /*-----------------------------------------------------------------------------
+    *                              ТЕСТЫ
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'tests'], function () {
+        Route::post('create', 'TestController@create');
+        Route::post('update', 'TestController@update');
+        Route::post('delete/{id}', 'TestController@delete');
+    });
+    
 });
 
 

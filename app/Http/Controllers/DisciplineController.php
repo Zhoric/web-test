@@ -40,9 +40,6 @@ class DisciplineController extends Controller
         $discipline = new Discipline();
         $discipline->fillFromJson($disciplineData);
         $this->_disciplineManager->addDiscipline($discipline, $profileIds);
-
-        $group = new Discipline();
-        $group->fillFromJson($disciplineData);
     }
 
     public function update(Request $request){
@@ -52,9 +49,6 @@ class DisciplineController extends Controller
         $discipline = new Discipline();
         $discipline->fillFromJson($disciplineData);
         $this->_disciplineManager->updateDiscipline($discipline, $profileIds);
-
-        $group = new Discipline();
-        $group->fillFromJson($disciplineData);
     }
 
     public function delete($id){
@@ -89,5 +83,9 @@ class DisciplineController extends Controller
 
     public function getDisciplineProfilesIds($id){
         return json_encode($this->_disciplineManager->getDisciplineProfilesIds($id));
+    }
+
+    public function getTestsByDiscipline($disciplineId){
+        return $this->_disciplineManager->getTestsByDiscipline($disciplineId);
     }
 }

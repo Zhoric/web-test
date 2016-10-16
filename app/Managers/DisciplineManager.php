@@ -83,4 +83,8 @@ class DisciplineManager
     public function getDisciplineProfilesIds($id){
         return $this->_unitOfWork->profiles()->getByDisciplineProfilesIds($id);
     }
+
+    public function getTestsByDiscipline($disciplineId){
+        return $this->_unitOfWork->tests()->getByDiscipline($disciplineId);
+    }
 }

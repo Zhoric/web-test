@@ -33,6 +33,7 @@ class UnitOfWork
     private $_markTypeRepo;
     private $_questionRepo;
     private $_answerRepo;
+    private $_testRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -116,6 +117,13 @@ class UnitOfWork
             $this->_answerRepo = new AnswerRepository($this->_em);
         }
         return $this->_answerRepo;
+    }
+
+    public function tests(){
+        if ($this->_testRepo == null){
+            $this->_testRepo = new TestRepository($this->_em);
+        }
+        return $this->_testRepo;
     }
 
     public function commit(){
