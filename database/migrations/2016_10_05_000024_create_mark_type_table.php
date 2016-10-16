@@ -16,6 +16,7 @@ class CreateMarkTypeTable extends Migration
             $table->increments('id');
             $table->integer('discipline_plan_id')->unsigned();
             $table->string('name', 255)->nullable()->default(NULL);
+            $table->smallInteger('number')->nullable()->default(NULL);
 
             $table->foreign('discipline_plan_id')->references('id')->on('discipline_plan')->onDelete('cascade');
         });

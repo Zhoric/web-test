@@ -29,6 +29,13 @@ class MarkType extends BaseEntity implements JsonSerializable
     protected $id;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="number", type="smallint", nullable=true)
+     */
+    protected $number;
+
+    /**
      * @var \DisciplinePlan
      *
      * @ORM\ManyToOne(targetEntity="DisciplinePlan")
@@ -61,6 +68,30 @@ class MarkType extends BaseEntity implements JsonSerializable
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set number
+     *
+     * @param string $number
+     *
+     * @return MarkType
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    /**
+     * Get number
+     *
+     * @return string
+     */
+    public function getNumber()
+    {
+        return $this->number;
     }
 
     /**
