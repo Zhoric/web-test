@@ -92,10 +92,10 @@ class StudyPlanController extends Controller
 
     public function updateMarkType(Request $request){
         $markData = $request->json('markType');
+        $disciplinePlanId = $request->json('disciplinePlanId');
+
         $markType = new MarkType();
         $markType->fillFromJson($markData);
-
-        $disciplinePlanId = $request->json('disciplinePlanId');
         $this->_studyPlanManager->updateMarkType($markType, $disciplinePlanId);
     }
 

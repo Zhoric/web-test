@@ -127,9 +127,12 @@ Route::group(['prefix' => 'api'], function() {
         *                   Работа со темами дисциплин                          */
 
         Route::get('{id}/themes','DisciplineController@getThemes');
-        Route::post('create', 'DisciplineController@createTheme');
-        Route::post('update', 'DisciplineController@updateTheme');
-        Route::post('delete/{id}', 'DisciplineController@deleteTheme');
+
+        Route::group(['prefix' => 'themes'], function () {
+            Route::post('create', 'DisciplineController@createTheme');
+            Route::post('update', 'DisciplineController@updateTheme');
+            Route::post('delete/{id}', 'DisciplineController@deleteTheme');
+        });
     });
 
     /*-----------------------------------------------------------------------------
@@ -152,6 +155,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'QuestionController@update');
         Route::post('delete/{id}', 'QuestionController@delete');
         Route::get('show', 'QuestionController@getByThemeAndTextPaginated');
+        Route::get('{id}', 'QuestionController@get');
     });
 
 });

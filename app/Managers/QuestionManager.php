@@ -3,6 +3,7 @@
 namespace Managers;
 
 use Answer;
+use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Question;
 
@@ -15,10 +16,12 @@ class QuestionManager
         $this->_unitOfWork = $unitOfWork;
     }
 
-    public function getByThemeAndTextPaginated($pageSize, $pageNum, $themeId, $text){
+    public function getByParamsPaginated($pageSize, $pageNum,
+                                               $themeId, $text, $type, $complexity){
         return $this->_unitOfWork
             ->questions()
-            ->getByThemeAndTextPaginated($pageSize, $pageNum, $themeId, $text);
+            ->getByParamsPaginated($pageSize, $pageNum,
+                $themeId, $text, $type, $complexity);
     }
 
     public function create(Question $question, $themeId, array $answers = null){
@@ -59,6 +62,13 @@ class QuestionManager
         }
 
         $this->_unitOfWork->commit();
+    }
+
+    public function getWithAnswers($questionId){
+        $question = $this->_unitOfWork->questions()->find($questionId);
+        $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
+
+        return new QuestionViewModel($question, $answers);
     }
 
 }

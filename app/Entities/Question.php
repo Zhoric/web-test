@@ -221,21 +221,17 @@ class Question extends BaseEntity implements JsonSerializable
         return $this->theme;
     }
 
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
-    }
-
-    public function __toString()
-    {
-        return 'QuestionId:'.$this->id;
+        return array(
+            'theme' => $this->theme->getId(),
+            'id' => $this->id,
+            'text' => $this->text,
+            'image' => $this->image,
+            'type' => $this->type,
+            'complexity' => $this->complexity,
+            'time' => $this->time
+        );
     }
 }
 

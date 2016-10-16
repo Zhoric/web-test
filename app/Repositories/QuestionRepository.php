@@ -13,18 +13,29 @@ class QuestionRepository extends BaseRepository
         parent::__construct($em, Question::class);
     }
 
-    public function getByThemeAndTextPaginated($pageSize, $pageNum, $themeId, $text = null){
+    public function getByParamsPaginated($pageSize, $pageNum, $themeId,
+                                               $text, $type, $complexity){
         $qb = $this->repo->createQueryBuilder('q');
         $query = $qb;
 
-        $query = $query->where('q.theme = :themeId')
+        $query = $query->andWhere('q.theme = :themeId')
             ->setParameter('themeId', $themeId);
 
         if ($text != null && $text != ''){
-            $query = $query->where('q.text LIKE :text')
+            $query = $query->andWhere('q.text LIKE :text')
                 ->setParameter('text', '%'.$text.'%');
         }
 
+        if ($type != null && $type != ''){
+            $query = $query->andWhere('q.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        if ($complexity != null && $complexity != ''){
+            $query = $query->andWhere('q.complexity = :complexity')
+                ->setParameter('complexity', $complexity);
+        }
+        
         $countQuery = clone $query;
         $data =  $this->paginate($pageSize, $pageNum, $query, 'q.id');
 

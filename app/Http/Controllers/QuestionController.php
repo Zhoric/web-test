@@ -25,9 +25,12 @@ class QuestionController extends Controller
         $pageSize = $request->query('pageSize');
         $text = $request->query('name');
         $themeId = $request->query('theme');
+        $type = $request->query('type');
+        $complexity = $request->query('complexity');
 
         $paginationResult = $this->_questionManager
-            ->getByThemeAndTextPaginated($pageSize, $pageNum, $themeId, $text);
+            ->getByParamsPaginated($pageSize, $pageNum,
+                $themeId, $text, $type, $complexity);
 
         return json_encode($paginationResult);
     }
@@ -75,5 +78,13 @@ class QuestionController extends Controller
 
     public function delete($id){
         $this->delete($id);
+    }
+
+    /*
+     *   Получение вопроса с ответами по id
+     */
+    public function get($id){
+        $question =  $this->_questionManager->getWithAnswers($id);
+        return json_encode($question);
     }
 }

@@ -25,7 +25,8 @@
             "app/Repositories",
             "app/Managers",
             "app/Helpers",
-            "app/Entities"
+            "app/Entities",
+            "app/ViewModels"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -34,10 +35,11 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php",
-	    "app/Repositories",
+	        "app/Repositories",
             "app/Managers",
             "app/Helpers",
-            "app/Entities"
+            "app/Entities",
+            "app/ViewModels"
         ],
         "psr-4": {
             "App\\": "app/"
