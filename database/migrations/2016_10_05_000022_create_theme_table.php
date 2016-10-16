@@ -14,7 +14,7 @@ class CreateThemeTable extends Migration
     {
         Schema::create('theme', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 100);
+            $table->string('name', 200);
             $table->integer('discipline_id')->unsigned();
 
             $table->foreign('discipline_id')->references('id')->on('discipline')->onDelete('cascade');

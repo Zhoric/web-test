@@ -16,6 +16,8 @@ class CreateTestMarkTypeTable extends Migration
             $table->increments('id');
             $table->integer('test_id')->unsigned();
             $table->integer('mark_type_id')->unsigned();
+            $table->smallInteger('semester')->nullable()->default(NULL);
+
 
             $table->foreign('test_id')->references('id')->on('test')->onDelete('cascade');
             $table->foreign('mark_type_id')->references('id')->on('mark_type')->onDelete('cascade');

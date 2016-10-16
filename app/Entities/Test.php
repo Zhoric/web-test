@@ -36,27 +36,6 @@ class Test extends BaseEntity implements JsonSerializable
     /**
      * @var integer
      *
-     * @ORM\Column(name="order_number", type="smallint", nullable=true)
-     */
-    protected $orderNumber;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="fulltime_start", type="smallint", nullable=true)
-     */
-    protected $fulltimeStart;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="extramural_start", type="smallint", nullable=true)
-     */
-    protected $extramuralStart;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -144,78 +123,6 @@ class Test extends BaseEntity implements JsonSerializable
     public function getAttempts()
     {
         return $this->attempts;
-    }
-
-    /**
-     * Set orderNumber
-     *
-     * @param integer $orderNumber
-     *
-     * @return Test
-     */
-    public function setOrderNumber($orderNumber)
-    {
-        $this->orderNumber = $orderNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get orderNumber
-     *
-     * @return integer
-     */
-    public function getOrderNumber()
-    {
-        return $this->orderNumber;
-    }
-
-    /**
-     * Set fulltimeStart
-     *
-     * @param integer $fulltimeStart
-     *
-     * @return Test
-     */
-    public function setFulltimeStart($fulltimeStart)
-    {
-        $this->fulltimeStart = $fulltimeStart;
-
-        return $this;
-    }
-
-    /**
-     * Get fulltimeStart
-     *
-     * @return integer
-     */
-    public function getFulltimeStart()
-    {
-        return $this->fulltimeStart;
-    }
-
-    /**
-     * Set extramuralStart
-     *
-     * @param integer $extramuralStart
-     *
-     * @return Test
-     */
-    public function setExtramuralStart($extramuralStart)
-    {
-        $this->extramuralStart = $extramuralStart;
-
-        return $this;
-    }
-
-    /**
-     * Get extramuralStart
-     *
-     * @return integer
-     */
-    public function getExtramuralStart()
-    {
-        return $this->extramuralStart;
     }
 
     /**

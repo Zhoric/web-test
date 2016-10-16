@@ -41,6 +41,12 @@ class TestMarkType extends BaseEntity
      */
     protected $markType;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="semester", type="smallint", nullable=true)
+     */
+    protected $semester;
 
     /**
      * Get id
@@ -75,6 +81,16 @@ class TestMarkType extends BaseEntity
     public function getMarkType()
     {
         return $this->markType;
+    }
+
+    public function getSemester()
+    {
+        return $this->semester;
+    }
+
+    public function setSemester($semester)
+    {
+        $this->semester = $semester;
     }
 }
 

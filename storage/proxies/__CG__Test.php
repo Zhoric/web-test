@@ -64,10 +64,10 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'orderNumber', 'fulltimeStart', 'extramuralStart', 'id', 'discipline'];
+            return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'id', 'discipline'];
         }
 
-        return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'orderNumber', 'fulltimeStart', 'extramuralStart', 'id', 'discipline'];
+        return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'id', 'discipline'];
     }
 
     /**
@@ -237,72 +237,6 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAttempts', []);
 
         return parent::getAttempts();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setOrderNumber($orderNumber)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setOrderNumber', [$orderNumber]);
-
-        return parent::setOrderNumber($orderNumber);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getOrderNumber()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOrderNumber', []);
-
-        return parent::getOrderNumber();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setFulltimeStart($fulltimeStart)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFulltimeStart', [$fulltimeStart]);
-
-        return parent::setFulltimeStart($fulltimeStart);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFulltimeStart()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFulltimeStart', []);
-
-        return parent::getFulltimeStart();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setExtramuralStart($extramuralStart)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setExtramuralStart', [$extramuralStart]);
-
-        return parent::setExtramuralStart($extramuralStart);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getExtramuralStart()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getExtramuralStart', []);
-
-        return parent::getExtramuralStart();
     }
 
     /**

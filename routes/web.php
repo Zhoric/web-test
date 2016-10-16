@@ -168,7 +168,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'TestController@update');
         Route::post('delete/{id}', 'TestController@delete');
     });
-    
+
 });
 
 

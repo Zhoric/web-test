@@ -7,9 +7,8 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="name" type="string" column="name" length="255" nullable="true">
+    <field name="name" type="string" column="name" length="255" nullable="true"/>
     <field name="number" type="smallint" column="number" nullable="true">
-
       <options>
         <option name="fixed"/>
       </options>
