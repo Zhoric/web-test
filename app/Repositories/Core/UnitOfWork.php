@@ -34,6 +34,7 @@ class UnitOfWork
     private $_questionRepo;
     private $_answerRepo;
     private $_testRepo;
+    private $_testMarkTypeRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -124,6 +125,13 @@ class UnitOfWork
             $this->_testRepo = new TestRepository($this->_em);
         }
         return $this->_testRepo;
+    }
+
+    public function markTests(){
+        if ($this->_testMarkTypeRepo == null){
+            $this->_testMarkTypeRepo = new TestMarkTypeRepository($this->_em);
+        }
+        return $this->_testMarkTypeRepo;
     }
 
     public function commit(){

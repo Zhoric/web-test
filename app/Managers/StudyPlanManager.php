@@ -6,6 +6,8 @@ use DisciplinePlan;
 use MarkType;
 use Repositories\UnitOfWork;
 use Studyplan;
+use Test;
+use TestMarkType;
 
 class StudyPlanManager
 {
@@ -103,6 +105,23 @@ class StudyPlanManager
             $this->_unitOfWork->markTypes()->delete($markType);
             $this->_unitOfWork->commit();
         }
+    }
+
+    public function linkMarkToTest($testId, $markTypeId, $semester){
+        $testMarkType = new TestMarkType();
+        $test = null;
+
+        if ($testId != null){
+            $test = $this->_unitOfWork->tests()->find($testId);
+        }
+        $markType = $this->_unitOfWork->markTypes()->find($markTypeId);
+
+        $testMarkType->setTest($test);
+        $testMarkType->setMarkType($markType);
+        $testMarkType->setSemester($semester);
+
+        $this->_unitOfWork->markTests()->setTestMarkType($testMarkType);
+        $this->_unitOfWork->commit();
     }
 
 }

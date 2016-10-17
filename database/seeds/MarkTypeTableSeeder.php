@@ -13,7 +13,7 @@ class MarkTypeTableSeeder extends Seeder
             DB::table('mark_type')->insert(array(
                 'name' => 'Тест по теме '.$i,
                 'number' => $i,
-                'discipline_id' => 2));
+                'discipline_plan_id' => 2));
 
             DB::table('test_mark_type')->insert(array(
                 'test_id' => $i,
@@ -25,6 +25,6 @@ class MarkTypeTableSeeder extends Seeder
         DB::table('mark_type')->insert(array(
             'name' => 'Курсовой проект',
             'number' => 8,
-            'discipline_id' => 2));
+            'discipline_plan_id' => 2));
     }
 }

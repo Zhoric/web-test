@@ -84,6 +84,7 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('create', 'StudyPlanController@addDisciplinePlan');
             Route::post('update', 'StudyPlanController@updateDisciplinePlan');
             Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
+            Route::post('linkTest', 'StudyPlanController@linkMarkToTest');
         });
     });
 

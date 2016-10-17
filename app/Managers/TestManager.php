@@ -33,7 +33,7 @@ class TestManager
     public function delete($id){
         $test = $this->_unitOfWork->tests()->find($id);
 
-        if ($test != null){
+        if ($test != null) {
             $this->_unitOfWork->tests()->delete($test);
             $this->_unitOfWork->commit();
         }

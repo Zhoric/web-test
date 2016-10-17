@@ -103,4 +103,12 @@ class StudyPlanController extends Controller
         $this->_studyPlanManager->deleteMarkType($id);
     }
 
+    public function linkMarkToTest(Request $request){
+        $testId = $request->json('testId');
+        $markTypeId = $request->json('markTypeId');
+        $semester = $request->json('semester');
+
+        $this->_studyPlanManager->linkMarkToTest($testId, $markTypeId, $semester);
+    }
+
 }
