@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call('GroupTableSeeder');
         $this->call('ThemeTableSeeder');
         $this->call('QuestionTableSeeder');
+        $this->call('TestTableSeeder');
+        $this->call('MarkTypeTableSeeder');
     }
 }
