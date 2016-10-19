@@ -17,6 +17,11 @@ Route::get('editor','DemoController@editor');
 Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
+Route::get('redis',function (){
+    $redis = app()->make('redis');
+    $redis->set("key", "testVal");
+    return $redis->get("key");
+});
 
 Auth::routes();
 
