@@ -38,4 +38,8 @@ class TestManager
             $this->_unitOfWork->commit();
         }
     }
+
+    public function getById($id){
+        return $this->_unitOfWork->tests()->find($id);
+    }
 }

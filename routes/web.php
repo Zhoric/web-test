@@ -18,9 +18,8 @@ Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
 Route::get('redis',function (){
-    $redis = app()->make('redis');
-    $redis->set("key", "testVal");
-    return $redis->get("key");
+    $sessionId = TestEngine\TestSessionHandler::createTestSession(1,1);
+    dd(TestEngine\TestSessionHandler::getSession($sessionId));
 });
 
 Auth::routes();

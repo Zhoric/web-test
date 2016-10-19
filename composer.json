@@ -27,7 +27,8 @@
             "app/Managers",
             "app/Helpers",
             "app/Entities",
-            "app/ViewModels"
+            "app/ViewModels",
+            "app/TestEngine"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -40,7 +41,8 @@
             "app/Managers",
             "app/Helpers",
             "app/Entities",
-            "app/ViewModels"
+            "app/ViewModels",
+            "app/TestEngine"
         ],
         "psr-4": {
             "App\\": "app/"
