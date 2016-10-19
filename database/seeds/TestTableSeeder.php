@@ -14,7 +14,10 @@ class TestTableSeeder extends Seeder
                 'subject' => 'Тест по лабораторной №'.$i,
                 'discipline_id' => 2,
                 'time_total' => 600,
-                'attempts' => 3
+                'attempts' => 3,
+                'type' => 1,
+                'is_active' => true,
+                'is_random' => true
             ));
         }
 

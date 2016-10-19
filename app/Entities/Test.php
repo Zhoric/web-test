@@ -36,11 +36,32 @@ class Test extends BaseEntity implements JsonSerializable
     /**
      * @var integer
      *
+     * @ORM\Column(name="type", type="smallint", nullable=true)
+     */
+    protected $type;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean", nullable=true)
+     */
+    protected $isActive;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_random", type="boolean", nullable=true)
+     */
+    protected $isRandom;
 
     /**
      * @var \Discipline
@@ -159,16 +180,58 @@ class Test extends BaseEntity implements JsonSerializable
         return $this->discipline;
     }
 
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
+
     function jsonSerialize()
     {
         // TODO: Implement jsonSerialize() method.
+    }
+
+    /**
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsRandom()
+    {
+        return $this->isRandom;
+    }
+
+    /**
+     * @param boolean $isRandom
+     */
+    public function setIsRandom($isRandom)
+    {
+        $this->isRandom = $isRandom;
     }
 }
 

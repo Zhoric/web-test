@@ -17,6 +17,14 @@
         <option name="unsigned"/>
       </options>
     </field>
+    <field name="type" type="smallint" column="type" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="isActive" type="boolean" column="is_active" nullable="false"/>
+    <field name="isRandom" type="boolean" column="is_random" nullable="false"/>
+
     <field name="attempts" type="smallint" column="attempts" nullable="true"/>
     <many-to-one field="discipline" target-entity="Discipline" fetch="LAZY">
       <join-columns>
