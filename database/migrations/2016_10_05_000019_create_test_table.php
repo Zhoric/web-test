@@ -18,6 +18,9 @@ class CreateTestTable extends Migration
             $table->string('subject', 200)->nullable()->default(NULL);
             $table->smallInteger('time_total')->nullable()->default(NULL);
             $table->smallInteger('attempts')->nullable()->default(NULL);
+            $table->smallInteger('type')->nullable()->default(NULL);
+            $table->tinyInteger('is_active')->nullable()->default(NULL);
+            $table->tinyInteger('is_random')->nullable()->default(NULL);
 
             $table->foreign('discipline_id')->references('id')->on('discipline')->onDelete('cascade');
         });
