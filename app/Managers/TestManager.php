@@ -2,6 +2,7 @@
 
 namespace Managers;
 
+use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Test;
 
@@ -41,5 +42,17 @@ class TestManager
 
     public function getById($id){
         return $this->_unitOfWork->tests()->find($id);
+    }
+
+    public function getNotAnsweredQuestionsByTest($testId, $answeredIds){
+        return $this->_unitOfWork->questions()
+            ->getNotAnsweredQuestionsByTest($testId, $answeredIds);
+    }
+
+    public function getQuestionWithAnswers($questionId){
+        $question = $this->_unitOfWork->questions()->find($questionId);
+        $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
+
+        return new QuestionViewModel($question, $answers);
     }
 }

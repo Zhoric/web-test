@@ -8,6 +8,10 @@ namespace TestEngine;
 class TestSession
 {
     /**
+     * Идентификатор сессии.
+     */
+    private $sessionId;
+    /**
      * Id пользователя, проходящего тест.
      */
     private $userId;
@@ -111,5 +115,21 @@ class TestSession
     public function setAnsweredQuestionsIds($answeredQuestionsIds)
     {
         $this->answeredQuestionsIds = $answeredQuestionsIds;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
+    }
+
+    /**
+     * @param mixed $sessionId
+     */
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
     }
 }

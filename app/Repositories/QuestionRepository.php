@@ -5,6 +5,9 @@ namespace Repositories;
 use Doctrine\ORM\EntityManager;
 use PaginationResult;
 use Question;
+use TestTheme;
+use Theme;
+use Doctrine\ORM\Query\Expr\Join;
 
 class QuestionRepository extends BaseRepository
 {
@@ -46,5 +49,23 @@ class QuestionRepository extends BaseRepository
             ->getSingleScalarResult();
 
         return new PaginationResult($data, $count);
+    }
+
+    public function getNotAnsweredQuestionsByTest($testId, $answeredIds){
+        $qb = $this->repo->createQueryBuilder('q');
+        $query = $qb->join(Theme::class, 't', Join::WITH, 'q.theme = t.id')
+            ->join(TestTheme::class, 'tt', Join::WITH,
+                't.id = tt.theme AND tt.test = :test')
+            ->setParameter('test', $testId);
+
+        if ($answeredIds != null && !empty($answeredIds)){
+            $query = $query->andWhere('q.id NOT IN(:answered)')
+                ->setParameter('answered', $answeredIds);
+        }
+
+        $query = $query->select('q.id')
+            ->getQuery();
+
+        return $query->getScalarResult();
     }
 }

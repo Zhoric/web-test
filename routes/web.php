@@ -17,10 +17,7 @@ Route::get('editor','DemoController@editor');
 Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
-Route::get('redis',function (){
-    $sessionId = TestEngine\TestSessionHandler::createTestSession(1,1);
-    dd(TestEngine\TestSessionHandler::getSession($sessionId));
-});
+
 
 Auth::routes();
 
@@ -172,6 +169,9 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('create', 'TestController@create');
         Route::post('update', 'TestController@update');
         Route::post('delete/{id}', 'TestController@delete');
+
+        Route::post('start', 'TestProcessController@startTest');
+        Route::get('nextQuestion', 'TestProcessController@getNextQuestion');
     });
 
 });
