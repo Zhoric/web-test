@@ -51,12 +51,13 @@ class QuestionRepository extends BaseRepository
         return new PaginationResult($data, $count);
     }
 
-    public function getNotAnsweredQuestionsByTest($testId, $answeredIds){
+    public function getNotAnsweredQuestionsByTest($testId, $answeredIds, $timeLeft){
         $qb = $this->repo->createQueryBuilder('q');
         $query = $qb->join(Theme::class, 't', Join::WITH, 'q.theme = t.id')
             ->join(TestTheme::class, 'tt', Join::WITH,
-                't.id = tt.theme AND tt.test = :test')
-            ->setParameter('test', $testId);
+                't.id = tt.theme AND tt.test = :test AND q.time < :timeLeft')
+            ->setParameter('test', $testId)
+            ->setParameter('timeLeft', $timeLeft);
 
         if ($answeredIds != null && !empty($answeredIds)){
             $query = $query->andWhere('q.id NOT IN(:answered)')

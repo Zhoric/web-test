@@ -2,12 +2,29 @@
 
 namespace TestEngine;
 use League\Flysystem\Exception;
+use Managers\TestManager;
 
 /**
  * Класс, ответственный за управление процессом тестирования.
  */
 class TestProcessManager
 {
+    const dateFormat = 'Y-m-d H:i:s';
+
+    /**
+     * Допуск времени (в секундах), отведённого на тест.
+     */
+    const testEndTolerance = 30;
+
+    /**
+     * @var TestManager
+     */
+    private static $_testManager;
+    /**
+     * @var TestSession
+     */
+    private static $_session;
+
     /**
      * Инициализация процесса тестирования.
      */
@@ -24,41 +41,101 @@ class TestProcessManager
      */
     public static function getNextQuestion($sessionId){
         try{
-            $session = TestSessionHandler::getSession($sessionId);
-            $testId = $session->getTestId();
-            $answeredQuestionsIds = $session->getAnsweredQuestionsIds();
-            //TODO: Проверка на истечение сессии тестирования (подобрать погрешность)
-            //TODO: Проверка на отсутствие сессии с таким идентификатором
+            self::$_testManager = TestSessionHandler::getTestManager();
 
-            $testManager = TestSessionHandler::getTestManager();
-            $test = $testManager->getById($testId);
-            /* TODO: На основании настроек теста выбрать следующий вопрос
-            *  TODO: Учитывать оставшееся на тест время при поиске подходящих вопросов,
-            *  переводя время до конца теста в секунды и сравнивая с временем на вопрос
-            */
+            self::$_session = TestSessionHandler::getSession($sessionId);
+            self::validateTestSession();
 
-            $suitableQuestions = $testManager->getNotAnsweredQuestionsByTest(
-                $testId,
-                $answeredQuestionsIds);
+            $suitableQuestions = self::getSuitableQuestionsIds();
+            self::validateSuitableQuestions($suitableQuestions);
 
-            if ($suitableQuestions == null || empty($suitableQuestions)){
-                throw new Exception('Тест завершен!');
-            }
+            $nextQuestionId = self::getRandomQuestion($suitableQuestions);
+            self::updateTestSession($nextQuestionId);
 
-            //TODO: Обработка случая, когда подходящих вопросов не осталось (завершение теста)
-
-            array_flatten($suitableQuestions);
-            $nextQuestionIndex = array_rand($suitableQuestions);
-            $nextQuestionId = $suitableQuestions[$nextQuestionIndex]['id'];
-
-            array_push($answeredQuestionsIds, $nextQuestionId);
-            $session->setAnsweredQuestionsIds($answeredQuestionsIds);
-            TestSessionHandler::updateSession($sessionId, $answeredQuestionsIds);
         } catch (Exception $exception){
             return array('message' => $exception->getMessage());
         }
 
-        return $testManager->getQuestionWithAnswers($nextQuestionId);
+        return self::$_testManager->getQuestionWithAnswers($nextQuestionId);
     }
+
+    /**
+     * Получение идентификаторов вопросов, подходящих под условия,
+     * настройки и текущее состояние процесса тестирования.
+     */
+    private static function getSuitableQuestionsIds(){
+        $testManager = self::$_testManager;
+        $session = self::$_session;
+
+        $testId = $session->getTestId();
+        $test = $testManager->getById($testId);
+        $answeredQuestionsIds = $session->getAnsweredQuestionsIds();
+
+        $timeLeft = self::getTimeLeftBeforeTestEnd();
+        $suitableQuestionsIds = $testManager->getNotAnsweredQuestionsByTest(
+            $testId,
+            $answeredQuestionsIds,
+            $timeLeft);
+
+        return $suitableQuestionsIds;
+    }
+
+    /**
+     * Подсчёт количества секунд, оставшихся до конца тестирования.
+     */
+    private static function getTimeLeftBeforeTestEnd(){
+        $now = date(self::dateFormat);
+        $testTimeLeft = self::$_session->getTestEndDateTime()->format(self::dateFormat);
+
+        $secondsLeft = strtotime($testTimeLeft) - strtotime($now);
+        return $secondsLeft;
+    }
+
+    /**
+     * Выбор случайного вопроса из списка подходящих.
+     */
+    private static function getRandomQuestion($suitableQuestions){
+        array_flatten($suitableQuestions);
+        $nextQuestionIndex = array_rand($suitableQuestions);
+        $nextQuestionId = $suitableQuestions[$nextQuestionIndex]['id'];
+
+        return $nextQuestionId;
+    }
+
+    /**
+     * Обновление состояния сессии тестирования.
+     */
+    private static function updateTestSession($nextQuestionId){
+        $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
+        array_push($answeredQuestionsIds, $nextQuestionId);
+        self::$_session->setAnsweredQuestionsIds($answeredQuestionsIds);
+        TestSessionHandler::updateSession(self::$_session->getSessionId(), $answeredQuestionsIds);
+    }
+
+    /**
+     * Валидация сессии тестирования.
+     */
+    private static function validateTestSession(){
+        $endTime = self::$_session->getTestEndDateTime();
+        if ($endTime == null || $endTime == ''){
+            throw new Exception('Не найдена сессия тестирования!');
+        }
+
+        $timeLeft = self::getTimeLeftBeforeTestEnd();
+        if (self::testEndTolerance + $timeLeft <= 0){
+            throw new Exception('Время, отведённое на тест истекло!');
+        }
+    }
+
+    /**
+     * Валидация списка подходящих вопросов.
+     */
+    private static function validateSuitableQuestions($suitableQuestionsIds){
+
+        if ($suitableQuestionsIds == null || empty($suitableQuestionsIds)){
+            throw new Exception('Тест завершен!');
+        }
+    }
+
 
 }

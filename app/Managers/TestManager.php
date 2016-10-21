@@ -44,9 +44,9 @@ class TestManager
         return $this->_unitOfWork->tests()->find($id);
     }
 
-    public function getNotAnsweredQuestionsByTest($testId, $answeredIds){
+    public function getNotAnsweredQuestionsByTest($testId, $answeredIds, $timeLeft){
         return $this->_unitOfWork->questions()
-            ->getNotAnsweredQuestionsByTest($testId, $answeredIds);
+            ->getNotAnsweredQuestionsByTest($testId, $answeredIds, $timeLeft);
     }
 
     public function getQuestionWithAnswers($questionId){
