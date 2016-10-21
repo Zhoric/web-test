@@ -88,4 +88,12 @@ class DisciplineController extends Controller
     public function getTestsByDiscipline($disciplineId){
         return $this->_disciplineManager->getTestsByDiscipline($disciplineId);
     }
+
+    public function getTheme($id){
+        return json_encode($this->_disciplineManager->getTheme($id));
+    }
+
+    public function getDiscipline($id){
+        return json_encode($this->_disciplineManager->getDiscipline($id));
+    }
 }

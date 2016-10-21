@@ -87,4 +87,11 @@ class DisciplineManager
     public function getTestsByDiscipline($disciplineId){
         return $this->_unitOfWork->tests()->getByDiscipline($disciplineId);
     }
+
+    public function getTheme($id){
+        return $this->_unitOfWork->themes()->find($id);
+    }
+    public function getDiscipline($id){
+        return $this->_unitOfWork->disciplines()->find($id);
+    }
 }

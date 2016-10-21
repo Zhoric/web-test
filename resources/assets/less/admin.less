@@ -126,8 +126,210 @@
   }
 }
 
+table{
+  &.theme{
+    width: 97%;
+    padding: 15px 0;
+    border-collapse: collapse;
+    border-top: 1px solid @light-grey;
+    cellpadding: 10px;
+    text-align:center;
+    th{
+      padding: 10px;
+    }
+    tbody tr{
+      &:nth-child(odd){
+        background: @light-grey;
+      }
+      &:nth-child(even){
+        background: @normal-grey;
+      }
+    }
+    td{
+      padding: 5px;
+      width: 7%;
+      &:nth-child(2){
+        width: 80%;
+        text-align: left;
+      }
+    }
+    button{
+      width: 35px;
+      height: 30px;
+    }
+    a{
+      border-bottom: 0;
+      &:hover{
+        color: @emerland;
+      }
+    }
+    &s {
+      .width100();
+      td{
+        &:first-child{
+          width: 50%;
+        }
+        &:nth-child(2), &:nth-child(3){
+          width: 13%;
+        }
+      }
+    }
+  }
+  &.students-table{
+    width: 100%;
+    padding: 15px 0;
+    border-collapse: collapse;
+    border-top: 1px solid @light-grey;
+    tr > td{
+      &:first-child, &:last-child{
+        text-align: center;
+      }
+      &:first-child{
+        width: 100px;
+      }
+      &:last-child{
+        width: 250px;
+      }
+    }
+  }
+}
 
+a.active-link{
+  font-size: 13px;
+  color: @greensea;
+  float: right;
+  border-bottom: 0;
+  &:hover{
+    color: @black;
+  }
+}
+button.move{
+  width: 150px;
+}
+button{
+  background: @emerland;
+  width: 50px;
+  &:hover{
+    background: @nephritis;
+  }
+}
 
+.discipline{
+  &-edit{
+    div{
+      &:first-child{
+        width: 20%;
+        input{
+          width: 100%;
+        }
+      }
+      &:nth-child(2){
+        width: 70%;
+        input{
+          width: 94%;
+        }
+      }
+      &:nth-child(3){
+        width: 93%;
+        select{
+          width: 97%;
+        }
+      }
+    }
+    .float-btn-group{
+      float: right;
+      margin-right: 8%;
+    }
+  }
+  &-info{
+    div{
+      &:last-child{
+        width: 100%;
+        i{
+          &:first-child{
+            float: left;
+          }
+          &:last-child{
+            float:right;
+            margin-right: 8%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.themes{
+  .org-info{
+    border-bottom: 20px solid @white;
+  }
+  .filter div{
+    width: 32%;
+  }
+  &-add{
+    border-bottom: 20px solid @white;
+    div{
+      width: 47%;
+      input{
+        width: 95%;
+      }
+      &:first-child{
+        width: 13%;
+        input{
+          width: 25px;
+          text-align: center;
+        }
+      }
+      &:nth-child(2){
+        width: 81%;
+        input{
+          width: 97%;
+        }
+      }
+      &:nth-child(5), &:nth-child(6){
+        width: 96%;
+        textarea{
+          width: 99%;
+          height: 100px;
+        }
+        input{
+          width: 93%;
+        }
+        button{
+          width: 35px;
+          height: 34px;
+          margin-left: 15px;
+        }
+      }
+      &:nth-child(7){
+        width:96%;
+        table{
+          width: 100%;
+          border-top: 1px solid @unimportant;
+          border-bottom: 1px solid @unimportant;
+          padding:7px;
+          td{
+            width:30%;
+            &:first-child{
+              width: 10%;
+            }
+            &:last-child{
+              width: 20%;
+            }
+          }
+        }
+      }
+      &:last-child{
+        width:100%;
+        button{
+          float: right;
+          width:200px;
+          margin-right: 45px;
+        }
+      }
+    }
+  }
+}
 
 
 .institutes{
@@ -185,13 +387,7 @@
     }
   }
 }
-button{
-  background: @emerland;
-  width: 50px;
-  &:hover{
-    background: @nephritis;
-  }
-}
+
 .info-group{
   .details-group{
     div{
@@ -239,73 +435,4 @@ button{
   }
 }
 
-table{
-  &.theme{
-    width: 97%;
-    padding: 15px 0;
-    border-collapse: collapse;
-    border-top: 1px solid @light-grey;
-    cellpadding: 10px;
-    text-align:center;
-    th{
-      padding: 10px;
-    }
-    tbody tr{
-      &:nth-child(odd){
-        background: @light-grey;
-      }
-      &:nth-child(even){
-        background: @normal-grey;
-      }
-    }
-    td{
-      padding: 5px;
-      width: 7%;
-      &:nth-child(2){
-        width: 80%;
-        text-align: left;
-      }
-    }
-    button{
-      width: 35px;
-      height: 30px;
-    }
-    a{
-      border-bottom: 0;
-      &:hover{
-        color: @emerland;
-      }
-    }
-  }
-  &.students-table{
-    width: 100%;
-    padding: 15px 0;
-    border-collapse: collapse;
-    border-top: 1px solid @light-grey;
-    tr > td{
-      &:first-child, &:last-child{
-        text-align: center;
-      }
-      &:first-child{
-        width: 100px;
-      }
-      &:last-child{
-        width: 250px;
-      }
-    }
-  }
-}
-
-a.active-link{
-  font-size: 13px;
-  color: @greensea;
-  float: right;
-  border-bottom: 0;
-  &:hover{
-    color: @black;
-  }
-}
-button.move{
-  width: 150px;
-}
 

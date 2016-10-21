@@ -43,6 +43,7 @@ $(document).ready(function(){
                         .name('')
                         .abbreviation('')
                         .description('');
+                    self.current().profile().selected([]);
                 },
                 stringify: function(){
                     var edit = self.current().discipline();
@@ -62,16 +63,20 @@ $(document).ready(function(){
                     var discipline = self.current().profile().discipline();
                     var profiles = self.current().profile().profiles;
                     var selected = self.current().profile().selected;
+                    var received = self.current().profile().received;
+                    selected([]);
                     if (discipline.length){
                         discipline.forEach(function(disc){
                             var profile = profiles().find(function(item){
                                 return  (item.id() == disc.profile_id()) ? item : null;
                             });
 
-                            if (profile) selected.push(profile);
+                            if (profile){
+                                selected.push(profile);
+                                received.push(profile);
+                            }
                         });
                     }
-                    //console.log(selected());
                 }
             });
             self.pagination = ko.observable({
@@ -82,6 +87,7 @@ $(document).ready(function(){
 
                 selectPage: function(page){
                     self.pagination().currentPage(page);
+                    self.get().disciplines();
                 },
                 dotsVisible: function(index){
                     var total = self.pagination().totalPages();
@@ -108,9 +114,9 @@ $(document).ready(function(){
                 show: function(data){
                     if (self.mode() === 'none' || self.current().discipline().id() !== data.id()){
                         self.mode('info');
+                        self.get().disciplineProfiles();
                         self.toggleCurrent().fill(data);
                         self.get().themes();
-                        self.get().disciplineProfiles();
                         return;
                     }
                     self.mode('none');
@@ -121,8 +127,8 @@ $(document).ready(function(){
                     self.mode() === 'add' ? self.mode('none') : self.mode('add');
                 },
                 startUpdate: function(){
-                    self.toggleCurrent().setInitialProfiles();
                     self.mode('edit');
+                    self.toggleCurrent().setInitialProfiles();
                 },
                 startRemove: function(){
                     self.mode('delete');
@@ -140,7 +146,6 @@ $(document).ready(function(){
                     self.post(url, '');
                 },
                 cancel: function(){
-                    console.log(self.current().profile().selected());
                     if (self.mode() === 'add'){
                         self.mode('none');
                         self.toggleCurrent().empty();
@@ -183,6 +188,11 @@ $(document).ready(function(){
                 })
             });
 
+            self.moveTo = ko.observable({
+                theme: function(data){
+                    window.location.href = '/admin/theme/' + data.id();
+                }
+            });
             self.get = ko.observable({
                 disciplines: function(profileId){
                     var filter = self.filter();
@@ -252,6 +262,7 @@ $(document).ready(function(){
                 disciplines: self.disciplines,
                 pagination: self.pagination,
                 current: self.current,
+                moveTo: self.moveTo,
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,

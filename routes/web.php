@@ -32,6 +32,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('groups', function(){return View('admin.groups');});
     Route::get('disciplines', function(){return View('admin.disciplines');});
     Route::get('groups/{id}', function(){return View('admin.groups');});
+    Route::get('theme/{id}', function(){return View('admin.themes');});
 });
 
 
@@ -125,6 +126,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
         Route::get('{id}/profiles','DisciplineController@getDisciplineProfilesIds');
         Route::get('{id}/tests','DisciplineController@getTestsByDiscipline');
+        Route::get('{id}','DisciplineController@getDiscipline');
 
         /*------------------------------------------------------------------------
         *                   Работа со темами дисциплин                          */
@@ -135,6 +137,8 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('create', 'DisciplineController@createTheme');
             Route::post('update', 'DisciplineController@updateTheme');
             Route::post('delete/{id}', 'DisciplineController@deleteTheme');
+            Route::get('{id}', 'DisciplineController@getTheme');
+
         });
     });
 

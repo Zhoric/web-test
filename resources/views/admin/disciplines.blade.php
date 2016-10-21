@@ -99,6 +99,7 @@
         <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
         <div class="width100" data-bind="template: {name: 'edit-mode', data: $data}"></div>
         <!-- /ko -->
+        <!-- ko if: $root.mode() !== 'add' -->
         <div class="width100">
             <table class="theme">
                 <thead>
@@ -108,17 +109,18 @@
                 <!-- ko foreach: $root.current().themes-->
                 <tr>
                     <td data-bind="text: $index()+1"></td>
-                    <td><a data-bind="text: name"></a></td>
+                    <td><a data-bind="text: name, click: $root.moveTo().theme"></a></td>
                     <td><button data-bind="click: $root.csed().theme().startRemove" class="fa danger">&#xf014;</button></td>
                 </tr>
                 <!-- /ko -->
                 </tbody>
             </table>
         </div>
+        <!-- /ko -->
     </div>
 </script>
 <script type="text/html" id="info-mode">
-    <div class="org-info-details width100 discipline">
+    <div class="org-info-details width100 discipline-info">
         <div>
             <label>Аббревиатура</label></br>
             <span data-bind="text: abbreviation"></span>
@@ -128,15 +130,19 @@
             <span data-bind="text: name"></span>
         </div>
         <div>
+        <i>
             <button class="move" data-bind="click: $root.csed().theme().startAdd"><span class="fa">&#xf067;</span>&nbsp;Добавить тему</button>
             <button class="move"><span class="fa">&#xf044;</span>&nbsp;Тесты</button>
+        </i>
+        <i>
             <button data-bind="click: $root.csed().startUpdate" class="fa">&#xf040;</button>
             <button data-bind="click: $root.csed().startRemove" class="fa danger">&#xf014;</button>
+        </i>
         </div>
     </div>
 </script>
 <script type="text/html" id="edit-mode">
-    <div class="org-info-edit width100 discipline">
+    <div class="org-info-edit width100 discipline-edit">
         <div>
             <label>Аббревиатура</label></br>
             <input type="text" data-bind="value: abbreviation">
@@ -148,10 +154,10 @@
         <div>
             <label>Профили</label></br>
             <!-- ko with: $root.current().profile() -->
-            <select data-bind="options: profiles, optionsText: 'name',  selectedOptions: selected" size="4" multiple="true"></select>
+            <select data-bind="options: profiles, optionsText: 'fullname',  selectedOptions: selected" size="4" multiple="true"></select>
             <!-- /ko -->
         </div>
-        <div>
+        <div class="float-btn-group">
             <button data-bind="click: $root.csed().update" class="fa">&#xf00c;</button>
             <button data-bind="click: $root.csed().cancel" class="fa danger">&#xf00d;</button>
         </div>

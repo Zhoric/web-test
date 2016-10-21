@@ -103,5 +103,18 @@ button.move:hover {
   -moz-osx-font-smoothing: grayscale;
   font-size: 19px;
 }
+span.radio {
+  color: #7f8c8d;
+  font-size: 13px;
+  line-height: 2;
+}
+span.radio-checked {
+  color: #16a085;
+  font-size: 18px;
+}
+span.radio-checked-danger {
+  color: #e74c3c;
+  font-size: 18px;
+}
 
 /*# sourceMappingURL=common.css.map */
