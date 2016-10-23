@@ -2,8 +2,13 @@
 
 namespace TestEngine;
 
+use DateTime;
+use Doctrine\Common\Cache\PredisCache;
 use Exception;
+use Illuminate\Support\Facades\Redis;
 use Managers\TestManager;
+use Managers\TestResultManager;
+use Test;
 
 /**
  * Класс, отвечающий за работу с сессиями тестирования.
@@ -15,15 +20,21 @@ class TestSessionHandler
      */
     const userIdPrefix = 'uid';
     const testIdPrefix = 'tid';
+    const testResultPrefix = 'tr';
     const testEndTimePrefix = 'end';
     const answersQualityPrefix = 'aq';
     const answeredQuestionsIdsPrefix = 'aqid';
+
     const dateSerializationFormat = 'Y-m-d H:i:s';
     const cacheExpiration = '+ 1 day';
 
     private static $_testManager;
+    private static $_testResultManager;
     private static $_redisClient;
 
+    /**
+     * @return TestManager
+     */
     public static function getTestManager(){
         if (self::$_testManager == null){
             self::$_testManager = app()->make(TestManager::class);
@@ -32,6 +43,20 @@ class TestSessionHandler
         return self::$_testManager;
     }
 
+    /**
+     * @return TestResultManager
+     */
+    public static function getTestResultManager(){
+        if (self::$_testResultManager == null){
+            self::$_testResultManager = app()->make(TestResultManager::class);
+        }
+
+        return self::$_testResultManager;
+    }
+
+    /**
+     * @return Redis
+     */
     private static function getRedisClient(){
         if (self::$_redisClient == null){
             self::$_redisClient = app()->make('redis');
@@ -52,29 +77,7 @@ class TestSessionHandler
 
         $sessionId = self::generateSessionId($userId, $testId);
 
-        $testEndTime = $date = new \DateTime('+'.$test->getTimeTotal().' seconds');
-        $testEndTime = $testEndTime->format(self::dateSerializationFormat);
-        $answersQuality = 0;
-        $answeredQuestionsIds = [];
-
-        $redis = self::getRedisClient();
-
-        $userIdKey = self::userIdPrefix.$sessionId;
-        $testIdKey = self::testIdPrefix.$sessionId;
-        $endTimeKey = self::testEndTimePrefix.$sessionId;
-        $qualityKey = self::answersQualityPrefix.$sessionId;
-        $answeredKey = self::answeredQuestionsIdsPrefix.$sessionId;
-
-        $redis->set($userIdKey, $userId);
-        $redis->expireat($userIdKey, strtotime(self::cacheExpiration));
-        $redis->set($testIdKey, $testId);
-        $redis->expireat($testIdKey, strtotime(self::cacheExpiration));
-        $redis->set($endTimeKey, $testEndTime);
-        $redis->expireat($endTimeKey, strtotime(self::cacheExpiration));
-        $redis->set($qualityKey, $answersQuality);
-        $redis->expireat($qualityKey, strtotime(self::cacheExpiration));
-        $redis->set($answeredKey, implode($answeredQuestionsIds, ','));
-        $redis->expireat($answeredKey, strtotime(self::cacheExpiration));
+        self::initializeSession($sessionId, $userId, $test);
 
         return $sessionId;
     }
@@ -119,6 +122,69 @@ class TestSessionHandler
         $sessionDataString = $userId.$testId.$currentDate;
         return bcrypt($sessionDataString);
     }
+
+    /**
+     * Инициализация значений полей сессии тестирования в кэше.
+     */
+    private static function initializeSession($sessionId, $userId, Test $test){
+        $testId = $test->getId();
+        $testEndTime = $date = new DateTime('+'.$test->getTimeTotal().' seconds');
+        $testEndTime = $testEndTime->format(self::dateSerializationFormat);
+        $answersQuality = 0;
+        $answeredQuestionsIds = [];
+
+        self::initSessionTest($sessionId,$testId);
+        self::initSessionUser($sessionId,$userId);
+        self::initSessionTestResult($sessionId, $userId, $testId);
+        self::initSessionAnsweredQuestions($sessionId, $answeredQuestionsIds);
+        self::initSessionAnswersQuality($sessionId, $answersQuality);
+        self::initSessionEndTime($sessionId, $testEndTime);
+    }
+
+    private static function initSessionUser($sessionId, $userId){
+        $userIdKey = self::userIdPrefix.$sessionId;
+
+        self::getRedisClient()->set($userIdKey, $userId);
+        self::getRedisClient()->expireat($userIdKey, strtotime(self::cacheExpiration));
+    }
+
+    private static function initSessionTest($sessionId, $testId){
+        $testIdKey = self::testIdPrefix.$sessionId;
+
+        self::getRedisClient()->set($testIdKey, $testId);
+        self::getRedisClient()->expireat($testIdKey, strtotime(self::cacheExpiration));
+    }
+
+    private static function initSessionTestResult($sessionId, $userId, $testId){
+        $testResultIdKey = self::testResultPrefix.$sessionId;
+        $testResultId = self::getTestResultManager()->createEmptyTestResult($userId, $testId);
+
+        self::getRedisClient()->set($testResultIdKey, $testResultId);
+        self::getRedisClient()->expireat($testResultIdKey, strtotime(self::cacheExpiration));
+    }
+
+    private static function initSessionEndTime($sessionId, $testEndTime){
+        $endTimeKey = self::testEndTimePrefix.$sessionId;
+
+        self::getRedisClient()->set($endTimeKey, $testEndTime);
+        self::getRedisClient()->expireat($endTimeKey, strtotime(self::cacheExpiration));
+    }
+
+    private static function initSessionAnswersQuality($sessionId, $answersQuality){
+        $qualityKey = self::answersQualityPrefix.$sessionId;
+
+        self::getRedisClient()->set($qualityKey, $answersQuality);
+        self::getRedisClient()->expireat($qualityKey, strtotime(self::cacheExpiration));
+    }
+
+    private static function initSessionAnsweredQuestions($sessionId, $answeredQuestionsIds){
+        $answeredKey = self::answeredQuestionsIdsPrefix.$sessionId;
+
+        self::getRedisClient()->set($answeredKey, implode($answeredQuestionsIds, ','));
+        self::getRedisClient()->expireat($answeredKey, strtotime(self::cacheExpiration));
+    }
+
+
 
 
 }

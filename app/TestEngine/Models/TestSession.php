@@ -38,6 +38,11 @@ class TestSession
     private $answeredQuestionsIds;
 
     /**
+     * Id записи с результатом теста в БД.
+     */
+    private $testResultId;
+
+    /**
      * @return mixed
      */
     public function getTestId()
@@ -131,5 +136,21 @@ class TestSession
     public function setSessionId($sessionId)
     {
         $this->sessionId = $sessionId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTestResultId()
+    {
+        return $this->testResultId;
+    }
+
+    /**
+     * @param mixed $testResultId
+     */
+    public function setTestResultId($testResultId)
+    {
+        $this->testResultId = $testResultId;
     }
 }

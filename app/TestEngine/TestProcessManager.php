@@ -29,9 +29,8 @@ class TestProcessManager
      * Инициализация процесса тестирования.
      */
     public static function initTest($userId, $testId){
+        //TODO: проверка номера попытки
         $sessionId = TestSessionHandler::createTestSession($userId, $testId);
-        //TODO: Создание сущности TestResult, id которой также можно хранить в кэше
-        //TODO: Проверка на количество попыток
         return $sessionId;
     }
 
@@ -39,6 +38,7 @@ class TestProcessManager
      * Получение следующего вопроса на основании настроек теста
      * и списка вопросов, на которые уже были даны ответы.
      */
+    //TODO: НЕ ВОЗВРАЩАТЬ В ОТВЕТАХ is_right !
     public static function getNextQuestion($sessionId){
         try{
             self::$_testManager = TestSessionHandler::getTestManager();
@@ -57,6 +57,15 @@ class TestProcessManager
         }
 
         return self::$_testManager->getQuestionWithAnswers($nextQuestionId);
+    }
+
+    /**
+     * Обработка ответа студента на вопрос теста.
+     * @param $sessionId - Идентификатор сессии.
+     * @param QuestionAnswer $questionAnswer - Ответ на вопрос теста.
+     */
+    public function processAnswer($sessionId, QuestionAnswer $questionAnswer){
+        
     }
 
     /**
