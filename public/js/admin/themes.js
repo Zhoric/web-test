@@ -32,8 +32,8 @@ $(document).ready(function(){
             });
             self.filter = ko.observable({
                 name: ko.observable(''),
-                type: ko.observable(''),
-                complexity: ko.observable(''),
+                type: ko.observable(),
+                complexity: ko.observable(),
                 types: ko.observableArray([
                     {id: ko.observable(1), name: ko.observable('Закрытый с одним правильным ответом')},
                     {id: ko.observable(2), name: ko.observable('Закрытый с несколькими правильными ответами')},
@@ -233,11 +233,14 @@ $(document).ready(function(){
                     ));
                 }
             });
-            self.filter().type.subscribe(function(value){
-
+            self.filter().type.subscribe(function(){
+                self.get().questions();
             });
-            self.filter().complexity.subscribe(function(value){
-
+            self.filter().complexity.subscribe(function(){
+                self.get().questions();
+            });
+            self.filter().name.subscribe(function(){
+                self.get().questions();
             });
 
             return {

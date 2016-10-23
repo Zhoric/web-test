@@ -389,10 +389,10 @@ button:hover {
   padding: 7px;
 }
 .themes-add div:nth-child(7) table td {
-  width: 30%;
+  width: 65%;
 }
 .themes-add div:nth-child(7) table td:first-child {
-  width: 10%;
+  width: 5%;
 }
 .themes-add div:nth-child(7) table td:last-child {
   width: 20%;
