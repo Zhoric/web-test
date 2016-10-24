@@ -6,9 +6,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.theme = ko.observable({
-
-            });
+            self.theme = ko.observable({});
 
             self.current = ko.observable({
                 theme: ko.observable({
@@ -28,7 +26,12 @@ $(document).ready(function(){
                     type: ko.observable(0),
                     minutes: ko.observable(),
                     seconds: ko.observable()
-                })
+                }),
+                answer: ko.observable({
+                    name: ko.observable(''),
+                    isRight: ko.observable(false)
+                }),
+                answers: ko.observableArray([])
             });
             self.filter = ko.observable({
                 name: ko.observable(''),
@@ -47,33 +50,74 @@ $(document).ready(function(){
                 ])
             });
             self.toggleCurrent = ko.observable({
-                fill: function(data){
-                    self.current().theme()
-                        .id(data.id())
-                        .name(data.name());
-                },
-                empty: function(){
-                    self.current().discipline()
-                        .id(0)
-                        .name('')
-                        .abbreviation('')
-                        .description('');
-                    self.current().profile().selected([]);
-                },
-                stringify: function(){
-                    var edit = self.current().discipline();
-                    var profiles = [];
-                    var forpost = {
-                        name: edit.name(),
-                        abbreviation: edit.abbreviation(),
-                        description: edit.description()
-                    };
-                    self.mode() === 'edit' ? forpost.id = edit.id() : null;
-                    self.current().profile().selected().forEach(function(item){
-                        profiles.push(item.id());
-                    });
-                    return JSON.stringify({discipline: forpost, profileIds: profiles});
-                },
+                fill: ko.observable({
+                    theme: function(data){
+                        self.current().theme()
+                            .id(data.id())
+                            .name(data.name());
+                    },
+                    question: function(data){
+                        self.current().question()
+                            .id(data.id())
+                            .text(data.text())
+                            .time(data.time())
+                            .complexity(data.complexity())
+                            .type(data.type());
+                    },
+                    answers: function(){}
+                }),
+                empty: ko.observable({
+                    question: function(){
+                        self.current().question()
+                            .id(0)
+                            .text('')
+                            .time(0)
+                            .complexity(0)
+                            .type(0)
+                            .minutes(0)
+                            .seconds(0);
+                    },
+                    answer: function(){
+                        self.current().answer().name('').isRight(false);
+                    },
+                    answers: function(){
+                        self.current().answers([]);
+                    }
+                }),
+                stringify: ko.observable({
+                    theme: function(){
+                        var disciplineId = self.current().discipline().id();
+                        var themeForPost = {
+                            id: self.current().theme().id(),
+                            name: self.current().theme().name(),
+                            discipline: disciplineId
+                        };
+
+                        return JSON.stringify({
+                            theme: themeForPost,
+                            disciplineId: disciplineId
+                        });
+                    },
+                    question: function(){
+                        var answers = [];
+                        var curq = self.current().question();
+                        var question = {
+                            type: curq.type().id(),
+                            text: curq.text(),
+                            complexity: curq.complexity().id(),
+                            time: +curq.minutes() * 60 + +curq.seconds()
+                        };
+                        self.current().answers().find(function(item){
+                            var answer = {
+                                text: item.name(),
+                                isRight: item.isRight()
+                            };
+                            answers.push(answer);
+                        });
+
+                        return JSON.stringify({question: question, theme: self.theme().id(), answers: answers});
+                    }
+                }),
                 set: ko.observable({
                     complexity: function(data){
                         var complexityId = data.complexity();
@@ -98,7 +142,21 @@ $(document).ready(function(){
                             return;
                         });
                         return type;
-                    }
+                    },
+                    answerCorrectness: function(data, e){
+                        var level = $(e.target).attr('level') == 1 ? true : false;
+                        var type = self.current().question().type() ? self.current().question().type().id() : 0;
+                        console.log(type);
+                        self.current().answers().find(function(item){
+                            if (type === 1){
+                                if (level){
+                                    item.isRight(false);
+                                }
+                            }
+                            if (item.id() === data.id())
+                                item.isRight(level);
+                        });
+                    },
                 })
             });
             self.pagination = ko.observable({
@@ -137,43 +195,44 @@ $(document).ready(function(){
                     edit: function(){
                         self.mode('theme.edit');
                     },
-                    update: function(){},
+                    update: function(){
+                        self.theme().name(self.current().theme().name());
+                        self.post().theme();
+                        self.mode('none');
+                    },
                     cancel: function(){
                         self.mode('none');
-                        self.toggleCurrent().fill(self.theme());
+                        self.toggleCurrent().fill().theme(self.theme());
                     }
                 }),
-                startAdd: function(){
-                    self.toggleCurrent().empty();
-                    self.mode() === 'add' ? self.mode('none') : self.mode('add');
-                },
-                startUpdate: function(){
-                    self.mode('edit');
-                    self.toggleCurrent().setInitialProfiles();
-                },
-                startRemove: function(){
-                    self.mode('delete');
-                    self.toggleModal('#delete-modal', '');
-                },
-                update: function(){
-                    var url = self.mode() === 'add' ? '/api/disciplines/create' : '/api/disciplines/update';
-                    var json = self.toggleCurrent().stringify();
-                    console.log(url + ' : ' + json);
-                    self.post(url, json);
-                },
-                remove: function(){
-                    self.toggleModal('#delete-modal', 'close');
-                    var url = '/api/disciplines/delete/' + self.current().discipline().id();
-                    self.post(url, '');
-                },
-                cancel: function(){
-                    if (self.mode() === 'add'){
-                        self.mode('none');
-                        self.toggleCurrent().empty();
-                        return;
+                question: ko.observable({
+                    toggleAdd: function(){
+                        self.mode() === 'add' ? self.mode('none') : self.mode('add');
+                        self.toggleCurrent().empty().question();
+                    },
+                    add: function(){
+                        self.post().question();
                     }
-                    self.mode('info');
-                }
+                }),
+                answer: ko.observable({
+                    add: function(){
+                        var name = self.current().answer().name();
+                        var isRight = self.current().answer().isRight();
+                        var id = self.current().answers().length ? self.current().answers().length + 1 : 1;
+
+                        self.current().answers.push({
+                            id: ko.observable(id),
+                            name: ko.observable(name),
+                            isRight: ko.observable(isRight)
+                        });
+                        self.toggleCurrent().empty().answer();
+                    },
+                    remove: function(data){
+                        self.current().answers.remove(function(item){
+                            return item.id() === data.id();
+                        });
+                    }
+                })
             });
 
             self.get = ko.observable({
@@ -209,18 +268,32 @@ $(document).ready(function(){
                         self.theme(ko.mapping.fromJSON(response));
                         self.get().discipline();
                         self.get().questions();
-                        self.toggleCurrent().fill(self.theme());
+                        self.toggleCurrent().fill().theme(self.theme());
                     });
                 }
             });
+            self.post = ko.observable({
+                theme: function(){
+                    var url = '/api/disciplines/themes/update';
+                    var json = self.toggleCurrent().stringify().theme();
+
+                    $.post(url, json, function(){});
+                },
+                question: function(){
+                    var url = '/api/questions/create';
+                    var json = self.toggleCurrent().stringify().question();
+                    $.post(url, json, function(){
+                        self.toggleCurrent().empty().question();
+                        self.mode('none');
+                        self.get().questions();
+                    });
+                }
+            });
+
             self.get().theme();
 
 
-            self.post = function(url, json){
-                $.post(url, json, function(result){
-                    self.mode('none');
-                });
-            };
+
             self.toggleModal = function(selector, action){
                 $(selector).arcticmodal(action);
             };
@@ -241,6 +314,15 @@ $(document).ready(function(){
             });
             self.filter().name.subscribe(function(){
                 self.get().questions();
+            });
+            self.current().question().type.subscribe(function(value){
+                if (value){
+                    if (value.id() === 1){
+                        self.current().answers().find(function(item){
+                            item.isRight(false);
+                        });
+                    }
+                }
             });
 
             return {

@@ -107,12 +107,13 @@ span.radio {
   color: #7f8c8d;
   font-size: 13px;
   line-height: 2;
+  cursor: pointer;
 }
-span.radio-checked {
+span.radio-positive {
   color: #16a085;
   font-size: 18px;
 }
-span.radio-checked-danger {
+span.radio-negative {
   color: #e74c3c;
   font-size: 18px;
 }

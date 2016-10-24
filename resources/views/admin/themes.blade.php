@@ -7,7 +7,7 @@
 @section('content')
 <div class="content themes">
     <div class="org-info">
-        <div>
+        <div class="main-info width100">
             <div>
                 <label>Дисциплина</label></br>
                 <span data-bind="text: $root.current().discipline().name"></span>
@@ -19,15 +19,18 @@
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
                 <input type="text" data-bind="value: $root.current().theme().name">
-                <div>
-                    <button data-bind="click: $root.csed().theme().update" class="fa">&#xf00c;</button>
-                    <button data-bind="click: $root.csed().theme().cancel" class="fa danger">&#xf00d;</button>
-                </div>
+                <span>
+                    <button data-bind="click: $root.csed().theme().update" class="fa sq-small">&#xf00c;</button>
+                    <button data-bind="click: $root.csed().theme().cancel" class="fa danger sq-small">&#xf00d;</button>
+                </span>
                 <!-- /ko -->
+            </div></br>
+            <div>
+                <button class="width200" data-bind="click: $root.csed().question().toggleAdd">Добавить вопрос</button>
             </div>
         </div>
     </div>
-
+    <!-- ko if: $root.mode() === 'add' -->
     <div class="themes-add org-info">
         <div>
             <label>Время на ответ</label></br>
@@ -59,27 +62,35 @@
         </div>
         <div>
             <label>Варианты ответов</label></br>
-            <input type="text">
-            <button class="fa">&#xf067;</button>
+            <input data-bind="value: $root.current().answer().name" type="text">
+            <button data-bind="click: $root.csed().answer().add" class="fa">&#xf067;</button>
         </div>
+        <!-- ko if: $root.current().answers().length -->
         <div>
-            <table class="">
-                <tr>
-                    <td>1</td>
-                    <td>выоар ОРВФгн ЛАрвавл</td>
-                    <td>
-                        <span class="radio radio-checked">Правильный</span>
-                        <span>|</span>
-                        <span class="radio">Неправильный</span>
-                    </td>
-                </tr>
+            <table>
+                <tbody data-bind="foreach: $root.current().answers">
+                    <tr>
+                        <td data-bind="text: id"></td>
+                        <td data-bind="text: name"></td>
+                        <td>
+                            <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.toggleCurrent().set().answerCorrectness">Правильный</span>
+                            <span>|</span>
+                            <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.toggleCurrent().set().answerCorrectness" >Неправильный</span>
+                        </td>
+                        <td>
+                            <button class="fa sq-small danger" data-bind="click: $root.csed().answer().remove">&#xf014;</button>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
+        <!-- /ko -->
         <div class="btn-larger-group">
-            <button>Отмена</button>
-            <button>Сохранить вопрос</button>
+            <button class="danger" data-bind="click: $root.csed().question().toggleAdd">Отмена</button>
+            <button data-bind="click: $root.csed().question().add">Сохранить вопрос</button>
         </div>
     </div>
+    <!-- /ko -->
 
     <div class="filter">
         <div>

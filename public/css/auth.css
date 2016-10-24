@@ -103,6 +103,20 @@ button.move:hover {
   -moz-osx-font-smoothing: grayscale;
   font-size: 19px;
 }
+span.radio {
+  color: #7f8c8d;
+  font-size: 13px;
+  line-height: 2;
+  cursor: pointer;
+}
+span.radio-positive {
+  color: #16a085;
+  font-size: 18px;
+}
+span.radio-negative {
+  color: #e74c3c;
+  font-size: 18px;
+}
 body {
   background-color: #4aa272;
   -webkit-transition: background-color 0.2s ease-out 1s;

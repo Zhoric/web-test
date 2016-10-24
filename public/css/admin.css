@@ -107,12 +107,13 @@ span.radio {
   color: #7f8c8d;
   font-size: 13px;
   line-height: 2;
+  cursor: pointer;
 }
-span.radio-checked {
+span.radio-positive {
   color: #16a085;
   font-size: 18px;
 }
-span.radio-checked-danger {
+span.radio-negative {
   color: #e74c3c;
   font-size: 18px;
 }
@@ -335,6 +336,16 @@ button:hover {
 .themes .org-info {
   border-bottom: 20px solid #fff;
 }
+.themes .org-info .main-info {
+  padding: 5px;
+}
+.themes .org-info .main-info div {
+  width: 94%;
+}
+.themes .org-info .main-info input {
+  min-width: 300px;
+  width: 88%;
+}
 .themes .filter div {
   width: 32%;
 }
@@ -496,6 +507,14 @@ button:hover {
 .tyle-btn-negative {
   border: 2px solid #34495e;
   background: #16a085;
+}
+button.width200 {
+  width: 200px;
+}
+button.sq-small {
+  width: 35px;
+  height: 34px;
+  margin-left: 5px;
 }
 
 /*# sourceMappingURL=admin.css.map */
