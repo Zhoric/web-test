@@ -92,6 +92,7 @@ class TestSessionHandler
         $session->setSessionId($sessionId);
         $session->setUserId($redis->get(self::userIdPrefix.$sessionId));
         $session->setTestId($redis->get(self::testIdPrefix.$sessionId));
+        $session->setTestResultId($redis->get(self::testResultPrefix.$sessionId));
         $endTimeString = $redis->get(self::testEndTimePrefix.$sessionId);
         $session->setTestEndDateTime(date_create_from_format(self::dateSerializationFormat, $endTimeString));
         $session->setAnswersQuality($redis->get(self::answersQualityPrefix.$sessionId));

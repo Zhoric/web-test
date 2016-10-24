@@ -3,6 +3,7 @@
 namespace Managers;
 
 use Answer;
+use GivenAnswer;
 use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Question;
@@ -64,11 +65,25 @@ class QuestionManager
         $this->_unitOfWork->commit();
     }
 
+    /**
+     * Получение вопроса с ответами.
+     * @param $questionId
+     * @return QuestionViewModel
+     */
     public function getWithAnswers($questionId){
         $question = $this->_unitOfWork->questions()->find($questionId);
         $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
 
         return new QuestionViewModel($question, $answers);
+    }
+
+    public function getById($id){
+        return $this->_unitOfWork->questions()->find($id);
+    }
+
+    public function createQuestionAnswer(GivenAnswer $givenAnswer){
+        $this->_unitOfWork->givenAnswers()->create($givenAnswer);
+        $this->_unitOfWork->commit();
     }
 
 }

@@ -36,6 +36,8 @@ class UnitOfWork
     private $_testRepo;
     private $_testMarkTypeRepo;
     private $_testResultRepo;
+    private $_givenAnswerRepo;
+
 
     public function users(){
         if ($this->_userRepo == null){
@@ -140,6 +142,13 @@ class UnitOfWork
             $this->_testResultRepo = new TestResultRepository($this->_em);
         }
         return $this->_testResultRepo;
+    }
+
+    public function givenAnswers(){
+        if ($this->_givenAnswerRepo == null){
+            $this->_givenAnswerRepo = new GivenAnswerRepository($this->_em);
+        }
+        return $this->_givenAnswerRepo;
     }
 
     public function commit(){

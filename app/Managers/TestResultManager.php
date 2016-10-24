@@ -48,4 +48,13 @@ class TestResultManager
 
         return $testResult->getId();
     }
+
+    /**
+     * Получение результата теста по id
+     * @param $id
+     * @return TestResult
+     */
+    public function getById($id){
+        return $this->_unitOfWork->testResults()->find($id);
+    }
 }

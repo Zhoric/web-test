@@ -175,6 +175,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('delete/{id}', 'TestController@delete');
 
         Route::post('start', 'TestProcessController@startTest');
+        Route::post('answer', 'TestProcessController@answer');
         Route::get('nextQuestion', 'TestProcessController@getNextQuestion');
     });
 

@@ -1,7 +1,9 @@
 <?php
 
 namespace TestEngine;
+use GivenAnswer;
 use League\Flysystem\Exception;
+use Managers\QuestionManager;
 use Managers\TestManager;
 
 /**
@@ -20,10 +22,27 @@ class TestProcessManager
      * @var TestManager
      */
     private static $_testManager;
+
+    /**
+     * @var QuestionManager
+     */
+    private static $_questionManager;
+
     /**
      * @var TestSession
      */
     private static $_session;
+
+    /**
+     * @return QuestionManager
+     */
+    private static function getQuestionManager(){
+        if (self::$_questionManager == null){
+            self::$_questionManager = app()->make(QuestionManager::class);
+        }
+
+        return self::$_questionManager;
+    }
 
     /**
      * Инициализация процесса тестирования.
@@ -63,9 +82,29 @@ class TestProcessManager
      * Обработка ответа студента на вопрос теста.
      * @param $sessionId - Идентификатор сессии.
      * @param QuestionAnswer $questionAnswer - Ответ на вопрос теста.
+     * @return array
      */
-    public function processAnswer($sessionId, QuestionAnswer $questionAnswer){
-        
+    public static function processAnswer($sessionId, QuestionAnswer $questionAnswer){
+        try{
+            $session = TestSessionHandler::getSession($sessionId);
+            self::$_session = $session;
+            self::validateTestSession();
+
+            $testResultId = $session->getTestResultId();
+            $questionId = $questionAnswer->getQuestionId();
+            self::validateQuestionToAnswer($testResultId);
+
+            $question = self::getQuestionManager()->getWithAnswers($questionId);
+            $answers = $question->getAnswers();
+
+            $answerRightPercentage = self::checkAnswers($answers,
+                $questionAnswer->getAnswerIds());
+
+            self::saveQuestionAnswer($session, $questionId, $answerRightPercentage);
+
+        } catch (Exception $exception){
+            return array('message' => 'Ошибка при обработке ответа: '.$exception->getMessage());
+        }
     }
 
     /**
@@ -144,6 +183,49 @@ class TestProcessManager
         if ($suitableQuestionsIds == null || empty($suitableQuestionsIds)){
             throw new Exception('Тест завершен!');
         }
+    }
+
+    /**
+     * Проверка на то, что мы дважды не отвечаем на один и тот же вопрос
+     */
+    private static function validateQuestionToAnswer($testResultId){
+        //TODO: Получение всех GivenAnswer.question_id по testResultId. Если среди них есть наш, кидаем ехсепшон
+    }
+
+    /**
+     * Проверка правильности ответов
+     * @param $answers - ответы вопроса
+     * @param $studentAnswers - ответы, которые дал студент
+     * @return int - оценка за ответ, %
+     */
+    private static function checkAnswers(array $answers, array $studentAnswers){
+        return AnswerChecker::calculatePointsForAnswer($answers, $studentAnswers);
+    }
+
+    /**
+     * Сохранение ответа студента в БД.
+     * @param TestSession $session - сессия тестирования.
+     * @param $questionId - вопрос, на который дан ответ.
+     * @param $rightPercentage - степень правильности ответа.
+     * @param string $answerText - текст ответа.
+     * @throws \Exception
+     */
+    private static function saveQuestionAnswer($session, $questionId, $rightPercentage, $answerText = ''){
+        $testResultId = $session->getTestResultId();
+        $testResult = TestSessionHandler::getTestResultManager()->getById($testResultId);
+        $question = self::getQuestionManager()->getById($questionId);
+
+        if ($testResultId == null || $question == null){
+            throw new \Exception('Не удалось сохранить ответ!');
+        }
+
+        $givenAnswer = new GivenAnswer();
+        $givenAnswer->setTestResult($testResult);
+        $givenAnswer->setQuestion($question);
+        $givenAnswer->setRightPercentage($rightPercentage);
+        $givenAnswer->setAnswer($answerText);
+
+        self::getQuestionManager()->createQuestionAnswer($givenAnswer);
     }
 
 

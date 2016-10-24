@@ -18,4 +18,36 @@ class QuestionViewModel implements JsonSerializable
             'answers' => $this->_answers
         );
     }
+
+    /**
+     * @return mixed
+     */
+    public function getQuestion()
+    {
+        return $this->_question;
+    }
+
+    /**
+     * @param mixed $question
+     */
+    public function setQuestion($question)
+    {
+        $this->_question = $question;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnswers()
+    {
+        return $this->_answers;
+    }
+
+    /**
+     * @param mixed $answers
+     */
+    public function setAnswers($answers)
+    {
+        $this->_answers = $answers;
+    }
 }
