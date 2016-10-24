@@ -69,7 +69,6 @@ class TestProcessManager
             self::validateSuitableQuestions($suitableQuestions);
 
             $nextQuestionId = self::getRandomQuestion($suitableQuestions);
-            self::updateTestSession($nextQuestionId);
 
         } catch (Exception $exception){
             return array('message' => $exception->getMessage());
@@ -92,7 +91,7 @@ class TestProcessManager
 
             $testResultId = $session->getTestResultId();
             $questionId = $questionAnswer->getQuestionId();
-            self::validateQuestionToAnswer($testResultId);
+            self::validateQuestionToAnswer($questionId);
 
             $question = self::getQuestionManager()->getWithAnswers($questionId);
             $answers = $question->getAnswers();
@@ -101,6 +100,7 @@ class TestProcessManager
                 $questionAnswer->getAnswerIds());
 
             self::saveQuestionAnswer($session, $questionId, $answerRightPercentage);
+            self::updateTestSession($questionId);
 
         } catch (Exception $exception){
             return array('message' => 'Ошибка при обработке ответа: '.$exception->getMessage());
@@ -152,10 +152,11 @@ class TestProcessManager
 
     /**
      * Обновление состояния сессии тестирования.
+     * @param $answeredQuestionId - id вопроса, на который был дан ответ.
      */
-    private static function updateTestSession($nextQuestionId){
+    private static function updateTestSession($answeredQuestionId){
         $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
-        array_push($answeredQuestionsIds, $nextQuestionId);
+        array_push($answeredQuestionsIds, $answeredQuestionId);
         self::$_session->setAnsweredQuestionsIds($answeredQuestionsIds);
         TestSessionHandler::updateSession(self::$_session->getSessionId(), $answeredQuestionsIds);
     }
@@ -187,9 +188,16 @@ class TestProcessManager
 
     /**
      * Проверка на то, что мы дважды не отвечаем на один и тот же вопрос
+     * @param $questionId - id вопроса, на который даётся ответ.
+     * @throws Exception
      */
-    private static function validateQuestionToAnswer($testResultId){
-        //TODO: Получение всех GivenAnswer.question_id по testResultId. Если среди них есть наш, кидаем ехсепшон
+    private static function validateQuestionToAnswer($questionId){
+        $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
+
+        if (in_array($questionId, $answeredQuestionsIds)){
+            throw new Exception('Вы уже отвечали на этот вопрос!');
+        }
+
     }
 
     /**

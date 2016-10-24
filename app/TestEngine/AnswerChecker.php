@@ -19,7 +19,7 @@ class AnswerChecker
         $studentRightAnswersCount = self::calculateRightStudentAnswers($answers, $studentAnswers);
 
         $rightPercentage = $studentRightAnswersCount/$totalRightAnswersCount * 100;
-        $rightPercentageRounded = round($rightPercentage, 2);
+        $rightPercentageRounded = floor($rightPercentage);
 
         return $rightPercentageRounded;
     }
