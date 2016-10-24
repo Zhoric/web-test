@@ -1,8 +1,8 @@
 <?php
 
 namespace TestEngine;
+use Exception;
 use GivenAnswer;
-use League\Flysystem\Exception;
 use Managers\QuestionManager;
 use Managers\TestManager;
 
@@ -45,10 +45,23 @@ class TestProcessManager
     }
 
     /**
+     * @return TestManager
+     */
+    private static function getTestManager(){
+        if (self::$_testManager == null){
+            self::$_testManager = app()->make(TestManager::class);
+        }
+
+        return self::$_testManager;
+    }
+
+    /**
      * Инициализация процесса тестирования.
      */
-    public static function initTest($userId, $testId){
-        //TODO: проверка номера попытки
+    public static function initTest($userId, $testId)
+    {
+        //self::validateAttemptNumber($userId, $testId);
+
         $sessionId = TestSessionHandler::createTestSession($userId, $testId);
         return $sessionId;
     }
@@ -57,7 +70,6 @@ class TestProcessManager
      * Получение следующего вопроса на основании настроек теста
      * и списка вопросов, на которые уже были даны ответы.
      */
-    //TODO: НЕ ВОЗВРАЩАТЬ В ОТВЕТАХ is_right !
     public static function getNextQuestion($sessionId){
         try{
             self::$_testManager = TestSessionHandler::getTestManager();
@@ -74,7 +86,7 @@ class TestProcessManager
             return array('message' => $exception->getMessage());
         }
 
-        return self::$_testManager->getQuestionWithAnswers($nextQuestionId);
+        return self::$_testManager->getQuestionWithAnswers($nextQuestionId, false);
     }
 
     /**
@@ -197,7 +209,17 @@ class TestProcessManager
         if (in_array($questionId, $answeredQuestionsIds)){
             throw new Exception('Вы уже отвечали на этот вопрос!');
         }
+    }
 
+    private static function validateAttemptNumber($userId, $testId){
+        $test = self::getTestManager()->getById($testId);
+        $attemptsAllowed = $test->getAttempts();
+
+        $lastTestResultAttempt = self::getTestManager()->getTestAttemptsUsedCount($userId, $testId);
+
+        if ($attemptsAllowed != 0 || $lastTestResultAttempt >= $attemptsAllowed){
+            throw new Exception('Количество попыток прохождения теста исчерпано!');
+        }
     }
 
     /**
@@ -224,7 +246,7 @@ class TestProcessManager
         $question = self::getQuestionManager()->getById($questionId);
 
         if ($testResultId == null || $question == null){
-            throw new \Exception('Не удалось сохранить ответ!');
+            throw new Exception('Не удалось сохранить ответ!');
         }
 
         $givenAnswer = new GivenAnswer();

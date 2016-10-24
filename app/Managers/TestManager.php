@@ -40,6 +40,10 @@ class TestManager
         }
     }
 
+    /**
+     * @param $id
+     * @return Test
+     */
     public function getById($id){
         return $this->_unitOfWork->tests()->find($id);
     }
@@ -49,10 +53,31 @@ class TestManager
             ->getNotAnsweredQuestionsByTest($testId, $answeredIds, $timeLeft);
     }
 
-    public function getQuestionWithAnswers($questionId){
+    /**
+     * @param $questionId
+     * @param bool $showWhichRight - показывать ли правильность ответов.
+     * @return QuestionViewModel
+     */
+    public function getQuestionWithAnswers($questionId, $showWhichRight = true){
         $question = $this->_unitOfWork->questions()->find($questionId);
         $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
 
+        if ($showWhichRight == false){
+            for($i = 0; $i < count($answers); $i++){
+                $answers[$i]->setIsRight(null);
+            }
+        }
+
         return new QuestionViewModel($question, $answers);
+    }
+
+    /**
+     * Получение количества использованных попыток прохождения теста.
+     * @param $testId
+     * @param $userId
+     * @return mixed
+     */
+    public function getTestAttemptsUsedCount($testId, $userId){
+        return $this->_unitOfWork->testResults()->getLastAttemptNumber($testId, $userId);
     }
 }

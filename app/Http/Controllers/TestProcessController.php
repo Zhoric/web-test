@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Managers\TestManager;
 use Test;
 use Illuminate\Http\Request;
@@ -13,12 +14,18 @@ use TestEngine\TestProcessManager;
 class TestProcessController extends Controller
 {
     public function startTest(Request $request){
-        $testId = $request->json('testId');
-        //TODO: Получать id текущего пользователя
-        $userId = 5;
+        $result = null;
+        try{
+            $testId = $request->json('testId');
+            //TODO: Получать id текущего пользователя
+            $userId = 5;
 
-        $sessionId = TestProcessManager::initTest($userId, $testId);
-        $request->session()->set('sessionId', $sessionId);
+            $result = TestProcessManager::initTest($userId, $testId);
+            $request->session()->set('sessionId', $result);
+        } catch (Exception $exception){
+            return json_encode(array('message' => $exception->getMessage()));
+        }
+
     }
 
     public function getNextQuestion(Request $request){
