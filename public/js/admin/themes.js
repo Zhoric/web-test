@@ -22,13 +22,13 @@ $(document).ready(function(){
                     id: ko.observable(0),
                     text: ko.observable(''),
                     time: ko.observable(0),
-                    complexity: ko.observable(0),
-                    type: ko.observable(0),
+                    complexity: ko.observable(),
+                    type: ko.observable(),
                     minutes: ko.observable(),
                     seconds: ko.observable()
                 }),
                 answer: ko.observable({
-                    name: ko.observable(''),
+                    text: ko.observable(''),
                     isRight: ko.observable(false)
                 }),
                 answers: ko.observableArray([])
@@ -57,12 +57,23 @@ $(document).ready(function(){
                             .name(data.name());
                     },
                     question: function(data){
+                        var type = self.filter().types().find(function(item){
+                            return item.id() === data.type();
+                        });
+                        var complexity = self.filter().complexityTypes().find(function(item){
+                            return item.id() === data.complexity();
+                        });
+                        var minutes = Math.floor(data.time()/60);
+                        var seconds = data.time()%60;
+
                         self.current().question()
                             .id(data.id())
                             .text(data.text())
                             .time(data.time())
-                            .complexity(data.complexity())
-                            .type(data.type());
+                            .complexity(complexity)
+                            .type(type)
+                            .minutes(minutes)
+                            .seconds(seconds);
                     },
                     answers: function(){}
                 }),
@@ -78,7 +89,7 @@ $(document).ready(function(){
                             .seconds(0);
                     },
                     answer: function(){
-                        self.current().answer().name('').isRight(false);
+                        self.current().answer().text('').isRight(false);
                     },
                     answers: function(){
                         self.current().answers([]);
@@ -107,9 +118,10 @@ $(document).ready(function(){
                             complexity: curq.complexity().id(),
                             time: +curq.minutes() * 60 + +curq.seconds()
                         };
+                        self.mode() === 'edit' ? question.id = curq.id() : '';
                         self.current().answers().find(function(item){
                             var answer = {
-                                text: item.name(),
+                                text: item.text(),
                                 isRight: item.isRight()
                             };
                             answers.push(answer);
@@ -146,7 +158,6 @@ $(document).ready(function(){
                     answerCorrectness: function(data, e){
                         var level = $(e.target).attr('level') == 1 ? true : false;
                         var type = self.current().question().type() ? self.current().question().type().id() : 0;
-                        console.log(type);
                         self.current().answers().find(function(item){
                             if (type === 1){
                                 if (level){
@@ -210,19 +221,37 @@ $(document).ready(function(){
                         self.mode() === 'add' ? self.mode('none') : self.mode('add');
                         self.toggleCurrent().empty().question();
                     },
-                    add: function(){
-                        self.post().question();
+                    cancel: function(){
+                        self.mode('none');
+                        self.toggleCurrent().empty().question();
+                    },
+                    update: function(){
+                        if (self.mode() === 'add') self.post().question('create');
+                        if (self.mode() === 'edit') self.post().question('update');
+                    },
+                    edit: function(data){
+                        self.get().questionWithAnswers(data.id());
+                        self.mode('edit');
+                    },
+                    startDelete: function(data){
+                        self.get().questionWithAnswers(data.id());
+                        self.mode('delete');
+                        self.toggleModal('#delete-modal', '');
+                    },
+                    remove: function(){
+                        self.post().removedQuestion();
+                        self.toggleModal('#delete-modal', 'close');
                     }
                 }),
                 answer: ko.observable({
                     add: function(){
-                        var name = self.current().answer().name();
+                        var text = self.current().answer().text();
                         var isRight = self.current().answer().isRight();
                         var id = self.current().answers().length ? self.current().answers().length + 1 : 1;
 
                         self.current().answers.push({
                             id: ko.observable(id),
-                            name: ko.observable(name),
+                            text: ko.observable(text),
                             isRight: ko.observable(isRight)
                         });
                         self.toggleCurrent().empty().answer();
@@ -270,6 +299,14 @@ $(document).ready(function(){
                         self.get().questions();
                         self.toggleCurrent().fill().theme(self.theme());
                     });
+                },
+                questionWithAnswers: function(id){
+                    var url = '/api/questions/' + id;
+                    $.get(url, function(response){
+                        var res = ko.mapping.fromJSON(response);
+                        self.current().answers(res.answers());
+                        self.toggleCurrent().fill().question(res.question);
+                    });
                 }
             });
             self.post = ko.observable({
@@ -279,14 +316,22 @@ $(document).ready(function(){
 
                     $.post(url, json, function(){});
                 },
-                question: function(){
-                    var url = '/api/questions/create';
+                question: function(action){
+                    var url = '/api/questions/' + action;
                     var json = self.toggleCurrent().stringify().question();
                     $.post(url, json, function(){
                         self.toggleCurrent().empty().question();
                         self.mode('none');
                         self.get().questions();
                     });
+                },
+                removedQuestion: function(){
+                    var url = '/api/questions/delete/' + self.current().question().id();
+                    $.post(url, function(){
+                        self.mode('none');
+                        self.toggleCurrent().empty().question();
+                        self.get().questions();
+                    })
                 }
             });
 

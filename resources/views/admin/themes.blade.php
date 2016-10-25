@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <!-- ko if: $root.mode() === 'add' -->
+    <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
     <div class="themes-add org-info">
         <div>
             <label>Время на ответ</label></br>
@@ -62,7 +62,7 @@
         </div>
         <div>
             <label>Варианты ответов</label></br>
-            <input data-bind="value: $root.current().answer().name" type="text">
+            <input data-bind="value: $root.current().answer().text" type="text">
             <button data-bind="click: $root.csed().answer().add" class="fa">&#xf067;</button>
         </div>
         <!-- ko if: $root.current().answers().length -->
@@ -71,7 +71,7 @@
                 <tbody data-bind="foreach: $root.current().answers">
                     <tr>
                         <td data-bind="text: id"></td>
-                        <td data-bind="text: name"></td>
+                        <td data-bind="text: text"></td>
                         <td>
                             <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.toggleCurrent().set().answerCorrectness">Правильный</span>
                             <span>|</span>
@@ -86,8 +86,8 @@
         </div>
         <!-- /ko -->
         <div class="btn-larger-group">
-            <button class="danger" data-bind="click: $root.csed().question().toggleAdd">Отмена</button>
-            <button data-bind="click: $root.csed().question().add">Сохранить вопрос</button>
+            <button class="danger" data-bind="click: $root.csed().question().cancel">Отмена</button>
+            <button data-bind="click: $root.csed().question().update">Сохранить вопрос</button>
         </div>
     </div>
     <!-- /ko -->
@@ -130,8 +130,8 @@
                     <td data-bind="text: $root.toggleCurrent().set().type($data)"></td>
                     <td data-bind="text: $root.toggleCurrent().set().complexity($data)"></td>
                     <td>
-                        <button data-bind="click: " class="fa">&#xf040;</button>
-                        <button data-bind="click: " class="fa danger">&#xf014;</button>
+                        <button data-bind="click: $root.csed().question().edit" class="fa">&#xf040;</button>
+                        <button data-bind="click: $root.csed().question().startDelete" class="fa danger">&#xf014;</button>
                     </td>
                 </tr>
             <!-- /ko -->
@@ -158,112 +158,15 @@
     </div>
 </div>
 
-{{--<div class="g-hidden">--}}
-    {{--<div class="box-modal" id="delete-modal">--}}
-        {{--<div>--}}
-            {{--<div><span>Удалить выбранную дисциплину?</span></div>--}}
-            {{--<div>--}}
-                {{--<button data-bind="click: $root.csed().remove" class="fa">&#xf00c;</button>--}}
-                {{--<button data-bind="click: $root.csed().cancel" class="fa danger arcticmodal-close">&#xf00d;</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}
-{{--<div class="g-hidden">--}}
-    {{--<div class="box-modal" id="remove-theme-modal">--}}
-        {{--<div>--}}
-            {{--<div><span>Удалить выбранную тему?</span></div>--}}
-            {{--<div>--}}
-                {{--<button data-bind="click: $root.csed().theme().remove" class="fa">&#xf00c;</button>--}}
-                {{--<button class="fa danger arcticmodal-close">&#xf00d;</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}
-{{--<div class="g-hidden">--}}
-    {{--<div class="box-modal" id="add-theme-modal">--}}
-        {{--<div>--}}
-            {{--<div><span>Добавление темы</span></div>--}}
-            {{--<div>--}}
-                {{--<label>Название</label>--}}
-                {{--<input type="text" data-bind="value: $root.current().theme().name">--}}
-            {{--</div>--}}
-            {{--<div>--}}
-                {{--<button data-bind="click: $root.csed().theme().add" class="fa">&#xf00c;</button>--}}
-                {{--<button class="fa danger arcticmodal-close">&#xf00d;</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}
-
-<script type="text/html" id="show-details">
-    <div class="org-info">
-        <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' -->
-        <div class="width100" data-bind="template: {name: 'info-mode', data: $data}"></div>
-        <!-- /ko -->
-        <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
-        <div class="width100" data-bind="template: {name: 'edit-mode', data: $data}"></div>
-        <!-- /ko -->
-        <!-- ko if: $root.mode() !== 'add' -->
-        <div class="width100">
-            <table class="theme">
-                <thead>
-                <tr><th>#</th><th>Темы</th><th>Действия</th></tr>
-                </thead>
-                <tbody>
-                <!-- ko foreach: $root.current().themes-->
-                <tr>
-                    <td data-bind="text: $index()+1"></td>
-                    <td><a data-bind="text: name"></a></td>
-                    <td><button data-bind="click: $root.csed().theme().startRemove" class="fa danger">&#xf014;</button></td>
-                </tr>
-                <!-- /ko -->
-                </tbody>
-            </table>
-        </div>
-        <!-- /ko -->
-    </div>
-</script>
-<script type="text/html" id="info-mode">
-    <div class="org-info-details width100 discipline-info">
+<div class="g-hidden">
+    <div class="box-modal" id="delete-modal">
         <div>
-            <label>Дисциплина</label></br>
-            {{--<span data-bind="text: discipline().name"></span>--}}
-        </div>
-        <div>
-            <label>Тема</label></br>
-            <span data-bind="text: theme().name"></span>
-        </div>
-        <div>
-        <i>
-            <button class="move" data-bind="click: $root.csed().theme().startAdd"><span class="fa">&#xf067;</span>&nbsp;Добавить вопрос</button>
-        </i>
-        <i>
-            <button data-bind="click: $root.csed().startUpdate" class="fa">&#xf040;</button>
-        </i>
+            <div><span>Удалить выбранный вопрос?</span></div>
+            <div>
+                <button data-bind="click: $root.csed().question().remove" class="fa">&#xf00c;</button>
+                <button data-bind="click: $root.csed().question().cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
+            </div>
         </div>
     </div>
-</script>
-<script type="text/html" id="edit-mode">
-    <div class="org-info-edit width100 discipline-edit">
-        <div>
-            <label>Назван</label></br>
-            <input type="text" data-bind="value: abbreviation">
-        </div>
-        <div>
-            <label>Полное название дисциплины</label></br>
-            <input type="text" data-bind="value: name">
-        </div>
-        <div>
-            <label>Профили</label></br>
-            <!-- ko with: $root.current().profile() -->
-            <select data-bind="options: profiles, optionsText: 'fullname',  selectedOptions: selected" size="4" multiple="true"></select>
-            <!-- /ko -->
-        </div>
-        <div class="float-btn-group">
-            <button data-bind="click: $root.csed().update" class="fa">&#xf00c;</button>
-            <button data-bind="click: $root.csed().cancel" class="fa danger">&#xf00d;</button>
-        </div>
-    </div>
-</script>
+</div>
 @endsection

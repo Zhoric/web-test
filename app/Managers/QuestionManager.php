@@ -65,6 +65,14 @@ class QuestionManager
         $this->_unitOfWork->commit();
     }
 
+    public function delete($id){
+        $question = $this->_unitOfWork->questions()->find($id);
+        if ($question != null){
+            $this->_unitOfWork->questions()->delete($question);
+        }
+        $this->_unitOfWork->commit();
+    }
+
     /**
      * Получение вопроса с ответами.
      * @param $questionId

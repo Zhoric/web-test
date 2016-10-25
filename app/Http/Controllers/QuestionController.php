@@ -77,7 +77,7 @@ class QuestionController extends Controller
     }
 
     public function delete($id){
-        $this->delete($id);
+        $this->_questionManager->delete($id);
     }
 
     /*
