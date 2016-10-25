@@ -120,6 +120,13 @@ class TestProcessManager
     }
 
     /**
+     * Обработка окончания теста. Подсчёт и сохранение результатов.
+     */
+    public static function processTestEnd(){
+        TestResultCalculator::calculate(self::$_session->getTestResultId());
+    }
+
+    /**
      * Получение идентификаторов вопросов, подходящих под условия,
      * настройки и текущее состояние процесса тестирования.
      */
@@ -194,7 +201,7 @@ class TestProcessManager
     private static function validateSuitableQuestions($suitableQuestionsIds){
 
         if ($suitableQuestionsIds == null || empty($suitableQuestionsIds)){
-            throw new Exception('Тест завершен!');
+            self::processTestEnd();
         }
     }
 

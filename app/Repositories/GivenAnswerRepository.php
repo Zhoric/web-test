@@ -12,5 +12,9 @@ class GivenAnswerRepository extends BaseRepository
         parent::__construct($em, GivenAnswer::class);
     }
 
+    public function getByTestResult($testResultId){
+        return $this->repo->findBy(['testResult' => $testResultId]);
+    }
+
 
 }
