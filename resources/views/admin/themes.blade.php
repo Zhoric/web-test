@@ -34,9 +34,9 @@
     <div class="themes-add org-info">
         <div>
             <label>Время на ответ</label></br>
-            <input type="text" data-bind="value: $root.current().question().minutes" placeholder="00">
+            <input type="text" data-bind="value: $root.current().question().minutes, valueUpdate: 'keyup' " placeholder="00">
             <span>:</span>
-            <input type="text" data-bind="value: $root.current().question().seconds" placeholder="00">
+            <input type="text" data-bind="value: $root.current().question().seconds, valueUpdate: 'keyup' " placeholder="00">
         </div>
         <div>
             <label>Изображение</label></br>
@@ -60,6 +60,7 @@
             <label>Текст вопроса</label></br>
             <textarea type="text" data-bind="value: $root.current().question().text"></textarea>
         </div>
+        <!-- ko if: !$root.current().question().isOpenMultiLine() && $root.current().question().type() -->
         <div>
             <label>Варианты ответов</label></br>
             <input data-bind="value: $root.current().answer().text" type="text">
@@ -72,7 +73,7 @@
                     <tr>
                         <td data-bind="text: id"></td>
                         <td data-bind="text: text"></td>
-                        <td>
+                        <td data-bind="visible: !$root.current().question().isOpenSingleLine()">
                             <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.toggleCurrent().set().answerCorrectness">Правильный</span>
                             <span>|</span>
                             <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.toggleCurrent().set().answerCorrectness" >Неправильный</span>
@@ -84,6 +85,7 @@
                 </tbody>
             </table>
         </div>
+        <!-- /ko -->
         <!-- /ko -->
         <div class="btn-larger-group">
             <button class="danger" data-bind="click: $root.csed().question().cancel">Отмена</button>
@@ -166,6 +168,14 @@
                 <button data-bind="click: $root.csed().question().remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed().question().cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
             </div>
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
+    <div class="box-modal" id="validation-modal">
+        <div class="box-modal_close arcticmodal-close">закрыть</div>
+        <div>
+            <span data-bind="text: $root.current().question().validationMessage"></span>
         </div>
     </div>
 </div>

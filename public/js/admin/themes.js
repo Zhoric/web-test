@@ -25,13 +25,16 @@ $(document).ready(function(){
                     complexity: ko.observable(),
                     type: ko.observable(),
                     minutes: ko.observable(),
-                    seconds: ko.observable()
+                    seconds: ko.observable(),
+                    isOpenMultiLine: ko.observable(false),
+                    isOpenSingleLine: ko.observable(false),
+                    validationMessage: ko.observable('')
                 }),
                 answer: ko.observable({
                     text: ko.observable(''),
                     isRight: ko.observable(false)
                 }),
-                answers: ko.observableArray([])
+                answers: ko.observableArray([]),
             });
             self.filter = ko.observable({
                 name: ko.observable(''),
@@ -85,8 +88,9 @@ $(document).ready(function(){
                             .time(0)
                             .complexity(0)
                             .type(0)
-                            .minutes(0)
-                            .seconds(0);
+                            .minutes('')
+                            .seconds('');
+                        self.current().answers([]);
                     },
                     answer: function(){
                         self.current().answer().text('').isRight(false);
@@ -168,6 +172,52 @@ $(document).ready(function(){
                                 item.isRight(level);
                         });
                     },
+                }),
+                check: ko.observable({
+                    question: function(){
+                        var q = self.current().question();
+                        var awr = self.current().answers();
+                        if (!q.text()) {
+                            q.validationMessage('Отсутствует трактовка вопроса');
+                            self.toggleModal('#validation-modal', '');
+                            return false;
+                        }
+                        if (!q.minutes() || !q.seconds()){
+                            q.validationMessage('Время не определено');
+                            self.toggleModal('#validation-modal', '');
+                            return false;
+                        }
+                        if (!q.type()){
+                            q.validationMessage('Не указан тип вопроса');
+                            self.toggleModal('#validation-modal', '');
+                            return false;
+                        }
+                        if (!q.complexity()){
+                            q.validationMessage('Не указана сложность вопроса');
+                            self.toggleModal('#validation-modal', '');
+                            return false;
+                        }
+                        if (q.type().id() !== 4) {
+                            if (awr.length < 2) {
+                                q.validationMessage('Слишком мало вариантов ответа');
+                                self.toggleModal('#validation-modal', '');
+                                return false;
+                            }
+                            else{
+                                var correct = 0;
+                                awr.find(function(item){
+                                    if (item.isRight() === true) correct++;
+                                });
+                                if (!correct){
+                                    q.validationMessage('Вопрос должен соржать хотя бы один правильный ответ');
+                                    self.toggleModal('#validation-modal', '');
+                                    return false;
+                                }
+                            }
+                        }
+
+                        return true;
+                    }
                 })
             });
             self.pagination = ko.observable({
@@ -226,8 +276,9 @@ $(document).ready(function(){
                         self.toggleCurrent().empty().question();
                     },
                     update: function(){
-                        if (self.mode() === 'add') self.post().question('create');
-                        if (self.mode() === 'edit') self.post().question('update');
+                        var isQok = self.toggleCurrent().check().question();
+                        if (!isQok) return;
+                        self.mode() === 'add' ? self.post().question('create') : self.post().question('update');
                     },
                     edit: function(data){
                         self.get().questionWithAnswers(data.id());
@@ -246,6 +297,7 @@ $(document).ready(function(){
                 answer: ko.observable({
                     add: function(){
                         var text = self.current().answer().text();
+                        if (!text) return;
                         var isRight = self.current().answer().isRight();
                         var id = self.current().answers().length ? self.current().answers().length + 1 : 1;
 
@@ -361,13 +413,36 @@ $(document).ready(function(){
                 self.get().questions();
             });
             self.current().question().type.subscribe(function(value){
-                if (value){
-                    if (value.id() === 1){
-                        self.current().answers().find(function(item){
-                            item.isRight(false);
-                        });
-                    }
+                if (!value) return;
+                self.current().question().isOpenSingleLine(false);
+                self.current().question().isOpenMultiLine(false);
+                if (value.id() === 1){
+                    self.current().answers().find(function(item){
+                        item.isRight(false);
+                    });
+                    return;
                 }
+                if (value.id() === 3){
+                    self.current().question().isOpenSingleLine(true);
+                    return;
+                }
+                if (value.id() === 4){
+                    self.current().question().isOpenMultiLine(true);
+                    self.current().answers([]);
+                    return;
+                }
+            });
+            self.current().question().minutes.subscribe(function(value){
+                var validated = value.replace(/[^0-9]/g, "");
+                validated = validated.substr(0, 2);
+                validated = +validated >= 60 ? '60' : validated;
+                self.current().question().minutes(validated);
+            });
+            self.current().question().seconds.subscribe(function(value){
+                var validated = value.replace(/[^0-9]/g, "");
+                validated = validated.substr(0, 2);
+                validated = +validated >= 60 ? '59' : validated;
+                self.current().question().seconds(validated);
             });
 
             return {
@@ -378,6 +453,7 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
+                validate: self.validate,
                 toggleModal: self.toggleModal
             };
         };
