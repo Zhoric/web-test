@@ -140,12 +140,14 @@
             </tbody>
         </table>
     </div>
+
+
     <div class="pager-wrap">
         <!-- ko if: ($root.pagination().totalPages()) > 0 -->
         <div class="pager">
             <!-- ko ifnot: $root.pagination().currentPage() == 1 -->
             <button class="" data-bind="click: $root.pagination().selectPage.bind($data, 1)">&lsaquo;&lsaquo;</button>
-            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, (currentPage() - 1))">&lsaquo;</button>
+            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, ($root.pagination().currentPage() - 1))">&lsaquo;</button>
             <!-- /ko -->
             <!-- ko foreach: new Array($root.pagination().totalPages()) -->
             <span data-bind="visible: $root.pagination().dotsVisible($index() + 1)">...</span>
