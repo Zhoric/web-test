@@ -8,9 +8,6 @@ use Repositories\UnitOfWork;
 class TestResultCalculator
 {
 
-    // Значение сложности вопроса по умолчанию.
-    const defaultComplexity = 1;
-
     /**
      * @var UnitOfWork
      */
@@ -30,23 +27,28 @@ class TestResultCalculator
      * @throws Exception
      */
     public static function calculate($testResultId){
+        //DEBUG HARDCODE
+        $testResultId = 1;
         $testResult = self::getUnitOfWork()->testResults()->find($testResultId);
         if ($testResult == null){
             throw new Exception("Не удалось сформировать результат теста!");
         }
 
         $resultPercents = self::getResultPercents($testResultId);
-        dd($resultPercents);
+        $resultMark = ($resultPercents / 100) * GlobalTestSettings::maxMarkValue;
+
+        return $resultMark;
     }
 
     private static function getResultPercents($testResultId){
         $maxMark = 0;
         $studentMark = 0;
         $answers = self::getUnitOfWork()->givenAnswers()->getByTestResult($testResultId);
+
         foreach ($answers as $answer) {
             $question = $answer->getQuestion();
             $complexity = $question->getComplexity();
-            $complexity = ($complexity != null) ? $complexity : self::defaultComplexity;
+            $complexity = ($complexity != null) ? $complexity : GlobalTestSettings::defaultComplexity;
 
             $maxMark += $complexity;
             $studentMark += $complexity * $answer->getRightPercentage();

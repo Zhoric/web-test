@@ -18,6 +18,8 @@ class CreateTestResultTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('mark_type_id')->unsigned()->nullable()->default(NULL);
             $table->smallInteger('attempt')->nullable()->default(NULL);
+            $table->smallInteger('mark')->nullable()->default(NULL);
+
             $table->dateTime('date_time');
 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');

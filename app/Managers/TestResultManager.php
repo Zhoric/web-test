@@ -35,7 +35,7 @@ class TestResultManager
             throw new Exception('Не удаётся начать тест. Указанного пользователя не существует!');
         }
         if ($test == null){
-            throw new Exception('Не уrдаётся начать тест. Указанного теста не существует!');
+            throw new Exception('Не удаётся начать тест. Указанного теста не существует!');
         }
 
         $testResult->setUser($user);
@@ -56,5 +56,11 @@ class TestResultManager
      */
     public function getById($id){
         return $this->_unitOfWork->testResults()->find($id);
+    }
+
+    public function update(TestResult $testResult){
+        $this->_unitOfWork->testResults()->update($testResult);
+        $this->_unitOfWork->commit();
+
     }
 }

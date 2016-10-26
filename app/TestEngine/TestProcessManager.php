@@ -3,8 +3,10 @@
 namespace TestEngine;
 use Exception;
 use GivenAnswer;
+use Illuminate\Session\SessionManager;
 use Managers\QuestionManager;
 use Managers\TestManager;
+use Managers\TestResultManager;
 
 /**
  * Класс, ответственный за управление процессом тестирования.
@@ -22,6 +24,11 @@ class TestProcessManager
      * @var TestManager
      */
     private static $_testManager;
+
+    /**
+     * @var TestResultManager
+     */
+    private static $_testResultManager;
 
     /**
      * @var QuestionManager
@@ -55,6 +62,16 @@ class TestProcessManager
         return self::$_testManager;
     }
 
+    /**
+     * @return TestResultManager
+     */
+    private static function getTestResultManager(){
+        if (self::$_testResultManager == null){
+            self::$_testResultManager = app()->make(TestResultManager::class);
+        }
+
+        return self::$_testResultManager;
+    }
     /**
      * Инициализация процесса тестирования.
      */
@@ -123,7 +140,20 @@ class TestProcessManager
      * Обработка окончания теста. Подсчёт и сохранение результатов.
      */
     public static function processTestEnd(){
-        TestResultCalculator::calculate(self::$_session->getTestResultId());
+        $testResultId = self::$_session->getTestResultId();
+        self::calculateAnsSaveResult($testResultId);
+    }
+
+    /**
+     * Подсчёт и сохранение оценки за тест.
+     * @param $testResultId
+     */
+    public static function calculateAnsSaveResult($testResultId){
+        $testResultMark = TestResultCalculator::calculate($testResultId);
+
+        $testResult = self::getTestResultManager()->getById($testResultId);
+        $testResult->setMark($testResultMark);
+        self::getTestResultManager()->update($testResult);
     }
 
     /**
@@ -235,7 +265,7 @@ class TestProcessManager
      * @param $studentAnswers - ответы, которые дал студент
      * @return int - оценка за ответ, %
      */
-    private static function checkAnswers(array $answers, array $studentAnswers){
+    private static function checkAnswers($answers, $studentAnswers){
         return AnswerChecker::calculatePointsForAnswer($answers, $studentAnswers);
     }
 

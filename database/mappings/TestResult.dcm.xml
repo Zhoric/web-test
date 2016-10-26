@@ -10,6 +10,7 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="attempt" type="smallint" column="attempt" nullable="true"/>
+    <field name="mark" type="smallint" column="mark" nullable="true"/>
     <field name="dateTime" type="datetime" column="date_time" nullable="false"/>
     <many-to-one field="markType" target-entity="MarkType" fetch="LAZY">
       <join-columns>

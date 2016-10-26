@@ -20,6 +20,13 @@ class TestResult extends BaseEntity implements JsonSerializable
     protected $attempt;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="mark", type="smallint", nullable=true)
+     */
+    protected $mark;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_time", type="datetime", nullable=false)
@@ -197,12 +204,21 @@ class TestResult extends BaseEntity implements JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * @return int
      */
+    public function getMark()
+    {
+        return $this->mark;
+    }
+
+    /**
+     * @param int $mark
+     */
+    public function setMark($mark)
+    {
+        $this->mark = $mark;
+    }
+
     function jsonSerialize()
     {
         // TODO: Implement jsonSerialize() method.

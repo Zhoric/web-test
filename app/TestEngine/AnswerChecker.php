@@ -14,7 +14,8 @@ class AnswerChecker
      * @param $studentAnswers - варианты ответа, которые дал студент.
      * @return int - оценка, %.
      */
-    public static function calculatePointsForAnswer(array $answers, array $studentAnswers){
+    public static function calculatePointsForAnswer($answers, $studentAnswers){
+        $studentAnswers = ($studentAnswers == null) ? [] : $studentAnswers;
         $totalRightAnswersCount = self::calculateTotalRightAnswers($answers);
         $studentRightAnswersCount = self::calculateRightStudentAnswers($answers, $studentAnswers);
 
