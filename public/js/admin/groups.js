@@ -136,6 +136,8 @@ $(document).ready(function(){
                 self.toggleModal('#select-plan-modal', 'close');
             };
 
+            self.groupSelect = ko.observable();
+
             self.generateGroupName = function(){
                 var group = self.current().group();
                 var name = group.prefix() + '-' +
@@ -199,12 +201,11 @@ $(document).ready(function(){
 
             self.startRemove = function(data) {
                 self.toggleModal('#delete-student-modal', '');
-                self.current().student().id(data.id());
+                self.current().student(data);
             };
             self.startTransfer = function (data) {
-                console.log(self.groups().name  );
                 self.toggleModal('#transfer-student-modal', '');
-
+                self.current().student(data);
             };
 
 
@@ -228,7 +229,17 @@ $(document).ready(function(){
 
             self.student = ko.observable({
                 transfer: function () {
-                    
+                    self.toggleModal('#transfer-student-modal', 'close');
+
+                    $.post(
+                        '/api/groups/student/setGroup',
+                        JSON.stringify({studentId: self.current().student().id(), groupId: self.groupSelect().id()}),
+                        function(result){
+                            self.emptyCurrentStudent();
+                            self.getStudents();
+                        });
+
+
                 },
                 
                 edit: function (data) {
@@ -257,10 +268,16 @@ $(document).ready(function(){
                     if(self.mode() === 'edit-student'){
                         self.mode('info');
                     }
-                    else {
-                        self.toggleModal('#delete-student-modal', 'close');
-                        self.emptyCurrentStudent();
-                    }
+                },
+
+                cancelDelete: function () {
+                    self.toggleModal('#delete-student-modal', 'close');
+                    //self.emptyCurrentStudent();
+                },
+
+                cancelTransfer: function () {
+                    self.toggleModal('#transfer-student-modal', 'close');
+                    //self.emptyCurrentStudent();
                 },
                 
                 approve: function () {
@@ -388,6 +405,7 @@ $(document).ready(function(){
                 profiles: self.profiles,
                 studyplans: self.studyplans,
                 studyplanSelect: self.studyplanSelect,
+                groupSelect: self.groupSelect,
 
                 showGroup: self.showGroup,
                 addGroup: self.addGroup,

@@ -40,7 +40,7 @@
                     <!-- ko if: $root.current().student().id() === id() && $root.mode() === 'edit-student'-->
                     <tr data-bind="template: {name: 'edit-student-mode', data: $root.current().student()}"></tr>
                     <!-- /ko -->
-                    <!-- ko if: ($root.current().student().id() != id() && $root.mode() === 'edit-student') || ($root.mode() === 'info') || ($root.mode() === 'edit')-->
+                    <!-- ko if: ($root.current().student().id()!= id() && $root.mode() === 'edit-student') || ($root.mode() === 'info') || ($root.mode() === 'edit')-->
                     <tr>
                         <td data-bind="text: ($index() + 1)"></td>
                         <td>
@@ -102,7 +102,7 @@
             <div><span>Удалить выбранного студента?</span></div>
             <div>
                 <button data-bind="click: $root.student().delete" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.student().cancel" class="fa danger">&#xf00d;</button>
+                <button data-bind="click: $root.student().cancelDelete" class="fa danger">&#xf00d;</button>
             </div>
         </div>
     </div>
@@ -113,14 +113,14 @@
         <div>
             <div><span>Выберите группу для перевода студента:</span></div>
             <div>
-                <!--<select data-bind="options: function(item) {
-                       return item.countryName + ' (pop: ' + item.countryPopulation + ')'
-                   }
-\"></select> -->
+                <select data-bind="options: $root.groups,
+                       optionsText: 'name',
+                       value: $root.groupSelect,
+                       optionsCaption: 'Группа'"></select>
             </div>
             <div>
                 <button data-bind="click: $root.student().transfer" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.student().cancel" class="fa danger">&#xf00d;</button>
+                <button data-bind="click: $root.student().cancelTransfer" class="fa danger">&#xf00d;</button>
             </div>
 
         </div>
