@@ -183,7 +183,17 @@ class Test extends BaseEntity implements JsonSerializable
 
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return array(
+            'id' => $this->id,
+            'subject' => $this->subject,
+            'timeTotal' => $this->timeTotal,
+            'type' => $this->type,
+            'isActive' => $this->isActive,
+            'attempts' => $this->attempts,
+            'isRandom' => $this->isRandom,
+            'disciplineId' => $this->discipline->getId(),
+            'disciplineName' => $this->discipline->getName()
+        );
     }
 
     /**

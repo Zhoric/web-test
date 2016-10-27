@@ -40,7 +40,12 @@ class TestManager
         }
     }
 
-    /**
+    public function getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId){
+        return $this->_unitOfWork->tests()
+            ->getByNameAndDisciplinePaginated($pageSize, $pageNum, $disciplineId, $name);
+    }
+
+        /**
      * @param $id
      * @return Test
      */

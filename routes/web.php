@@ -174,6 +174,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('create', 'TestController@create');
         Route::post('update', 'TestController@update');
         Route::post('delete/{id}', 'TestController@delete');
+        Route::get('show', 'TestController@getByNameAndDisciplinePaginated');
 
         Route::post('start', 'TestProcessController@startTest');
         Route::post('answer', 'TestProcessController@answer');

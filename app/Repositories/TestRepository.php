@@ -2,8 +2,11 @@
 
 namespace Repositories;
 
+use Discipline;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Join;
 use Illuminate\Support\Facades\DB;
+use PaginationResult;
 use Test;
 use TestTheme;
 
@@ -34,5 +37,32 @@ class TestRepository extends BaseRepository
                     'theme_id' => $themeId
                 ));
         }
+    }
+
+    public function getByNameAndDisciplinePaginated($pageSize, $pageNum, $disciplineId = null, $name = null){
+        $qb = $this->repo->createQueryBuilder('t');
+        $query = $qb;
+
+        if ($disciplineId != null){
+            $query = $query->join(Discipline::class, 'd', Join::WITH,
+                't.discipline = d.id AND t.discipline = :disciplineId')
+                ->setParameter('disciplineId', $disciplineId);
+        }
+
+        if ($name != null && $name != ''){
+            $query = $query->where('t.subject LIKE :name')
+                ->setParameter('name', '%'.$name.'%');
+        }
+
+        $countQuery = clone $query;
+        $data =  $this->paginate($pageSize, $pageNum, $query, 't.subject');
+
+        $count = $countQuery->select(
+            $qb->expr()
+                ->count('t.id'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return new PaginationResult($data, $count);
     }
 }

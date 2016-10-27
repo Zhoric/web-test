@@ -38,4 +38,16 @@ class TestController extends Controller
     public function delete($id){
         $this->_testManager->delete($id);
     }
+
+    public function getByNameAndDisciplinePaginated(Request $request){
+        $pageNum =  $request->query('page');
+        $pageSize = $request->query('pageSize');
+        $disciplineId = $request->query('discipline');
+        $name = $request->query('name');
+
+        $paginationResult = $this->_testManager
+            ->getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId);
+
+        return json_encode($paginationResult);
+    }
 }
