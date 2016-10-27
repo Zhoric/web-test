@@ -6,20 +6,27 @@
 
 @section('content')
 <div class="content">
+    <div class="filter">
+        <div>
+            <label>Название группы </label>
+            <input type="text" data-bind="value: $root.filter().group, valueUpdate: 'keyup'">
+        </div>
+    </div>
     <div class="institutes">
         <div class="institute" data-bind="click: $root.addGroup">
             <span class="fa">&#xf067;</span>
         </div>
         <!-- ko if: $root.mode() === 'add' -->
-        <div class="info-group" data-bind="template: {name: 'edit-mode', data: $root.currentGroup}"></div>
+        <div class="info-group" data-bind="template: {name: 'edit-mode', data: $root.current().group}"></div>
         <!-- /ko -->
         <!-- ko foreach: groups -->
-        <div class="institute font-settings" data-bind="click: $root.showGroup, css: {'institute-current': $root.currentGroup().id() === id()}">
+        <div class="institute font-settings" data-bind="click: $root.showGroup, css: {'institute-current': $root.current().group().id === id}">
             <span data-bind="text: name"></span>
         </div>
-        <!-- ko if: $root.currentGroup().id() === id() && ($root.mode() === 'info' || $root.mode() === 'edit')-->
-        <div data-bind="template: {name: 'group-info', data: $root.currentGroup}"></div>
+        <!-- ko if: $root.current().group().id() === id() && ($root.mode() === 'info' || $root.mode() === 'edit' || $root.mode() === 'edit-student')-->
+        <div data-bind="template: {name: 'group-info', data: $root.current().group}"></div>
         <div>
+            <!-- ko if: $root.mode() === 'info' || $root.mode() === 'edit-student' || $root.mode() === 'edit' -->
             <table class="students-table">
                 <thead>
                 <tr>
@@ -29,25 +36,49 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- ko foreach: $root.currentGroupStudents-->
-                <tr>
-                    <td data-bind="text: ($index() + 1)"></td>
-                    <td>
-                        <span data-bind="text: lastName"></span>&nbsp;
-                        <span data-bind="text: firstName"></span>&nbsp;
-                        <span data-bind="text: patronymic"></span>&nbsp;
-                    </td>
-                    <td>
-                        <button class="fa">&#xf0ec;</button>
-                        <button class="fa">&#xf040;</button>
-                        <button class="fa danger">&#xf014;</button>
-                    </td>
-                </tr>
+                <!-- ko foreach: $root.current().groupStudents-->
+                    <!-- ko if: $root.current().student().id() === id() && $root.mode() === 'edit-student'-->
+                    <tr data-bind="template: {name: 'edit-student-mode', data: $root.current().student()}"></tr>
+                    <!-- /ko -->
+                    <!-- ko if: ($root.current().student().id() != id() && $root.mode() === 'edit-student') || ($root.mode() === 'info') || ($root.mode() === 'edit')-->
+                    <tr>
+                        <td data-bind="text: ($index() + 1)"></td>
+                        <td>
+                            <span data-bind="text: lastName"></span>&nbsp;
+                            <span data-bind="text: firstName"></span>&nbsp;
+                            <span data-bind="text: patronymic"></span>&nbsp;
+                        </td>
+                        <td>
+                            <button class="fa" data-bind="click: $root.startTransfer">&#xf0ec;</button>
+                            <button class="fa" data-bind="click: $root.student().edit">&#xf040;</button>
+                            <button class="fa danger" data-bind="click: $root.startRemove">&#xf014;</button>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
                 <!-- /ko -->
                 </tbody>
             </table>
+            <!-- /ko -->
         </div>
         <!-- /ko -->
+        <!-- /ko -->
+    </div>
+    <div class="pager-wrap">
+        <!-- ko if: ($root.pagination().totalPages()) > 0 -->
+        <div class="pager">
+            <!-- ko ifnot: $root.pagination().currentPage() == 1 -->
+            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, 1)">&lsaquo;&lsaquo;</button>
+            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, (currentPage() - 1))">&lsaquo;</button>
+            <!-- /ko -->
+            <!-- ko foreach: new Array($root.pagination().totalPages()) -->
+            <span data-bind="visible: $root.pagination().dotsVisible($index() + 1)">...</span>
+            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, ($index()+1)), text: ($index()+1), visible: $root.pagination().pageNumberVisible($index() + 1), css: {current: ($index() + 1) == $root.pagination().currentPage()}"></button>
+            <!-- /ko -->
+            <!-- ko ifnot: $root.pagination().currentPage() == $root.pagination().totalPages() -->
+            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, ($root.pagination().currentPage() + 1))">&rsaquo;</button>
+            <button class="" data-bind="click: $root.pagination().selectPage.bind($data, $root.pagination().totalPages())">&rsaquo;&rsaquo;</button>
+            <!-- /ko -->
+        </div>
         <!-- /ko -->
     </div>
 </div>
@@ -64,6 +95,38 @@
         </div>
     </div>
 </div>
+<div class="g-hidden">
+    <div class="box-modal" id="delete-student-modal">
+        {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
+        <div>
+            <div><span>Удалить выбранного студента?</span></div>
+            <div>
+                <button data-bind="click: $root.student().delete" class="fa">&#xf00c;</button>
+                <button data-bind="click: $root.student().cancel" class="fa danger">&#xf00d;</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
+    <div class="box-modal" id="transfer-student-modal">
+        {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
+        <div>
+            <div><span>Выберите группу для перевода студента:</span></div>
+            <div>
+                <!--<select data-bind="options: function(item) {
+                       return item.countryName + ' (pop: ' + item.countryPopulation + ')'
+                   }
+\"></select> -->
+            </div>
+            <div>
+                <button data-bind="click: $root.student().transfer" class="fa">&#xf00c;</button>
+                <button data-bind="click: $root.student().cancel" class="fa danger">&#xf00d;</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="g-hidden">
     <div class="box-modal" id="select-plan-modal">
         {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
@@ -94,12 +157,13 @@
 </div>
 <script type="text/html" id="group-info">
     <div class="info-group">
+
         <!-- ko if: $root.mode() === 'edit'-->
         {{--<div class="edit-group">--}}
-            <div data-bind="template: {name: 'edit-mode', data: $root.currentGroup}"></div>
+            <div data-bind="template: {name: 'edit-mode', data: $root.current().group}"></div>
         {{--</div>--}}
         <!-- /ko -->
-        <!-- ko if: $root.mode() === 'info' -->
+        <!-- ko if: $root.mode() === 'info' || $root.mode() == 'edit-student' -->
         <div class="details-group">
             <div>
                 <label>Название группы</label></br>
@@ -149,5 +213,17 @@
             <button data-bind="click: $root.cancel" class="fa danger">&#xf00d;</button>
         </div>
     </div>
+</script>
+<script type="text/html" id="edit-student-mode">
+    <td></td>
+    <td>
+        <input type="text" data-bind="value: lastName">
+        <input type="text" data-bind="value: firstName">
+        <input type="text" data-bind="value: patronymic">
+    </td>
+    <td>
+        <button data-bind="click: $root.student().approve" class="fa">&#xf00c;</button>
+        <button data-bind="click: $root.student().cancel" class="fa danger">&#xf00d;</button>
+    </td>
 </script>
 @endsection

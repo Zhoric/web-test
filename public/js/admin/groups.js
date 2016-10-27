@@ -7,20 +7,90 @@ $(document).ready(function(){
             var self = this;
 
             self.groups = ko.observableArray([]);
-            self.currentGroupStudents = ko.observable([]);
-            self.currentProfileId = ko.observable('');
-            self.currentGroup = ko.observable({
-                id: ko.observable(0),
-                name: ko.observable(''),
-                prefix: ko.observable(''),
-                number: ko.observable(1),
-                isFullTime: ko.observable(true),
-                course: ko.observable(1),
-                studyplan: ko.observable('Указать'),
-                studyplanId: ko.observable(0)
-            });
             self.groupStudyForm = ko.observable('Очная');
             self.mode = ko.observable('none');
+
+            self.current = ko.observable({
+                groupStudents : ko.observable([]),
+                profileId : ko.observable(''),
+                group: ko.observable({
+                    id: ko.observable(0),
+                    name: ko.observable(''),
+                    prefix: ko.observable(''),
+                    number: ko.observable(1),
+                    isFullTime: ko.observable(true),
+                    course: ko.observable(1),
+                    studyplan: ko.observable('Указать'),
+                    studyplanId: ko.observable(0)
+                }),
+                student: ko.observable({
+                    id: ko.observable(0),
+                    firstName: ko.observable(''),
+                    lastName: ko.observable(''),
+                    patronymic: ko.observable(''),
+                    active: ko.observable(''),
+                    email: ko.observable('')
+
+                })
+
+            });
+
+            self.emptyCurrentGroup =  function () {
+                    self.current().group()
+                        .id(0)
+                        .name('')
+                        .prefix('')
+                        .number(1)
+                        .isFullTime(true)
+                        .course(1)
+                        .studyplan('Указать')
+                        .studyplanId(0);
+                    self.mode('none');
+            };
+            self.emptyCurrentStudent = function () {
+                    self.current().student()
+                        .id(0)
+                        .firstName('')
+                        .lastName('')
+                        .patronymic('')
+                        .email('')
+                        .active('');
+
+            };
+
+            self.filter = ko.observable({
+               group: ko.observable('')
+            });
+            self.pagination = ko.observable({
+                currentPage: ko.observable(1),
+                pageSize: ko.observable(10),
+                itemsCount: ko.observable(1),
+                totalPages: ko.observable(1),
+
+                selectPage: function(page){
+                    self.pagination().currentPage(page);
+                    self.getGroups();
+                },
+                dotsVisible: function(index){
+                    var total = self.pagination().totalPages();
+                    var current = self.pagination().currentPage();
+                    if (total > 11 && index == total-1 && index > current + 2  ||total > 11 && index == current - 1 && index > 3)  {
+                        return true;
+                    }
+                    return false;
+                },
+                pageNumberVisible: function(index){
+                    var total = self.pagination().totalPages();
+                    var current = self.pagination().currentPage();
+                    if (total < 12 ||
+                        index > (c12urrent - 2) && index < (current + 2) ||
+                        index > total - 2 ||
+                        index < 3) {
+                        return true;
+                    }
+                    return false;
+                }
+            });
 
             self.institutes = ko.observableArray([]);
             self.profiles = ko.observableArray([]);
@@ -48,9 +118,6 @@ $(document).ready(function(){
                 }
             });
 
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
 
             self.selectStudyPlan = function(){
                 if (!self.studyplanSelect().institute() && !self.institutes().length) {
@@ -62,7 +129,7 @@ $(document).ready(function(){
             };
             self.approveStudyPlan = function(){
                 var select = self.studyplanSelect();
-                self.currentGroup()
+                self.current().group()
                     .studyplan(select.studyplan().name())
                     .studyplanId(select.studyplan().id());
                 select.studyplan(undefined).institute(undefined).profile(undefined);
@@ -70,7 +137,7 @@ $(document).ready(function(){
             };
 
             self.generateGroupName = function(){
-                var group = self.currentGroup();
+                var group = self.current().group();
                 var name = group.prefix() + '-' +
                     group.course() +
                     group.number();
@@ -79,34 +146,25 @@ $(document).ready(function(){
             };
 
             self.fillCurrentGroup = function(data, mode){
-                self.currentGroup()
+                self.current().group()
                     .id(data.id())
                     .name(data.name())
                     .prefix(data.prefix())
                     .number(data.number())
-                    .isFullTime(data.isFullTime())
+                    .isFullTime(data.isFullTime)
                     .course(data.course())
-                    .studyplan(data.studyplan())
-                    .studyplanId(data.studyplanId());
+                    .studyplan(data.studyplan)
+                    .studyplanId(data.studyplanId);
                 self.mode(mode);
                 self.getStudents();
             };
-            self.emptyCurrentGroup = function(){
-                self.currentGroup()
-                    .id(0)
-                    .name('')
-                    .prefix('')
-                    .number(1)
-                    .isFullTime(true)
-                    .course(1)
-                    .studyplan('Указать')
-                    .studyplanId(0);
-                self.mode('none');
-            };
+
 
             self.getGroups = function(){
                 var url = window.location.href;
+                var filter = self.filter();
                 var profileId = +url.substr(url.lastIndexOf('/')+1);
+                /*
                 url = url.substr(0, url.indexOf('/a'));
                 if ($.isNumeric(profileId)){
                     url += '/api/profile/' + profileId + '/groups';
@@ -114,12 +172,17 @@ $(document).ready(function(){
                 }
                 else{
                     url += '/api/groups';
-                }
+                } */
 
-                $.get(url, function(data){
-                    var res = ko.mapping.fromJSON(data);
-                    self.groups(res());
-                    console.log('loading groups');
+                var name = 'name=' + filter.group();
+                var page = 'page=' + self.pagination().currentPage();
+                var pageSize = 'pageSize=' + self.pagination().pageSize();
+                var url = '/api/groups/show?' + page + '&' + pageSize + '&' + name + '&' + profileId;
+
+                $.get(url, function(response){
+                    var result = ko.mapping.fromJSON(response);
+                    self.groups(result.data());
+                    self.pagination().itemsCount(result.count());
                 });
 
 
@@ -127,11 +190,21 @@ $(document).ready(function(){
             self.getGroups();
 
             self.getStudents = function(){
-                var url = '/api/groups/' + self.currentGroup().id() + '/students';
+                var url = '/api/groups/' + self.current().group().id() + '/students';
                 $.get(url, function(data){
                     var res = ko.mapping.fromJSON(data);
-                    self.currentGroupStudents(res());
+                    self.current().groupStudents(res());
                 });
+            };
+
+            self.startRemove = function(data) {
+                self.toggleModal('#delete-student-modal', '');
+                self.current().student().id(data.id());
+            };
+            self.startTransfer = function (data) {
+                console.log(self.groups().name  );
+                self.toggleModal('#transfer-student-modal', '');
+
             };
 
 
@@ -140,7 +213,7 @@ $(document).ready(function(){
                 self.mode('add');
             };
             self.showGroup = function(data){
-                (self.currentGroup().id() === data.id()) ?
+                (self.current().group().id() === data.id()) ?
                     self.emptyCurrentGroup() :
                     self.fillCurrentGroup(data, 'info');
             };
@@ -153,13 +226,70 @@ $(document).ready(function(){
             };
 
 
+            self.student = ko.observable({
+                transfer: function () {
+                    
+                },
+                
+                edit: function (data) {
+                    self.current().student()
+                        .id(data.id())
+                        .firstName(data.firstName())
+                        .lastName(data.lastName())
+                        .patronymic(data.patronymic())
+                        .email(data.email())
+                        .active(data.active());
 
-            self.addStudent = function(){};
-            self.editStudent = function(){};
-            self.deleteStudent = function(){};
+                    self.mode('edit-student');
+                },
+                
+                delete: function () {
+                    self.toggleModal('#delete-student-modal', 'close');
+                    var url = '/api/groups/student/delete/' + self.current().student().id();
+
+                    $.post(url, function(result){
+                        self.emptyCurrentStudent();
+                        self.getStudents();
+                    });                    
+                },
+                
+                cancel: function () {
+                    if(self.mode() === 'edit-student'){
+                        self.mode('info');
+                    }
+                    else {
+                        self.toggleModal('#delete-student-modal', 'close');
+                        self.emptyCurrentStudent();
+                    }
+                },
+                
+                approve: function () {
+                    var edit = self.current().student();
+
+                    var student = {
+                        id: edit.id(),
+                        firstname: edit.firstName(),
+                        lastname: edit.lastName(),
+                        patronymic: edit.patronymic(),
+                        active: edit.active(),
+                        email: edit.email()
+                    };
+
+                    $.post(
+                        '/api/groups/student/update',
+                        JSON.stringify({student: student}),
+                        function(result){
+                            self.getStudents();
+                        });
+
+                    self.mode('info');
+                }
+
+            });
+
 
             self.approve = function(){
-                var edit = self.currentGroup();
+                var edit = self.current().group();
                 if (self.mode() === 'delete'){
                     $.post(
                         '/api/groups/delete/' + edit.id(),
@@ -171,6 +301,7 @@ $(document).ready(function(){
                     });
                     self.toggleModal('#delete-group-modal', 'close');
                     self.emptyCurrentGroup();
+                    self.getGroups();
                     return;
                 }
                 var group = {
@@ -220,17 +351,38 @@ $(document).ready(function(){
                     return;
                 }
                 self.emptyCurrentGroup();
+                self.toggleCurrentStudent();
+
                 if (m === 'delete'){
                     $('#delete-group-modal').arcticmodal('close');
                 }
+
             };
+
+            self.toggleModal = function(selector, action){
+                $(selector).arcticmodal(action);
+            };
+
+
+            self.pagination().itemsCount.subscribe(function(value){
+                if (value){
+                    self.pagination().totalPages(Math.ceil(
+                        value/self.pagination().pageSize()
+                    ));
+                }
+            });
+
+            self.filter().group.subscribe(function(){
+                self.getGroups();
+            });
 
             return {
                 groups: self.groups,
-                currentGroup: self.currentGroup,
+                current: self.current,
                 mode: self.mode,
                 groupStudyForm: self.groupStudyForm,
-                currentGroupStudents: self.currentGroupStudents,
+                pagination: self.pagination,
+                filter: self.filter,
 
                 institutes: self.institutes,
                 profiles: self.profiles,
@@ -245,7 +397,11 @@ $(document).ready(function(){
                 cancel: self.cancel,
                 selectStudyPlan: self.selectStudyPlan,
                 approveStudyPlan: self.approveStudyPlan,
-                generateGroupName: self.generateGroupName
+                generateGroupName: self.generateGroupName,
+
+                startRemove: self.startRemove,
+                startTransfer: self.startTransfer,
+                student: self.student
             };
         };
     };
