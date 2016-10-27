@@ -16,7 +16,7 @@ class DisciplineManager
     }
 
     public function getAll(){
-        return $this->_unitOfWork->groups()->all();
+        return $this->_unitOfWork->disciplines()->all();
     }
 
     public function getByNameAndProfilePaginated($pageNum, $pageSize, $name, $profileId){

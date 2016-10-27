@@ -248,6 +248,12 @@ class TestProcessManager
         }
     }
 
+    /**
+     * Проверка номера попытки прохождения теста.
+     * @param $userId
+     * @param $testId
+     * @throws Exception
+     */
     private static function validateAttemptNumber($userId, $testId){
         $test = self::getTestManager()->getById($testId);
         $attemptsAllowed = $test->getAttempts();

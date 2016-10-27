@@ -19,7 +19,7 @@ class DisciplineController extends Controller
 
     public function getAll()
     {
-        return json_encode($this->_groupManager->getAll());
+        return json_encode($this->_disciplineManager->getAll());
     }
 
     public function getByNameAndProfilePaginated(Request $request){

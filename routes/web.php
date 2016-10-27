@@ -120,6 +120,7 @@ Route::group(['prefix' => 'api'], function() {
      *-----------------------------------------------------------------------------
      */
     Route::group(['prefix' => 'disciplines'], function () {
+        Route::get('/', 'DisciplineController@getAll');
         Route::post('create', 'DisciplineController@create');
         Route::post('update', 'DisciplineController@update');
         Route::post('delete/{id}', 'DisciplineController@delete');
