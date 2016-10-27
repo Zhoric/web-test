@@ -15,7 +15,10 @@ class TestManager
         $this->_unitOfWork = $unitOfWork;
     }
 
-    public function create(Test $test, array $themeIds){
+    public function create(Test $test, array $themeIds, $disciplineId){
+        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+        $test->setDiscipline($discipline);
+
         $this->_unitOfWork->tests()->create($test);
         $this->_unitOfWork->commit();
 
@@ -23,7 +26,10 @@ class TestManager
         $this->_unitOfWork->commit();
     }
 
-    public function update(Test $test, array $themeIds){
+    public function update(Test $test, array $themeIds, $disciplineId){
+        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+        $test->setDiscipline($discipline);
+
         $this->_unitOfWork->tests()->update($test);
         $this->_unitOfWork->commit();
 

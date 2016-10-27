@@ -191,6 +191,9 @@ $(document).ready(function(){
             self.moveTo = ko.observable({
                 theme: function(data){
                     window.location.href = '/admin/theme/' + data.id();
+                },
+                tests: function(data){
+                    window.location.href = '/admin/tests/' + data.id();
                 }
             });
             self.get = ko.observable({

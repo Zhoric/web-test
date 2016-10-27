@@ -132,7 +132,7 @@
         <div>
         <i>
             <button class="move" data-bind="click: $root.csed().theme().startAdd"><span class="fa">&#xf067;</span>&nbsp;Добавить тему</button>
-            <button class="move"><span class="fa">&#xf044;</span>&nbsp;Тесты</button>
+            <button class="move" data-bind="click: $root.moveTo().tests"><span class="fa">&#xf044;</span>&nbsp;Тесты</button>
         </i>
         <i>
             <button data-bind="click: $root.csed().startUpdate" class="fa">&#xf040;</button>

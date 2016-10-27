@@ -27,12 +27,15 @@ Route::get('welcome',function (){
    return View('welcome');
 });
 Route::group(['prefix' => 'admin'], function(){
+    Route::get('/', function(){return View('admin.main');});
     Route::get('main', function(){return View('admin.main');});
     Route::get('students', function(){return View('admin.students');});
     Route::get('groups', function(){return View('admin.groups');});
     Route::get('disciplines', function(){return View('admin.disciplines');});
     Route::get('groups/{id}', function(){return View('admin.groups');});
     Route::get('theme/{id}', function(){return View('admin.themes');});
+    Route::get('tests/{id}', function(){return View('admin.tests');});
+    Route::get('tests', function(){return View('admin.tests');});
 });
 
 

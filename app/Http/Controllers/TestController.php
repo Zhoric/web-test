@@ -20,19 +20,21 @@ class TestController extends Controller
     public function create(Request $request){
         $testData = $request->json('test');
         $themeIds = $request->json('themeIds');
+        $disciplineId = $request->json('disciplineId');
 
         $test = new Test();
         $test->fillFromJson($testData);
-        $this->_testManager->create($test, $themeIds);
+        $this->_testManager->create($test, $themeIds, $disciplineId);
     }
 
     public function update(Request $request){
         $testData = $request->json('test');
         $themeIds = $request->json('themeIds');
+        $disciplineId = $request->json('disciplineId');
 
         $test = new Test();
         $test->fillFromJson($testData);
-        $this->_testManager->update($test, $themeIds);
+        $this->_testManager->update($test, $themeIds, $disciplineId);
     }
 
     public function delete($id){
