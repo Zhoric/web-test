@@ -7,16 +7,18 @@
 @section('content')
     <div class="content">
         <!-- ko if: current.question() -->
-        <div>
+        <div class="question-head">
             <h3 data-bind="text: current.question().text"></h3>
-            <h3 data-bind="timer: current.timeLeft"></h3>
+            <h1 data-bind="timer: current.timeLeft"></h1>
         </div>
 
         <!-- ko if: current.answers().length -->
-        <div data-bind="foreach: current.answers">
+        <div class="question-answers" data-bind="foreach: current.answers">
             <!-- ko if: $root.current.question().type() === 1 -->
+            <div class="container">
                 <input data-bind="attr: {id: id}, checked: $root.current.singleAnswer, value: id" type="radio" group="answers">
-                <label data-bind="text: text, attr: {for: id}"></label> </br>
+                <label data-bind="text: text, attr: {for: id}"></label>
+            </div>
             <!-- /ko -->
             <!-- ko if: $root.current.question().type() === 2-->
                 <input data-bind="attr: {id: id, checked: isRight}" type="checkbox">
@@ -33,6 +35,6 @@
             <textarea data-bind="value: $root.current.answerText" type=""></textarea>
         <!-- /ko -->
         <!-- /ko -->
-        <button data-bind="click: $root.actions.answer">Ответить</button>
+        <button id="next-question" data-bind="click: $root.actions.answer">Ответить</button>
     </div>
 @endsection
