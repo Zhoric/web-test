@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User extends BaseEntity implements JsonSerializable
+class User extends BaseEntity implements JsonSerializable, \Illuminate\Contracts\Auth\Authenticatable
 {
     /**
      * @var string
@@ -259,6 +259,50 @@ class User extends BaseEntity implements JsonSerializable
             'email' => $this->email,
             'active' => $this->active,
         );
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return "id";
+        // TODO: Implement getAuthIdentifierName() method.
+    }
+
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->getId();
+
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->getPassword();
+
+    }
+
+    /**
+     * Get the column name for the "remember me" token.
+     *
+     * @return string
+     */
+    public function getRememberTokenName()
+    {
+        return "rememberToken";
+
     }
 }
 

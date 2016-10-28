@@ -19,27 +19,29 @@ class UserRepository extends BaseRepository implements IUserRepository
     }
 
     public function findByRememberToken($id,$token){
-        return $this->where('remember_token','=',$token)->where('id','=',$id)->first();
+        return $this->repo->findBy(['rememberToken' => $token , 'id' => $id]);
     }
 
     public function findByCredentials(array $credentials){
         if (empty($credentials)) {
-            return;
+            return array();
         }
 
-        $query = $this;
+        $query = $this->repo->createQueryBuilder('u');
+
         foreach ($credentials as $key => $value) {
             if (! Str::contains($key, 'password')) {
-                $query = $this->where($key,'=', $value);
+                $query =  $query->where("u.$key = $value");
             }
         }
 
-        return $query->first();
+
+        return $query->getQuery()->execute();
     }
 
-    public function findByEmail($login)
+    public function findByEmail($email)
     {
-        return $this->where('email','=',$login)->first();
+        return $this->repo->findOneBy(['email' => $email]);
     }
 
     public function getGroupsByProfile($profileId){

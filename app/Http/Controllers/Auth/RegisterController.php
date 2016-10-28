@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
+use Repositories\UnitOfWork;
+use User;
 use Repositories\UserRepository;
 use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
@@ -30,17 +33,17 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/';
 
-    protected $user_repo;
+    protected $unitOfWork;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(UserRepository $user_repo)
+    public function __construct(UnitOfWork $unitOfWork)
     {
 
-        $this->user_repo = $user_repo;
+        $this->unitOfWork = $unitOfWork;
         $this->middleware('guest');
     }
 
@@ -52,7 +55,6 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-
 
        return Validator::make($data, [
             'login' => 'required|max:255',
@@ -66,25 +68,34 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
+    protected function create(Request $request)
     {
 
 
         $user = new User();
-        $user->login = $data['login'];
-        $user->password = bcrypt($data['password']);
-        $user->fullName = 'TEST';
-        $user->groupId = 1;
-        $user->admissionYear = 2013;
-        $user->role = 1;
+        $data = $request->json('user');
+        $user->fillFromJson($data);
+        $user->setPassword(bcrypt($user->getPassword()));
+        $this->unitOfWork->users()->create($user);
+        $this->unitOfWork->commit();
 
-         $this->user_repo->create($user);
-        return $this->user_repo->findByLogin($user->login);
+        return $this->unitOfWork->users()->findByEmail($user->getEmail());
 
-       /* return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);*/
+
     }
+
+    public function register(Request $request){
+
+
+        //$this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request)));
+
+
+        $this->guard()->login($user);
+
+        /*return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());*/
+    }
+
 }
