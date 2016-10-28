@@ -17,6 +17,7 @@ use Managers\UserManager;
 use Repositories\UnitOfWork;
 use Repositories\UserRepository;
 use User;
+use Auth;
 
 class DemoController extends BaseController
 {
@@ -36,7 +37,15 @@ class DemoController extends BaseController
 
         dd($result);
     }
+
+    public function auth(){
+        $user = Auth::user();
+        dd($user);
+    }
+
     public function index(){
+
+
        // $user = $this->_userManager->getUserByRememberToken('1','1234');
 
        // $this->_userManager->addUser('Иван Петрович','vasya','123456',UserRole::Lecturer, 2013, 1);

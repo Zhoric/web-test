@@ -74,9 +74,11 @@ class DatamapperUserProvider implements UserProvider {
     public function validateCredentials(UserContract $user, array $credentials)
     {
 
+
         $plain = $credentials['password'];
         $crypted = bcrypt($plain);
 
+        dd($user->getAuthPassword());
         return $crypted ===  $user->getAuthPassword();
         // Check that given credentials belong to the given user
     }

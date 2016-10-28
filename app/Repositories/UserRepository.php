@@ -27,16 +27,12 @@ class UserRepository extends BaseRepository implements IUserRepository
             return array();
         }
 
-        $query = $this->repo->createQueryBuilder('u');
-
-        foreach ($credentials as $key => $value) {
-            if (! Str::contains($key, 'password')) {
-                $query =  $query->where("u.$key = $value");
-            }
-        }
 
 
-        return $query->getQuery()->execute();
+      //,'password' => bcrypt($credentials['password'])]));
+
+
+        return  $this->repo->findOneBy(['email' => $credentials['email']]);
     }
 
     public function findByEmail($email)
