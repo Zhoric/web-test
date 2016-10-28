@@ -2,18 +2,6 @@
  * Created by nyanjii on 28.10.16.
  */
 $(document).ready(function(){
-    ko.bindingHandlers.timer = {
-        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var sec = valueAccessor()() + 1;
-            var timer = setInterval(function () {
-                $(element).text(--sec);
-                if (sec == 0) {
-                    bindingContext.$data.actions.answer();
-                    sec = valueAccessor()() + 1;
-                }
-            }, 1000);
-        }
-    };
 
     var testingViewModel = function(){
         return new function(){
@@ -24,7 +12,7 @@ $(document).ready(function(){
                 answers: ko.observableArray([]),
                 answerText: ko.observable(''),
                 singleAnswer: ko.observable(0),
-                timeLeft : ko.observable(-1)
+                timeLeft : ko.observable(-1),
             };
 
             self.actions = {
@@ -64,7 +52,6 @@ $(document).ready(function(){
             self.get = {
                 question: function(){
                     $.get('/api/tests/nextQuestion', function(response){
-                        console.log(response);
                         var res = ko.mapping.fromJSON(response);
                         self.current.question(res.question);
                         self.current.answers(res.answers());
@@ -92,6 +79,20 @@ $(document).ready(function(){
             self.toggleModal = function(selector, action){
                 $(selector).arcticmodal(action);
             };
+
+            // TIMER
+
+            setInterval(function(){
+                var time = self.current.timeLeft() - 1;
+                self.current.timeLeft(time);
+            }, 1000);
+
+            self.current.timeLeft.subscribe(function(value){
+                if (!value){
+                    self.actions.answer();
+                }
+            });
+
 
             return {
                 toggleCurrent: self.toggleCurrent,

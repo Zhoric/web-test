@@ -9,7 +9,7 @@
         <!-- ko if: current.question() -->
         <div class="question-head">
             <h3 data-bind="text: current.question().text"></h3>
-            <h1 data-bind="timer: current.timeLeft"></h1>
+            <h1 data-bind="text: current.timeLeft"></h1>
         </div>
 
         <!-- ko if: current.answers().length -->
