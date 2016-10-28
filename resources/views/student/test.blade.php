@@ -9,15 +9,14 @@
         <!-- ko if: current.question() -->
         <div>
             <h3 data-bind="text: current.question().text"></h3>
+            <h3 data-bind="timer: current.timeLeft"></h3>
         </div>
 
         <!-- ko if: current.answers().length -->
         <div data-bind="foreach: current.answers">
             <!-- ko if: $root.current.question().type() === 1 -->
-
                 <input data-bind="attr: {id: id}, checked: $root.current.singleAnswer, value: id" type="radio" group="answers">
                 <label data-bind="text: text, attr: {for: id}"></label> </br>
-
             <!-- /ko -->
             <!-- ko if: $root.current.question().type() === 2-->
                 <input data-bind="attr: {id: id, checked: isRight}" type="checkbox">
