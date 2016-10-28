@@ -26,6 +26,8 @@ Route::get('/', 'HomeController@index');
 Route::get('welcome',function (){
    return View('welcome');
 });
+Route::get('test', function(){return View('student.test');});
+
 Route::group(['prefix' => 'admin'], function(){
     Route::get('/', function(){return View('admin.main');});
     Route::get('main', function(){return View('admin.main');});
@@ -37,6 +39,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('tests/{id}', function(){return View('admin.tests');});
     Route::get('tests', function(){return View('admin.tests');});
 });
+
 
 
 
