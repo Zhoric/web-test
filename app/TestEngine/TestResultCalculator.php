@@ -7,7 +7,6 @@ use Repositories\UnitOfWork;
 
 class TestResultCalculator
 {
-
     /**
      * @var UnitOfWork
      */
@@ -28,7 +27,6 @@ class TestResultCalculator
      */
     public static function calculate($testResultId){
         //DEBUG HARDCODE
-        $testResultId = 1;
         $testResult = self::getUnitOfWork()->testResults()->find($testResultId);
         if ($testResult == null){
             throw new Exception("Не удалось сформировать результат теста!");

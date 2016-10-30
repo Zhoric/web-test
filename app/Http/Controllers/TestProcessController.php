@@ -13,6 +13,10 @@ use TestEngine\TestProcessManager;
 
 class TestProcessController extends Controller
 {
+    /*
+     * Инициализация процесса тестирования.
+     * Простановка в переменных сессии браузера идентификатора сессии тестирования.
+     */
     public function startTest(Request $request){
         $result = null;
         try{
@@ -28,6 +32,11 @@ class TestProcessController extends Controller
 
     }
 
+    /*
+     * Получение следующего вопроса теста.
+     * [!] В случае окончания теста в качестве ответа может быть получен
+     * результат теста вместо следующего вопроса.
+     */
     public function getNextQuestion(Request $request){
         $sessionId = $request->session()->get('sessionId');
         $nextQuestionRequestResult = TestProcessManager::getNextQuestion($sessionId);
@@ -35,6 +44,11 @@ class TestProcessController extends Controller
         return json_encode($nextQuestionRequestResult);
     }
 
+    /*
+     * Обработка ответа на вопрос теста.
+     * В зависимости от типа вопроса, принимаются Id выбранных ответов (answersIds)
+     * или текст ответа (answerText).
+     */
     public function answer(Request $request){
         $sessionId = $request->session()->get('sessionId');
         $questionId = $request->json('questionId');

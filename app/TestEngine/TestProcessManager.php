@@ -2,6 +2,7 @@
 
 namespace TestEngine;
 use Exception;
+use DateTime;
 use GivenAnswer;
 use Illuminate\Session\SessionManager;
 use Managers\QuestionManager;
@@ -10,6 +11,7 @@ use Managers\TestResultManager;
 use Question;
 use QuestionType;
 use QuestionViewModel;
+use TestResult;
 
 /**
  * Класс, ответственный за управление процессом тестирования.
@@ -17,11 +19,6 @@ use QuestionViewModel;
 class TestProcessManager
 {
     const dateFormat = 'Y-m-d H:i:s';
-
-    /**
-     * Допуск времени (в секундах), отведённого на тест.
-     */
-    const testEndTolerance = 30;
 
     /**
      * @var TestManager
@@ -42,6 +39,11 @@ class TestProcessManager
      * @var TestSession
      */
     private static $_session;
+
+    /**
+     * @var TestResult
+     */
+    private static $_testResult;
 
     /**
      * @return QuestionManager
@@ -80,6 +82,7 @@ class TestProcessManager
      */
     public static function initTest($userId, $testId)
     {
+        //DEBUG COMMENT
         //self::validateAttemptNumber($userId, $testId);
 
         $sessionId = TestSessionHandler::createTestSession($userId, $testId);
@@ -93,12 +96,16 @@ class TestProcessManager
     public static function getNextQuestion($sessionId){
         try{
             self::$_testManager = TestSessionHandler::getTestManager();
-
             self::$_session = TestSessionHandler::getSession($sessionId);
+
             self::validateTestSession();
 
             $suitableQuestions = self::getSuitableQuestionsIds();
             self::validateSuitableQuestions($suitableQuestions);
+
+            if (self::$_testResult != null){
+                return self::$_testResult;
+            }
 
             $nextQuestionId = self::getRandomQuestion($suitableQuestions);
 
@@ -121,12 +128,12 @@ class TestProcessManager
             self::$_session = $session;
             self::validateTestSession();
 
-            $testResultId = $session->getTestResultId();
             $questionId = $questionAnswer->getQuestionId();
+
+            //DEBUG COMMENT
             //self::validateQuestionToAnswer($questionId);
 
             $question = self::getQuestionManager()->getWithAnswers($questionId);
-            $answers = $question->getAnswers();
 
             $answerRightPercentage = self::checkAnswers($question, $questionAnswer);
             $answerText = self::getAnswerText($question, $questionAnswer);
@@ -153,10 +160,16 @@ class TestProcessManager
      */
     public static function calculateAnsSaveResult($testResultId){
         $testResultMark = TestResultCalculator::calculate($testResultId);
+        $now = new DateTime();
 
         $testResult = self::getTestResultManager()->getById($testResultId);
         $testResult->setMark($testResultMark);
+        $testResult->setDateTime($now);
+
+        self::$_testResult = $testResult;
         self::getTestResultManager()->update($testResult);
+        self::$_testResult->setDateTime($now->format(self::dateFormat));
+
     }
 
     /**
@@ -223,7 +236,7 @@ class TestProcessManager
         }
 
         $timeLeft = self::getTimeLeftBeforeTestEnd();
-        if (self::testEndTolerance + $timeLeft <= 0){
+        if (GlobalTestSettings::testEndTolerance + $timeLeft <= 0){
             throw new Exception('Время, отведённое на тест истекло!');
         }
     }

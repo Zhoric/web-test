@@ -221,7 +221,13 @@ class TestResult extends BaseEntity implements JsonSerializable
 
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return array(
+            'id' => $this->id,
+            'mark' => $this->mark,
+            'userId' => $this->getUser()->getId(),
+            'testId' => $this->getTest()->getId(),
+            'attempt' => $this->getAttempt(),
+            'dateTime' => $this->getDateTime());
     }
 }
 

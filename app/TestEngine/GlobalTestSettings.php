@@ -1,20 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: test
- * Date: 26.10.16
- * Time: 12:16
- */
 
 namespace TestEngine;
 
-
+/**
+ * Глобальные настройки механизма тестирования.
+ */
 abstract class GlobalTestSettings
 {
     // Значение сложности вопроса по умолчанию.
     const defaultComplexity = 1;
 
     // Максимальная оценка за тест.
-    const maxMarkValue = 45;
+    const maxMarkValue = 100;
 
+    // Допуск времени (в секундах), отведённого на тест.
+    const testEndTolerance = 30;
 }
