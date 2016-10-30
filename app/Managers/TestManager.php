@@ -2,6 +2,7 @@
 
 namespace Managers;
 
+use QuestionType;
 use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Test;
@@ -73,13 +74,19 @@ class TestManager
         $question = $this->_unitOfWork->questions()->find($questionId);
         $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
 
+        shuffle($answers);
+
+        //Не отправляем студенту информацию о правильности ответов
         if ($showWhichRight == false){
             for($i = 0; $i < count($answers); $i++){
                 $answers[$i]->setIsRight(null);
             }
         }
 
-        shuffle($answers);
+        //Если тест открытый с однострочным ответом - не отправляем студенту варианты ответов
+        if ($question->getType() == QuestionType::OpenOneString){
+            $answers = null;
+        }
 
         return new QuestionViewModel($question, $answers);
     }

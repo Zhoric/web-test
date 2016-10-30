@@ -123,13 +123,12 @@ class TestProcessManager
 
             $testResultId = $session->getTestResultId();
             $questionId = $questionAnswer->getQuestionId();
-            self::validateQuestionToAnswer($questionId);
+            //self::validateQuestionToAnswer($questionId);
 
             $question = self::getQuestionManager()->getWithAnswers($questionId);
             $answers = $question->getAnswers();
 
-            $answerRightPercentage = self::checkAnswers($answers,
-                $questionAnswer->getAnswerIds());
+            $answerRightPercentage = self::checkAnswers($question, $questionAnswer);
             $answerText = self::getAnswerText($question, $questionAnswer);
 
             self::saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
@@ -271,12 +270,33 @@ class TestProcessManager
 
     /**
      * Проверка правильности ответов
-     * @param $answers - ответы вопроса
-     * @param $studentAnswers - ответы, которые дал студент
+     * @param QuestionViewModel $questionInfo - Вопрос со всеми его ответами.
+     * @param QuestionAnswer $questionAnswer - ответы, которые дал студент
      * @return int - оценка за ответ, %
+     * @throws Exception
      */
-    private static function checkAnswers($answers, $studentAnswers){
-        return AnswerChecker::calculatePointsForAnswer($answers, $studentAnswers);
+    private static function checkAnswers($questionInfo, $questionAnswer){
+        $answerResultPoints = null;
+
+        $question = $questionInfo->getQuestion();
+        $questionType = $question->getType();
+        $answers = $questionInfo->getAnswers();
+
+        switch ($questionType){
+            case QuestionType::ClosedOneAnswer:
+            case QuestionType::ClosedManyAnswers: {
+                $studentAnswers = $questionAnswer->getAnswerIds();
+                $answerResultPoints =  AnswerChecker::calculatePointsForClosedAnswer($answers, $studentAnswers);
+                break;
+            }
+            case QuestionType::OpenOneString:{
+                $answerText = $questionAnswer->getAnswerText();
+                $answerResultPoints = AnswerChecker::calculatePointsForSingleStringAnswer($answers, $answerText);
+                break;
+            }
+        }
+
+        return $answerResultPoints;
     }
 
     /**
