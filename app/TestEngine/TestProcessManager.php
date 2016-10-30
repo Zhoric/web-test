@@ -7,6 +7,9 @@ use Illuminate\Session\SessionManager;
 use Managers\QuestionManager;
 use Managers\TestManager;
 use Managers\TestResultManager;
+use Question;
+use QuestionType;
+use QuestionViewModel;
 
 /**
  * Класс, ответственный за управление процессом тестирования.
@@ -127,8 +130,9 @@ class TestProcessManager
 
             $answerRightPercentage = self::checkAnswers($answers,
                 $questionAnswer->getAnswerIds());
+            $answerText = self::getAnswerText($question, $questionAnswer);
 
-            self::saveQuestionAnswer($session, $questionId, $answerRightPercentage);
+            self::saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
             self::updateTestSession($questionId);
 
         } catch (Exception $exception){
@@ -299,6 +303,47 @@ class TestProcessManager
         $givenAnswer->setAnswer($answerText);
 
         self::getQuestionManager()->createQuestionAnswer($givenAnswer);
+    }
+
+    /**
+     * Получение текста ответа на вопрос.
+     * В случае, если вопрос закрытый - в текст ответа копируется текст всех выбранных вариантов.
+     * Если вопрос открытый, то в текст ответа будет сохранён текст, введённый студентом при ответе.
+     * @param QuestionViewModel $questionAnswer - вопрос со всеми его ответами.
+     * @param QuestionAnswer $studentAnswer - ответ студента
+     * @return string
+     * @internal param Question $question
+     */
+    private static function getAnswerText($questionAnswer, $studentAnswer){
+        $openAnswerText = $studentAnswer->getAnswerText();
+        if ($openAnswerText != null && $openAnswerText != ""){
+            return $openAnswerText;
+        }
+
+        $studentAnswersIds = $studentAnswer->getAnswerIds();
+        $questionType = $questionAnswer->getQuestion()->getType();
+        $answers = $questionAnswer->getAnswers();
+        $answerText = '';
+
+        switch ($questionType){
+            case QuestionType::ClosedOneAnswer: {
+                foreach ($answers as $answer){
+                    if (in_array($answer->getId(), $studentAnswersIds)){
+                        $answerText .= $answer->getText().'; ';
+                    }
+                }
+                break;
+            }
+            case QuestionType::ClosedManyAnswers: {
+                foreach ($answers as $answer){
+                    if (in_array($answer->getId(), $studentAnswersIds)){
+                        $answerText .= $answer->getText().'; ';
+                    }
+                }
+                break;
+            }
+        }
+        return $answerText;
     }
 
 

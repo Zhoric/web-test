@@ -50,8 +50,8 @@ class TestManager
         return $this->_unitOfWork->tests()
             ->getByNameAndDisciplinePaginated($pageSize, $pageNum, $disciplineId, $name);
     }
-
-        /**
+    
+    /**
      * @param $id
      * @return Test
      */
@@ -78,6 +78,8 @@ class TestManager
                 $answers[$i]->setIsRight(null);
             }
         }
+
+        shuffle($answers);
 
         return new QuestionViewModel($question, $answers);
     }
