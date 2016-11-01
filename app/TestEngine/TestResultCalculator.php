@@ -33,7 +33,9 @@ class TestResultCalculator
         }
 
         $resultPercents = self::getResultPercents($testResultId);
-        $resultMark = ($resultPercents / 100) * GlobalTestSettings::maxMarkValue;
+        $resultMark = ($resultPercents != null)
+            ? ($resultPercents / 100) * GlobalTestSettings::maxMarkValue
+            : null;
 
         return $resultMark;
     }
@@ -44,6 +46,9 @@ class TestResultCalculator
         $answers = self::getUnitOfWork()->givenAnswers()->getByTestResult($testResultId);
 
         foreach ($answers as $answer) {
+
+            if ($answer->getRightPercentage() == null) return null;
+
             $question = $answer->getQuestion();
             $complexity = $question->getComplexity();
             $complexity = ($complexity != null) ? $complexity : GlobalTestSettings::defaultComplexity;

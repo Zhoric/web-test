@@ -243,6 +243,7 @@ class TestProcessManager
 
     /**
      * Валидация списка подходящих вопросов.
+     * В случае отсутствия подходящих вопросов, тест завершается.
      */
     private static function validateSuitableQuestions($suitableQuestionsIds){
 
@@ -344,7 +345,7 @@ class TestProcessManager
      * Получение текста ответа на вопрос.
      * В случае, если вопрос закрытый - в текст ответа копируется текст всех выбранных вариантов.
      * Если вопрос открытый, то в текст ответа будет сохранён текст, введённый студентом при ответе.
-     * @param QuestionViewModel $questionAnswer - вопрос со всеми его ответами.
+     * @param QuestionViewModel $questionAnswer - вопрос со всеми возможными ответами.
      * @param QuestionAnswer $studentAnswer - ответ студента
      * @return string
      * @internal param Question $question
