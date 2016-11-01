@@ -3,6 +3,7 @@
 namespace Managers;
 
 use DateTime;
+use ExtraAttempt;
 use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
 use TestResult;
@@ -87,9 +88,48 @@ class TestResultManager
         return new TestResultViewModel($testResult, $answers);
     }
 
+    /**
+     * Получение количества дополнительных попыток для прохождения теста студентом.
+     * @param $userId
+     * @param $testId
+     * @return int
+     */
+    public function getExtraAttemptsCount($userId, $testId){
+        $extraAttempts = $this->_unitOfWork
+            ->extraAttempts()
+            ->findByTestAndUser($userId, $testId);
+
+        return $extraAttempts != null ? $extraAttempts->getCount() : 0;
+    }
+
+    /**
+     * Установка количества дополнительных попыток для прохождения теста студентом.
+     * @param $userId
+     * @param $testId
+     * @param $attemptsCount
+     */
+    public function setExtraAttempts($userId, $testId, $attemptsCount){
+        $user = $this->_unitOfWork->users()->find($userId);
+        $test = $this->_unitOfWork->tests()->find($testId);
+
+        $existingExtraAttempts = $this->_unitOfWork
+            ->extraAttempts()->findByTestAndUser($testId, $userId);
 
 
+        if ($existingExtraAttempts != null){
+            $existingExtraAttempts->setCount($attemptsCount);
+            $this->_unitOfWork->extraAttempts()->update($existingExtraAttempts);
+        } else {
+            $attempts = new ExtraAttempt();
+            $attempts->setTest($test);
+            $attempts->setUser($user);
+            $attempts->setCount($attemptsCount);
 
+            $this->_unitOfWork->extraAttempts()->create($attempts);
+        }
+
+        $this->_unitOfWork->commit();
+    }
 
 
 

@@ -112,7 +112,7 @@ Route::group(['prefix' => 'api'], function() {
         });
 
         /*------------------------------------------------------------------------
-*                      Работа с оценками по дисциплинам планов                     */
+        *                      Работа с оценками по дисциплинам планов           */
 
         Route::group(['prefix' => 'mark'], function () {
             Route::post('create', 'StudyPlanController@addDisciplinePlan');
@@ -214,13 +214,25 @@ Route::group(['prefix' => 'api'], function() {
     });
 
     /*-----------------------------------------------------------------------------
+    *                        ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ
+    *------------------------------------------------------------------------------
+    */
+
+    Route::group(['prefix' => 'attempts'], function () {
+
+        Route::get('get', 'TestResultController@getExtraAttemptsCount');
+        Route::post('set', 'TestResultController@setExtraAttempts');
+    });
+    /*-----------------------------------------------------------------------------
     *                           РЕЗУЛЬТАТЫ ТЕСТОВ
     *------------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'results'], function () {
         Route::get('show', 'TestResultController@getByGroupAndTest');
-        Route::get('{id}', 'TestResultController@getById');
+        Route::get('/{id}', 'TestResultController@getById');
     });
+
+
 
 
 });

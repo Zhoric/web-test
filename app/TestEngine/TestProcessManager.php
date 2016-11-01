@@ -272,11 +272,13 @@ class TestProcessManager
      */
     private static function validateAttemptNumber($userId, $testId){
         $test = self::getTestManager()->getById($testId);
+
         $attemptsAllowed = $test->getAttempts();
 
-        $lastTestResultAttempt = self::getTestManager()->getTestAttemptsUsedCount($userId, $testId);
+        $extraAttempts = self::$_testResultManager->getExtraAttemptsCount($userId, $testId);
+        $lastAttempt = self::getTestManager()->getTestAttemptsUsedCount($userId, $testId);
 
-        if ($attemptsAllowed != 0 || $lastTestResultAttempt >= $attemptsAllowed){
+        if ($attemptsAllowed != 0 && $lastAttempt >= $attemptsAllowed + $extraAttempts){
             throw new Exception('Количество попыток прохождения теста исчерпано!');
         }
     }

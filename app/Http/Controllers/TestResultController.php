@@ -28,12 +28,25 @@ class TestResultController extends Controller
     }
 
     /**
-     * Получение результата теста вместе с отвами на вопросы по id
+     * Получение результата теста вместе с ответами на вопросы по id
      * @param $id
      * @return \TestResultViewModel
      */
     public function getById($id){
         return json_encode($this->_testResultManager->getByIdWithAnswers($id));
+    }
+
+    public function getExtraAttemptsCount(Request $request){
+        $testId = $request->query('testId');
+        $userId = $request->query('userId');
+        return json_encode($this->_testResultManager->getExtraAttemptsCount($userId, $testId));
+    }
+
+    public function setExtraAttempts(Request $request){
+        $testId = $request->json('testId');
+        $userId = $request->json('userId');
+        $count = $request->json('count');
+        $this->_testResultManager->setExtraAttempts($userId, $testId, $count);
     }
 
 }

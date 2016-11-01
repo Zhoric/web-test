@@ -37,6 +37,7 @@ class UnitOfWork
     private $_testMarkTypeRepo;
     private $_testResultRepo;
     private $_givenAnswerRepo;
+    private $_extraAttemptRepo;
 
 
     public function users(){
@@ -149,6 +150,13 @@ class UnitOfWork
             $this->_givenAnswerRepo = new GivenAnswerRepository($this->_em);
         }
         return $this->_givenAnswerRepo;
+    }
+
+    public function extraAttempts(){
+        if ($this->_extraAttemptRepo == null){
+            $this->_extraAttemptRepo = new ExtraAttemptRepository($this->_em);
+        }
+        return $this->_extraAttemptRepo;
     }
 
     public function commit(){
