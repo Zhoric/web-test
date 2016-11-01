@@ -63,7 +63,10 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('tests', function(){return View('admin.tests');});
 });
 
-
+Route::get('/testBack', function (){
+    $repo =  app()->make(\Repositories\TestResultRepository::class);
+    return $repo->getByGroupAndTest(5,2);
+});
 
 
 Route::group(['prefix' => 'api'], function() {
@@ -154,14 +157,14 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'DisciplineController@update');
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
-        Route::get('{id}/profiles','DisciplineController@getDisciplineProfilesIds');
-        Route::get('{id}/tests','DisciplineController@getTestsByDiscipline');
-        Route::get('{id}','DisciplineController@getDiscipline');
+        Route::get('{id}/profiles', 'DisciplineController@getDisciplineProfilesIds');
+        Route::get('{id}/tests', 'DisciplineController@getTestsByDiscipline');
+        Route::get('{id}', 'DisciplineController@getDiscipline');
 
         /*------------------------------------------------------------------------
         *                   Работа со темами дисциплин                          */
 
-        Route::get('{id}/themes','DisciplineController@getThemes');
+        Route::get('{id}/themes', 'DisciplineController@getThemes');
 
         Route::group(['prefix' => 'themes'], function () {
             Route::post('create', 'DisciplineController@createTheme');
@@ -210,6 +213,14 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('nextQuestion', 'TestProcessController@getNextQuestion');
     });
 
+    /*-----------------------------------------------------------------------------
+    *                           РЕЗУЛЬТАТЫ ТЕСТОВ
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'results'], function () {
+        Route::get('show', 'TestResultController@getByGroupAndTest');
+        Route::get('{id}', 'TestResultController@getById');
+    });
+
+
 });
-
-

@@ -48,8 +48,8 @@ class TestResultCalculator
             $complexity = $question->getComplexity();
             $complexity = ($complexity != null) ? $complexity : GlobalTestSettings::defaultComplexity;
 
-            $maxMark += $complexity;
-            $studentMark += $complexity * $answer->getRightPercentage();
+            $maxMark += $complexity * GlobalTestSettings::complexityDifferenceCoef;
+            $studentMark += $complexity * $answer->getRightPercentage() * GlobalTestSettings::complexityDifferenceCoef;
         }
 
         return ceil($studentMark/$maxMark);

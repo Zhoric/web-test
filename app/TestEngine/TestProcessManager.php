@@ -85,7 +85,7 @@ class TestProcessManager
         //DEBUG COMMENT
         //self::validateAttemptNumber($userId, $testId);
 
-        $sessionId = TestSessionHandler::createTestSession($userId, $testId);
+        $sessionId = TestSessionHandler::createTestSession($testId, $userId);
         return $sessionId;
     }
 

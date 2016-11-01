@@ -19,16 +19,12 @@ class TestProcessController extends Controller
      */
     public function startTest(Request $request){
         $result = null;
-        try{
             $testId = $request->json('testId');
             //TODO: Получать id текущего пользователя
-            $userId = 5;
+            $userId = 7;
 
             $result = TestProcessManager::initTest($userId, $testId);
             $request->session()->set('sessionId', $result);
-        } catch (Exception $exception){
-            return json_encode(array('message' => $exception->getMessage()));
-        }
 
     }
 

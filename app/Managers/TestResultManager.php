@@ -6,6 +6,7 @@ use DateTime;
 use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
 use TestResult;
+use TestResultViewModel;
 
 class TestResultManager
 {
@@ -63,4 +64,33 @@ class TestResultManager
         $this->_unitOfWork->commit();
 
     }
+
+    /**
+     * Получение последних результатов заданного теста для заданной группы.
+     * @param $testId
+     * @param $groupId
+     * @return array
+     */
+    public function getByGroupAndTest($groupId, $testId){
+        return $this->_unitOfWork->testResults()->getByGroupAndTest($testId, $groupId);
+    }
+
+    /**
+     * Получение результата теста со всеми ответами по id.
+     * @param $testResultId
+     * @return TestResultViewModel
+     */
+    public function getByIdWithAnswers($testResultId){
+        $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+        $answers =  $this->_unitOfWork->givenAnswers()->getByTestResult($testResultId);
+
+        return new TestResultViewModel($testResult, $answers);
+    }
+
+
+
+
+
+
+
 }
