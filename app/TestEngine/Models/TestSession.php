@@ -43,6 +43,11 @@ class TestSession
     private $testResultId;
 
     /**
+     * Срок истечения времени, отведённого на текущий вопрос.
+     */
+    private $questionEndTime;
+
+    /**
      * @return mixed
      */
     public function getTestId()
@@ -152,5 +157,21 @@ class TestSession
     public function setTestResultId($testResultId)
     {
         $this->testResultId = $testResultId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuestionEndTime()
+    {
+        return $this->questionEndTime;
+    }
+
+    /**
+     * @param mixed $questionEndTime
+     */
+    public function setQuestionEndTime($questionEndTime)
+    {
+        $this->questionEndTime = $questionEndTime;
     }
 }

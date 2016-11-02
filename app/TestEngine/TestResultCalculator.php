@@ -47,7 +47,9 @@ class TestResultCalculator
 
         foreach ($answers as $answer) {
 
-            if ($answer->getRightPercentage() == null) return null;
+            if ($answer->getRightPercentage() != 0 && $answer->getRightPercentage() == null) {
+                return null;
+            }
 
             $question = $answer->getQuestion();
             $complexity = $question->getComplexity();

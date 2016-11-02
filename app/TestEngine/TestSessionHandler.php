@@ -24,6 +24,7 @@ class TestSessionHandler
     const testEndTimePrefix = 'end';
     const answersQualityPrefix = 'aq';
     const answeredQuestionsIdsPrefix = 'aqid';
+    const questionEndTimePrefix = 'qend';
 
     const dateSerializationFormat = 'Y-m-d H:i:s';
     const cacheExpiration = '+ 1 day';
@@ -95,24 +96,14 @@ class TestSessionHandler
         $session->setTestResultId($redis->get(self::testResultPrefix.$sessionId));
         $endTimeString = $redis->get(self::testEndTimePrefix.$sessionId);
         $session->setTestEndDateTime(date_create_from_format(self::dateSerializationFormat, $endTimeString));
+        $qEndTimeString = $redis->get(self::questionEndTimePrefix.$sessionId);
+        $session->setQuestionEndTime(date_create_from_format(self::dateSerializationFormat, $qEndTimeString));
         $session->setAnswersQuality($redis->get(self::answersQualityPrefix.$sessionId));
         $answeredQuestions = $redis->get(self::answeredQuestionsIdsPrefix.$sessionId);
         $answeredQuestions = $answeredQuestions == null ? [] : explode(',', $answeredQuestions);
         $session->setAnsweredQuestionsIds($answeredQuestions);
 
         return $session;
-    }
-
-    public static function updateSession($sessionId, $answeredQuestionsIds, $quality = 0){
-        $redis = self::getRedisClient();
-
-        $qualityKey = self::answersQualityPrefix.$sessionId;
-        $answeredKey = self::answeredQuestionsIdsPrefix.$sessionId;
-
-        $redis->set($qualityKey, $quality);
-        $redis->expireat($qualityKey, strtotime(self::cacheExpiration));
-        $redis->set($answeredKey, implode($answeredQuestionsIds, ','));
-        $redis->expireat($answeredKey, strtotime(self::cacheExpiration));
     }
 
     /**
@@ -134,29 +125,29 @@ class TestSessionHandler
         $answersQuality = 0;
         $answeredQuestionsIds = [];
 
-        self::initSessionTest($sessionId,$testId);
-        self::initSessionUser($sessionId,$userId);
-        self::initSessionTestResult($sessionId, $userId, $testId);
-        self::initSessionAnsweredQuestions($sessionId, $answeredQuestionsIds);
-        self::initSessionAnswersQuality($sessionId, $answersQuality);
-        self::initSessionEndTime($sessionId, $testEndTime);
+        self::setSessionTest($sessionId,$testId);
+        self::setSessionUser($sessionId,$userId);
+        self::setSessionTestResult($sessionId, $userId, $testId);
+        self::setSessionAnsweredQuestions($sessionId, $answeredQuestionsIds);
+        self::setSessionAnswersQuality($sessionId, $answersQuality);
+        self::setSessionEndTime($sessionId, $testEndTime);
     }
 
-    private static function initSessionUser($sessionId, $userId){
+    public static function setSessionUser($sessionId, $userId){
         $userIdKey = self::userIdPrefix.$sessionId;
 
         self::getRedisClient()->set($userIdKey, $userId);
         self::getRedisClient()->expireat($userIdKey, strtotime(self::cacheExpiration));
     }
 
-    private static function initSessionTest($sessionId, $testId){
+    public static function setSessionTest($sessionId, $testId){
         $testIdKey = self::testIdPrefix.$sessionId;
 
         self::getRedisClient()->set($testIdKey, $testId);
         self::getRedisClient()->expireat($testIdKey, strtotime(self::cacheExpiration));
     }
 
-    private static function initSessionTestResult($sessionId, $userId, $testId){
+    public static function setSessionTestResult($sessionId, $userId, $testId){
         $testResultIdKey = self::testResultPrefix.$sessionId;
         $testResultId = self::getTestResultManager()->createEmptyTestResult($userId, $testId);
 
@@ -164,25 +155,33 @@ class TestSessionHandler
         self::getRedisClient()->expireat($testResultIdKey, strtotime(self::cacheExpiration));
     }
 
-    private static function initSessionEndTime($sessionId, $testEndTime){
+    public static function setSessionEndTime($sessionId, $testEndTime){
         $endTimeKey = self::testEndTimePrefix.$sessionId;
 
         self::getRedisClient()->set($endTimeKey, $testEndTime);
         self::getRedisClient()->expireat($endTimeKey, strtotime(self::cacheExpiration));
     }
 
-    private static function initSessionAnswersQuality($sessionId, $answersQuality){
+    public static function setSessionAnswersQuality($sessionId, $answersQuality){
         $qualityKey = self::answersQualityPrefix.$sessionId;
 
         self::getRedisClient()->set($qualityKey, $answersQuality);
         self::getRedisClient()->expireat($qualityKey, strtotime(self::cacheExpiration));
     }
 
-    private static function initSessionAnsweredQuestions($sessionId, $answeredQuestionsIds){
+    public static function setSessionAnsweredQuestions($sessionId, $answeredQuestionsIds){
         $answeredKey = self::answeredQuestionsIdsPrefix.$sessionId;
 
         self::getRedisClient()->set($answeredKey, implode($answeredQuestionsIds, ','));
         self::getRedisClient()->expireat($answeredKey, strtotime(self::cacheExpiration));
+    }
+
+    public static function setSessionQuestionEndTime($sessionId, $questionEndTime){
+        $questionEndTimeKey = self::questionEndTimePrefix.$sessionId;
+
+        self::getRedisClient()->set($questionEndTimeKey, $questionEndTime);
+        self::getRedisClient()->expireat($questionEndTimeKey, strtotime(self::cacheExpiration));
+
     }
 
 

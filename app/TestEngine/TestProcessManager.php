@@ -222,8 +222,9 @@ class TestProcessManager
     private static function updateTestSession($answeredQuestionId){
         $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
         array_push($answeredQuestionsIds, $answeredQuestionId);
-        self::$_session->setAnsweredQuestionsIds($answeredQuestionsIds);
-        TestSessionHandler::updateSession(self::$_session->getSessionId(), $answeredQuestionsIds);
+        $sessionId = self::$_session->getSessionId();
+
+        TestSessionHandler::setSessionAnsweredQuestions($sessionId, $answeredQuestionsIds);
     }
 
     /**
