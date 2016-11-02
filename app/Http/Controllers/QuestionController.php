@@ -48,6 +48,8 @@ class QuestionController extends Controller
         $questionData = $request->json('question');
         $answers = (array) $request->json('answers');
         $themeId = $request->json('theme');
+        $file = $request->json('file');
+        $fileType = $request->json('fileType');
 
         $question = new Question();
         $question->fillFromJson($questionData);

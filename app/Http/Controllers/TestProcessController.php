@@ -21,7 +21,7 @@ class TestProcessController extends Controller
         $result = null;
             $testId = $request->json('testId');
             //TODO: Получать id текущего пользователя
-            $userId = 7;
+            $userId = 5;
 
             $result = TestProcessManager::initTest($userId, $testId);
             $request->session()->set('sessionId', $result);

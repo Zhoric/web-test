@@ -23,23 +23,29 @@ $(document).ready(function(){
             self.toggleCurrent = {
                 stringify: {
                     answer: function(){
+                        var qType = self.current.question().type();
                         var ids = [];
-                        if (self.current.question().type() === 1){
+                        var answer = {
+                            questionId: self.current.question().id()
+                        };
+
+                        if (qType === 1){
                             ids.push(self.current.singleAnswer());
+                            answer.answerIds = ids;
                         }
-                        else{
+                        if (qType === 2){
                             self.current.answers().find(function(item){
                                 if (item.isRight() === true){
                                     ids.push(item.id());
                                 }
                             });
+                            answer.answerIds = ids;
+                        }
+                        if (qType === 3 || qType === 4){
+                            answer.answerText = self.current.answerText();
                         }
 
-                        return JSON.stringify({
-                            questionId: self.current.question().id(),
-                            answersIds: ids,
-                            answerText: self.current.answerText()
-                        });
+                        return JSON.stringify(answer);
                     }
                 },
                 clear: function(){

@@ -30,12 +30,20 @@ $(document).ready(function(){
                     isOpenSingleLine: ko.observable(false),
                     validationMessage: ko.observable('')
                 }),
+                fileData: ko.observable({
+                    file: ko.observable(),
+                    dataURL: ko.observable(),
+                    base64String: ko.observable()
+                }),
                 answer: ko.observable({
                     text: ko.observable(''),
                     isRight: ko.observable(false)
                 }),
                 answers: ko.observableArray([]),
             });
+            ko.fileBindings.defaultOptions = {
+                fileName: true
+            };
             self.filter = ko.observable({
                 name: ko.observable(''),
                 type: ko.observable(),
@@ -120,7 +128,9 @@ $(document).ready(function(){
                             type: curq.type().id(),
                             text: curq.text(),
                             complexity: curq.complexity().id(),
-                            time: +curq.minutes() * 60 + +curq.seconds()
+                            time: +curq.minutes() * 60 + +curq.seconds(),
+                            file: self.current().fileData().base64String(),
+                            fileType: self.current().fileData().file().type
                         };
                         self.mode() === 'edit' ? question.id = curq.id() : '';
                         self.current().answers().find(function(item){
@@ -444,6 +454,7 @@ $(document).ready(function(){
                 validated = +validated >= 60 ? '59' : validated;
                 self.current().question().seconds(validated);
             });
+            self.current().fileData().file.subscribe(function(value){console.log(value);});
 
             return {
                 theme: self.theme,

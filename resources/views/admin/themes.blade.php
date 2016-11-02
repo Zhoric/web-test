@@ -1,6 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Дисциплины')
 @section('javascript')
+    <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
 @endsection
 
@@ -40,7 +41,17 @@
         </div>
         <div>
             <label>Изображение</label></br>
-            <input type="file" data-bind="value: $root.current().question().image" placefolder="C:/fakepath">
+            <div data-bind="fileDrag: $root.current().fileData">
+                <div class="image-upload-preview">
+                    <img data-bind="attr: { src: $root.current().fileData().dataURL }, visible: $root.current().fileData().dataURL">
+                </div>
+                <div class="image-upload-input">
+                    <input type="file" data-bind="fileInput: $root.current().fileData">
+                </div>
+            </div>
+            {{--<div data-bind="fileDrag: $root.current().fileData">--}}
+                {{--<input type="file" data-bind="fileInput: $root.current().fileData, , customFileInput: {}">--}}
+            {{--</div>--}}
         </div>
         <div>
             <label>Тип вопроса</label></br>

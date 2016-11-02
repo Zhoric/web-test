@@ -29,3 +29,95 @@
   margin: 20px 75px 0 0;
   float: right;
 }
+
+
+input[type=radio]{
+  vertical-align: top;
+  width: 17px;
+  height: 17px;
+  margin: 0 3px 0 0;
+  & + label {
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 30px;
+  }
+  &:not(checked) {
+    position: absolute;
+    opacity: 0;
+    & + label {
+      position: relative;
+      padding: 0 0 0 35px;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        border: 1px solid #CDD1DA;
+        border-radius: 50%;
+        background: #FFF;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: @nephritis;
+        opacity: 0;
+        transition: all .2s;
+      }
+    }
+  }
+  &:checked + label:after {
+    opacity: 1;
+  }
+}
+input[type=checkbox]{
+  vertical-align: top;
+  width: 17px;
+  height: 17px;
+  margin: 0 3px 0 0;
+  & + label {
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 30px;
+  }
+  &:not(checked) {
+    position: absolute;
+    opacity: 0;
+    & + label {
+      position: relative;
+      padding: 0 0 0 35px;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        border: 1px solid #CDD1DA;
+        border-radius: 20%;
+        background: #FFF;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 20%;
+        background: @nephritis;
+        opacity: 0;
+        transition: all .2s;
+      }
+    }
+  }
+  &:checked + label:after {
+    opacity: 1;
+  }
+}
