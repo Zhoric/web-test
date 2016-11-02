@@ -41,9 +41,7 @@ $(document).ready(function(){
                 }),
                 answers: ko.observableArray([]),
             };
-            ko.fileBindings.defaultOptions = {
-                fileName: true
-            };
+
             self.filter = {
                 name: ko.observable(''),
                 type: ko.observable(),

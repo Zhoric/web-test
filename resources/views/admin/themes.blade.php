@@ -1,6 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Дисциплины')
 @section('javascript')
+    <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
     <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
 @endsection
@@ -31,54 +32,64 @@
             </div>
         </div>
     </div>
+    <div>
+        <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
+            <div class="row">
+                <div class="img-preview">
+                    <img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
+                    <div data-bind="ifnot: $root.current.fileData().dataURL">
+                        <label class="drag-label">Drag file here</label>
+                    </div>
+                </div>
+                <div class="file-input">
+                    <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
+              buttonClass: 'upload-btn',
+              fileNameClass: 'disabled'}" accept="image/*">
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
     <div class="themes-add org-info">
-        <div>
+        <div class="upload-image">
+            {{--<label>Изображение</label></br>--}}
+            
+        </div>
+        <div class="time">
             <label>Время на ответ</label></br>
             <input type="text" data-bind="value: $root.current.question().minutes, valueUpdate: 'keyup' " placeholder="00">
             <span>:</span>
             <input type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup' " placeholder="00">
         </div>
-        <div>
-            <label>Изображение</label></br>
-            <div data-bind="fileDrag: $root.current.fileData">
-                <div class="image-upload-preview">
-                    <img data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
-                </div>
-                <div class="image-upload-input">
-                    <input type="file" data-bind="fileInput: $root.current.fileData">
-                </div>
-            </div>
-            {{--<div data-bind="fileDrag: $root.current.fileData">--}}
-                {{--<input type="file" data-bind="fileInput: $root.current.fileData, , customFileInput: {}">--}}
-            {{--</div>--}}
-        </div>
-        <div>
+
+        <div class="select-theme">
             <label>Тип вопроса</label></br>
             <select data-bind="options: $root.filter.types,
                        optionsText: 'name',
                        value: $root.current.question().type,
                        optionsCaption: 'Выберите тип'"></select>
         </div>
-        <div>
+        <div class="select-complexity">
             <label>Сложность вопроса</label></br>
             <select data-bind="options: $root.filter.complexityTypes,
                        optionsText: 'name',
                        value: $root.current.question().complexity,
                        optionsCaption: 'Выберите сложность'"></select>
         </div>
-        <div>
+        <div class="question-text">
             <label>Текст вопроса</label></br>
             <textarea type="text" data-bind="value: $root.current.question().text"></textarea>
         </div>
         <!-- ko if: !$root.current.question().isOpenMultiLine() && $root.current.question().type() -->
-        <div>
+        <div class="answers-input">
             <label>Варианты ответов</label></br>
             <input data-bind="value: $root.current.answer().text" type="text">
             <button data-bind="click: $root.csed.answer.add" class="fa">&#xf067;</button>
         </div>
         <!-- ko if: $root.current.answers().length -->
-        <div>
+        <div class="answers-table">
             <table>
                 <tbody data-bind="foreach: $root.current.answers">
                     <tr>
