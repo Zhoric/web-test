@@ -123,14 +123,15 @@ $(document).ready(function(){
                     question: function(){
                         var answers = [];
                         var curq = self.current.question();
+                        var file = self.current.fileData().base64String();
+                        var fileType = self.current.fileData().file().type;
                         var question = {
                             type: curq.type().id(),
                             text: curq.text(),
                             complexity: curq.complexity().id(),
-                            time: +curq.minutes() * 60 + +curq.seconds(),
-                            file: self.current.fileData().base64String(),
-                            fileType: self.current.fileData().file().type
+                            time: +curq.minutes() * 60 + +curq.seconds()
                         };
+
                         self.mode() === 'edit' ? question.id = curq.id() : '';
                         self.current.answers().find(function(item){
                             var answer = {
@@ -140,7 +141,7 @@ $(document).ready(function(){
                             answers.push(answer);
                         });
 
-                        return JSON.stringify({question: question, theme: self.theme().id(), answers: answers});
+                        return JSON.stringify({question: question, theme: self.theme().id(), answers: answers, file: file, fileType: fileType});
                     }
                 },
                 set: {

@@ -55,7 +55,7 @@
     <div class="themes-add org-info">
         <div class="upload-image">
             {{--<label>Изображение</label></br>--}}
-            
+
         </div>
         <div class="time">
             <label>Время на ответ</label></br>
