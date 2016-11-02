@@ -176,7 +176,10 @@ class TestSessionHandler
         self::getRedisClient()->expireat($answeredKey, strtotime(self::cacheExpiration));
     }
 
-    public static function setSessionQuestionEndTime($sessionId, $questionEndTime){
+    public static function setSessionQuestionEndTime($sessionId, $questionSeconds){
+        $questionEndTime = $date = new DateTime('+'.$questionSeconds.' seconds');
+        $questionEndTime = $questionEndTime->format(self::dateSerializationFormat);
+
         $questionEndTimeKey = self::questionEndTimePrefix.$sessionId;
 
         self::getRedisClient()->set($questionEndTimeKey, $questionEndTime);

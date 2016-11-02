@@ -108,6 +108,11 @@ class TestProcessManager
             }
 
             $nextQuestionId = self::getRandomQuestion($suitableQuestions);
+            $question = self::getQuestionManager()->getById($nextQuestionId);
+
+            TestSessionHandler::setSessionQuestionEndTime(
+                self::$_session->getSessionId(),
+                $question->getTime());
 
         } catch (Exception $exception){
             return array('message' => $exception->getMessage());
@@ -126,9 +131,11 @@ class TestProcessManager
         try{
             $session = TestSessionHandler::getSession($sessionId);
             self::$_session = $session;
-            self::validateTestSession();
 
             $questionId = $questionAnswer->getQuestionId();
+
+            self::validateTestSession($questionId);
+
 
             //DEBUG COMMENT
             //self::validateQuestionToAnswer($questionId);
@@ -139,6 +146,7 @@ class TestProcessManager
             $answerText = self::getAnswerText($question, $questionAnswer);
 
             self::saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
+
             self::updateTestSession($questionId);
 
         } catch (Exception $exception){
@@ -205,6 +213,17 @@ class TestProcessManager
     }
 
     /**
+     * Подсчёт количества секунд, оставшихся на ответ на текущий вопрос.
+     */
+    private static function getTimeLeftBeforeQuestionEnd(){
+        $now = date(self::dateFormat);
+        $questionTimeLeft = self::$_session->getQuestionEndTime()->format(self::dateFormat);
+
+        $secondsLeft = strtotime($questionTimeLeft) - strtotime($now);
+        return $secondsLeft;
+    }
+
+    /**
      * Выбор случайного вопроса из списка подходящих.
      */
     private static function getRandomQuestion($suitableQuestions){
@@ -229,16 +248,26 @@ class TestProcessManager
 
     /**
      * Валидация сессии тестирования.
+     * Проверка истечения времени на текущий вопрос и на тест в целом.
+     * @param null $questionId
+     * @throws Exception
      */
-    private static function validateTestSession(){
+    private static function validateTestSession($questionId = null){
         $endTime = self::$_session->getTestEndDateTime();
         if ($endTime == null || $endTime == ''){
             throw new Exception('Не найдена сессия тестирования!');
         }
 
-        $timeLeft = self::getTimeLeftBeforeTestEnd();
-        if (GlobalTestSettings::testEndTolerance + $timeLeft <= 0){
+        $timeLeftToEnd = self::getTimeLeftBeforeTestEnd();
+        if (GlobalTestSettings::testEndTolerance + $timeLeftToEnd <= 0){
             throw new Exception('Время, отведённое на тест истекло!');
+        }
+        if ($questionId != null){
+            $timeLeftToQuestion = self::getTimeLeftBeforeQuestionEnd();
+            if (GlobalTestSettings::questionEndTolerance + $timeLeftToQuestion <= 0){
+                self::saveQuestionAnswer(self::$_session, $questionId, 0);
+                throw new Exception('Время, отведённое на данный вопрос истекло. Ответ не будет засчитан!');
+            }
         }
     }
 
@@ -382,6 +411,5 @@ class TestProcessManager
         }
         return $answerText;
     }
-
 
 }

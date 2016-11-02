@@ -63,10 +63,20 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('tests', function(){return View('admin.tests');});
 });
 
-Route::get('/testBack', function (){
-    $repo =  app()->make(\Repositories\TestResultRepository::class);
-    return $repo->getByGroupAndTest(5,2);
+
+/*----------------------DEBUG ROUTES-----------------------------------*/
+
+Route::get('/testSession', function (\Illuminate\Http\Request $request){
+
+
+    $id = $request->session()->get('sessionId');
+    $session = \TestEngine\TestSessionHandler::getSession($id);
+
+    dd($session);
 });
+
+// $repo =  app()->make(\Repositories\TestResultRepository::class);
+// return $repo->getByGroupAndTest(5,2);
 
 
 Route::group(['prefix' => 'api'], function() {
