@@ -32,38 +32,52 @@
             </div>
         </div>
     </div>
-    <div>
-        <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
-            <div class="row">
-                <div class="img-preview">
-                    <img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
-                    <div data-bind="ifnot: $root.current.fileData().dataURL">
-                        <label class="drag-label">Drag file here</label>
-                    </div>
-                </div>
-                <div class="file-input">
-                    <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
-              buttonClass: 'upload-btn',
-              fileNameClass: 'disabled'}" accept="image/*">
-                </div>
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div>
+    {{--<div>--}}
+        {{--<div class="image-uploader" data-bind="fileDrag: $root.current.fileData">--}}
+            {{--<div class="row">--}}
+                {{--<div class="img-preview">--}}
+                    {{--<img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">--}}
+                    {{--<div data-bind="ifnot: $root.current.fileData().dataURL">--}}
+                        {{--<label class="drag-label">Drag file here</label>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="file-input">--}}
+                    {{--<input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {--}}
+              {{--buttonClass: 'upload-btn',--}}
+              {{--fileNameClass: 'disabled'}" accept="image/*">--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="clear"></div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
     <div class="themes-add org-info">
-        <div class="upload-image">
-            {{--<label>Изображение</label></br>--}}
-
-        </div>
         <div class="time">
             <label>Время на ответ</label></br>
             <input type="text" data-bind="value: $root.current.question().minutes, valueUpdate: 'keyup' " placeholder="00">
             <span>:</span>
             <input type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup' " placeholder="00">
         </div>
-
+        <div class="upload-image">
+            <label>Изображение</label></br>
+            <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
+                <div class="row">
+                    <div class="img-preview">
+                        <img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
+                        <div data-bind="ifnot: $root.current.fileData().dataURL">
+                            <label class="drag-label">Drag file here</label>
+                        </div>
+                    </div>
+                    <div class="file-input">
+                        <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
+              buttonClass: 'upload-btn',
+              fileNameClass: 'disabled'}" accept="image/*">
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
         <div class="select-theme">
             <label>Тип вопроса</label></br>
             <select data-bind="options: $root.filter.types,

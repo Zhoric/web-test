@@ -53,6 +53,7 @@
   margin: 0 auto;
   position: fixed;
   border-bottom: 1px solid @wetasphalt;
+  z-index: 10;
   ul{
     text-align: center;
   }
@@ -283,8 +284,11 @@ button{
     }
     .time{
       width: 13%;
+      position: relative;
+      top: 20px;
       input{
-        width: 25px;
+        width: 30px;
+        font-size: 25px;
         text-align: center;
       }
     }
@@ -295,31 +299,33 @@ button{
         height: 100px;
       }
     }
-    .answers-input{
-      width: 96%;
-      input{
-        width: 93%;
+    .answers{
+      &-input{
+        width: 96%;
+        input{
+          width: 93%;
+        }
+        button{
+          width: 35px;
+          height: 34px;
+          margin-left: 15px;
+        }
       }
-      button{
-        width: 35px;
-        height: 34px;
-        margin-left: 15px;
-      }
-    }
-    .answers-table{
-      width:96%;
-      table{
-        width: 100%;
-        border-top: 1px solid @unimportant;
-        border-bottom: 1px solid @unimportant;
-        padding:7px;
-        td{
-          width:65%;
-          &:first-child{
-            width: 5%;
-          }
-          &:last-child{
-            width: 20%;
+      &-table{
+        width:96%;
+        table{
+          width: 100%;
+          border-top: 1px solid @unimportant;
+          border-bottom: 1px solid @unimportant;
+          padding:7px;
+          td{
+            width:65%;
+            &:first-child{
+              width: 5%;
+            }
+            &:last-child{
+              width: 20%;
+            }
           }
         }
       }
@@ -332,7 +338,15 @@ button{
           margin-right: 45px;
         }
     }
-
+    .upload-image{
+      width: 80%;
+      position: relative;
+      top: -15px;
+      div{
+        display: block;
+        margin: 0;
+      }
+    }
   }
 }
 

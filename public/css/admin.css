@@ -154,6 +154,7 @@ span.radio-negative {
   margin: 0 auto;
   position: fixed;
   border-bottom: 1px solid #34495e;
+  z-index: 10;
 }
 .menu ul {
   text-align: center;
@@ -358,9 +359,12 @@ button:hover {
 }
 .themes-add .time {
   width: 13%;
+  position: relative;
+  top: 20px;
 }
 .themes-add .time input {
-  width: 25px;
+  width: 30px;
+  font-size: 25px;
   text-align: center;
 }
 .themes-add .question-text {
@@ -406,6 +410,15 @@ button:hover {
   float: right;
   width: 200px;
   margin-right: 45px;
+}
+.themes-add .upload-image {
+  width: 80%;
+  position: relative;
+  top: -15px;
+}
+.themes-add .upload-image div {
+  display: block;
+  margin: 0;
 }
 .institutes {
   width: 100%;
