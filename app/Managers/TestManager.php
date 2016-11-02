@@ -6,6 +6,7 @@ use QuestionType;
 use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Test;
+use TestInfoViewModel;
 
 class TestManager
 {
@@ -99,5 +100,38 @@ class TestManager
      */
     public function getTestAttemptsUsedCount($testId, $userId){
         return $this->_unitOfWork->testResults()->getLastAttemptNumber($testId, $userId);
+    }
+
+    /**
+     * Получение тестов по заданной дисциплине, которые может видеть текущий студент.
+     * @param $userId
+     * @param $disciplineId
+     * @return mixed
+     */
+    public function getTestsByUserAndDiscipline($userId, $disciplineId){
+        $testsInfo = [];
+        $tests =  $this->_unitOfWork->tests()->getByUserAndDiscipline($userId, $disciplineId);
+        foreach ($tests as $test){
+            $testId = $test->getId();
+            $lastTestResult = $this->_unitOfWork->testResults()->getLastForUser($userId, $testId);
+            $extraAttempts = $this->_unitOfWork->extraAttempts()->findByTestAndUser($testId, $userId);
+
+            $lastMark = $lastTestResult != null ? $lastTestResult->getMark() : null;
+            $lastAttemptNumber = $lastTestResult != null ? $lastTestResult->getAttempt() : 0;
+            $extraAttemptsCount = $extraAttempts != null ? $extraAttempts->getCount() : 0;
+            $attemptsAllowed = $test->getAttempts();
+
+            $attemptsLeft = $attemptsAllowed + $extraAttemptsCount - $lastAttemptNumber;
+
+            $testInfo = new TestInfoViewModel();
+            $testInfo->setTest($test);
+            $testInfo->setLastMark($lastMark);
+            $testInfo->setAttemptsLeft($attemptsLeft);
+            $testInfo->setAttemptsMade($lastAttemptNumber);
+
+            array_push($testsInfo, $testInfo);
+        }
+
+        return $testsInfo;
     }
 }

@@ -26,7 +26,6 @@ class TestResultCalculator
      * @throws Exception
      */
     public static function calculate($testResultId){
-        //DEBUG HARDCODE
         $testResult = self::getUnitOfWork()->testResults()->find($testResultId);
         if ($testResult == null){
             throw new Exception("Не удалось сформировать результат теста!");

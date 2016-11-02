@@ -4,6 +4,7 @@ namespace Repositories;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use League\Flysystem\Exception;
 use PaginationResult;
 use TestResult;
 use User;
@@ -46,5 +47,22 @@ class TestResultRepository extends BaseRepository
         $query->setParameter(2, $testId);
 
         return $query->getArrayResult();
+    }
+
+    public function getLastForUser($userId, $testId){
+        try{
+            $qb = $this->repo->createQueryBuilder('tr');
+            $query = $qb->where('tr.user = :user AND tr.test = :test')
+                ->setParameter('user', $userId)
+                ->setParameter('test', $testId)
+                ->orderBy('tr.attempt', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery();
+
+            return $query->getOneOrNullResult();
+        } catch (Exception $exception){
+            return null;
+        }
+
     }
 }

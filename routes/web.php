@@ -67,16 +67,18 @@ Route::group(['prefix' => 'admin'], function(){
 /*----------------------DEBUG ROUTES-----------------------------------*/
 
 Route::get('/testSession', function (\Illuminate\Http\Request $request){
-
-
     $id = $request->session()->get('sessionId');
     $session = \TestEngine\TestSessionHandler::getSession($id);
-
     dd($session);
 });
 
-// $repo =  app()->make(\Repositories\TestResultRepository::class);
-// return $repo->getByGroupAndTest(5,2);
+Route::get('/testRepo', function (\Illuminate\Http\Request $request){
+    $repo =  app()->make(\Repositories\TestResultRepository::class);
+    $result =  $repo->getLastForUser(5,5);
+    dd($result);
+});
+
+
 
 
 Route::group(['prefix' => 'api'], function() {
@@ -218,6 +220,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('delete/{id}', 'TestController@delete');
         Route::get('show', 'TestController@getByNameAndDisciplinePaginated');
 
+        Route::get('showForStudent', 'TestController@getStudentTestsByDiscipline');
         Route::post('start', 'TestProcessController@startTest');
         Route::post('answer', 'TestProcessController@answer');
         Route::get('nextQuestion', 'TestProcessController@getNextQuestion');
