@@ -42,6 +42,7 @@ $(document).ready(function(){
                 answers: ko.observableArray([]),
             };
 
+
             self.filter = {
                 name: ko.observable(''),
                 type: ko.observable(),
@@ -98,12 +99,19 @@ $(document).ready(function(){
                             .minutes('')
                             .seconds('');
                         self.current.answers([]);
+                        self.toggleCurrent.empty.file();
                     },
                     answer: function(){
                         self.current.answer().text('').isRight(false);
                     },
                     answers: function(){
                         self.current.answers([]);
+                    },
+                    file: function(){
+                        self.current.fileData()
+                            .file('')
+                            .dataURL('')
+                            .base64String('');
                     }
                 },
                 stringify: {

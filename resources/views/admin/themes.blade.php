@@ -32,25 +32,6 @@
             </div>
         </div>
     </div>
-    {{--<div>--}}
-        {{--<div class="image-uploader" data-bind="fileDrag: $root.current.fileData">--}}
-            {{--<div class="row">--}}
-                {{--<div class="img-preview">--}}
-                    {{--<img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">--}}
-                    {{--<div data-bind="ifnot: $root.current.fileData().dataURL">--}}
-                        {{--<label class="drag-label">Drag file here</label>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="file-input">--}}
-                    {{--<input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {--}}
-              {{--buttonClass: 'upload-btn',--}}
-              {{--fileNameClass: 'disabled'}" accept="image/*">--}}
-                {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="clear"></div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
     <div class="themes-add org-info">
         <div class="time">
@@ -66,13 +47,14 @@
                     <div class="img-preview">
                         <img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
                         <div data-bind="ifnot: $root.current.fileData().dataURL">
-                            <label class="drag-label">Drag file here</label>
+                            <label class="drag-label">Перетащите файл изображения</label>
                         </div>
                     </div>
                     <div class="file-input">
                         <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
-              buttonClass: 'upload-btn',
-              fileNameClass: 'disabled'}" accept="image/*">
+                            buttonClass: 'upload-btn', fileNameClass: 'disabled',
+                            buttonText: 'Выберите файт', changeButtonText: 'Изменить',
+                            clearButtonText: 'Очистить', noFileText: 'Файл не выбран'}" accept="image/*">
                     </div>
                 </div>
                 <div class="clear"></div>

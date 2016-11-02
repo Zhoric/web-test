@@ -549,8 +549,8 @@ button.sq-small {
   background: #27ae60;
 }
 .image-uploader img {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 70px;
+  max-height: 70px;
   width: auto;
   height: auto;
 }
