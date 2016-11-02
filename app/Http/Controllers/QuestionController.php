@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Helpers\FileHelper;
 use Illuminate\Http\Request;
 use Managers\QuestionManager;
 use Question;
@@ -50,6 +51,10 @@ class QuestionController extends Controller
         $themeId = $request->json('theme');
         $file = $request->json('file');
         $fileType = $request->json('fileType');
+
+        if ($file != null){
+            FileHelper::save($file, $fileType);
+        }
 
         $question = new Question();
         $question->fillFromJson($questionData);
