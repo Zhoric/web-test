@@ -82,6 +82,13 @@ Route::get('/deleteFile', function (\Illuminate\Http\Request $request){
    \Helpers\FileHelper::delete('images/questions/t81cnrp5nbebrk6zflv9kan9obeg1v.png');
 });
 
+Route::get('/getGroupSemester', function (\Illuminate\Http\Request $request){
+    $manager =  app()->make(\Managers\GroupManager::class);
+    $groupId = $request->query('groupId');
+    $result =  $manager->getCurrentSemesterForGroup($groupId);
+    dd($result);
+});
+
 /*---------------------------------------------------------------------*/
 
 

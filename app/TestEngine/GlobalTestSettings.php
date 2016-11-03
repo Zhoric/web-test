@@ -35,4 +35,14 @@ abstract class GlobalTestSettings
      * Коэффициент различия баллов, получаемых за вопросы различной сложности.
      */
     const complexityDifferenceCoef = 0.6;
+
+    /**
+     * Номер месяца, с которого отсчитывается первый семестр.
+     */
+    const firstSemesterMounth = 8;
+
+    /**
+     * Номер месяца, с которого отсчитывается второй семестр.
+     */
+    const secondSemesterMounth = 1;
 }

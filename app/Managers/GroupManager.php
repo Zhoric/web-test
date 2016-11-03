@@ -2,8 +2,10 @@
 
 namespace Managers;
 
+use DateTime;
 use Group;
 use Repositories\UnitOfWork;
+use TestEngine\GlobalTestSettings;
 use User;
 use UserRole;
 
@@ -88,6 +90,23 @@ class GroupManager
             $this->_unitOfWork->users()->delete($student);
             $this->_unitOfWork->commit();
         }
+    }
+
+    /**
+     * Определение номера текущего семестра для группы.
+     * @param $groupId
+     * @return mixed
+     */
+    public function getCurrentSemesterForGroup($groupId){
+        $group = $this->_unitOfWork->groups()->find($groupId);
+        $groupStudyYear = $group->getCourse();
+        $now = new DateTime();
+
+        $currentMounthNumber = date("n", $now->getTimestamp()) + 1;
+        $currentYearSemester = ($currentMounthNumber >= GlobalTestSettings::secondSemesterMounth
+            && $currentMounthNumber < GlobalTestSettings::firstSemesterMounth) ? 2 : 1;
+
+        return ($groupStudyYear - 1) * 2 + $currentYearSemester;
     }
 
 }
