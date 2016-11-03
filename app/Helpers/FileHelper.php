@@ -15,20 +15,34 @@ use Exception;
 class FileHelper
 {
     private static $savePath = 'images/questions/';
-    private static $fileNameLength = 30;
+    private static $fileNameLength = 15;
 
+    /**
+     * Сохранение файла с присвоением ему уникального имени.
+     * @param $fileContent
+     * @param $fileType
+     * @return string
+     */
     public static function save($fileContent, $fileType){
-        $fileName = self::getRandomString(self::$fileNameLength);
-
         $extension = self::getFileExtension($fileType);
 
-        $filePath = self::$savePath.$fileName.$extension;
+        do {
+            $fileName = self::getRandomString(self::$fileNameLength);
+            $filePath = self::$savePath.$fileName.$extension;
+        } while (file_exists($filePath));
+
         $file = fopen($filePath, "a");
 
         fwrite($file, base64_decode($fileContent));
         fclose($file);
 
         return $filePath;
+    }
+
+    public static function delete($filePath){
+        if (file_exists($filePath)){
+            unlink($filePath);
+        }
     }
 
     private static function getFileExtension($fileTypeString){
@@ -38,6 +52,8 @@ class FileHelper
             return '.png';
         } else if (strpos($fileTypeString, 'gif') !== false){
             return '.gif';
+        } else if (strpos($fileTypeString, 'bmp') !== false){
+            return '.bmp';
         } else {
             throw new Exception("Недопустимый формат файла!");
         }

@@ -78,6 +78,12 @@ Route::get('/testRepo', function (\Illuminate\Http\Request $request){
     dd($result);
 });
 
+Route::get('/deleteFile', function (\Illuminate\Http\Request $request){
+   \Helpers\FileHelper::delete('images/questions/t81cnrp5nbebrk6zflv9kan9obeg1v.png');
+});
+
+/*---------------------------------------------------------------------*/
+
 
 
 

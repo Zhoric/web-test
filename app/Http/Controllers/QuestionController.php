@@ -43,6 +43,8 @@ class QuestionController extends Controller
      *    "theme" : 2,
      *    "answers" : [{"text":"Правильный ответ","isRight":true},
      *                 {"text":"Неправильный ответ","isRight":false}]
+     *    "file" : "Содержимое файла в base64",
+     *    "fileType" : "Тип файла"
      *    }
      */
     public function create(Request $request){
@@ -52,33 +54,38 @@ class QuestionController extends Controller
         $file = $request->json('file');
         $fileType = $request->json('fileType');
 
-        if ($file != null){
-            FileHelper::save($file, $fileType);
-        }
-
         $question = new Question();
         $question->fillFromJson($questionData);
+
+        if ($file != null){
+            $filePath = FileHelper::save($file, $fileType);
+            $question->setImage($filePath);
+        }
 
         $this->_questionManager->create($question,$themeId, $answers);
     }
 
-    /*
-     *   Обновление вопроса вместе с ответами
-     *   Пример валидного JSON-запроса:
-     *   {"question" : { "id":19,"type": 1, "text": "Текст вопроса?", "complexity": 2, "time": 30},
-     *    "theme" : 2,
-     *    "answers" : [{"text":"Правильный ответ","isRight":true},
-     *                 {"text":"Неправильный ответ1","isRight":false},
-     *                 {"text":"Неправильный ответ2","isRight":false}]
-     *    }
-     */
+    //TODO: Реализовать удаление изображения при обновлении.
     public function update(Request $request){
         $questionData = $request->json('question');
         $answers = $request->json('answers');
         $themeId = $request->json('theme');
+        $file = $request->json('file');
+        $fileType = $request->json('fileType');
 
         $question = new Question();
         $question->fillFromJson($questionData);
+
+        if ($file != null){
+            $filePath = FileHelper::save($file, $fileType);
+            $question->setImage($filePath);
+        } else {
+            $oldQuestion = $this->_questionManager->getById($question->getId());
+            $oldImage = $oldQuestion->getImage();
+            if ($oldImage != null && !emptyString($oldImage)){
+                $question->setImage($oldImage);
+            }
+        }
 
         $this->_questionManager->update($question,$themeId, $answers);
     }
