@@ -88,6 +88,8 @@ class DisciplineRepository extends BaseRepository
             ->where('g.id = :groupId AND dp.startSemester <= :currentSemester')
             ->setParameter('groupId', $groupId)
             ->setParameter('currentSemester', $currentSemester)
+            ->orderBy('dp.startSemester', 'DESC')
+
             ->getQuery();
 
         return $query->execute();
