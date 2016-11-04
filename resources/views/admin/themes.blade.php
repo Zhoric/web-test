@@ -2,7 +2,12 @@
 @section('title', 'Дисциплины')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
 @endsection
 
@@ -32,13 +37,14 @@
             </div>
         </div>
     </div>
+    <span ></span>
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
     <div class="themes-add org-info">
         <div class="time">
             <label>Время на ответ</label></br>
-            <input type="text" data-bind="value: $root.current.question().minutes, valueUpdate: 'keyup' " placeholder="00">
-            <span>:</span>
-            <input type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup' " placeholder="00">
+            <input tooltip-mark="minutes_tooltip" type="text" data-bind=", value: $root.current.question().minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
+            <span>&nbsp;:&nbsp;</span>
+            <input tooltip-mark="seconds_tooltip" type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
         </div>
         <div class="upload-image">
             <label>Изображение</label></br>
@@ -53,7 +59,7 @@
                     <div class="file-input">
                         <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
                             buttonClass: 'upload-btn', fileNameClass: 'disabled',
-                            buttonText: 'Выберите файт', changeButtonText: 'Изменить',
+                            buttonText: 'Выберите файл', changeButtonText: 'Изменить',
                             clearButtonText: 'Очистить', noFileText: 'Файл не выбран'}" accept="image/*">
                     </div>
                 </div>
@@ -159,7 +165,6 @@
         </table>
     </div>
 
-
     <div class="pager-wrap">
         <!-- ko if: ($root.pagination.totalPages()) > 0 -->
         <div class="pager">
@@ -180,6 +185,14 @@
     </div>
 </div>
 
+<div class="tooltip_templates">
+    <span id="minutes_tooltip">
+        <span data-bind="validationMessage: $root.current.question().minutes"></span>
+    </span>
+    <span id="seconds_tooltip">
+        <span data-bind="validationMessage: $root.current.question().seconds"></span>
+    </span>
+</div>
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
         <div>

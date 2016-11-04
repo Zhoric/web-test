@@ -2,6 +2,12 @@
  * Created by nyanjii on 19.10.16.
  */
 $(document).ready(function(){
+
+    ko.validation.init({
+        messagesOnModified: true,
+        insertMessages: false,
+        errorsAsTitle: true
+    });
     var themeViewModel = function(){
         return new function(){
             var self = this;
@@ -20,15 +26,22 @@ $(document).ready(function(){
                 questions: ko.observableArray([]),
                 question: ko.observable({
                     id: ko.observable(0),
-                    text: ko.observable(''),
+                    text: ko.observable('').extend({
+                        required: true
+                    }),
                     time: ko.observable(0),
-                    complexity: ko.observable(),
-                    type: ko.observable(),
-                    minutes: ko.observable(),
-                    seconds: ko.observable(),
+                    complexity: ko.observable().extend({required: true}),
+                    type: ko.observable().extend({required: true}),
+                    minutes: ko.observable().extend({
+                        required: true,
+                        maxLength: 2
+                    }),
+                    seconds: ko.observable().extend({
+                        required: true,
+                        maxLength: 2
+                    }),
                     isOpenMultiLine: ko.observable(false),
-                    isOpenSingleLine: ko.observable(false),
-                    validationMessage: ko.observable('')
+                    isOpenSingleLine: ko.observable(false)
                 }),
                 fileData: ko.observable({
                     file: ko.observable(),
@@ -41,8 +54,6 @@ $(document).ready(function(){
                 }),
                 answers: ko.observableArray([]),
             };
-
-
             self.filter = {
                 name: ko.observable(''),
                 type: ko.observable(),
@@ -407,6 +418,28 @@ $(document).ready(function(){
 
             self.get.theme();
 
+            self.events = {
+                focusout: function(data, e){
+                    var template = '#' + $(e.target).attr('tooltip-mark') + ' span';
+                    var template_content = $(template).text();
+                    if (!template_content) return;
+
+                    if (!$(e.target).hasClass('tooltipstered')){
+                        $(e.target).tooltipster({
+                            theme: 'tooltipster-light',
+                            trigger: 'custom'
+                        });
+                    }
+
+                    $(e.target).tooltipster('content', template_content).tooltipster('open');
+                },
+                focusin: function(data, e){
+                    if (!$(e.target).hasClass('tooltipstered')) return;
+                    $(e.target).tooltipster('close');
+                }
+            };
+
+
 
 
             self.toggleModal = function(selector, action){
@@ -450,19 +483,18 @@ $(document).ready(function(){
                     return;
                 }
             });
-            self.current.question().minutes.subscribe(function(value){
-                var validated = value.replace(/[^0-9]/g, "");
-                validated = validated.substr(0, 2);
-                validated = +validated >= 60 ? '60' : validated;
-                self.current.question().minutes(validated);
-            });
-            self.current.question().seconds.subscribe(function(value){
-                var validated = value.replace(/[^0-9]/g, "");
-                validated = validated.substr(0, 2);
-                validated = +validated >= 60 ? '59' : validated;
-                self.current.question().seconds(validated);
-            });
-            self.current.fileData().file.subscribe(function(value){console.log(value);});
+            // self.current.question().minutes.subscribe(function(value){
+            //     var validated = value.replace(/[^0-9]/g, "");
+            //     validated = validated.substr(0, 2);
+            //     validated = +validated >= 60 ? '60' : validated;
+            //     self.current.question().minutes(validated);
+            // });
+            // self.current.question().seconds.subscribe(function(value){
+            //     var validated = value.replace(/[^0-9]/g, "");
+            //     validated = validated.substr(0, 2);
+            //     validated = +validated >= 60 ? '59' : validated;
+            //     self.current.question().seconds(validated);
+            // });
 
             return {
                 theme: self.theme,
@@ -472,10 +504,15 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
+                events: self.events,
                 toggleModal: self.toggleModal
             };
         };
     };
-
     ko.applyBindings(themeViewModel());
+
+    // $('.tooltip').tooltipster({
+    //     theme: 'tooltipster-light',
+    //     contentAsHTML: true
+    // });
 });

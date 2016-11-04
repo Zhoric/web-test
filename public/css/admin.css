@@ -554,5 +554,8 @@ button.sq-small {
   width: auto;
   height: auto;
 }
+.tooltip_templates {
+  display: none;
+}
 
 /*# sourceMappingURL=admin.css.map */
