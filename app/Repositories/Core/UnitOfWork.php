@@ -38,6 +38,7 @@ class UnitOfWork
     private $_testResultRepo;
     private $_givenAnswerRepo;
     private $_extraAttemptRepo;
+    private $_studentGroupRepo;
 
 
     public function users(){
@@ -157,6 +158,13 @@ class UnitOfWork
             $this->_extraAttemptRepo = new ExtraAttemptRepository($this->_em);
         }
         return $this->_extraAttemptRepo;
+    }
+
+    public function studentGroups(){
+        if ($this->_studentGroupRepo == null){
+            $this->_studentGroupRepo = new StudentGroupRepository($this->_em);
+        }
+        return $this->_studentGroupRepo;
     }
 
     public function commit(){

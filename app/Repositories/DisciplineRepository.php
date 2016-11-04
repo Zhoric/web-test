@@ -81,4 +81,16 @@ class DisciplineRepository extends BaseRepository
         }
     }
 
+    function getActualDisciplinesForGroup($groupId, $currentSemester){
+        $qb = $this->repo->createQueryBuilder('d');
+        $query = $qb->join(\DisciplinePlan::class, 'dp', Join::WITH, 'dp.discipline = d.id')
+            ->join(\Group::class, 'g', Join::WITH, 'g.studyplan = dp.studyplan')
+            ->where('g.id = :groupId AND dp.startSemester <= :currentSemester')
+            ->setParameter('groupId', $groupId)
+            ->setParameter('currentSemester', $currentSemester)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
 }

@@ -27,8 +27,6 @@ class UserRepository extends BaseRepository implements IUserRepository
             return array();
         }
 
-
-
       //,'password' => bcrypt($credentials['password'])]));
 
 

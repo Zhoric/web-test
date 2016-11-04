@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use Discipline;
+use Exception;
 use Illuminate\Http\Request;
 use Managers\DisciplineManager;
+use Managers\ScheduleManager;
 use Theme;
 
 
 class DisciplineController extends Controller
 {
     private $_disciplineManager;
+    private $_scheduleManager;
 
-    public function __construct(DisciplineManager $disciplineManager)
+    public function __construct(DisciplineManager $disciplineManager,
+                                ScheduleManager $scheduleManager)
     {
         $this->_disciplineManager = $disciplineManager;
+        $this->_scheduleManager = $scheduleManager;
     }
 
     public function getAll()
@@ -28,7 +33,8 @@ class DisciplineController extends Controller
         $profileId = $request->query('profile');
         $name = $request->query('name');
 
-        $paginationResult = $this->_disciplineManager->getByNameAndProfilePaginated($pageNum, $pageSize, $name, $profileId);
+        $paginationResult = $this->_disciplineManager
+            ->getByNameAndProfilePaginated($pageNum, $pageSize, $name, $profileId);
 
         return json_encode($paginationResult);
     }
@@ -56,7 +62,8 @@ class DisciplineController extends Controller
     }
 
     public function getThemes($id){
-        return json_encode($this->_disciplineManager->getDisciplineThemes($id));
+        return json_encode($this->_disciplineManager
+            ->getDisciplineThemes($id));
     }
 
     public function createTheme(Request $request){
@@ -95,5 +102,19 @@ class DisciplineController extends Controller
 
     public function getDiscipline($id){
         return json_encode($this->_disciplineManager->getDiscipline($id));
+    }
+
+    public function getActualDisciplinesForStudent(){
+        try{
+            //DEBUG HARDCODE
+            $userId = 5;
+            $currentSemester = $this->_scheduleManager->getCurrentSemesterForUser($userId);
+            $disciplines = $this->_disciplineManager->getActualDisciplinesForStudent($userId, $currentSemester);
+
+            return json_encode($disciplines);
+        } catch (Exception $exception){
+            return json_encode($exception->getMessage());
+        }
+
     }
 }

@@ -94,4 +94,18 @@ class DisciplineManager
     public function getDiscipline($id){
         return $this->_unitOfWork->disciplines()->find($id);
     }
+
+    /*
+     * Получение списка актуальных для текущего студента дисцпилин.
+     */
+    public function getActualDisciplinesForStudent($studentId, $currentSemester){
+        $userGroup = $this->_unitOfWork->studentGroups()->getUserGroup($studentId);
+        if ($userGroup == null || $userGroup->getGroup() == null){
+            throw new \Exception("Невозможно определить группу студента!");
+        }
+        $groupId = $userGroup->getGroup()->getId();
+
+        return $this->_unitOfWork->disciplines()
+            ->getActualDisciplinesForGroup($groupId, $currentSemester);
+    }
 }

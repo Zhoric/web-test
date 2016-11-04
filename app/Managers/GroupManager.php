@@ -91,22 +91,4 @@ class GroupManager
             $this->_unitOfWork->commit();
         }
     }
-
-    /**
-     * Определение номера текущего семестра для группы.
-     * @param $groupId
-     * @return mixed
-     */
-    public function getCurrentSemesterForGroup($groupId){
-        $group = $this->_unitOfWork->groups()->find($groupId);
-        $groupStudyYear = $group->getCourse();
-        $now = new DateTime();
-
-        $currentMounthNumber = date("n", $now->getTimestamp()) + 1;
-        $currentYearSemester = ($currentMounthNumber >= GlobalTestSettings::secondSemesterMounth
-            && $currentMounthNumber < GlobalTestSettings::firstSemesterMounth) ? 2 : 1;
-
-        return ($groupStudyYear - 1) * 2 + $currentYearSemester;
-    }
-
 }

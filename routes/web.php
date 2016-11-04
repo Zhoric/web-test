@@ -182,6 +182,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'DisciplineController@update');
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
+        Route::get('actual', 'DisciplineController@getActualDisciplinesForStudent');
         Route::get('{id}/profiles', 'DisciplineController@getDisciplineProfilesIds');
         Route::get('{id}/tests', 'DisciplineController@getTestsByDiscipline');
         Route::get('{id}', 'DisciplineController@getDiscipline');
@@ -199,6 +200,7 @@ Route::group(['prefix' => 'api'], function() {
 
         });
     });
+
 
     /*-----------------------------------------------------------------------------
      *                           ПРЕПОДАВАТЕЛИ
