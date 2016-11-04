@@ -65,7 +65,13 @@ class QuestionController extends Controller
         $this->_questionManager->create($question,$themeId, $answers);
     }
 
-    //TODO: Реализовать удаление изображения при обновлении.
+
+    /*
+     * При обновлении вопроса с файлом изображения,
+     * если в ходе редактирования вопроса изображение не изменялось,
+     * в fileType следует записать значение 'OLD'
+     * Если при редактировании изображение удалено, то поля file и fileType должны быть null.
+     */
     public function update(Request $request){
         $questionData = $request->json('question');
         $answers = $request->json('answers');
@@ -76,15 +82,15 @@ class QuestionController extends Controller
         $question = new Question();
         $question->fillFromJson($questionData);
 
+        $oldQuestion = $this->_questionManager->getById($question->getId());
+        $oldImage = $oldQuestion->getImage();
+        if ($oldImage != null && $fileType != 'OLD'){
+            FileHelper::delete($oldImage);
+        }
+
         if ($file != null){
             $filePath = FileHelper::save($file, $fileType);
             $question->setImage($filePath);
-        } else {
-            $oldQuestion = $this->_questionManager->getById($question->getId());
-            $oldImage = $oldQuestion->getImage();
-            if ($oldImage != null && !emptyString($oldImage)){
-                $question->setImage($oldImage);
-            }
         }
 
         $this->_questionManager->update($question,$themeId, $answers);
