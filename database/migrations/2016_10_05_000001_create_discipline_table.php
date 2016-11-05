@@ -15,8 +15,8 @@ class CreateDisciplineTable extends Migration
         Schema::create('discipline', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 255);
-            $table->string('abbreviation', 50)->nullable()->default(NULL);
-            $table->text('description')->nullable()->default(NULL);
+            $table->string('abbreviation', 50)->nullable()->default(NULL);;
+            $table->text('description')->nullable()->default(NULL);;
         });
     }
 
