@@ -1,9 +1,17 @@
 @import (less) "common.less";
 
+.transition(@duration, @delay){
+  -webkit-transition: background-color @duration ease-out @delay;
+  -moz-transition: background-color @duration ease-out @delay;
+  -o-transition: background-color @duration ease-out @delay;
+  transition: background-color @duration ease-out @delay;
+}
+
 body{
   background-color: @body-green;
+  .transition(0.2s, 1s);
 //  background-color: #eb2c3b;
-  -webkit-transition: background-color 0.2s ease-out 1s;
+  //-webkit-transition: background-color 0.2s ease-out 1s;
   //&.unpass-validation{
   //  background-color: @body-red;
   //}
@@ -43,7 +51,7 @@ body{
 .login{
   height: 280px;
   input{
-    height: 0;
-    width: 310px;
+    height: 25px;
+    width: 340px;
   }
 }

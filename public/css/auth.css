@@ -120,6 +120,7 @@ span.radio-negative {
 body {
   background-color: #4aa272;
   -webkit-transition: background-color 0.2s ease-out 1s;
+  transition: background-color 0.2s ease-out 1s;
 }
 .register {
   margin: 0 auto;
@@ -155,8 +156,8 @@ body {
   height: 280px;
 }
 .login input {
-  height: 0;
-  width: 310px;
+  height: 25px;
+  width: 340px;
 }
 
 /*# sourceMappingURL=auth.css.map */
