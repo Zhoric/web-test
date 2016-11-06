@@ -148,6 +148,7 @@ $(document).ready(function(){
             };
 
             self.fillCurrentGroup = function(data, mode){
+                console.log(data);
                 self.current().group()
                     .id(data.id())
                     .name(data.name())

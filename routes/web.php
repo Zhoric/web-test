@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('theme/{id}', function(){return View('admin.themes');});
     Route::get('tests/{id}', function(){return View('admin.tests');});
     Route::get('tests', function(){return View('admin.tests');});
+    Route::get('editor', function(){return View('admin.editor');});
 });
 
 

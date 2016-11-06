@@ -180,6 +180,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+        JeroenNoten\LaravelCkEditor\ServiceProvider::class
 
     ],
 
