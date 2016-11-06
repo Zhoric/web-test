@@ -25,7 +25,6 @@ class TestProcessController extends Controller
 
             $result = TestProcessManager::initTest($userId, $testId);
             $request->session()->set('sessionId', $result);
-
     }
 
     /*

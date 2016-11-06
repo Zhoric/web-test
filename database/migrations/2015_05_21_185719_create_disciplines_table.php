@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDisciplineTable extends Migration
-{
+class CreateDisciplinesTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -12,11 +12,13 @@ class CreateDisciplineTable extends Migration
      */
     public function up()
     {
-        Schema::create('discipline', function (Blueprint $table) {
+        Schema::create('disciplines', function (Blueprint $table)
+        {
             $table->increments('id');
-            $table->string('name', 255);
-            $table->string('abbreviation', 50)->nullable()->default(NULL);;
-            $table->text('description')->nullable()->default(NULL);;
+            $table->string('name');
+            $table->string('abbreviation');
+            $table->text('description');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +29,7 @@ class CreateDisciplineTable extends Migration
      */
     public function down()
     {
-        Schema::drop('discipline');
+        Schema::drop('disciplines');
     }
+
 }

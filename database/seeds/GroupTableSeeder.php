@@ -33,12 +33,24 @@ class GroupTableSeeder extends Seeder
             'is_fulltime' => true,
             'name' => 'ИСб-43о'));
 
-        for ($i=1; $i<=70; $i++)
+        for ($i=4; $i<=73; $i++)
         {
-            DB::table('student_group')->insert(array(
-                'student_id' => $i,
-                'group_id' => ($i > 3 && $i < 24) ? 1 : ($i < 54) ? 2 : 3
-            ));
+            if ($i > 4 ) {
+                $groupId = 0;
+                if ($i > 4 && $i < 24){
+                    $groupId = 1;
+                } else if ($i >= 24 && $i < 54){
+                    $groupId = 2;
+                } else {
+                    $groupId = 3;
+                }
+
+                DB::table('student_group')->insert(array(
+                    'student_id' => $i,
+                    'group_id' => $groupId
+                ));
+            }
+;
         }
     }
 }

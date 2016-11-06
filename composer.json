@@ -11,6 +11,8 @@
         "laravel-doctrine/orm": "1.2.*",
         "predis/predis":"~1.0",
         "jeroennoten/laravel-ckeditor": "^3.7"
+        "predis/predis":"~1.0",
+        "kalnoy/nestedset": "^4.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -7,19 +7,28 @@ class RoleTableSeeder extends Seeder
 
     public function run()
     {
-        DB::table('role')->delete();
+        DB::table('roles')->delete();
 
-        DB::table('role')->insert(array(
-            'name' => 'admin',
+        DB::table('roles')->insert(array(
+            'name' => 'Admin',
+            'slug' => 'admin',
             'description' => 'Администратор'));
 
-        DB::table('role')->insert(array(
-            'name' => 'lecturer',
+        DB::table('roles')->insert(array(
+            'name' => 'Lecturer',
+            'slug' => 'lecturer',
             'description' => 'Преподаватель'));
 
-        DB::table('role')->insert(array(
-            'name' => 'student',
+        DB::table('roles')->insert(array(
+            'name' => 'Student',
+            'slug' => 'student',
             'description' => 'Студент'));
+
+        DB::table('roles')->insert(array(
+            'name' => 'Employee',
+            'slug' => 'employee',
+            'description' => 'Сотрудник деканата'));
+
 
         DB::table('role_user')->delete();
 
