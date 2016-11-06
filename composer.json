@@ -10,9 +10,8 @@
 	"laravelcollective/remote": "5.3.*",
         "laravel-doctrine/orm": "1.2.*",
         "predis/predis":"~1.0",
-        "jeroennoten/laravel-ckeditor": "^3.7"
-        "predis/predis":"~1.0",
-        "kalnoy/nestedset": "^4.1"
+        "jeroennoten/laravel-ckeditor": "^3.7",
+        "kalnoy/nestedset": "^4.1",
         "trupedia/laravel-blade-haml": "~1.0"
     },
     "require-dev": {
