@@ -25,7 +25,7 @@
                 <span><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></span>
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
-                <input type="text" data-bind="value: $root.current.theme().name">
+                <input type="text" tooltip-mark="theme-name_tooltip" data-bind="value: $root.current.theme().name, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
                 <span>
                     <button data-bind="click: $root.csed.theme.update" class="fa sq-small">&#xf00c;</button>
                     <button data-bind="click: $root.csed.theme.cancel" class="fa danger sq-small">&#xf00d;</button>
@@ -41,7 +41,7 @@
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
     <div class="themes-add org-info">
         <div class="time">
-            <label>Время на ответ</label></br>
+            <label>Время на ответ <span>*</span></label></br>
             <input tooltip-mark="minutes_tooltip" type="text" data-bind=", value: $root.current.question().minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
             <span>&nbsp;:&nbsp;</span>
             <input tooltip-mark="seconds_tooltip" type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
@@ -67,27 +67,27 @@
             </div>
         </div>
         <div class="select-theme">
-            <label>Тип вопроса</label></br>
+            <label>Тип вопроса <span>*</span></label></br>
             <select data-bind="options: $root.filter.types,
                        optionsText: 'name',
                        value: $root.current.question().type,
                        optionsCaption: 'Выберите тип'"></select>
         </div>
         <div class="select-complexity">
-            <label>Сложность вопроса</label></br>
+            <label>Сложность вопроса <span>*</span></label></br>
             <select data-bind="options: $root.filter.complexityTypes,
                        optionsText: 'name',
                        value: $root.current.question().complexity,
                        optionsCaption: 'Выберите сложность'"></select>
         </div>
         <div class="question-text">
-            <label>Текст вопроса</label></br>
-            <textarea type="text" data-bind="value: $root.current.question().text"></textarea>
+            <label>Текст вопроса <span>*</span></label></br>
+            <textarea tooltip-mark="question_tooltip" type="text" data-bind="value: $root.current.question().text, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}"></textarea>
         </div>
         <!-- ko if: !$root.current.question().isOpenMultiLine() && $root.current.question().type() -->
         <div class="answers-input">
-            <label>Варианты ответов</label></br>
-            <input data-bind="value: $root.current.answer().text" type="text">
+            <label>Варианты ответов <span>*</span></label></br>
+            <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup'"/>
             <button data-bind="click: $root.csed.answer.add" class="fa">&#xf067;</button>
         </div>
         <!-- ko if: $root.current.answers().length -->
@@ -95,7 +95,7 @@
             <table>
                 <tbody data-bind="foreach: $root.current.answers">
                     <tr>
-                        <td data-bind="text: id"></td>
+                        <td data-bind="text: $index()+1"></td>
                         <td data-bind="text: text"></td>
                         <td data-bind="visible: !$root.current.question().isOpenSingleLine()">
                             <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.toggleCurrent.set.answerCorrectness">Правильный</span>
@@ -113,14 +113,14 @@
         <!-- /ko -->
         <div class="btn-larger-group">
             <button class="danger" data-bind="click: $root.csed.question.cancel">Отмена</button>
-            <button data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
+            <button class="approve-btn" data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
         </div>
     </div>
     <!-- /ko -->
 
     <div class="filter">
         <div>
-            <label>Название вопроса</label></br>
+            <label>Вопрос</label></br>
             <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
         </div>
         <div>
@@ -191,6 +191,12 @@
     </span>
     <span id="seconds_tooltip">
         <span data-bind="validationMessage: $root.current.question().seconds"></span>
+    </span>
+    <span id="theme-name_tooltip">
+        <span data-bind="validationMessage: $root.current.theme().name"></span>
+    </span>
+    <span id="question_tooltip">
+        <span data-bind="validationMessage: $root.current.question().text"></span>
     </span>
 </div>
 <div class="g-hidden">

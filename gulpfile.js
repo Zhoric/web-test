@@ -13,9 +13,8 @@ require('laravel-elixir-vue');
  |
  */
 
-elixir(mix => {
-    mix.sass('app.scss')
-       .webpack('app.js');
+elixir(function(mix){
+    mix.sass('app.scss').webpack('app.js');
 });
 
 elixir(function(mix){
@@ -23,4 +22,8 @@ elixir(function(mix){
     mix.less('auth.less');
     mix.less('admin.less');
     mix.less('site.less');
+});
+
+elixir(function(mix){
+    mix.coffee('institutes-coffee.coffee');
 });

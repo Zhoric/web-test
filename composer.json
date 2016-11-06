@@ -13,6 +13,7 @@
         "jeroennoten/laravel-ckeditor": "^3.7"
         "predis/predis":"~1.0",
         "kalnoy/nestedset": "^4.1"
+        "trupedia/laravel-blade-haml": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -21,7 +22,8 @@
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
 	    "laravelcollective/remote": "5.3.*",
-        "laravel-doctrine/orm": "1.2.*"
+        "laravel-doctrine/orm": "1.2.*",
+        "trupedia/laravel-blade-haml": "~1.0"
     },
     "autoload": {
         "classmap": [

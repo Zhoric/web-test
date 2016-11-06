@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "89ba03d630d0852909f9e25dc404a96f",
-    "content-hash": "0fcc01487c9d8c0f9cd40c69332c4bd7",
+    "hash": "51c94c368edda1712df8e3d1a10cd527",
+    "content-hash": "bb3269fd71f5162faf73e17b59a4bcbd",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -164,16 +164,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "f8af318d14bdb0eff0336795b428b547bd39ccb6"
+                "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/f8af318d14bdb0eff0336795b428b547bd39ccb6",
-                "reference": "f8af318d14bdb0eff0336795b428b547bd39ccb6",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/b6f544a20f4807e81f7044d31e679ccbb1866dc3",
+                "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +230,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-12-31 16:37:02"
+            "time": "2016-10-29 11:16:17"
         },
         {
             "name": "doctrine/collections",
@@ -1009,16 +1009,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.3.21",
+            "version": "v5.3.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "140ad823863d5cc6f4580f1cdf9b18b9a6a457f4"
+                "reference": "715328dd4fb1a7bcf3cb41b3472f9e3499d068fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/140ad823863d5cc6f4580f1cdf9b18b9a6a457f4",
-                "reference": "140ad823863d5cc6f4580f1cdf9b18b9a6a457f4",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/715328dd4fb1a7bcf3cb41b3472f9e3499d068fc",
+                "reference": "715328dd4fb1a7bcf3cb41b3472f9e3499d068fc",
                 "shasum": ""
             },
             "require": {
@@ -1133,7 +1133,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-10-26 13:27:05"
+            "time": "2016-11-01 18:52:00"
         },
         {
             "name": "laravelcollective/remote",
@@ -1388,6 +1388,77 @@
                 "schedule"
             ],
             "time": "2016-01-26 21:23:30"
+        },
+        {
+            "name": "mthaml/mthaml",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arnaud-lb/MtHaml.git",
+                "reference": "b7e0c72883ee3efcf8b8819210b90496158b00d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arnaud-lb/MtHaml/zipball/b7e0c72883ee3efcf8b8819210b90496158b00d4",
+                "reference": "b7e0c72883ee3efcf8b8819210b90496158b00d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "conflict": {
+                "mthaml/mthaml-bundle": "<1.1.0"
+            },
+            "require-dev": {
+                "cebe/markdown": "~1",
+                "coffeescript/coffeescript": "~1",
+                "erusev/parsedown": "*",
+                "fluxbb/commonmark": "~1@dev",
+                "gregwar/rst": "~1",
+                "kzykhys/ciconia": "~1",
+                "leafo/lessphp": "*",
+                "leafo/scssphp": "*",
+                "league/commonmark": ">=0.9",
+                "michelf/php-markdown": "~1.3",
+                "oyejorge/less.php": "*",
+                "twig/twig": "~1.12|~2.0"
+            },
+            "suggest": {
+                "cebe/markdown": "If you want to use :markdown filter",
+                "coffeescript/coffeescript": "If you want to use :coffee or :coffeescript filter",
+                "erusev/parsedown": "If you want to use :markdown filter",
+                "fluxbb/commonmark": "If you want to use :markdown filter",
+                "gregwar/rst": "If you want to use :rest filter",
+                "kzykhys/ciconia": "If you want to use :markdown filter",
+                "leafo/lessphp": "If you want to use :less filter",
+                "leafo/scssphp": "If you want to use :scss filter",
+                "league/commonmark": "If you want to use :markdown filter",
+                "michelf/php-markdown": "If you want to use :markdown filter",
+                "oyejorge/less.php": "If you want to use :less filter",
+                "twig/twig": "If you want to use Twig templating engine"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MtHaml\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Le Blanc",
+                    "email": "arnaud.lb@gmail.com"
+                }
+            ],
+            "description": "HAML for PHP",
+            "homepage": "https://github.com/arnaud-lb/MtHaml",
+            "keywords": [
+                "HAML"
+            ],
+            "time": "2015-12-17 09:48:00"
         },
         {
             "name": "nesbot/carbon",
@@ -2830,6 +2901,54 @@
             "time": "2016-10-18 15:46:07"
         },
         {
+            "name": "trupedia/laravel-blade-haml",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/trupedia/laravel-blade-haml.git",
+                "reference": "1af76f9464df2a5b3508b977fdc1c63a7c51a2e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/trupedia/laravel-blade-haml/zipball/1af76f9464df2a5b3508b977fdc1c63a7c51a2e6",
+                "reference": "1af76f9464df2a5b3508b977fdc1c63a7c51a2e6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.0",
+                "illuminate/view": ">=5.0",
+                "mthaml/mthaml": "~1.3",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "trupedia\\LaravelBladeHaml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Reinhard",
+                    "email": "info@bkwld.com"
+                },
+                {
+                    "name": "Julian Karhoff",
+                    "email": "j.karhoff@trupedia.de"
+                }
+            ],
+            "description": "Wraps MtHaml for ease use in Laravel 5 with Blade syntax style",
+            "keywords": [
+                "HAML",
+                "blade",
+                "laravel"
+            ],
+            "time": "2015-03-30 17:23:23"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v2.4.0",
             "source": {
@@ -3041,16 +3160,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.5.4",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "ea74994a3dc7f8d2f65a06009348f2d63c81e61f"
+                "reference": "399c1f9781e222f6eb6cc238796f5200d1b7f108"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/ea74994a3dc7f8d2f65a06009348f2d63c81e61f",
-                "reference": "ea74994a3dc7f8d2f65a06009348f2d63c81e61f",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/399c1f9781e222f6eb6cc238796f5200d1b7f108",
+                "reference": "399c1f9781e222f6eb6cc238796f5200d1b7f108",
                 "shasum": ""
             },
             "require": {
@@ -3079,7 +3198,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2016-09-16 13:37:59"
+            "time": "2016-10-31 17:19:45"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -3291,16 +3410,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "5f3f7e736d6319d5f1fc402aff8b026da26709a3"
+                "reference": "6cba06ff75a1a63a71033e1a01b89056f3af1e8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/5f3f7e736d6319d5f1fc402aff8b026da26709a3",
-                "reference": "5f3f7e736d6319d5f1fc402aff8b026da26709a3",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6cba06ff75a1a63a71033e1a01b89056f3af1e8d",
+                "reference": "6cba06ff75a1a63a71033e1a01b89056f3af1e8d",
                 "shasum": ""
             },
             "require": {
@@ -3350,7 +3469,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-07-26 14:39:29"
+            "time": "2016-11-01 05:06:24"
         },
         {
             "name": "phpunit/php-file-iterator",

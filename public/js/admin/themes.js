@@ -5,8 +5,7 @@ $(document).ready(function(){
 
     ko.validation.init({
         messagesOnModified: true,
-        insertMessages: false,
-        errorsAsTitle: true
+        insertMessages: false
     });
     var themeViewModel = function(){
         return new function(){
@@ -17,28 +16,44 @@ $(document).ready(function(){
             self.current = {
                 theme: ko.observable({
                     id: ko.observable(0),
-                    name: ko.observable('')
+                    name: ko.observable('').extend({
+                        required: {
+                            params: true,
+                            message: 'Вы не можете оставить это поле пустым'
+                        },
+                        maxLength: {
+                            params: 200,
+                            message: 'Длина не может превышать 200 символов'
+                        }
+                    })
                 }),
                 discipline: ko.observable({
                     id: ko.observable(0),
                     name: ko.observable('')
                 }),
                 questions: ko.observableArray([]),
-                question: ko.observable({
+                question: ko.validatedObservable({
                     id: ko.observable(0),
-                    text: ko.observable('').extend({
-                        required: true
+                    text: ko.observable().extend({
+                        required: {
+                            params: true,
+                            message: 'Постановка вопроса обязательна'
+                        }
                     }),
                     time: ko.observable(0),
                     complexity: ko.observable().extend({required: true}),
                     type: ko.observable().extend({required: true}),
                     minutes: ko.observable().extend({
-                        required: true,
-                        maxLength: 2
+                        required: {
+                            message: 'Поле не может быть пустым',
+                            params: true
+                        }
                     }),
                     seconds: ko.observable().extend({
-                        required: true,
-                        maxLength: 2
+                        required: {
+                            params: true,
+                            message: 'Поле не может быть пустым'
+                        }
                     }),
                     isOpenMultiLine: ko.observable(false),
                     isOpenSingleLine: ko.observable(false)
@@ -48,8 +63,8 @@ $(document).ready(function(){
                     dataURL: ko.observable(),
                     base64String: ko.observable()
                 }),
-                answer: ko.observable({
-                    text: ko.observable(''),
+                answer: ko.validatedObservable({
+                    text: ko.observable(),
                     isRight: ko.observable(false)
                 }),
                 answers: ko.observableArray([]),
@@ -71,6 +86,25 @@ $(document).ready(function(){
                 ])
             };
 
+            self.validationTooltip = {
+                init: function(selector){
+                    $(selector).tooltipster({
+                        theme: 'tooltipster-light',
+                        trigger: 'custom',
+                        timer: 3000,
+                        position: 'left'
+                    });
+                },
+                open: function(selector, content){
+                    $(selector).tooltipster('content', content)
+                        .tooltipster('open');
+                },
+                checkIfExists: function(selector){
+                    if ($(selector).hasClass('tooltipstered')) return;
+                    self.validationTooltip.init(selector);
+                }
+            };
+
             self.toggleCurrent = {
                 fill: {
                     theme: function(data){
@@ -78,7 +112,7 @@ $(document).ready(function(){
                             .id(data.id())
                             .name(data.name());
                     },
-                    question: function(data){
+                    question: function(data, answers){
                         var type = self.filter.types().find(function(item){
                             return item.id() === data.type();
                         });
@@ -87,7 +121,6 @@ $(document).ready(function(){
                         });
                         var minutes = Math.floor(data.time()/60);
                         var seconds = data.time()%60;
-
                         self.current.question()
                             .id(data.id())
                             .text(data.text())
@@ -96,8 +129,8 @@ $(document).ready(function(){
                             .type(type)
                             .minutes(minutes)
                             .seconds(seconds);
-                    },
-                    answers: function(){}
+                        self.current.answers(answers());
+                    }
                 },
                 empty: {
                     question: function(){
@@ -143,7 +176,7 @@ $(document).ready(function(){
                         var answers = [];
                         var curq = self.current.question();
                         var file = self.current.fileData().base64String();
-                        var fileType = self.current.fileData().file().type;
+                        var fileType = self.current.fileData().file() ? self.current.fileData().file().type : '';
                         var question = {
                             type: curq.type().id(),
                             text: curq.text(),
@@ -204,44 +237,36 @@ $(document).ready(function(){
                 },
                 check: {
                     question: function(){
-                        var q = self.current.question();
-                        var awr = self.current.answers();
-                        if (!q.text()) {
-                            q.validationMessage('Отсутствует трактовка вопроса');
-                            self.toggleModal('#validation-modal', '');
+                        var q = self.current.question;
+                        var selector = '.approve-btn';
+
+                        if (!q.isValid()){
+                            self.validationTooltip.open(selector, 'Поля не заполнены');
                             return false;
                         }
-                        if (!q.minutes() || !q.seconds()){
-                            q.validationMessage('Время не определено');
-                            self.toggleModal('#validation-modal', '');
-                            return false;
-                        }
-                        if (!q.type()){
-                            q.validationMessage('Не указан тип вопроса');
-                            self.toggleModal('#validation-modal', '');
-                            return false;
-                        }
-                        if (!q.complexity()){
-                            q.validationMessage('Не указана сложность вопроса');
-                            self.toggleModal('#validation-modal', '');
-                            return false;
-                        }
-                        if (q.type().id() !== 4) {
-                            if (awr.length < 2) {
-                                q.validationMessage('Слишком мало вариантов ответа');
-                                self.toggleModal('#validation-modal', '');
+
+                        var ansr = self.current.answers();
+                        var tId = q().type().id();
+
+                        if (tId === 1 || tId === 2){
+                            if (ansr.length < 2){
+                                self.validationTooltip.open(selector, 'Должно быть хотя бы 2 ответа');
                                 return false;
                             }
-                            else{
-                                var correct = 0;
-                                awr.find(function(item){
-                                    if (item.isRight() === true) correct++;
-                                });
-                                if (!correct){
-                                    q.validationMessage('Вопрос должен соржать хотя бы один правильный ответ');
-                                    self.toggleModal('#validation-modal', '');
-                                    return false;
-                                }
+                            console.log('more than 2');
+                            var correct = 0;
+                            ansr.find(function(item){
+                                if (item.isRight()) ++correct;
+                            });
+                            if (!correct){
+                                self.validationTooltip.open(selector, 'Не выбрано ни одного правильного варианта ответа');
+                                return false;
+                            }
+                        }
+                        if (tId === 3) {
+                            if (!ansr.length) {
+                                self.validationTooltip.open(selector, 'Должен быть хотя бы один вариант ответа');
+                                return false;
                             }
                         }
 
@@ -286,6 +311,7 @@ $(document).ready(function(){
                         self.mode('theme.edit');
                     },
                     update: function(){
+                        if (!self.current.theme().name.isValid()) return;
                         self.theme().name(self.current.theme().name());
                         self.post.theme();
                         self.mode('none');
@@ -299,6 +325,7 @@ $(document).ready(function(){
                     toggleAdd: function(){
                         self.mode() === 'add' ? self.mode('none') : self.mode('add');
                         self.toggleCurrent.empty.question();
+                        self.validationTooltip.checkIfExists('.approve-btn');
                     },
                     cancel: function(){
                         self.mode('none');
@@ -311,6 +338,7 @@ $(document).ready(function(){
                     },
                     edit: function(data){
                         self.get.questionWithAnswers(data.id());
+                        self.validationTooltip.checkIfExists('.approve-btn');
                         self.mode('edit');
                     },
                     startDelete: function(data){
@@ -385,8 +413,7 @@ $(document).ready(function(){
                     var url = '/api/questions/' + id;
                     $.get(url, function(response){
                         var res = ko.mapping.fromJSON(response);
-                        self.current.answers(res.answers());
-                        self.toggleCurrent.fill.question(res.question);
+                        self.toggleCurrent.fill.question(res.question, res.answers);
                     });
                 }
             };
@@ -439,9 +466,6 @@ $(document).ready(function(){
                 }
             };
 
-
-
-
             self.toggleModal = function(selector, action){
                 $(selector).arcticmodal(action);
             };
@@ -475,6 +499,9 @@ $(document).ready(function(){
                 }
                 if (value.id() === 3){
                     self.current.question().isOpenSingleLine(true);
+                    self.current.answers().find(function(item){
+                        item.isRight(true);
+                    });
                     return;
                 }
                 if (value.id() === 4){
@@ -483,18 +510,22 @@ $(document).ready(function(){
                     return;
                 }
             });
-            // self.current.question().minutes.subscribe(function(value){
-            //     var validated = value.replace(/[^0-9]/g, "");
-            //     validated = validated.substr(0, 2);
-            //     validated = +validated >= 60 ? '60' : validated;
-            //     self.current.question().minutes(validated);
-            // });
-            // self.current.question().seconds.subscribe(function(value){
-            //     var validated = value.replace(/[^0-9]/g, "");
-            //     validated = validated.substr(0, 2);
-            //     validated = +validated >= 60 ? '59' : validated;
-            //     self.current.question().seconds(validated);
-            // });
+            self.current.question().minutes.subscribe(function(value){
+                // if (value){
+                //     var validated = value.replace(/[^0-9]/g, "");
+                //     validated = validated.substr(0, 2);
+                //     validated = +validated >= 60 ? '60' : validated;
+                //     self.current.question().minutes(validated);
+                // }
+            });
+            self.current.question().seconds.subscribe(function(value){
+                // if (value){
+                //     var validated = value.replace(/[^0-9]/g, "");
+                //     validated = validated.substr(0, 2);
+                //     validated = +validated >= 60 ? '59' : validated;
+                //     self.current.question().seconds(validated);
+                // }
+            });
 
             return {
                 theme: self.theme,
@@ -509,10 +540,6 @@ $(document).ready(function(){
             };
         };
     };
-    ko.applyBindings(themeViewModel());
 
-    // $('.tooltip').tooltipster({
-    //     theme: 'tooltipster-light',
-    //     contentAsHTML: true
-    // });
+    ko.applyBindings(themeViewModel());
 });

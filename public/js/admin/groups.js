@@ -167,15 +167,40 @@ $(document).ready(function(){
                 var url = window.location.href;
                 var filter = self.filter();
                 var profileId = +url.substr(url.lastIndexOf('/')+1);
-                /*
-                url = url.substr(0, url.indexOf('/a'));
-                if ($.isNumeric(profileId)){
-                    url += '/api/profile/' + profileId + '/groups';
-                    self.currentProfileId(profileId);
+                var name = 'name=' + filter.group();
+                var page = 'page=' + self.pagination().currentPage();
+                var pageSize = 'pageSize=' + self.pagination().pageSize();
+                var url = '/api/groups/show?' + page + '&' + pageSize + '&' + name + '&' + profileId;
+
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open('GET', url, true);
+                xmlhttp.send(null);
+                xmlhttp.onreadystatechange = function() { // (3)
+                    if (xmlhttp.readyState != 4) return;
+
+                    if (xmlhttp.status != 200) {
+                        alert(xmlhttp.status + ': ' + xmlhttp.statusText);
+                    } else {
+                        var result = ko.mapping.fromJSON(xmlhttp.responseText);
+                        self.groups(result.data());
+                        self.pagination().itemsCount(result.count());
+                    }
+
                 }
-                else{
-                    url += '/api/groups';
-                } */
+            };
+            self.getAlterGroups = function(){
+                var url = window.location.href;
+                var filter = self.filter();
+                var profileId = +url.substr(url.lastIndexOf('/')+1);
+                /*
+                 url = url.substr(0, url.indexOf('/a'));
+                 if ($.isNumeric(profileId)){
+                 url += '/api/profile/' + profileId + '/groups';
+                 self.currentProfileId(profileId);
+                 }
+                 else{
+                 url += '/api/groups';
+                 } */
 
                 var name = 'name=' + filter.group();
                 var page = 'page=' + self.pagination().currentPage();
@@ -187,12 +212,28 @@ $(document).ready(function(){
                     self.groups(result.data());
                     self.pagination().itemsCount(result.count());
                 });
-
-
             };
             self.getGroups();
+            //self.getAlterGroups();
 
             self.getStudents = function(){
+                var xmlhttp = new XMLHttpRequest();
+                var url = '/api/groups/' + self.current().group().id() + '/students';
+                xmlhttp.open('GET', url, true);
+                xmlhttp.send(null);
+                xmlhttp.onreadystatechange = function() { // (3)
+                    if (xmlhttp.readyState != 4) return;
+
+                    if (xmlhttp.status != 200) {
+                        alert(xmlhttp.status + ': ' + xmlhttp.statusText);
+                    } else {
+                        var result = ko.mapping.fromJSON(xmlhttp.responseText);
+                        self.current().groupStudents(result());
+                    }
+
+                }
+            };
+            self.getAlterStudents = function(){
                 var url = '/api/groups/' + self.current().group().id() + '/students';
                 $.get(url, function(data){
                     var res = ko.mapping.fromJSON(data);
@@ -293,20 +334,97 @@ $(document).ready(function(){
                         email: edit.email()
                     };
 
-                    $.post(
-                        '/api/groups/student/update',
-                        JSON.stringify({student: student}),
-                        function(result){
-                            self.getStudents();
-                        });
+                    var url = '/api/groups/student/update';
+                    var json = JSON.stringify({student: student});
+
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open('POST', url, true);
+                    xmlhttp.send(json);
+                    xmlhttp.onreadystatechange = function() {
+                        self.getStudents();
+                    };
+
+                    // $.post(
+                    //     '/api/groups/student/update',
+                    //     JSON.stringify({student: student}),
+                    //     function(result){
+                    //         self.getStudents();
+                    //     });
 
                     self.mode('info');
                 }
 
             });
 
-
             self.approve = function(){
+                var edit = self.current().group();
+                if (self.mode() === 'delete'){
+                    $.post(
+                        '/api/groups/delete/' + edit.id(),
+                        {},
+                        function(result){});
+                    self.groups.remove(function(item){
+                        if (item.id() === edit.id())
+                            return item;
+                    });
+                    self.toggleModal('#delete-group-modal', 'close');
+                    self.emptyCurrentGroup();
+                    self.getGroups();
+                    return;
+                }
+                var group = {
+                    prefix: edit.prefix(),
+                    course: edit.course(),
+                    name: edit.name(),
+                    number: edit.number(),
+                    isFulltime: edit.isFullTime()
+                };
+                var planId = edit.studyplanId();
+
+                if (self.mode() === 'edit'){
+                    group.id = edit.id();
+                    $.post(
+                        '/api/groups/update',
+                        JSON.stringify({group: group, studyPlanId: planId}),
+                        function(result){});
+                    self.groups().find(function(item){
+                        if (item.id() === edit.id()){
+                            item.prefix(edit.prefix())
+                                .course(edit.course())
+                                .name(edit.name())
+                                .number(edit.number())
+                                .isFullTime(edit.isFullTime());
+                            return item;
+                        }
+                    });
+                    self.mode('info');
+                    return;
+                }
+                if (self.mode() === 'add'){
+                    var json = JSON.stringify({group: group, studyPlanId: planId});
+                    var url = '/api/groups/create';
+
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open('POST', url, true);
+                    xmlhttp.send(json);
+                    xmlhttp.onreadystatechange = function() {
+                        self.groups([]);
+                        self.emptyCurrentGroup();
+                        self.getGroups();
+                    };
+
+                    // $.post(
+                    //     '/api/groups/create',
+                    //     JSON.stringify({group: group, studyPlanId: planId}),
+                    //     function(result){});
+                    // self.groups([]);
+                    // self.emptyCurrentGroup();
+                    // self.getGroups();
+                }
+
+
+            };
+            self.alterApprove = function(){
                 var edit = self.current().group();
                 if (self.mode() === 'delete'){
                     $.post(

@@ -134,6 +134,9 @@ span.radio-negative {
   font-size: 12px;
   color: #7f8c8d;
 }
+.filter label span {
+  color: #c0392b;
+}
 .filter input {
   padding: 6px;
   min-width: 200px;
@@ -217,6 +220,9 @@ span.radio-negative {
 .org-info label {
   font-size: 12px;
   color: #7f8c8d;
+}
+.org-info label span {
+  color: #c0392b;
 }
 .org-info input {
   padding: 6px;
@@ -556,6 +562,27 @@ button.sq-small {
 }
 .tooltip_templates {
   display: none;
+}
+.width60 {
+  width: 60%;
+}
+.manual h1 {
+  text-align: center;
+  padding: 30px;
+  color: #16a085;
+}
+.manual h3 {
+  padding: 10px 0 0 15px;
+}
+.manual p {
+  text-align: justify;
+  padding: 10px 30px 20px 0;
+}
+.manual .manual-image {
+  max-height: 700px;
+  max-width: 700px;
+  width: auto;
+  height: auto;
 }
 
 /*# sourceMappingURL=admin.css.map */
