@@ -7,5 +7,4 @@
         <textarea id="editor-field"></textarea>
     </div>
     @ckeditor('editor-field', ['language' => 'ru'])
-
 @endsection
