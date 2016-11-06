@@ -421,6 +421,7 @@ button:hover {
   width: 80%;
   position: relative;
   top: -17px;
+  margin: 0;
 }
 .themes-add .upload-image div {
   display: block;
@@ -430,12 +431,26 @@ button:hover {
   width: 70px;
   height: 70px;
 }
+.themes-add .upload-image .image-holder .remove {
+  background: #000;
+  opacity: 0.5;
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  float: right;
+  font-size: 15px;
+  cursor: pointer;
+}
 .themes-add .upload-image .image-holder img {
   max-width: 70px;
   max-height: 70px;
   width: auto;
   height: auto;
   position: absolute;
+  cursor: pointer;
 }
 .institutes {
   width: 100%;

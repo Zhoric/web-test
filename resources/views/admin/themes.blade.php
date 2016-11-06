@@ -48,7 +48,7 @@
         </div>
         <div class="upload-image">
             <label>Изображение</label></br>
-            <!-- ko if: !$root.current.question().image() -->
+            <!-- ko if: !$root.current.question().showImage() -->
             <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
                 <div class="row">
                     <div class="img-preview">
@@ -67,9 +67,10 @@
                 <div class="clear"></div>
             </div>
             <!-- /ko -->
-            <!-- ko if: $root.current.question().image() -->
+            <!-- ko if: $root.current.question().showImage() -->
             <div class="image-holder">
-                <img data-bind="attr: {src: '/' + $root.current.question().image()}"/>
+                <div class="fa remove" data-bind="click: $root.csed.image.remove">&#xf00d;</div>
+                <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
             </div>
             <!-- /ko -->
         </div>

@@ -56,6 +56,7 @@ $(document).ready(function(){
                         }
                     }),
                     image: ko.observable(),
+                    showImage: ko.observable(),
                     isOpenMultiLine: ko.observable(false),
                     isOpenSingleLine: ko.observable(false)
                 }),
@@ -131,7 +132,8 @@ $(document).ready(function(){
                             .type(type)
                             .minutes(minutes)
                             .seconds(seconds)
-                            .image(data.image());
+                            .image(data.image())
+                            .showImage(data.image());
                         self.current.answers(answers());
                     }
                 },
@@ -145,7 +147,8 @@ $(document).ready(function(){
                             .type(0)
                             .minutes('')
                             .seconds('')
-                            .image(null);
+                            .image(null)
+                            .showImage(null);
                         self.current.answers([]);
                         self.toggleCurrent.empty.file();
                     },
@@ -377,6 +380,12 @@ $(document).ready(function(){
                         self.current.answers.remove(function(item){
                             return item.id() === data.id();
                         });
+                    }
+                },
+                image: {
+                    expand: function(){},
+                    remove: function(){
+                        self.current.question().showImage(null);
                     }
                 }
             };

@@ -343,6 +343,7 @@ button{
       width: 80%;
       position: relative;
       top: -17px;
+      margin: 0;
       div{
         display: block;
         margin: 0;
@@ -350,12 +351,26 @@ button{
       .image-holder{
         width: 70px;
         height: 70px;
+        .remove{
+          background: @black;
+          opacity: 0.5;
+          width: 15px;
+          height: 15px;
+          text-align: center;
+          position: relative;
+          z-index: 2;
+          color: @white;
+          float: right;
+          font-size: 15px;
+          cursor: pointer;
+        }
         img{
           max-width: 70px;
           max-height: 70px;
           width: auto;
           height: auto;
           position: absolute;
+          cursor: pointer;
         }
       }
     }
