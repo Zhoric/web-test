@@ -511,20 +511,22 @@ $(document).ready(function(){
                 }
             });
             self.current.question().minutes.subscribe(function(value){
-                // if (value){
-                //     var validated = value.replace(/[^0-9]/g, "");
-                //     validated = validated.substr(0, 2);
-                //     validated = +validated >= 60 ? '60' : validated;
-                //     self.current.question().minutes(validated);
-                // }
+                if (value){
+                    var validated = value + '';
+                    validated = validated.replace(/[^0-9]/g, "");
+                    validated = validated.substr(0, 2);
+                    validated = +validated >= 60 ? '60' : validated;
+                    self.current.question().minutes(validated);
+                }
             });
             self.current.question().seconds.subscribe(function(value){
-                // if (value){
-                //     var validated = value.replace(/[^0-9]/g, "");
-                //     validated = validated.substr(0, 2);
-                //     validated = +validated >= 60 ? '59' : validated;
-                //     self.current.question().seconds(validated);
-                // }
+                if (value){
+                    var validated = value + '';
+                    validated = validated.replace(/[^0-9]/g, "");
+                    validated = validated.substr(0, 2);
+                    validated = +validated >= 60 ? '59' : validated;
+                    self.current.question().seconds(validated);
+                }
             });
 
             return {
