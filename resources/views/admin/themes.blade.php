@@ -48,6 +48,7 @@
         </div>
         <div class="upload-image">
             <label>Изображение</label></br>
+            <!-- ko if: !$root.current.question().image() -->
             <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
                 <div class="row">
                     <div class="img-preview">
@@ -65,6 +66,12 @@
                 </div>
                 <div class="clear"></div>
             </div>
+            <!-- /ko -->
+            <!-- ko if: $root.current.question().image() -->
+            <div class="image-holder">
+                <img data-bind="attr: {src: '/' + $root.current.question().image()}"/>
+            </div>
+            <!-- /ko -->
         </div>
         <div class="select-theme">
             <label>Тип вопроса <span>*</span></label></br>
@@ -207,14 +214,6 @@
                 <button data-bind="click: $root.csed.question.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.question.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
             </div>
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal" id="validation-modal">
-        <div class="box-modal_close arcticmodal-close">закрыть</div>
-        <div>
-            <span data-bind="text: $root.current.question().validationMessage"></span>
         </div>
     </div>
 </div>

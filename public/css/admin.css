@@ -420,11 +420,22 @@ button:hover {
 .themes-add .upload-image {
   width: 80%;
   position: relative;
-  top: -15px;
+  top: -17px;
 }
 .themes-add .upload-image div {
   display: block;
   margin: 0;
+}
+.themes-add .upload-image .image-holder {
+  width: 70px;
+  height: 70px;
+}
+.themes-add .upload-image .image-holder img {
+  max-width: 70px;
+  max-height: 70px;
+  width: auto;
+  height: auto;
+  position: absolute;
 }
 .institutes {
   width: 100%;

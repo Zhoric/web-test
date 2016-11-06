@@ -55,6 +55,7 @@ $(document).ready(function(){
                             message: 'Поле не может быть пустым'
                         }
                     }),
+                    image: ko.observable(),
                     isOpenMultiLine: ko.observable(false),
                     isOpenSingleLine: ko.observable(false)
                 }),
@@ -113,6 +114,7 @@ $(document).ready(function(){
                             .name(data.name());
                     },
                     question: function(data, answers){
+                        self.toggleCurrent.empty.file();
                         var type = self.filter.types().find(function(item){
                             return item.id() === data.type();
                         });
@@ -128,7 +130,8 @@ $(document).ready(function(){
                             .complexity(complexity)
                             .type(type)
                             .minutes(minutes)
-                            .seconds(seconds);
+                            .seconds(seconds)
+                            .image(data.image());
                         self.current.answers(answers());
                     }
                 },
@@ -141,7 +144,8 @@ $(document).ready(function(){
                             .complexity(0)
                             .type(0)
                             .minutes('')
-                            .seconds('');
+                            .seconds('')
+                            .image(null);
                         self.current.answers([]);
                         self.toggleCurrent.empty.file();
                     },
@@ -175,14 +179,19 @@ $(document).ready(function(){
                     question: function(){
                         var answers = [];
                         var curq = self.current.question();
-                        var file = self.current.fileData().base64String();
-                        var fileType = self.current.fileData().file() ? self.current.fileData().file().type : '';
+                        var fileData = self.current.fileData()
+                        var file = fileData.file() ? fileData.base64String() : null;
+                        var fileType = fileData.file() ? fileData.file().type : null;
                         var question = {
                             type: curq.type().id(),
                             text: curq.text(),
                             complexity: curq.complexity().id(),
                             time: +curq.minutes() * 60 + +curq.seconds()
                         };
+
+                        if (curq.image() && !fileType){
+                            fileType = 'OLD';
+                        }
 
                         self.mode() === 'edit' ? question.id = curq.id() : '';
                         self.current.answers().find(function(item){
@@ -253,7 +262,6 @@ $(document).ready(function(){
                                 self.validationTooltip.open(selector, 'Должно быть хотя бы 2 ответа');
                                 return false;
                             }
-                            console.log('more than 2');
                             var correct = 0;
                             ansr.find(function(item){
                                 if (item.isRight()) ++correct;
