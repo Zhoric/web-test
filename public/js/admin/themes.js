@@ -383,7 +383,9 @@ $(document).ready(function(){
                     }
                 },
                 image: {
-                    expand: function(){},
+                    expand: function(){
+                        $('.expanded-image').show();
+                    },
                     remove: function(){
                         self.current.question().showImage(null);
                     }

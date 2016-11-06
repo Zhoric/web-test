@@ -12,6 +12,11 @@
 @endsection
 
 @section('content')
+    <div class="expanded-image" data-bind="click: function(){$('.expanded-image').hide();}">
+        <!-- ko if: $root.current.question().showImage() -->
+        <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
+        <!-- /ko -->
+    </div>
 <div class="content themes">
     <div class="org-info">
         <div class="main-info width100">
@@ -192,6 +197,7 @@
         <!-- /ko -->
     </div>
 </div>
+
 
 <div class="tooltip_templates">
     <span id="minutes_tooltip">
