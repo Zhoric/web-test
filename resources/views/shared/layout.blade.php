@@ -13,6 +13,19 @@
     @yield('javascript')
 </head>
 <body>
+    <div class="LoadingImage">
+        <img src="{{ URL::asset('images/custom-spinner.gif')}}" />
+    </div>
+    <script>
+        var loading = $(".LoadingImage");
+        $(document).ajaxStart(function () {
+            loading.show();
+        });
+
+        $(document).ajaxStop(function () {
+            loading.hide();
+        });
+    </script>
     <div class="menu">
         <ul>
             <li><a href="/admin/main">Главная</a></li>

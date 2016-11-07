@@ -624,5 +624,19 @@ button.sq-small {
   display: block;
   margin: 0 auto;
 }
+.LoadingImage {
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  opacity: 0.3;
+  position: absolute;
+  display: none;
+}
+.LoadingImage img {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  margin-top: -20%;
+}
 
 /*# sourceMappingURL=admin.css.map */
