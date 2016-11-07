@@ -63,6 +63,7 @@
         <!-- /ko -->
         <!-- /ko -->
     </div>
+    <!-- ko if: $root.pagination().itemsCount() > $root.pagination().pageSize() -->
     <div class="pager-wrap">
         <!-- ko if: ($root.pagination().totalPages()) > 0 -->
         <div class="pager">
@@ -81,6 +82,7 @@
         </div>
         <!-- /ko -->
     </div>
+    <!-- /ko -->
 </div>
 
 <div class="g-hidden">
