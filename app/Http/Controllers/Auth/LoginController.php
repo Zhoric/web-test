@@ -29,6 +29,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/auth';
+    protected $authManager;
 
 
     /**
@@ -36,8 +37,9 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(AuthManager $authManager)
     {
+        $this->authManager = $authManager;
         $this->middleware('guest', ['except' => 'logout']);
     }
 
@@ -54,6 +56,11 @@ class LoginController extends Controller
         }
 
         $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
+
+        if(!$this->authManager->checkIfUserActive($request->json('email'))){
+            return $this->sendFailedLoginResponse($request);
+        }
+
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
             return $this->sendLoginResponse($request);

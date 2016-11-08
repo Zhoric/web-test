@@ -62,7 +62,11 @@ class RegisterController extends Controller
     }
 
     public function register(Request $request){
-        event(new Registered($user = $this->create($request)));
+        $user = $this->create($request);
+        if(empty($user)){
+            return 'ОШИБКА РЕГИСТРАЦИИ';
+        }
+        event(new Registered($user));
         $this->guard()->login($user);
     }
 
