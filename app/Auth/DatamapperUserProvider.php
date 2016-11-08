@@ -11,10 +11,7 @@ class DatamapperUserProvider implements UserProvider {
 
     public function __construct(UserRepository $user_repo)
     {
-
-
        $this->user_repo = $user_repo;
-
     }
 
     /**
@@ -23,8 +20,6 @@ class DatamapperUserProvider implements UserProvider {
      */
     public function retrieveById($identifier)
     {
-
-
         return $this->user_repo->find($identifier);
         // Get and return a user by their unique identifier
     }
@@ -36,10 +31,7 @@ class DatamapperUserProvider implements UserProvider {
      */
     public function retrieveByToken($identifier, $token)
     {
-
-
         return $this->user_repo->findByRememberToken($identifier,$token);
-
         // Get and return a user by their unique identifier and "remember me" token
     }
 
@@ -62,9 +54,7 @@ class DatamapperUserProvider implements UserProvider {
      */
     public function retrieveByCredentials(array $credentials)
     {
-
         return $this->user_repo->findByCredentials($credentials);
-
         // Get and return a user by looking up the given credentials
     }
 
@@ -77,9 +67,6 @@ class DatamapperUserProvider implements UserProvider {
      */
     public function validateCredentials(UserContract $user, array $credentials)
     {
-
-
-
         $plain = $credentials['password'];
 
         if (password_verify($plain, $user->getAuthPassword())) {
@@ -88,8 +75,6 @@ class DatamapperUserProvider implements UserProvider {
         }
 
         return false;
-
-
     }
 
 
