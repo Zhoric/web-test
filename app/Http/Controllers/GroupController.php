@@ -28,8 +28,8 @@ class GroupController extends Controller
         $profileId = $request->query('profile');
         $groupName = $request->query('name');
 
-        $paginationResult = $this->_groupManager
-            ->getProfileGroupsByNamePaginated($pageNum, $pageSize, $groupName, $profileId);
+            $paginationResult = $this->_groupManager
+                ->getProfileGroupsByNamePaginated($pageNum, $pageSize, $groupName, $profileId);
 
         return json_encode($paginationResult);
     }
