@@ -12,7 +12,8 @@
         "predis/predis":"~1.0",
         "jeroennoten/laravel-ckeditor": "^3.7",
         "kalnoy/nestedset": "^4.1",
-        "trupedia/laravel-blade-haml": "~1.0"
+        "trupedia/laravel-blade-haml": "~1.0",
+        "barryvdh/laravel-elfinder": "^0.3.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
