@@ -68,54 +68,33 @@
 </div>
 
 <script type="text/html" id="show-details">
-    <div class="org-info">
-
+    <div class="org-info test">
         <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' -->
         <div class="width100" data-bind="template: {name: 'info-mode', data: $data}"></div>
         <!-- /ko -->
         <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
         <div class="width100" data-bind="template: {name: 'edit-mode', data: $data}"></div>
         <!-- /ko -->
-
-
-        {{--<!-- ko if: $root.mode() !== 'add' -->--}}
-        {{--<div class="width100">--}}
-            {{--<table class="theme">--}}
-                {{--<thead>--}}
-                {{--<tr><th>#</th><th>Темы</th><th>Действия</th></tr>--}}
-                {{--</thead>--}}
-                {{--<tbody>--}}
-                {{--<!-- ko foreach: $root.current().themes-->--}}
-                {{--<tr>--}}
-                    {{--<td data-bind="text: $index()+1"></td>--}}
-                    {{--<td><a data-bind="text: name, click: $root.moveTo().theme"></a></td>--}}
-                    {{--<td><button data-bind="click: $root.csed().theme().startRemove" class="fa danger">&#xf014;</button></td>--}}
-                {{--</tr>--}}
-                {{--<!-- /ko -->--}}
-                {{--</tbody>--}}
-            {{--</table>--}}
-        {{--</div>--}}
-        {{--<!-- /ko -->--}}
     </div>
 </script>
 <script type="text/html" id="info-mode">
     <div class="org-info-details width100">
-        <div>
+        <div class="name">
             <label>Название</label></br>
             <span data-bind="text: subject"></span>
         </div>
-        <div>
+        <div class="type">
             <label>Тип</label></br>
             <span data-bind="text: $root.current.type().name"></span>
         </div>
-        <div>
+        <div class="time">
             <label>Время</label></br>
             <span data-bind="text: minutes"></span>
             <span>:</span>
             <span data-bind="text: seconds"></span>
         </div>
 
-        <div>
+        <div class="btn-group">
             <button data-bind="click: $root.csed.test.startEdit" class="fa">&#xf040;</button>
             <button data-bind="click: $root.csed.test.startRemove" class="fa danger">&#xf014;</button>
         </div>
@@ -123,39 +102,41 @@
 </script>
 <script type="text/html" id="edit-mode">
     <div class="org-info-edit width100">
-        <div>
+        <div class="name">
             <label>Название</label></br>
             <input type="text" data-bind="value: subject">
         </div>
-        <div>
+        <div class="type">
             <label>Тип теста</label></br>
             <select data-bind="options: $root.current.types,
                        optionsText: 'name',
                        value: $root.current.type,
                        optionsCaption: 'Выберете тип'"></select>
         </div>
-        <div>
+        <div class="time">
             <label>Дительность теста</label></br>
             <input type="text" data-bind="value: minutes, valueUpdate: 'keyup' " placeholder="00">
             <span>:</span>
             <input type="text" data-bind="value: seconds, valueUpdate: 'keyup' " placeholder="00">
         </div>
-        <div>
+        <div class="tryouts">
             <label>Количество попыток</label></br>
             <input type="text" data-bind="value: attempts">
         </div>
-        <div>
+        <div class="random">
             <label>Прицнип подбора вопросов</label></br>
             <span class="radio" data-bind="css: { 'radio-positive': isRandom() }, click: $root.toggleCurrent.set.random.asTrue">Случайный</span>
             <span>|</span>
             <span class="radio" data-bind="css: { 'radio-positive': isRandom() === false }, click: $root.toggleCurrent.set.random.asFalse">Адаптивный</span>
         </div>
-        <div>
+        <div class="themes">
             <label>Темы</label></br>
-            <select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.selectedThemes" size="4" multiple="true"></select>
+            <select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.selectedThemes" size="7" multiple="true"></select>
         </div>
-        <div>
+        <div class="isActive">
             <input id="test-is-active" type="checkbox" data-bind="checked: isActive"> <label for="test-is-active">Активный</label>
+        </div>
+        <div class="btn-group">
             <button data-bind="click: $root.csed.test.update" class="fa">&#xf00c;</button>
             <button data-bind="click: $root.csed.test.cancel" class="fa danger">&#xf00d;</button>
         </div>
