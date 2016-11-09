@@ -152,7 +152,7 @@
         </div>
         <div>
             <label>Темы</label></br>
-            <select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.theme" size="4" multiple="true"></select>
+            <select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.selectedThemes" size="4" multiple="true"></select>
         </div>
         <div>
             <input id="test-is-active" type="checkbox" data-bind="checked: isActive"> <label for="test-is-active">Активный</label>

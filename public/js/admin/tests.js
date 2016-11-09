@@ -16,7 +16,8 @@ $(document).ready(function(){
                     seconds: ko.observable(''),
                     type: ko.observable(0),
                     isActive: ko.observable(true),
-                    isRandom: ko.observable(true)
+                    isRandom: ko.observable(true),
+                    themes: ko.observableArray([])
                 }),
                 tests: ko.observableArray([]),
 
@@ -57,6 +58,7 @@ $(document).ready(function(){
                             .type(data.type())
                             .isActive(data.isActive())
                             .isRandom(data.isRandom());
+                        self.get.testThemes(data.id());
                     },
                     type: function(id){
                         var type = self.current.types().find(function(item){
@@ -76,7 +78,8 @@ $(document).ready(function(){
                             .seconds('')
                             .type(0)
                             .isActive(true)
-                            .isRandom(true);
+                            .isRandom(true)
+                            .themes([]);
                     }
                 },
                 stringify: {
@@ -96,8 +99,7 @@ $(document).ready(function(){
                         if (self.mode() === 'edit'){
                             test.id = t.id();
                         }
-
-                        self.current.themes().find(function(item){
+                        self.current.selectedThemes().find(function(item){
                             themes.push(item.id());
                         });
 
@@ -131,7 +133,23 @@ $(document).ready(function(){
                         asFalse: function(){
                             self.current.test().isRandom(false);
                         }
-                    }
+                    },
+                    themes: function(){
+                        var selected = self.current.selectedThemes;
+                        var testThemes = self.current.test().themes();
+                        var commonThemes = self.current.themes();
+                        selected([]);
+                        commonThemes.find(function(item){
+                            var id = item.id();
+                            testThemes.find(function(theme){
+                                console.log(theme.id());
+                                if (theme.id() === id){
+                                    selected.push(item);
+                                }
+                            });
+                        });
+                        console.log(selected());
+                    },
                 }
             };
             self.pagination = {
@@ -178,7 +196,6 @@ $(document).ready(function(){
                         }
                         else{
                             self.mode('add');
-                            self.get.themes();
                         }
 
                     },
@@ -192,7 +209,7 @@ $(document).ready(function(){
                     },
                     startEdit: function(){
                         self.mode('edit');
-                        self.get.themes();
+                        self.toggleCurrent.set.themes();
                     },
                     update: function(){
                         self.mode() === 'add' ? self.post.test('create') : self.post.test('update');
@@ -228,12 +245,20 @@ $(document).ready(function(){
                         var res = ko.mapping.fromJSON(response);
                         self.current.tests(res.data());
                         self.pagination.itemsCount(res.count());
+                        self.get.themes();
                     });
                 },
                 themes: function(){
                     var url = '/api/disciplines/' + self.filter.discipline().id() + '/themes';
                     $.get(url, function(response){
                         self.current.themes(ko.mapping.fromJSON(response)());
+                    });
+                },
+                testThemes: function(id){
+                    var url = '/api/tests/' + id + '/themes';
+                    $.get(url, function(response){
+                        self.current.test().themes(ko.mapping.fromJSON(response)());
+                        console.log(self.current.test().themes());
                     });
                 }
             };
@@ -257,9 +282,6 @@ $(document).ready(function(){
             };
 
             self.get.disciplines();
-
-
-
 
             self.toggleModal = function(selector, action){
                 $(selector).arcticmodal(action);

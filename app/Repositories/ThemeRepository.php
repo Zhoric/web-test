@@ -19,8 +19,8 @@ class ThemeRepository extends BaseRepository
 
     public function getByTest($testId){
         $qb = $this->repo->createQueryBuilder('t');
-        $query = $qb->join(\TestTheme::class, 'tt', Join::WITH, 'tt.test = t.id')
-            ->where('t.id = :testId')
+        $query = $qb->join(\TestTheme::class, 'tt', Join::WITH, 'tt.theme = t.id')
+            ->where('tt.test = :testId')
             ->setParameter('testId', $testId)
             ->getQuery();
 
