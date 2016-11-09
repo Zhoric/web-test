@@ -2,6 +2,10 @@
 @section('title', 'Дисциплины')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
+    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
 @endsection
 
 @section('content')
@@ -66,6 +70,20 @@
         </div>
     </div>
 </div>
+<div class="tooltip_templates">
+    <span id="subject_tooltip">
+        <span data-bind="validationMessage: $root.current.test().subject"></span>
+    </span>
+    <span id="minutes_tooltip">
+        <span data-bind="validationMessage: $root.current.test().minutes"></span>
+    </span>
+    <span id="seconds_tooltip">
+        <span data-bind="validationMessage: $root.current.test().seconds"></span>
+    </span>
+    <span id="tryouts_tooltip">
+        <span data-bind="validationMessage: $root.current.test().attempts"></span>
+    </span>
+</div>
 
 <script type="text/html" id="show-details">
     <div class="org-info test">
@@ -104,7 +122,7 @@
     <div class="org-info-edit width100">
         <div class="name">
             <label>Название</label></br>
-            <input type="text" data-bind="value: subject">
+            <input tooltip-mark="subject_tooltip" type="text" data-bind="value: subject, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
         </div>
         <div class="type">
             <label>Тип теста</label></br>
@@ -115,16 +133,16 @@
         </div>
         <div class="time">
             <label>Дительность теста</label></br>
-            <input type="text" data-bind="value: minutes, valueUpdate: 'keyup' " placeholder="00">
+            <input type="text" tooltip-mark="minutes_tooltip" data-bind="value: minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout} " placeholder="00">
             <span>:</span>
-            <input type="text" data-bind="value: seconds, valueUpdate: 'keyup' " placeholder="00">
+            <input type="text" tooltip-mark="seconds_tooltip" data-bind="value: seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout} " placeholder="00">
         </div>
         <div class="tryouts">
             <label>Количество попыток</label></br>
-            <input type="text" data-bind="value: attempts">
+            <input tooltip-mark="tryouts_tooltip" type="text" data-bind="value: attempts, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
         </div>
         <div class="random">
-            <label>Прицнип подбора вопросов</label></br>
+            <label>Принцип подбора вопросов</label></br>
             <span class="radio" data-bind="css: { 'radio-positive': isRandom() }, click: $root.toggleCurrent.set.random.asTrue">Случайный</span>
             <span>|</span>
             <span class="radio" data-bind="css: { 'radio-positive': isRandom() === false }, click: $root.toggleCurrent.set.random.asFalse">Адаптивный</span>
@@ -137,7 +155,7 @@
             <input id="test-is-active" type="checkbox" data-bind="checked: isActive"> <label for="test-is-active">Активный</label>
         </div>
         <div class="btn-group">
-            <button data-bind="click: $root.csed.test.update" class="fa">&#xf00c;</button>
+            <button data-bind="click: $root.csed.test.update" class="fa approve-btn">&#xf00c;</button>
             <button data-bind="click: $root.csed.test.cancel" class="fa danger">&#xf00d;</button>
         </div>
     </div>

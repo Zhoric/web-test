@@ -2,18 +2,50 @@
  * Created by nyanjii on 26.10.16.
  */
 $(document).ready(function(){
+    ko.validation.init({
+        messagesOnModified: true,
+        insertMessages: false
+    });
     var testsViewModel = function(){
         return new function(){
             var self = this;
 
             self.current = {
-                test: ko.observable({
+                test: ko.validatedObservable({
                     id: ko.observable(0),
-                    subject: ko.observable(''),
-                    attempts: ko.observable(3),
+                    subject: ko.observable().extend({
+                        required: {
+                            params: true,
+                            message: 'Вы не можете оставить это поле пустым'
+                        }
+                    }),
+                    attempts: ko.observable(3).extend({
+                        number: {
+                            params: true,
+                            message: 'Только целое десятичное число'
+                        }
+                    }),
                     timeTotal: ko.observable(0),
-                    minutes: ko.observable(''),
-                    seconds: ko.observable(''),
+                    minutes: ko.observable().extend({
+                        required: {
+                            params: true,
+                            message: 'Поле не может быть пустым'
+                        },
+                        number: {
+                            params: true,
+                            message: 'Только целое десятичное число'
+                        }
+                    }),
+                    seconds: ko.observable().extend({
+                        required: {
+                            params: true,
+                            message: 'Поле не может быть пустым'
+                        },
+                        number: {
+                            params: true,
+                            message: 'Только целое десятичное число'
+                        }
+                    }),
                     type: ko.observable(0),
                     isActive: ko.observable(true),
                     isRandom: ko.observable(true),
@@ -40,6 +72,24 @@ $(document).ready(function(){
             self.filter = {
                 name: ko.observable(''),
                 discipline: ko.observable(),
+            };
+            self.validationTooltip = {
+                init: function(selector){
+                    $(selector).tooltipster({
+                        theme: 'tooltipster-light',
+                        trigger: 'custom',
+                        timer: 3000,
+                        position: 'left'
+                    });
+                },
+                open: function(selector, content){
+                    $(selector).tooltipster('content', content)
+                        .tooltipster('open');
+                },
+                checkIfExists: function(selector){
+                    if ($(selector).hasClass('tooltipstered')) return;
+                    self.validationTooltip.init(selector);
+                }
             };
             self.toggleCurrent = {
                 fill: {
@@ -80,6 +130,8 @@ $(document).ready(function(){
                             .isActive(true)
                             .isRandom(true)
                             .themes([]);
+                        self.current.type('');
+                        self.current.selectedThemes([]);
                     }
                 },
                 stringify: {
@@ -150,6 +202,29 @@ $(document).ready(function(){
                         });
                         console.log(selected());
                     },
+                },
+                check: {
+                    test: function(){
+                        var test = self.current.test;
+                        var selector = '.approve-btn';
+
+                        if (!test.isValid()){
+                            self.validationTooltip.open(selector, 'Поля не заполнены');
+                            return false;
+                        }
+
+                        if (!self.current.type()){
+                            self.validationTooltip.open(selector, 'Тип не выбран');
+                            return false;
+                        }
+
+                        if (!self.current.selectedThemes().length){
+                            self.validationTooltip.open(selector, 'Выберите хотя бы одну тему');
+                            return false;
+                        }
+
+                        return true;
+                    }
                 }
             };
             self.pagination = {
@@ -186,18 +261,18 @@ $(document).ready(function(){
             self.csed = {
                 test: {
                     show: function(data){
-                        self.toggleCurrent.fill.test(data);
-                        self.mode('info');
-                    },
-                    toggleAdd: function(){
-                        self.toggleCurrent.empty.test();
-                        if (self.mode() === 'add'){
+                        if (self.mode() === 'info'){
                             self.mode('none');
                         }
                         else{
-                            self.mode('add');
+                            self.mode('info');
+                            self.toggleCurrent.fill.test(data);
                         }
-
+                    },
+                    toggleAdd: function(){
+                        self.toggleCurrent.empty.test();
+                        self.mode() === 'add' ? self.mode('none') : self.mode('add');
+                        self.validationTooltip.checkIfExists('.approve-btn');
                     },
                     startRemove: function(data){
                         self.toggleCurrent.fill.test(data);
@@ -210,12 +285,14 @@ $(document).ready(function(){
                     startEdit: function(){
                         self.mode('edit');
                         self.toggleCurrent.set.themes();
+                        self.validationTooltip.checkIfExists('.approve-btn');
                     },
                     update: function(){
+                        if (!self.toggleCurrent.check.test()) return;
                         self.mode() === 'add' ? self.post.test('create') : self.post.test('update');
                     },
                     cancel: function(){
-                        if (self.mode() === 'add'){
+                        if (self.mode() === 'add' || self.mode() === 'edit'){
                             self.mode('none');
                             self.toggleCurrent.empty.test();
                             return;
@@ -283,6 +360,27 @@ $(document).ready(function(){
 
             self.get.disciplines();
 
+            self.events = {
+                focusout: function(data, e){
+                    var template = '#' + $(e.target).attr('tooltip-mark') + ' span';
+                    var template_content = $(template).text();
+                    if (!template_content) return;
+
+                    if (!$(e.target).hasClass('tooltipstered')){
+                        $(e.target).tooltipster({
+                            theme: 'tooltipster-light',
+                            trigger: 'custom'
+                        });
+                    }
+
+                    $(e.target).tooltipster('content', template_content).tooltipster('open');
+                },
+                focusin: function(data, e){
+                    if (!$(e.target).hasClass('tooltipstered')) return;
+                    $(e.target).tooltipster('close');
+                }
+            };
+
             self.toggleModal = function(selector, action){
                 $(selector).arcticmodal(action);
             };
@@ -315,6 +413,7 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
+                events: self.events,
                 toggleModal: self.toggleModal
             };
         };
