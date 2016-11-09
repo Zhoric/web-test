@@ -238,6 +238,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'TestController@update');
         Route::post('delete/{id}', 'TestController@delete');
         Route::get('show', 'TestController@getByNameAndDisciplinePaginated');
+        Route::get('{id}/themes', 'TestController@getThemesOfTest');
 
         Route::get('showForStudent', 'TestController@getStudentTestsByDiscipline');
         Route::post('start', 'TestProcessController@startTest');
