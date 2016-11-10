@@ -22,7 +22,7 @@ class UserController extends Controller
         $user = Auth::user();
         if(isset($user)) {
             try {
-                return json_encode(['result' => $this->userManager->getUserRole($user->id), 'success' => true]);
+                return json_encode(['result' => $this->userManager->getUserRole($user->getId()), 'success' => true]);
             }
             catch (Exception $e)
             {
