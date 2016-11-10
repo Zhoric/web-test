@@ -21,7 +21,7 @@ Route::get('auth', 'DemoController@auth');
 
 
 Auth::routes();
-
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 /*
 // Authentication Routes...
@@ -254,6 +254,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'TestController@update');
         Route::post('delete/{id}', 'TestController@delete');
         Route::get('show', 'TestController@getByNameAndDisciplinePaginated');
+        Route::get('{id}/themes', 'TestController@getThemesOfTest');
 
         Route::get('showForStudent', 'TestController@getStudentTestsByDiscipline');
         Route::post('start', 'TestProcessController@startTest');

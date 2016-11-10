@@ -40,6 +40,7 @@ class UnitOfWork
     private $_extraAttemptRepo;
     private $_studentGroupRepo;
     private $_sectionRepo;
+    private $_testThemeRepo;
 
 
     public function users(){
@@ -173,6 +174,13 @@ class UnitOfWork
             $this->_sectionRepo = new SectionRepository($this->_em);
         }
         return $this->_sectionRepo;
+    }
+
+    public function testThemes(){
+        if ($this->_testThemeRepo == null){
+            $this->_testThemeRepo = new TestThemeRepository($this->_em);
+        }
+        return $this->_testThemeRepo;
     }
 
     public function commit(){

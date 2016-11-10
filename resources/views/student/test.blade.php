@@ -21,20 +21,26 @@
             </div>
             <!-- /ko -->
             <!-- ko if: $root.current.question().type() === 2-->
+            <div class="container">
                 <input data-bind="attr: {id: id, checked: isRight}" type="checkbox">
                 <label data-bind="text: text, attr: {for: id}"></label> </br>
+            </div>
             <!-- /ko -->
         </div>
         <!-- /ko -->
         <!-- ko if: $root.current.question().type() === 3 -->
-            <label>Однострочный ответ</label> </br>
+        <div class="question-answers">
+            <label>Введите свой ответ</label> </br>
             <input data-bind="value: $root.current.answerText" type="text">
+        </div>
         <!-- /ko -->
         <!-- ko if: $root.current.question().type() === 4 -->
-            <label>Многострочный ответ</label> </br>
+        <div class="question-answers">
+            <label>Введите свой ответ</label> </br>
             <textarea data-bind="value: $root.current.answerText" type=""></textarea>
-        <!-- /ko -->
+        </div>
         <!-- /ko -->
         <button id="next-question" data-bind="click: $root.actions.answer">Ответить</button>
+        <!-- /ko -->
     </div>
 @endsection

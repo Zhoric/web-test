@@ -134,4 +134,14 @@ class TestManager
 
         return $testsInfo;
     }
+
+    /**
+     * Получение списка тем, из которых состоит тест
+     * @param $testId
+     * @return mixed
+     */
+    public function getThemesOfTest($testId){
+        $testThemes = $this->_unitOfWork->themes()->getByTest($testId);
+        return $testThemes;
+    }
 }

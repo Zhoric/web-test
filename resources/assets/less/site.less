@@ -1,15 +1,23 @@
 @import (less) "common.less";
 
 @danger: @alizarin;
+@indigo: #264348;
+
+body{
+  background: @indigo;
+}
 
 .content{
   width: 80%;
-  margin: 30px auto;
+  margin: 70px auto;
+  background: @white;
+  .border-radius(10px);
 }
 
 .question-head{
+  padding: 30px 50px 0 50px;
   h3{
-    width: 85%;
+    width: 80%;
     text-align: justify;
     display: inline-block;
   }
@@ -22,12 +30,24 @@
 }
 
 .question-answers{
-
+  padding: 30px 50px 50px;
+  .container{
+    width: 80%;
+  }
+  input[type=text], textarea{
+    width: 75%;
+  }
+  textarea{
+    height: 150px;
+  }
 }
 
 #next-question{
-  margin: 20px 75px 0 0;
-  float: right;
+  margin: 20px 0 0 0;
+  position:fixed;
+  right: 10%;
+  bottom: 5%;
+  .border-radius(5px);
 }
 
 

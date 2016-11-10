@@ -39,6 +39,7 @@ class DemoController extends BaseController
     }
 
     public function auth(){
+
         $user = Auth::user();
         dd($user);
     }

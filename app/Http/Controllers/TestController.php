@@ -59,7 +59,11 @@ class TestController extends Controller
         $disciplineId = $requst->query('discipline');
         $tests = $this->_testManager->getTestsByUserAndDiscipline($userId, $disciplineId);
         return json_encode($tests);
+    }
 
+    public function getThemesOfTest($testId){
+        $themes = $this->_testManager->getThemesOfTest($testId);
+        return json_encode($themes);
     }
 
 

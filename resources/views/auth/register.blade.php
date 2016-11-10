@@ -8,22 +8,22 @@
             <h2>Заявка на регистрацию</h2>
         </div>
         <div>
-            <input type="text" data-bind="value: name" placeholder="ФИО">
-            <label data-bind="validationElement: name"></label>
+            <input type="text" data-bind="value: user.name" placeholder="ФИО">
+            <label data-bind="validationElement: user.name"></label>
         </div>
         <div>
-            <input type="text" data-bind="value: login" placeholder="Логин">
+            <input type="text" data-bind="value: user.email" placeholder="E-mail">
         </div>
         <div>
-            <input type="password" data-bind="value: password" placeholder="Пароль">
+            <input type="password" data-bind="value: user.password" placeholder="Пароль">
         </div>
         <div>
-            <label data-bind="validationElement: admissionYear"></label>
-            <input type="text" data-bind="value: admissionYear" placeholder="Год поступления">
+            <label data-bind="validationElement: user.admissionYear"></label>
+            <input type="text" data-bind="value: user.admissionYear" placeholder="Год поступления">
         </div>
         <div>
-            <input type="text" data-bind="value: group" placeholder="Группа">
-            <div data-bind="template: {name: 'dropdown-items', foreach: groups}"></div>
+            <input type="text" data-bind="value: user.group" placeholder="Группа">
+            {{--<div data-bind="template: {name: 'dropdown-items', foreach: groups}"></div>--}}
         </div>
         <div>
             <button data-bind="click: $root.register">Отправить</button>

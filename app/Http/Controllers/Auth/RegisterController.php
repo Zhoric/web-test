@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Managers\AuthManager;
 use Repositories\UnitOfWork;
 use User;
 use Repositories\UserRepository;
@@ -32,35 +33,20 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+    protected $authManager;
 
-    protected $unitOfWork;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(UnitOfWork $unitOfWork)
-    {
+    public function __construct(AuthManager $authManager){
 
-        $this->unitOfWork = $unitOfWork;
+        $this->authManager = $authManager;
         $this->middleware('guest');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-
-       return Validator::make($data, [
-            'login' => 'required|max:255',
-            'password' => 'required|min:6|confirmed',
-        ]);
-    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -70,32 +56,21 @@ class RegisterController extends Controller
      */
     protected function create(Request $request)
     {
-
-
-        $user = new User();
-        $data = $request->json('user');
-        $user->fillFromJson($data);
-        $user->setPassword(bcrypt($user->getPassword()));
-        $this->unitOfWork->users()->create($user);
-        $this->unitOfWork->commit();
-
-        return $this->unitOfWork->users()->findByEmail($user->getEmail());
-
-
+        $credentials = $request->json('user');
+        $created_user = $this->authManager->createNewUser($credentials);
+        return $created_user;
     }
 
     public function register(Request $request){
-
-
-        //$this->validator($request->all())->validate();
-
-        event(new Registered($user = $this->create($request)));
-
-
+        $user = $this->create($request);
+        if(empty($user)){
+            return json_encode(['message' => 'Ошибка при регистрации!', 'success' => false]);
+        }
+        event(new Registered($user));
+        //TODO:: после регистрации не залогинивать юзера. Это заявка на регистрацию
         $this->guard()->login($user);
 
-        /*return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());*/
+        return json_encode(['message' => 'Ваша заявка на регистрацию принята! Ждите', 'success' => true]);
     }
 
 }

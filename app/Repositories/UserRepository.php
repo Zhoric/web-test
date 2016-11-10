@@ -27,7 +27,6 @@ class UserRepository extends BaseRepository implements IUserRepository
             return array();
         }
 
-      //,'password' => bcrypt($credentials['password'])]));
 
 
         return  $this->repo->findOneBy(['email' => $credentials['email']]);

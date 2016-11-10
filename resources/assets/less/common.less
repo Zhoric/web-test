@@ -51,9 +51,20 @@ body{
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
 }
-.transition(){
-
+.transition-bc(@duration, @delay){
+  -webkit-transition: background-color @duration ease-out @delay;
+  -moz-transition: background-color @duration ease-out @delay;
+  -o-transition: background-color @duration ease-out @delay;
+  transition: background-color @duration ease-out @delay;
 }
+
+.transition-all(@duration, @delay){
+  -webkit-transition: all @duration ease-out @delay;
+  -moz-transition: all @duration ease-out @delay;
+  -o-transition: all @duration ease-out @delay;
+  transition: all @duration ease-out @delay;
+}
+
 
 button{
   font-family: 'Roboto Regular';
