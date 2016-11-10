@@ -76,6 +76,13 @@ class RegisterController extends Controller
         return $createdUser;
     }
 
+    public function checkIfEmailExists(Request $request){
+        $email = $request->json('email');
+        $exists = $this->authManager->checkIfEmailExists($email);
+        return json_encode($exists);
+
+    }
+
     public function register(Request $request){
         $user = $this->create($request);
         if(empty($user)){

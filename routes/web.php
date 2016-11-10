@@ -18,7 +18,7 @@ Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
 Route::get('auth', 'DemoController@auth');
-
+Route::post('register/checkEmail', 'Auth\RegisterController@checkIfEmailExists');
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');

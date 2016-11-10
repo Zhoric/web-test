@@ -18,7 +18,7 @@ class AuthManager
         $this->unitOfWork = $unitOfWork;
     }
 
-    private function checkIfEmailExists($email){
+    public function checkIfEmailExists($email){
         if(!empty($this->unitOfWork->users()->findByEmail($email))){
             return true;
         }
@@ -40,6 +40,7 @@ class AuthManager
 
         return $this->unitOfWork->users()->findByEmail($user->getEmail());
     }
+
 
     public function checkIfUserActive($email){
 
