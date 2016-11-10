@@ -3,6 +3,7 @@
     <script src="{{ URL::asset('js/auth/register.js')}}"></script>
 @endsection
 @section('content')
+
     <div class="register">
         <div>
             <h2>Заявка на регистрацию</h2>
@@ -22,22 +23,26 @@
             <input type="text" data-bind="value: user.admissionYear" placeholder="Год поступления">
         </div>
         <div>
-            <input type="text" data-bind="value: user.group" placeholder="Группа">
-            {{--<div data-bind="template: {name: 'dropdown-items', foreach: groups}"></div>--}}
+            <select data-bind="options: groups, optionsText: 'name', value: user.group, optionsCaption: 'Выберите группу'"></select>
         </div>
         <div>
-            <button data-bind="click: $root.register">Отправить</button>
+            <button data-bind="click: register">Отправить</button>
             <a href="/login">Войти</a>
             <div class="clear"></div>
         </div>
     </div>
+
+    <div class="g-hidden">
+        <div class="box-modal" id="register-info">
+            <!-- ko if: registerResult()-->
+            <h3 data-bind="text: registerResult().message"></h3>
+            <button data-bind="click: acceptInformation">OK</button>
+            <!-- /ko -->
+        </div>
+    </div>
 @endsection
 
-<script type="text/html" id="dropdown-items">
-    <div>
-        <span data-bind="text: name"></span>
-    </div>
-</script>
+
 
 
 {{--@section('content')--}}

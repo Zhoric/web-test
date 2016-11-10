@@ -15,8 +15,16 @@
         </div>
         <div>
             <button data-bind="click: $root.login">Войти</button>
-            <a href="/register">Регистрация</a>
+            <a href="/login">Регистрация</a>
             <div class="clear"></div>
+        </div>
+    </div>
+    <div class="g-hidden">
+        <div class="box-modal" id="login-info">
+            <!-- ko if: loginResult()-->
+            <h3 data-bind="text: loginResult().message"></h3>
+            <button data-bind="click: acceptInformation">OK</button>
+            <!-- /ko -->
         </div>
     </div>
 @endsection

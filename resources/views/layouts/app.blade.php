@@ -11,31 +11,16 @@
     {{--<title>{{ config('app.name', 'Laravel') }}</title>--}}
     <title>@yield('title')</title>
 
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/jquery.arcticmodal.css')}}"/>--}}
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/simple.css')}}"/>--}}
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/styles.css')}}"/>--}}
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/auth.css')}}" />--}}
-    {{--<script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>--}}
-    {{--<script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>--}}
-    {{--<script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>--}}
-    {{--<script src="{{ URL::asset('js/knockout.validation.js')}}"></script>--}}
-    {{--<script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>--}}
     <link rel="stylesheet" href="{{ URL::asset('css/styles.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/jquery.arcticmodal.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/simple.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/auth.css')}}" />
-
     <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
-
-
     <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
-
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
-
-    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
-
-    @yield('javascript')
+    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+@yield('javascript')
 
     <!-- Scripts -->
     <script>
@@ -104,6 +89,6 @@
     @yield('content')
 
     <!-- Scripts -->
-    <script src="/js/app.js"></script>
+    {{--<script src="/js/app.js"></script>--}}
 </body>
 </html>

@@ -18,29 +18,28 @@ $(document).ready(function(){
                     email: self.user.email(),
                     password: self.user.password()
                 };
-                return JSON.stringify({user: user});
+                return JSON.stringify(user);
             };
             self.login = function(){
                  var url = '/login';
                  var json = self.stringify();
                 $.post(url, json, function(response){
                     self.loginResult(ko.mapping.fromJSON(response));
-                    self.modal('#register-info', '');
+                    console.log(self.loginResult());
+                    self.loginResult().success() ? window.location.href = '/home' : self.modal('#login-info', '');
                 });
             };
             self.acceptInformation = function(){
-                self.modal('register-info', 'close');
-                if (self.registerResult().success()){
-                    window.location.href = '/home';
-                }
-                else{
-                    return;
-                }
+                self.modal('#login-info', 'close');
+            };
+            self.modal = function(selector, action){
+                $(selector).arcticmodal(action);
             };
 
             return {
                 user: self.user,
                 login: self.login,
+                loginResult: self.loginResult,
                 acceptInformation: self.acceptInformation
             };
         };
