@@ -50,6 +50,7 @@ $(document).ready(function () {
                $(selector).arcticmodal(action);
            };
 
+
            self.approve = function () {
                if(self.mode() === 'create') {
                    var section = {
