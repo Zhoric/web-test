@@ -56,10 +56,13 @@ class LoginController extends Controller
         }
 
         $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
-
+        //TODO:: DEBUG HARDCODE Вернуть проверку на активность
+        /*
         if(!$this->authManager->checkIfUserActive($request->json('email'))){
+
             return json_encode(['message' => 'Неудачная попытка логина!', 'success' => false]);
         }
+        */
 
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
