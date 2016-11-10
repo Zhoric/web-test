@@ -23,7 +23,15 @@ $(document).ready(function(){
                 theme: ko.observable({
                     id: ko.observable(0),
                     name: ko.observable('')
+                }),
+                sections : ko.observableArray([]),
+                section: ko.observable({
+                    id: ko.observable(0),
+                    themeId: ko.observable(0),
+                    name: ko.observable(''),
+                    content: ko.observable('')
                 })
+
             };
             self.filter = {
                 discipline: ko.observable(''),
@@ -184,7 +192,36 @@ $(document).ready(function(){
                             self.toggleModal('#remove-theme-modal', 'close');
                             self.get.themes();
                         });
+                    },
+                    showSections : function(data) {
+                        self.current.theme(data);
+                        self.get.sections();
+                        self.toggleModal('#sections-modal', '');
+                    },
+                    addSection : function (data) {
+                        window.location.href = '/admin/editor/new/' + self.current.theme().id();
                     }
+                },
+                section: {
+                    startRemove: function (data) {
+                        self.toggleModal('#remove-section-modal', '');
+                        self.current.section(data);
+                    },
+                    remove: function () {
+                        var url = '/api/sections/delete/' + self.current.section().id();
+                        $.post(url, function(){
+                            self.toggleModal('#remove-section-modal', 'close');
+                            self.get.sections();
+                        });
+                    },
+                    edit: function (data) {
+                        window.location.href = '/admin/editor/' + data.id();
+
+                    },
+                    info: function (data) {
+                        window.location.href = '/admin/section/' + data.id();
+                    }
+                    
                 }
             };
 
@@ -228,6 +265,12 @@ $(document).ready(function(){
                     var url = '/api/disciplines/' + self.current.discipline().id() +'/themes';
                     $.get(url, function(response){
                         self.current.themes(ko.mapping.fromJSON(response)());
+                    });
+                },
+                sections: function() {
+                    var url = '/api/sections/theme/' + self.current.theme().id() ;
+                    $.get(url, function(response){
+                        self.current.sections(ko.mapping.fromJSON(response)());
                     });
                 }
             };

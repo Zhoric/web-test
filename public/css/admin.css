@@ -301,6 +301,13 @@ a.active-link:hover {
 button.move {
   width: 150px;
 }
+button.add-section {
+  width: 300px;
+  background: #3498db;
+}
+button.add-section:hover {
+  background: #2980b9;
+}
 button {
   background: #2ecc71;
   width: 50px;
@@ -637,6 +644,57 @@ button.sq-small {
   margin: 0 auto;
   width: 100%;
   margin-top: -20%;
+}
+.section-info {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+.section-info p {
+  text-align: center;
+}
+.section-name {
+  padding: 20px;
+}
+.section-name input {
+  width: 85%;
+  margin-left: 10px;
+}
+.section-name label {
+  font-size: 18px;
+}
+.section-buttons {
+  padding: 10px;
+  text-align: center;
+}
+.section-buttons button {
+  width: 100px;
+}
+#sections-modal {
+  width: 800px;
+}
+#sections-modal table td:first-child {
+  width: 5%;
+}
+#sections-modal table td:nth-child(2) {
+  width: 70%;
+}
+#sections-modal table td:last-child {
+  width: 15%;
+}
+#sections-modal table td:last-child button.info {
+  background: #3498db;
+}
+.section {
+  padding: 20px;
+}
+.section div:first-child {
+  text-align: center;
+  font-size: 18px;
+}
+#cancel-modal div {
+  text-align: center;
+  font-size: 18px;
+  padding: 15px;
 }
 
 /*# sourceMappingURL=admin.css.map */

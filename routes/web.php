@@ -61,7 +61,10 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('theme/{id}', function(){return View('admin.themes');});
     Route::get('tests/{id}', function(){return View('admin.tests');});
     Route::get('tests', function(){return View('admin.tests');});
-    Route::get('editor', function(){return View('admin.editor');});
+    Route::get('editor/new/{id}', function(){return View('admin.editor');});
+    Route::get('editor/{id}', function(){return View('admin.editor');});
+    Route::get('section/{id}', function(){return View('admin.section');});
+
 
     Route::get('institutes', function(){return View('admin.institutes');});
     Route::get('manual', function(){return View('admin.manual');});
@@ -216,6 +219,19 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('delete/{id}', 'LecturerController@delete');
         Route::get('show', 'LecturerController@getByNamePaginated');
     });
+
+     /*-----------------------------------------------------------------------------
+    *                             СЕКЦИИ
+    *-----------------------------------------------------------------------------
+   */
+    Route::group(['prefix' => 'sections'], function () {
+        Route::get('theme/{id}', 'SectionController@getAllSectionsByTheme');
+        Route::post('create', 'SectionController@create');
+        Route::post('update', 'SectionController@update');
+        Route::post('delete/{id}', 'SectionController@delete');
+        Route::get('{id}', 'SectionController@getSection');
+    });
+
 
     /*-----------------------------------------------------------------------------
      *                              ВОПРОСЫ

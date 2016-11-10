@@ -95,7 +95,7 @@
 
 <script type="text/html" id="show-details">
     <div class="org-info">
-        <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' -->
+        <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' || $root.mode() === 'section' -->
         <div class="width100" data-bind="template: {name: 'info-mode', data: $data}"></div>
         <!-- /ko -->
         <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
@@ -112,9 +112,12 @@
                 <tr>
                     <td data-bind="text: $index()+1"></td>
                     <td><a data-bind="text: name, click: $root.moveTo.theme"></a></td>
-                    <td><button data-bind="click: $root.csed.theme.startRemove" class="fa danger">&#xf014;</button></td>
+                    <td><button data-bind="click: $root.csed.theme.showSections" class="fa success">&#xf0f6;</button>
+                        <button data-bind="click: $root.csed.theme.startRemove" class="fa danger">&#xf014;</button>
+                    </td>
                 </tr>
                 <!-- /ko -->
+
                 </tbody>
             </table>
         </div>
@@ -165,4 +168,57 @@
         </div>
     </div>
 </script>
+
+<div class="g-hidden">
+    <div class="box-modal" id="sections-modal">
+        <div class="box-modal_close arcticmodal-close">закрыть</div>
+        <div class="width100">
+            <div>
+                <button data-bind="click: $root.csed.theme.addSection" class="add-section"><span class="fa">&#xf067;</span>&nbsp;Добавить новую секцию</button>
+            </div>
+            <!-- ko if:  $root.current.sections().length > 0-->
+            <div class="section-info">
+            <table class="theme">
+                <thead>
+                <tr><th>#</th><th>Название</th><th>Действия</th></tr>
+                </thead>
+                <tbody>
+                <!-- ko foreach: $root.current.sections-->
+                <tr>
+                    <td data-bind="text: $index()+1"></td>
+                    <td><a data-bind="text: name"></a></td>
+                    <td><button data-bind="click: $root.csed.section.info" class="fa success">&#xf0f6;</button>
+                        <button data-bind="click: $root.csed.section.edit" class="fa info">&#xf040;</button>
+                        <button data-bind="click: $root.csed.section.startRemove" class="fa danger">&#xf014;</button>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+            </div>
+            <!-- /ko -->
+            <!-- ko if:  $root.current.sections().length == 0-->
+            <div class="section-info">
+                <p>Для данной темы секции отсутствуют</p>
+            </div>
+            <!-- /ko -->
+
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
+    <div class="box-modal" id="remove-section-modal">
+        <div>
+            <div><span>Удалить выбранную секцию?</span></div>
+            <div>
+                <button data-bind="click: $root.csed.section.remove" class="fa">&#xf00c;</button>
+                <button class="fa danger arcticmodal-close">&#xf00d;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 @endsection

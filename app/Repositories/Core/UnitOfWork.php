@@ -39,6 +39,7 @@ class UnitOfWork
     private $_givenAnswerRepo;
     private $_extraAttemptRepo;
     private $_studentGroupRepo;
+    private $_sectionRepo;
 
 
     public function users(){
@@ -165,6 +166,13 @@ class UnitOfWork
             $this->_studentGroupRepo = new StudentGroupRepository($this->_em);
         }
         return $this->_studentGroupRepo;
+    }
+
+    public function sections(){
+        if ($this->_sectionRepo == null){
+            $this->_sectionRepo = new SectionRepository($this->_em);
+        }
+        return $this->_sectionRepo;
     }
 
     public function commit(){

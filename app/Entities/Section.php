@@ -137,7 +137,13 @@ class Section extends BaseEntity implements JsonSerializable
      */
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return array(
+            'id' => $this->id,
+            'name' => $this->name,
+            'content' => $this->content,
+            'themeId' => $this->theme->getId(),
+            'themeName' => $this->theme->getName()
+        );
     }
 }
 

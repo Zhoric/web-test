@@ -208,6 +208,13 @@ a.active-link{
 button.move{
   width: 150px;
 }
+button.add-section{
+  width: 300px;
+  background: @peterriver;
+  &:hover{
+    background: @belizehole;
+  }
+}
 button{
   background: @emerland;
   width: 50px;
@@ -584,5 +591,66 @@ button.sq-small{
     margin: 0 auto;
     width: 100%;
     margin-top: -20%;
+  }
+}
+
+.section-info{
+  padding-top: 20px;
+  padding-bottom: 10px;
+  p{
+    text-align: center;
+  }
+}
+
+.section-name{
+  padding: 20px;
+  input{
+    width: 85%;
+    margin-left: 10px;
+  }
+  label{
+    font-size: 18px;
+  }
+}
+
+.section-buttons{
+  padding: 10px;
+  text-align: center;
+  button{
+    width: 100px;
+  }
+}
+
+#sections-modal{
+  width: 800px;
+  table {
+    td:first-child {
+      width: 5%;
+    }
+    td:nth-child(2){
+      width: 70%;
+    }
+    td:last-child {
+      width: 15%;
+      button.info {
+        background: @peterriver;
+      }
+    }
+  }
+}
+
+.section{
+  padding: 20px;
+  div:first-child{
+    text-align: center;
+    font-size: 18px;
+  }
+}
+
+#cancel-modal{
+  div{
+    text-align: center;
+    font-size: 18px;
+    padding: 15px;
   }
 }
