@@ -30,7 +30,7 @@ class AuthManager
         $user->fillFromJson($json_credentials);
 
         if($this->checkIfEmailExists($user->getEmail())){
-            return null;
+            return false;
         }
 
 

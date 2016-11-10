@@ -64,13 +64,13 @@ class RegisterController extends Controller
     public function register(Request $request){
         $user = $this->create($request);
         if(empty($user)){
-            return json_encode(['message' => 'Ошибка при регистрации!']);
+            return json_encode(['message' => 'Ошибка при регистрации!', 'success' => false]);
         }
         event(new Registered($user));
         //TODO:: после регистрации не залогинивать юзера. Это заявка на регистрацию
         $this->guard()->login($user);
 
-        return json_encode(['message' => 'Ваша заявка на регистрацию принята! Ждите']);
+        return json_encode(['message' => 'Ваша заявка на регистрацию принята! Ждите', 'success' => true]);
     }
 
 }
