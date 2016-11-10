@@ -22,12 +22,15 @@ class UserController extends Controller
         $user = Auth::user();
         if(isset($user)) {
             try {
-                return json_encode(['role' => $this->userManager->getUserRole($user->id), 'success' => true]);
+                return json_encode(['result' => $this->userManager->getUserRole($user->id), 'success' => true]);
             }
             catch (Exception $e)
             {
-                return json_encode(['role' => $e->getMessage(), 'success' => false]);
+                return json_encode(['result' => $e->getMessage(), 'success' => false]);
             }
+        }
+        else {
+            return json_encode(['result' => 'Пользователь не авторизован!', 'success' => false]);
         }
 
 
