@@ -47,6 +47,7 @@ class GroupController extends Controller
         $this->_groupManager->addGroup($group, $studyPlanId);
     }
 
+
     public function update(Request $request){
         $groupData = $request->json('group');
         $studyPlanId = $request->json('studyPlanId');

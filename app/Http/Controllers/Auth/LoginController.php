@@ -58,12 +58,12 @@ class LoginController extends Controller
         $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
 
         if(!$this->authManager->checkIfUserActive($request->json('email'))){
-            return json_encode(['message' => 'Неудачная попытка логина!']);
+            return json_encode(['message' => 'Неудачная попытка логина!', 'success' => false]);
         }
 
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
-            return json_encode(['message' => 'Успешный логин!']);
+            return json_encode(['message' => 'Успешный логин!', 'success' => true]);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -71,7 +71,7 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        return json_encode(['message' => 'Неудачная попытка логина!']);
+        return json_encode(['message' => 'Неудачная попытка логина!', 'success' => false]);
         //$this->sendFailedLoginResponse($request);
     }
 
