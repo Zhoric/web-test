@@ -34,6 +34,9 @@ class GroupRepository extends BaseRepository
         $query->execute();
     }
 
+
+
+
     public function getByNameAndProfilePaginated($pageSize, $pageNum, $profileId = null, $name = null){
         $qb = $this->repo->createQueryBuilder('g');
         $query = $qb;

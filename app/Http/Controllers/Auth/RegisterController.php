@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use Managers\AuthManager;
+use Managers\GroupManager;
+use Mockery\CountValidator\Exception;
 use Repositories\UnitOfWork;
 use User;
 use Repositories\UserRepository;
@@ -34,6 +36,7 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/';
     protected $authManager;
+    protected $groupManager;
 
 
     /**
@@ -41,9 +44,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(AuthManager $authManager){
+    public function __construct(AuthManager $authManager, GroupManager $groupManager){
 
         $this->authManager = $authManager;
+        $this->groupManager = $groupManager;
         $this->middleware('guest');
     }
 
@@ -57,8 +61,19 @@ class RegisterController extends Controller
     protected function create(Request $request)
     {
         $credentials = $request->json('user');
-        $created_user = $this->authManager->createNewUser($credentials);
-        return $created_user;
+        $groupId = $request->json('groupId');
+
+        $createdUser = $this->authManager->createNewUser($credentials);
+        if(isset($createdUser)) {
+
+            $this->groupManager->setStudentGroup($groupId, $createdUser->getId());
+        }
+        else {
+            throw new Exception('Ошибка при создании пользователя.');
+        }
+
+
+        return $createdUser;
     }
 
     public function register(Request $request){

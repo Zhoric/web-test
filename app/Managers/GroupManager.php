@@ -47,6 +47,8 @@ class GroupManager
         $this->_unitOfWork->commit();
     }
 
+
+
     public function deleteGroup($groupId){
         $group = $this->_unitOfWork->groups()->find($groupId);
         if ($group != null){
@@ -61,10 +63,29 @@ class GroupManager
     }
 
     public function setStudentGroup($groupId, $studentId){
-        $this->_unitOfWork->groups()->
-            setStudentsGroup($groupId, $studentId);
+        $existingUserGroupId = $this->_unitOfWork->studentGroups()->getUserGroup($studentId);
+        
+        if(isset($existingUserGroupId)) {
+            $this->_unitOfWork->groups()->
+            setStudentsGroup($studentId, $groupId);
+        }
+        else {
+           $studentGroup = new \StudentGroup();
+            $group = $this->_unitOfWork->groups()->find($groupId);
+            $student = $this->_unitOfWork->users()->find($studentId);
+            if(!isset($group) || !isset($student)){
+                throw new \Exception('Ошибка: Невозможно назначить группу студенту.');
+            }
+
+            $studentGroup->setGroup($group);
+            $studentGroup->setStudent($student);
+            $this->_unitOfWork->studentGroups()->create($studentGroup);
+
+        }
+
         $this->_unitOfWork->commit();
     }
+
 
     public function addStudent(User $student, $groupId){
         $this->_unitOfWork->users()->create($student);
