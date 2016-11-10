@@ -127,7 +127,7 @@ body .incorrect {
 }
 .register {
   margin: 7% auto 0;
-  height: 450px;
+  height: 430px;
   width: 430px;
   background: #ecf0f1;
 }
@@ -162,7 +162,7 @@ body .incorrect {
   font-size: 15px;
 }
 .login {
-  height: 280px;
+  height: 270px;
   margin: 10% auto 0;
 }
 
