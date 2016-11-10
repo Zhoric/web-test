@@ -42,5 +42,22 @@
         <!-- /ko -->
         <button id="next-question" data-bind="click: $root.actions.answer">Ответить</button>
         <!-- /ko -->
+
+
+        <!-- ko if: $root.current.testResult() -->
+            <div class="test-results">
+                <h2>Результат теста</h2>
+                <div class="result-text">
+                    <!-- ko if: $root.current.testResult().mark() -->
+                        <span>Ваш результат составляет: <span>50/100</span> </span>
+                    <!-- /ko -->
+                    <!-- ko if: !$root.current.testResult().mark() -->
+                    <span>Результат вашего теста вы сможете узнать после того, как преподаватель проверит ваши ответы на открытые вопросы.</span>
+                    <!-- /ko -->
+
+                </div>
+                <button data-bind="">Вернуться на главную</button>
+            </div>
+        <!-- /ko -->
     </div>
 @endsection

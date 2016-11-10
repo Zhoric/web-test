@@ -390,7 +390,6 @@ class TestProcessManager
         $questionType = $questionAnswer->getQuestion()->getType();
         $answers = $questionAnswer->getAnswers();
         $answerText = '';
-
         switch ($questionType){
             case QuestionType::ClosedOneAnswer: {
                 foreach ($answers as $answer){

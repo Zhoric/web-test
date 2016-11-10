@@ -13,6 +13,8 @@ $(document).ready(function(){
                 answerText: ko.observable(''),
                 singleAnswer: ko.observable(0),
                 timeLeft : ko.observable(-1),
+
+                testResult: ko.observable()
             };
 
             self.actions = {
@@ -52,6 +54,7 @@ $(document).ready(function(){
                     self.current.singleAnswer(0);
                     self.current.answerText('');
                     self.current.answers([]);
+                    self.current.question(null);
                 }
             };
 
@@ -59,9 +62,16 @@ $(document).ready(function(){
                 question: function(){
                     $.get('/api/tests/nextQuestion', function(response){
                         var res = ko.mapping.fromJSON(response);
-                        self.current.question(res.question);
-                        self.current.answers(res.answers());
-                        self.current.timeLeft(res.question.time());
+                        if (res.hasOwnProperty('question')){
+                            self.current.question(res.question);
+                            self.current.answers(res.answers());
+                            self.current.timeLeft(res.question.time());
+                        }
+                        else{
+                            self.toggleCurrent.clear();
+                            self.current.testResult(res);
+                        }
+                        console.log(response);
                     });
                 }
             };
@@ -95,7 +105,7 @@ $(document).ready(function(){
 
             self.current.timeLeft.subscribe(function(value){
                 if (!value){
-                    self.actions.answer();
+                    //self.actions.answer();
                 }
             });
 

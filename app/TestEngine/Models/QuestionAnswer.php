@@ -56,7 +56,7 @@ class QuestionAnswer
      */
     public function getAnswerIds()
     {
-        return $this->answerIds;
+        return $this->answerIds != null ? $this->answerIds : [];
     }
 
     /**
