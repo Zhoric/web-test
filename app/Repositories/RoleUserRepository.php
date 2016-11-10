@@ -11,4 +11,17 @@ class RoleUserRepository extends BaseRepository
     {
         parent::__construct($em, RoleUser::class);
     }
+
+    /**
+     * @param $id
+     * @return \Role
+     */
+    public function getRoleByUser($id){
+        $userRole = $this->repo->findOneBy(['user' => $id]);
+
+        if(isset($userRole)){
+            return $userRole->getRole();
+        }
+        else return null;
+    }
 }

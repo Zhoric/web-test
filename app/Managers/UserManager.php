@@ -2,6 +2,7 @@
 
 namespace Managers;
 
+use Mockery\CountValidator\Exception;
 use Repositories\UnitOfWork;
 
 class UserManager
@@ -28,5 +29,15 @@ class UserManager
     public function getUserByRememberToken($id,$token){
      //   return $this->_userRepo->findByRememberToken($id,$token);
     }
+
+    public function getUserRole($id){
+        $role = $this->_unitOfWork->userRoles()->getRoleByUser($id);
+        if(isset($role)) {
+            return $role->getSlug();
+        }
+        else throw new Exception('Невозможно получить роль текущего пользователя.');
+    }
+
+
 
 }

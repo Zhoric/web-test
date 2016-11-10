@@ -27,6 +27,13 @@ class Role extends BaseEntity
     protected $description;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     */
+    protected $slug;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -49,6 +56,7 @@ class Role extends BaseEntity
 
         return $this;
     }
+
 
     /**
      * Get name
@@ -92,6 +100,22 @@ class Role extends BaseEntity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 }
 
