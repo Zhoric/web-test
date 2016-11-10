@@ -21,7 +21,7 @@ Route::get('auth', 'DemoController@auth');
 
 
 Auth::routes();
-
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 /*
 // Authentication Routes...
