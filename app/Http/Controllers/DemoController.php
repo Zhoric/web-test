@@ -39,11 +39,7 @@ class DemoController extends BaseController
         $command_pattern = "docker run -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet";
         $command = "sh /opt/temp_cache/run.sh";
 
-
-
         $result =  exec("$command_pattern $command",$output);
-
-
         dd($result);
     }
 
