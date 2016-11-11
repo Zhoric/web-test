@@ -41,6 +41,7 @@ class UnitOfWork
     private $_studentGroupRepo;
     private $_sectionRepo;
     private $_testThemeRepo;
+    private $_roleRepo;
 
 
     public function users(){
@@ -181,6 +182,13 @@ class UnitOfWork
             $this->_testThemeRepo = new TestThemeRepository($this->_em);
         }
         return $this->_testThemeRepo;
+    }
+
+    public function roles(){
+        if ($this->_roleRepo == null){
+            $this->_roleRepo = new RoleRepository($this->_em);
+        }
+        return $this->_roleRepo;
     }
 
     public function commit(){
