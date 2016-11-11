@@ -117,173 +117,48 @@ span.radio-negative {
   color: #e74c3c;
   font-size: 18px;
 }
-body {
-  background: #264348;
-}
 .content {
+  margin: 100px auto;
   width: 80%;
-  margin: 70px auto;
-  background: #fff;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+.row {
+  width: 100%;
+  height: 120px;
+}
+.row:after {
+  clear: both;
+}
+.row .discipline {
+  display: inline-block;
+  border: 2px solid;
+  width: 20%;
+  height: 100px;
+  text-align: center;
+  border-radius: 10px;
+  float: left;
+  margin: 10px 2%;
+}
+.row .discipline span {
+  line-height: 100px;
+  font-size: 17px;
+}
+.details {
+  clear: both;
+  width: 95%;
+  margin: 0 auto;
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  -webkit-transition: all .2s;
-  transition: all .2s;
+  border: 2px solid;
 }
-.question-head {
-  padding: 30px 50px 0 50px;
+.details table td {
+  padding: 5px;
 }
-.question-head h3 {
-  width: 80%;
-  text-align: justify;
-  display: inline-block;
-}
-.question-head h1 {
-  float: right;
-  width: 10%;
-  margin-top: 23px;
-  color: #e74c3c;
-}
-.question-answers {
-  padding: 30px 50px 50px;
-}
-.question-answers .container {
-  width: 80%;
-}
-.question-answers input[type=text],
-.question-answers textarea {
-  width: 75%;
-}
-.question-answers textarea {
-  height: 150px;
-}
-.test-results .hasMark {
-  text-align: center;
-}
-.test-results h2 {
-  text-align: center;
-  padding: 30px;
-  font-weight: bold;
-}
-.test-results .result-text {
-  border-bottom: 3px dashed #e3e3e3;
-  border-top: 3px dashed #e3e3e3;
-  width: 90%;
-  margin: 0 auto;
-  padding: 20px;
-}
-.test-results button {
-  width: 200px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  margin: 20px;
-  margin-left: 5%;
-}
-.test-results span {
-  font-size: 18px;
-  line-height: 25px;
-}
-#next-question {
-  margin: 20px 0 0 0;
-  position: fixed;
-  right: 10%;
-  bottom: 5%;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-}
-input[type=radio] {
-  vertical-align: top;
-  width: 17px;
-  height: 17px;
-  margin: 0 3px 0 0;
-}
-input[type=radio] + label {
-  cursor: pointer;
-  font-size: 17px;
-  line-height: 30px;
-}
-input[type=radio]:not(checked) {
-  position: absolute;
-  opacity: 0;
-}
-input[type=radio]:not(checked) + label {
-  position: relative;
-  padding: 0 0 0 35px;
-}
-input[type=radio]:not(checked) + label:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 22px;
-  height: 22px;
-  border: 1px solid #CDD1DA;
-  border-radius: 50%;
-  background: #FFF;
-}
-input[type=radio]:not(checked) + label:after {
-  content: '';
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #27ae60;
-  opacity: 0;
-  -webkit-transition: all .2s;
-  transition: all .2s;
-}
-input[type=radio]:checked + label:after {
-  opacity: 1;
-}
-input[type=checkbox] {
-  vertical-align: top;
-  width: 17px;
-  height: 17px;
-  margin: 0 3px 0 0;
-}
-input[type=checkbox] + label {
-  cursor: pointer;
-  font-size: 17px;
-  line-height: 30px;
-}
-input[type=checkbox]:not(checked) {
-  position: absolute;
-  opacity: 0;
-}
-input[type=checkbox]:not(checked) + label {
-  position: relative;
-  padding: 0 0 0 35px;
-}
-input[type=checkbox]:not(checked) + label:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 22px;
-  height: 22px;
-  border: 1px solid #CDD1DA;
-  border-radius: 20%;
-  background: #FFF;
-}
-input[type=checkbox]:not(checked) + label:after {
-  content: '';
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 16px;
-  height: 16px;
-  border-radius: 20%;
-  background: #27ae60;
-  opacity: 0;
-  -webkit-transition: all .2s;
-  transition: all .2s;
-}
-input[type=checkbox]:checked + label:after {
-  opacity: 1;
+.details table td:first-child {
+  width: 82%;
+  text-indent: 20px;
 }
 
 /*# sourceMappingURL=site.css.map */

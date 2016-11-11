@@ -49,7 +49,8 @@ Route::get('welcome',function (){
    return View('welcome');
 });
 
-Route::get('test', function(){return View('student.test');});
+Route::get('/test/{id}', function(){return View('student.test');});
+Route::get('/home', function(){return View('student.home');});
 
 
 Route::group(['prefix' => 'admin'], function(){
@@ -70,6 +71,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('institutes', function(){return View('admin.institutes');});
     Route::get('manual', function(){return View('admin.manual');});
 });
+
 
 
 /*----------------------DEBUG ROUTES-----------------------------------*/

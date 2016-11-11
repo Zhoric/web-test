@@ -22,6 +22,7 @@ elixir(function(mix){
     mix.less('auth.less');
     mix.less('admin.less');
     mix.less('site.less');
+    mix.less('test.less');
 });
 
 elixir(function(mix){
