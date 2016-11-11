@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Ace Editor Demo</title>
 
@@ -7,29 +7,12 @@
 <body>
 
 <div id="editor"></div>
-
+<input type="button" value="Отправить код" onclick="getCode()">
 
 
 <script src="{{ URL::asset('js/aui.js') }}" type="text/javascript" charset="utf-8"></script>
-
-
-<script>
-
-    YUI().use(
-            'aui-ace-editor',
-            function(Y) {
-                new Y.AceEditor(
-                        {
-                            boundingBox: '#editor',
-                            mode: 'javascript'
-
-                        }
-                ).render();
-            }
-    );
-
-
-</script>
+<script src="{{URL::asset('js/codeEditor/init.js') }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{URL::asset('js/codeEditor/sendCode.js') }}" type="text/javascript" charset="utf-8"></script>
 
 
 
