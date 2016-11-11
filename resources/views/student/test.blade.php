@@ -22,7 +22,7 @@
             <!-- /ko -->
             <!-- ko if: $root.current.question().type() === 2-->
             <div class="container">
-                <input data-bind="attr: {id: id, checked: isRight}" type="checkbox">
+                <input type="checkbox" data-bind="attr: {id: id}, checked: isRight" >
                 <label data-bind="text: text, attr: {for: id}"></label> </br>
             </div>
             <!-- /ko -->

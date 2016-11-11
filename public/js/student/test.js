@@ -70,8 +70,8 @@ $(document).ready(function(){
                         else{
                             self.toggleCurrent.clear();
                             self.current.testResult(res);
+                            console.log(response);
                         }
-                        console.log(response);
                     });
                 }
             };
