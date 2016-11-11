@@ -7,6 +7,16 @@
     <script src="{{ URL::asset('js/student/home.js')}}"></script>
 @endsection
 
+@section('menu')
+    <div class="menu">
+        <span>Главная</span>
+        <span>Результаты</span>
+        <span>Статистика</span>
+        <span><i class="fa">&#xf29c;</i>&nbsp;FAQ</span>
+        <span data-bind="click: $root.actions.logout">Выход</span>
+    </div>
+@endsection
+
 @section('content')
     <div class="content">
         <!-- ko foreach: $root.current.rows -->
