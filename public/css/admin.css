@@ -800,5 +800,37 @@ input[type=checkbox]:not(checked) + label:after {
 input[type=checkbox]:checked + label:after {
   opacity: 1;
 }
+.plan-details div {
+  display: inline-table;
+  margin: 10px 15px 25px;
+  width: 11%;
+}
+.plan-details div label {
+  font-size: 12px;
+  color: #7f8c8d;
+  line-height: 40px;
+}
+.plan-details div:first-child {
+  width: 15%;
+}
+.plan-details div .plan-form {
+  font-size: 13px;
+  color: #7f8c8d;
+  line-height: 1.8;
+  cursor: pointer;
+}
+.plan-details div .plan-form-selected {
+  font-size: 18px;
+  color: #16a085;
+}
+.plan-details:nth-child(odd) {
+  background: #e4e4e4;
+}
+.plan-details input {
+  width: 70px;
+}
+.plan-details select {
+  width: 200px;
+}
 
 /*# sourceMappingURL=admin.css.map */

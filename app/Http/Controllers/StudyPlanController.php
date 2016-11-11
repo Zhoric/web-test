@@ -23,6 +23,9 @@ class StudyPlanController extends Controller
         return json_encode($this->_studyPlanManager->getPlan($id));
     }
 
+    public function getPlansByProfile($profileId){
+        return json_encode($this->_studyPlanManager->getPlansByProfile($profileId));
+    }
 
     /* Пример валидных данных:
      * { "studyPlan": {"name":"Тестовый план"}, "profileId": 1}
@@ -51,6 +54,16 @@ class StudyPlanController extends Controller
     public function getPlanDisciplines($planId){
         return json_encode($this->_studyPlanManager
             ->getPlanDisciplines($planId));
+    }
+
+    public function getPlansDisciplinesByStudyplanAndNamePaginated(Request $request){
+        $pageNum =  $request->query('page');
+        $pageSize = $request->query('pageSize');
+        $studyplanId = $request->query('studyplan');
+        $name = $request->query('name');
+        $paginationResult = $this->_studyPlanManager->getPlansDisciplinesByStudyplanAndNamePaginated($pageNum, $pageSize, $name, $studyplanId);
+
+        return json_encode($paginationResult);
     }
 
     public function addDisciplinePlan(Request $request){

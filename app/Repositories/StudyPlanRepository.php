@@ -11,4 +11,8 @@ class StudyPlanRepository extends BaseRepository
     {
         parent::__construct($em, Studyplan::class);
     }
+
+    public function getByProfile($profileId){
+        return $this->repo->findBy(['profile' => $profileId]);
+    }
 }

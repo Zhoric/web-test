@@ -33,6 +33,7 @@
             <li><a href="/admin/groups">Группы</a></li>
             <li>Студенты</li>
             <li><a href="/admin/disciplines">Дисциплины</a></li>
+            <li><a href="/admin/studyplans">Планы</a></li>
             <li><a href="/admin/tests">Тесты</a></li>
             <li>Результаты</li>
             <li>Выход</li>

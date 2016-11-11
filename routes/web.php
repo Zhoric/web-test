@@ -65,8 +65,8 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('editor/new/{id}', function(){return View('admin.editor');});
     Route::get('editor/{id}', function(){return View('admin.editor');});
     Route::get('section/{id}', function(){return View('admin.section');});
-
-
+    Route::get('studyplans', function(){return View('admin.studyplans');});
+    Route::get('studyplan/{id}', function(){return View('admin.studyplan');});
     Route::get('institutes', function(){return View('admin.institutes');});
     Route::get('manual', function(){return View('admin.manual');});
 });
@@ -129,6 +129,7 @@ Route::group(['prefix' => 'api'], function() {
      */
     Route::group(['prefix' => 'plan'], function () {
         Route::get('{id}', 'StudyPlanController@getPlan');
+        Route::get('profile/{id}', 'StudyPlanController@getPlansByProfile');
         Route::get('{id}/disciplines', 'StudyPlanController@getPlanDisciplines');
         Route::post('create', 'StudyPlanController@create');
         Route::post('update', 'StudyPlanController@update');
@@ -139,6 +140,7 @@ Route::group(['prefix' => 'api'], function() {
 
         Route::group(['prefix' => 'discipline'], function () {
             Route::get('{id}/marks', 'StudyPlanController@getDisciplinePlanMarkTypes');
+            Route::post('show', 'StudyPlanController@getPlansDisciplinesByStudyplanAndNamePaginated');
             Route::post('create', 'StudyPlanController@addDisciplinePlan');
             Route::post('update', 'StudyPlanController@updateDisciplinePlan');
             Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');

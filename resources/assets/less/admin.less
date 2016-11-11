@@ -760,3 +760,39 @@ input[type=checkbox]{
     opacity: 1;
   }
 }
+
+.plan-details {
+  div {
+    display: inline-table;
+    margin: 10px 15px 25px;
+    width: 11%;
+    label{
+      font-size: 12px;
+      color: @asbestos;
+      line-height: 40px;
+    }
+    &:first-child{
+      width: 15%;
+    }
+    .plan-form{
+      &-selected{
+        font-size: 18px;
+        color: @greensea;
+      }
+      font-size: 13px;
+      color: @asbestos;
+      line-height: 1.8;
+      cursor: pointer;
+    }
+  }
+  &:nth-child(odd) {
+    background: @light-grey;
+  }
+  input{
+    width: 70px;
+  }
+  select{
+    width: 200px;
+  }
+
+}

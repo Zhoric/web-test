@@ -23,6 +23,10 @@ class StudyPlanManager
         return $this->_unitOfWork->studyPlans()->find($id);
     }
 
+    public function getPlansByProfile($profileId){
+        return $this->_unitOfWork->studyPlans()->getByProfile($profileId);
+    }
+
     public function create(Studyplan $studyplan, $profileId){
         $profile = $this->_unitOfWork->profiles()->find($profileId);
         $studyplan->setProfile($profile);
@@ -51,6 +55,11 @@ class StudyPlanManager
     public function getPlanDisciplines($planId){
         return $this->_unitOfWork->disciplinePlans()
             ->where('DisciplinePlan.studyplan = '.$planId);
+    }
+
+    public function getPlansDisciplinesByStudyplanAndNamePaginated($pageNum, $pageSize, $name, $studyplanId){
+        return $this->_unitOfWork->disciplinePlans()
+            ->getPlansDisciplinesByStudyplanAndNamePaginated($pageSize, $pageNum, $studyplanId, $name);
     }
 
     public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId){
