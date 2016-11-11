@@ -47,7 +47,7 @@ class TestProcessController extends Controller
     public function answer(Request $request){
         $sessionId = $request->session()->get('sessionId');
         $questionId = $request->json('questionId');
-        $answersIds = $request->json('answersIds');
+        $answersIds = $request->json('answerIds');
         $answerText = $request->json('answerText');
 
         $questionAnswer = new QuestionAnswer();
