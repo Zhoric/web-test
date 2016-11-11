@@ -117,7 +117,8 @@ class DisciplineController extends Controller
             if (isset($currentUser)){
                 $userId = $currentUser->getId();
                 $currentSemester = $this->_scheduleManager->getCurrentSemesterForUser($userId);
-                if (!isset($currentUser) || $currentUser == 0){
+                if (!isset($currentSemester) || $currentSemester == 0){
+
                     throw new Exception('Невозможно определить текущий семестр для пользователя');
                 }
                 $disciplines = $this->_disciplineManager->getActualDisciplinesForStudent($userId, $currentSemester);
