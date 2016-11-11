@@ -11,7 +11,7 @@
     <div class="content">
         <!-- ko foreach: $root.current.rows -->
         <div class="row" data-bind="foreach: disciplines">
-            <div class="discipline" data-bind="click: $root.actions.disciplineDetails.bind($data, $parent)">
+            <div class="discipline" data-bind="click: $root.actions.disciplineDetails.bind($data, $parent), css: {'current': $root.current.disciplineId() === id()},">
                 <span data-bind="text: abbreviation"></span>
             </div>
         </div>
@@ -24,6 +24,9 @@
                     </tbody>
                 </table>
                 <!-- /ko -->
+                <!-- ko if: !$root.current.tests().length -->
+                    <h3>По данной дисциплине пока нет тестов</h3>
+                <!-- /ko -->
             </div>
             <!-- /ko -->
         <!-- /ko -->
@@ -32,5 +35,5 @@
 
 <script type="text/html" id="test-template">
     <td data-bind="text: subject"></td>
-    <td><button data-bind="click: $root.actions.startTest">Пройти тест</button></td>
+    <td><button data-bind="click: $root.actions.startTest, enabled: $parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
 </script>

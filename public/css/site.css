@@ -132,17 +132,34 @@ span.radio-negative {
 }
 .row .discipline {
   display: inline-block;
-  border: 2px solid;
+  background: #bfbfbf;
   width: 20%;
   height: 100px;
   text-align: center;
   border-radius: 10px;
   float: left;
-  margin: 10px 2%;
+  margin: 10px 2.5%;
+  cursor: pointer;
+}
+.row .discipline:hover {
+  background: #5b3256;
+}
+.row .discipline.current {
+  background: #5b3256;
 }
 .row .discipline span {
+  color: #fff;
   line-height: 100px;
   font-size: 17px;
+}
+.attempts-all {
+  background: #87d37c;
+}
+.attempts-mid {
+  background: #ffb94e;
+}
+.attempts-little {
+  background: #d24d57;
 }
 .details {
   clear: both;
@@ -151,7 +168,13 @@ span.radio-negative {
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  border: 2px solid;
+}
+.details h3 {
+  text-align: center;
+}
+.details table {
+  border: 2px solid #bfbfbf;
+  border-radius: 10px;
 }
 .details table td {
   padding: 5px;
@@ -159,6 +182,14 @@ span.radio-negative {
 .details table td:first-child {
   width: 82%;
   text-indent: 20px;
+}
+.details button {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+.details button:disabled {
+  background: #bfbfbf;
 }
 
 /*# sourceMappingURL=site.css.map */
