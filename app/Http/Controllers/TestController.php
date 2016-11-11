@@ -53,12 +53,20 @@ class TestController extends Controller
         return json_encode($paginationResult);
     }
 
+    /*
+     * Получение тестов по конкретной дисциплине на главной странице для студента.
+     */
     public function getStudentTestsByDiscipline(Request $requst){
-        //DEBUG HARDCODE
-        $userId = 5;
-        $disciplineId = $requst->query('discipline');
-        $tests = $this->_testManager->getTestsByUserAndDiscipline($userId, $disciplineId);
-        return json_encode($tests);
+        $currentUser = Auth::user();
+        if (isset($currentUser)){
+            $userId = $currentUser->getId();
+            $disciplineId = $requst->query('discipline');
+            $tests = $this->_testManager->getTestsByUserAndDiscipline($userId, $disciplineId);
+            return json_encode($tests);
+        } else {
+            return json_encode(['message' => 'Невозможно получить данные о пользователе!']);
+        }
+
     }
 
     public function getThemesOfTest($testId){

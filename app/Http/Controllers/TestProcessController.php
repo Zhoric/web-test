@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Managers\TestManager;
 use Test;
 use Illuminate\Http\Request;
@@ -20,11 +21,14 @@ class TestProcessController extends Controller
     public function startTest(Request $request){
         $result = null;
             $testId = $request->json('testId');
-            //TODO: Получать id текущего пользователя
-            $userId = 5;
-
-            $result = TestProcessManager::initTest($userId, $testId);
-            $request->session()->set('sessionId', $result);
+            $currentUser = Auth::user();
+            if (isset($currentUser)){
+                $userId = $currentUser->getId();
+                $result = TestProcessManager::initTest($userId, $testId);
+                $request->session()->set('sessionId', $result);
+            } else {
+                return json_encode(['message' => 'Для начала тестирования необходимо авторизоваться!']);
+            }
     }
 
     /*

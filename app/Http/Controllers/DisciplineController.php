@@ -104,14 +104,28 @@ class DisciplineController extends Controller
         return json_encode($this->_disciplineManager->getDiscipline($id));
     }
 
+    /*
+     * Получение актуальных для пользователя дисциплин.
+     * В списке будут дисциплины на текущий и предыдущие семестры обучения для студента.
+     * Сортируются дисциплины по семестру, т.о. наверху списка всегда будут наиболее актуальные.
+     * Номер семестра для текущего пользователя считается исходя из курса группы, в которой он находится.
+     */
     public function getActualDisciplinesForStudent(){
         try{
-            //DEBUG HARDCODE
-            $userId = 5;
-            $currentSemester = $this->_scheduleManager->getCurrentSemesterForUser($userId);
-            $disciplines = $this->_disciplineManager->getActualDisciplinesForStudent($userId, $currentSemester);
+            $currentUser = Auth::user();
+            if (isset($currentUser)){
+                $userId = $currentUser->getId();
+                $currentSemester = $this->_scheduleManager->getCurrentSemesterForUser($userId);
+                if (!isset($currentUser) || $currentUser == 0){
+                    throw new Exception('Невозможно определить текущий семестр для пользователя');
+                }
+                $disciplines = $this->_disciplineManager->getActualDisciplinesForStudent($userId, $currentSemester);
 
-            return json_encode($disciplines);
+                return json_encode($disciplines);
+            } else {
+                throw new Exception('Для данного действия необходимо авторизоваться!');
+            }
+
         } catch (Exception $exception){
             return json_encode($exception->getMessage());
         }
