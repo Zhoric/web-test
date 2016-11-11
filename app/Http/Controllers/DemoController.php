@@ -44,21 +44,11 @@ class DemoController extends BaseController
         dd($user);
     }
 
+    public function editor(){
+        return view('editor');
+    }
+
     public function index(){
 
-
-       // $user = $this->_userManager->getUserByRememberToken('1','1234');
-
-       // $this->_userManager->addUser('Иван Петрович','vasya','123456',UserRole::Lecturer, 2013, 1);
-
-
-      //  $this->_userManager->updateUser(20,'Колян', 2055, 3);
-
-       // dd($this->_groupManager->addGroup(0,'ИСб',4,true,1));
-       // dd($this->_disciplineManager->getLecturerWithDisciplines(1));
-
-
-        //return new JsonResponse($users);
-        return json_encode($this->_uow->getUsersRepo()->all());
     }
 }
