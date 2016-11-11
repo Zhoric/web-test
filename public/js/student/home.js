@@ -55,6 +55,9 @@ $(document).ready(function(){
                             disciplines: ko.observableArray(row)
                         });
                     }
+                },
+                logout: function(){
+                    window.location.href = '/logout';
                 }
             };
 

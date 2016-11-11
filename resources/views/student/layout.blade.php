@@ -13,8 +13,7 @@
     @yield('javascript')
 </head>
 <body>
-    <div class="menu">
-    </div>
+    @yield('menu')
     @yield('content')
 
     <div class="footer">
