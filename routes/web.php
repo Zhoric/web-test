@@ -111,6 +111,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'user'], function () {
 
         Route::get('role', 'UserController@getRoleByUser');
+        Route::get('current', 'UserController@getCurrentUserInfo');
     });
 
     /*--------------------------------------------------------------------------------
@@ -290,8 +291,5 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'TestResultController@getByGroupAndTest');
         Route::get('/{id}', 'TestResultController@getById');
     });
-
-
-
 
 });

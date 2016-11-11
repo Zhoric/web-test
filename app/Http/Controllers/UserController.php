@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
+use Exception;
 use Managers\UserManager;
-use Mockery\CountValidator\Exception;
 
 
 class UserController extends Controller
@@ -35,6 +34,15 @@ class UserController extends Controller
         }
         else {
             return json_encode(['result' => 'Пользователь не авторизован!', 'success' => false]);
+        }
+    }
+
+    public function getCurrentUserInfo(){
+        try{
+            $currentUserInfo = $this->userManager->getCurrentUserInfo();
+            return json_encode($currentUserInfo);
+        } catch (Exception $exception){
+            return json_encode(['message' => $exception->getMessage()]);
         }
     }
 
