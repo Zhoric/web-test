@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Discipline;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Managers\DisciplineManager;
 use Managers\ScheduleManager;
 use Theme;
