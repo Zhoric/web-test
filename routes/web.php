@@ -18,6 +18,8 @@ Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
 Route::get('auth', 'DemoController@auth');
+Route::post('receiveCode','DemoController@receiveCode');
+Route::get('compile','DemoController@compileOnDocker');
 Route::post('register/checkEmail', 'Auth\RegisterController@checkIfEmailExists');
 Route::get('role','UserController@getRoleByUser');
 
@@ -49,7 +51,8 @@ Route::get('welcome',function (){
    return View('welcome');
 });
 
-Route::get('test', function(){return View('student.test');});
+Route::get('/test/{id}', function(){return View('student.test');});
+Route::get('/home', function(){return View('student.home');});
 
 
 Route::group(['prefix' => 'admin'], function(){
@@ -70,6 +73,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('institutes', function(){return View('admin.institutes');});
     Route::get('manual', function(){return View('admin.manual');});
 });
+
 
 
 /*----------------------DEBUG ROUTES-----------------------------------*/
@@ -103,6 +107,17 @@ Route::get('/getGroupSemester', function (\Illuminate\Http\Request $request){
 
 
 Route::group(['prefix' => 'api'], function() {
+
+    /*------------------------------------------------------------------------------
+     *                       ПОЛЬЗОВАТЕЛИ
+     * -----------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'user'], function () {
+
+        Route::get('role', 'UserController@getRoleByUser');
+        Route::get('current', 'UserController@getCurrentUserInfo');
+        Route::post('setPassword', 'UserController@setUserPassword');
+    });
 
     /*--------------------------------------------------------------------------------
      *      Организационная структура ВУЗа (Институты, профили)
@@ -283,8 +298,5 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'TestResultController@getByGroupAndTest');
         Route::get('/{id}', 'TestResultController@getById');
     });
-
-
-
 
 });

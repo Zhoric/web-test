@@ -58,6 +58,6 @@ class TestResultCalculator
             $studentMark += $complexity * $answer->getRightPercentage() * GlobalTestSettings::complexityDifferenceCoef;
         }
 
-        return ceil($studentMark/$maxMark);
+        return $maxMark != 0 ? ceil($studentMark/$maxMark) : 0;
     }
 }

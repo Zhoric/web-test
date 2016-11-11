@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Ace Editor Demo</title>
-    <style type="text/css">
-        #editor {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-        }
-    </style>
+
 </head>
 <body>
+
 <div id="editor"></div>
-<script src="{{ URL::asset('js/ace.js') }}" type="text/javascript" charset="utf-8"></script>
-<script>
-    var editor = ace.edit("editor"); // теперь обращаться к редактору будем через editor
-    editor.getSession().setMode("ace/mode/javascript");
-    editor.setTheme("ace/theme/monokai");
-    // Далее весь экшон будет проходить тут!
-</script>
+<input type="button" value="Отправить код" onclick="sendCode()">
+
+
+<script src="{{ URL::asset('js/aui.js') }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{URL::asset('js/codeEditor/init.js') }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{URL::asset('js/codeEditor/sendCode.js') }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
+
+
+
+
+
 </body>
 </html>

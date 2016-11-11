@@ -2,8 +2,10 @@
 
 namespace Managers;
 
+use Illuminate\Support\Facades\Auth;
 use Mockery\CountValidator\Exception;
 use Repositories\UnitOfWork;
+use UserInfoViewModel;
 
 class UserManager
 {
@@ -33,11 +35,28 @@ class UserManager
     public function getUserRole($id){
         $role = $this->_unitOfWork->userRoles()->getRoleByUser($id);
         if(isset($role)) {
-            return $role->getSlug();
+            return $role;
         }
         else throw new Exception('Невозможно получить роль текущего пользователя.');
     }
 
+    public function update($user){
+        $this->_unitOfWork->users()->update($user);
+        $this->_unitOfWork->commit();
+    }
 
+    public function getCurrentUserInfo(){
+        $currentUser = Auth::user();
+        if (!isset($currentUser)){
+            throw new Exception('Невозможно получить данные пользователя. Необходима авторизация!');
+        }
+        $currentUserRole = $this->getUserRole($currentUser->getId());
+
+        $userInfo = new UserInfoViewModel();
+        $userInfo->fillFromUser($currentUser);
+        $userInfo->setRole($currentUserRole->getSlug());
+
+        return $userInfo;
+    }
 
 }

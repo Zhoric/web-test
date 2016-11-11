@@ -20,6 +20,9 @@ $(document).ready(function(){
             self.actions = {
                 answer: function(){
                     self.post.answers();
+                },
+                goHome: function(){
+                    window.location.href = '/home';
                 }
             };
             self.toggleCurrent = {
@@ -69,8 +72,9 @@ $(document).ready(function(){
                         }
                         else{
                             self.toggleCurrent.clear();
-                            self.current.testResult(res);
                             console.log(response);
+                            self.current.testResult(res);
+
                         }
                     });
                 }
@@ -84,7 +88,10 @@ $(document).ready(function(){
                     });
                 },
                 startTest: function(){
-                    $.post('/api/tests/start', JSON.stringify({testId: 5}), function(){
+                    var url = window.location.href;
+                    var id = +url.substr(url.lastIndexOf('/')+1);
+
+                    $.post('/api/tests/start', JSON.stringify({testId: id}), function(){
                             self.get.question();
                     });
                 }

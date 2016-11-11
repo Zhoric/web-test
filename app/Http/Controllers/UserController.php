@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
+use Exception;
+use Illuminate\Http\Request;
 use Managers\UserManager;
-use Mockery\CountValidator\Exception;
 
 
 class UserController extends Controller
@@ -22,7 +22,11 @@ class UserController extends Controller
         $user = Auth::user();
         if(isset($user)) {
             try {
-                return json_encode(['result' => $this->userManager->getUserRole($user->getId()), 'success' => true]);
+                $role = $this->userManager->getUserRole($user->getId());
+                if ($role == null){
+                    throw new Exception('Невозможно определить роль пользователя!');
+                }
+                return json_encode(['result' => $role->getSlug(), 'success' => true]);
             }
             catch (Exception $e)
             {
@@ -32,9 +36,24 @@ class UserController extends Controller
         else {
             return json_encode(['result' => 'Пользователь не авторизован!', 'success' => false]);
         }
-
-
-
     }
+
+    public function getCurrentUserInfo(){
+        try{
+            $currentUserInfo = $this->userManager->getCurrentUserInfo();
+            return json_encode($currentUserInfo);
+        } catch (Exception $exception){
+            return json_encode(['message' => $exception->getMessage()]);
+        }
+    }
+
+    public function setUserPassword(Request $request){
+        $userId = $request->json('userId');
+        $password = $request->json('password');
+
+        $user = $this->userManager->getUser($userId);
+        $user->setPassword(bcrypt($password));
+        $this->userManager->update($user);
+            }
 
 }

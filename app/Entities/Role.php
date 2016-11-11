@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Role
  *
- * @ORM\Table(name="role")
+ * @ORM\Table(name="roles")
  * @ORM\Entity
  */
 class Role extends BaseEntity
@@ -15,21 +15,21 @@ class Role extends BaseEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     protected $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="description", type="string", length=255, nullable=false)
      */
     protected $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @ORM\Column(name="slug", type="string", length=255, nullable=false)
      */
     protected $slug;
 

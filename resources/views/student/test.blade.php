@@ -1,5 +1,8 @@
 @extends('student.layout')
 @section('title', 'Тест')
+@section('style')
+    <link rel="stylesheet" href="{{ URL::asset('css/test.css')}}"/>
+@endsection
 @section('javascript')
     <script src="{{ URL::asset('js/student/test.js')}}"></script>
 @endsection
@@ -40,7 +43,9 @@
             <textarea data-bind="value: $root.current.answerText" type=""></textarea>
         </div>
         <!-- /ko -->
-        <button id="next-question" data-bind="click: $root.actions.answer">Ответить</button>
+        <div class="next-question">
+            <button data-bind="click: $root.actions.answer">Ответить</button>
+        </div>
         <!-- /ko -->
 
 
@@ -49,14 +54,14 @@
                 <h2>Результат теста</h2>
                 <div class="result-text">
                     <!-- ko if: $root.current.testResult().mark() -->
-                        <span>Ваш результат составляет: <span>50/100</span> </span>
+                        <span>Ваш результат составляет: <span data-bind=""></span>.</span>
                     <!-- /ko -->
                     <!-- ko if: !$root.current.testResult().mark() -->
                     <span>Результат вашего теста вы сможете узнать после того, как преподаватель проверит ваши ответы на открытые вопросы.</span>
                     <!-- /ko -->
 
                 </div>
-                <button data-bind="">Вернуться на главную</button>
+                <button data-bind="click: $root.actions.goHome">Вернуться на главную</button>
             </div>
         <!-- /ko -->
     </div>

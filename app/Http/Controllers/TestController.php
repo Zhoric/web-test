@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Managers\TestManager;
 use Test;
 use Illuminate\Http\Request;

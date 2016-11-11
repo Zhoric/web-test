@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use Managers\AuthManager;
 use Managers\GroupManager;
-use Mockery\CountValidator\Exception;
-use Repositories\UnitOfWork;
+use Exception;
 use User;
-use Repositories\UserRepository;
+use UserRole;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
@@ -42,7 +41,8 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param AuthManager $authManager
+     * @param GroupManager $groupManager
      */
     public function __construct(AuthManager $authManager, GroupManager $groupManager){
 
@@ -53,27 +53,38 @@ class RegisterController extends Controller
 
 
     /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
+     * Регистрация нового пользователя.
+     * @param Request $request
+     * @return null|object
      */
     protected function create(Request $request)
     {
-        $credentials = $request->json('user');
-        $groupId = $request->json('groupId');
+        try{
+            $userData = $request->json('user');
+            $groupId = $request->json('groupId');
+            $role = $request->json('role');
 
-        $createdUser = $this->authManager->createNewUser($credentials);
-        if(isset($createdUser)) {
+            // По умолчанию регистрируем пользователя с ролью студента.
+            if (!isset($role)){
+                $role = UserRole::Student;
+            }
 
-            $this->groupManager->setStudentGroup($groupId, $createdUser->getId());
+            $user = new User();
+            $user->fillFromJson($userData);
+
+            $createdUser = $this->authManager->createNewUser($user, $role, false);
+
+            if(isset($createdUser)) {
+
+                $this->groupManager->setStudentGroup($groupId, $createdUser->getId());
+            }
+            else {
+                throw new Exception('Ошибка при создании пользователя.');
+            }
+            return $createdUser;
+        } catch (Exception $exception){
+            return json_encode(['message' => $exception->getMessage()]);
         }
-        else {
-            throw new Exception('Ошибка при создании пользователя.');
-        }
-
-
-        return $createdUser;
     }
 
     public function checkIfEmailExists(Request $request){
