@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Managers;
-
 
 use Exception;
 use Illuminate\Support\Facades\Auth;

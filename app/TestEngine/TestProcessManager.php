@@ -387,7 +387,6 @@ class TestProcessManager
         }
 
         $studentAnswersIds = $studentAnswer->getAnswerIds();
-        dd($studentAnswersIds);
         $questionType = $questionAnswer->getQuestion()->getType();
         $answers = $questionAnswer->getAnswers();
         $answerText = '';

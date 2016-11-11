@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Exception;
+use Illuminate\Http\Request;
 use Managers\UserManager;
 
 
@@ -45,5 +46,14 @@ class UserController extends Controller
             return json_encode(['message' => $exception->getMessage()]);
         }
     }
+
+    public function setUserPassword(Request $request){
+        $userId = $request->json('userId');
+        $password = $request->json('password');
+
+        $user = $this->userManager->getUser($userId);
+        $user->setPassword(bcrypt($password));
+        $this->userManager->update($user);
+            }
 
 }

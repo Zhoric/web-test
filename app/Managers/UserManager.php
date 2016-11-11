@@ -40,6 +40,11 @@ class UserManager
         else throw new Exception('Невозможно получить роль текущего пользователя.');
     }
 
+    public function update($user){
+        $this->_unitOfWork->users()->update($user);
+        $this->_unitOfWork->commit();
+    }
+
     public function getCurrentUserInfo(){
         $currentUser = Auth::user();
         if (!isset($currentUser)){
