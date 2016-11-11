@@ -64,10 +64,10 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'id', 'discipline'];
+            return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'type', 'id', 'isActive', 'isRandom', 'discipline'];
         }
 
-        return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'id', 'discipline'];
+        return ['__isInitialized__', 'subject', 'timeTotal', 'attempts', 'type', 'id', 'isActive', 'isRandom', 'discipline'];
     }
 
     /**
@@ -285,6 +285,72 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
 
         return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getType', []);
+
+        return parent::getType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setType($type)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setType', [$type]);
+
+        return parent::setType($type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isIsActive()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isIsActive', []);
+
+        return parent::isIsActive();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsActive($isActive)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsActive', [$isActive]);
+
+        return parent::setIsActive($isActive);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isIsRandom()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isIsRandom', []);
+
+        return parent::isIsRandom();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsRandom($isRandom)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsRandom', [$isRandom]);
+
+        return parent::setIsRandom($isRandom);
     }
 
     /**

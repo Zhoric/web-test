@@ -33,7 +33,7 @@ class UserManager
     public function getUserRole($id){
         $role = $this->_unitOfWork->userRoles()->getRoleByUser($id);
         if(isset($role)) {
-            return $role->getSlug();
+            return $role;
         }
         else throw new Exception('Невозможно получить роль текущего пользователя.');
     }

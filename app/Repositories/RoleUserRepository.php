@@ -18,9 +18,12 @@ class RoleUserRepository extends BaseRepository
      */
     public function getRoleByUser($id){
         $userRole = $this->repo->findOneBy(['user' => $id]);
-
         if(isset($userRole)){
-            return $userRole->getRole();
+            $roleId = $userRole->getRole()->getId();
+
+            $roleQb = $this->em->getRepository(\Role::class)->createQueryBuilder('r');
+            $role =  $roleQb->where('r.id ='.$roleId)->getQuery()->execute();
+            return (isset($role) && !empty($role)) ? $role[0] : null;
         }
         else return null;
     }

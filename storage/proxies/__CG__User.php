@@ -356,6 +356,50 @@ class User extends \User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function getAuthIdentifierName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAuthIdentifierName', []);
+
+        return parent::getAuthIdentifierName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthIdentifier()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAuthIdentifier', []);
+
+        return parent::getAuthIdentifier();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthPassword()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAuthPassword', []);
+
+        return parent::getAuthPassword();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRememberTokenName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRememberTokenName', []);
+
+        return parent::getRememberTokenName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function fillFromJson($json)
     {
 

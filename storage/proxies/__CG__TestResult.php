@@ -64,10 +64,10 @@ class TestResult extends \TestResult implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'attempt', 'dateTime', 'id', 'markType', 'test', 'user'];
+            return ['__isInitialized__', 'attempt', 'mark', 'dateTime', 'id', 'markType', 'test', 'user'];
         }
 
-        return ['__isInitialized__', 'attempt', 'dateTime', 'id', 'markType', 'test', 'user'];
+        return ['__isInitialized__', 'attempt', 'mark', 'dateTime', 'id', 'markType', 'test', 'user'];
     }
 
     /**
@@ -296,6 +296,28 @@ class TestResult extends \TestResult implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', []);
 
         return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMark()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getMark', []);
+
+        return parent::getMark();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setMark($mark)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setMark', [$mark]);
+
+        return parent::setMark($mark);
     }
 
     /**

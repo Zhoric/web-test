@@ -64,10 +64,10 @@ class Role extends \Role implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'name', 'description', 'id'];
+            return ['__isInitialized__', 'name', 'description', 'slug', 'id'];
         }
 
-        return ['__isInitialized__', 'name', 'description', 'id'];
+        return ['__isInitialized__', 'name', 'description', 'slug', 'id'];
     }
 
     /**
@@ -230,6 +230,28 @@ class Role extends \Role implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', []);
 
         return parent::getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSlug()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', []);
+
+        return parent::getSlug();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSlug($slug)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSlug', [$slug]);
+
+        return parent::setSlug($slug);
     }
 
     /**

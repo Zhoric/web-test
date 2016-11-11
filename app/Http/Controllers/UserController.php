@@ -22,7 +22,11 @@ class UserController extends Controller
         $user = Auth::user();
         if(isset($user)) {
             try {
-                return json_encode(['result' => $this->userManager->getUserRole($user->getId()), 'success' => true]);
+                $role = $this->userManager->getUserRole($user->getId());
+                if ($role == null){
+                    throw new Exception('Невозможно определить роль пользователя!');
+                }
+                return json_encode(['result' => $role->getSlug(), 'success' => true]);
             }
             catch (Exception $e)
             {
@@ -32,9 +36,6 @@ class UserController extends Controller
         else {
             return json_encode(['result' => 'Пользователь не авторизован!', 'success' => false]);
         }
-
-
-
     }
 
 }
