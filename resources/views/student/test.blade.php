@@ -18,21 +18,21 @@
             <!-- /ko -->
         </div>
 
-        <!-- ko if: current.answers().length -->
-        <div class="question-answers" data-bind="foreach: current.answers">
-            <!-- ko if: $root.current.question().type() === 1 -->
-            <div class="container">
-                <input data-bind="attr: {id: id}, checked: $root.current.singleAnswer, value: id" type="radio" group="answers">
-                <label data-bind="text: text, attr: {for: id}"></label>
+        <!-- ko if: $root.current.answers().length -->
+            <div class="question-answers" data-bind="foreach: current.answers">
+                <!-- ko if: $root.current.question().type() === 1 -->
+                <div class="container">
+                    <input data-bind="attr: {id: id}, checked: $root.current.singleAnswer, value: id" type="radio" group="answers">
+                    <label data-bind="text: text, attr: {for: id}"></label>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: $root.current.question().type() === 2-->
+                <div class="container">
+                    <input type="checkbox" data-bind="attr: {id: id}, checked: isRight" >
+                    <label data-bind="text: text, attr: {for: id}"></label> </br>
+                </div>
+                <!-- /ko -->
             </div>
-            <!-- /ko -->
-            <!-- ko if: $root.current.question().type() === 2-->
-            <div class="container">
-                <input type="checkbox" data-bind="attr: {id: id}, checked: isRight" >
-                <label data-bind="text: text, attr: {for: id}"></label> </br>
-            </div>
-            <!-- /ko -->
-        </div>
         <!-- /ko -->
         <!-- ko if: $root.current.question().type() === 3 -->
         <div class="question-answers">

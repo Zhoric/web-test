@@ -58,5 +58,5 @@
     <td data-bind="text: subject"></td>
     <td data-bind="text: $parent.attemptsMade"></td>
     <td data-bind="text: $parent.attemptsLeft"></td>
-    <td><button data-bind="click: $root.actions.startTest, enabled: $parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
+    <td><button data-bind="click: $root.actions.startTest, disable: !$parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
 </script>

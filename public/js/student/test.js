@@ -75,15 +75,17 @@ $(document).ready(function(){
                         var res = ko.mapping.fromJSON(response);
                         if (res.hasOwnProperty('question')){
                             self.current.question(res.question);
-                            self.current.answers(res.answers());
                             self.current.timeLeft(res.question.time());
-                            console.log(self.current.question());
+                            if (res.answers() == null) {
+                                self.current.answers([]);
+                            }
+                            else{
+                                self.current.answers(res.answers());
+                            }
                         }
                         else{
-                            self.toggleCurrent.clear();
                             console.log(response);
                             self.current.testResult(res);
-
                         }
                     });
                 }
