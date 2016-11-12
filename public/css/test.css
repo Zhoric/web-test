@@ -44,6 +44,9 @@ input {
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
+textarea {
+  font-family: 'Roboto Regular';
+}
 select {
   width: 500px;
   height: 30px;
@@ -144,6 +147,16 @@ body {
   margin-top: 23px;
   color: #e74c3c;
 }
+.question-head img {
+  max-width: 250px;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  clear: both;
+  display: block;
+  margin: 0 auto;
+  padding-top: 10px;
+}
 .question-answers {
   padding: 30px 50px 50px;
 }
@@ -167,12 +180,12 @@ body {
 }
 .test-results .text-middle {
   text-align: center;
+  display: block;
 }
 .test-results .date {
   font-size: 12px;
   display: block;
   float: right;
-  margin-top: 15px;
   color: #757d75;
 }
 .test-results .result-text {
@@ -193,6 +206,25 @@ body {
 .test-results span {
   font-size: 18px;
   line-height: 25px;
+}
+#image-expander {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  top: 0;
+  left: 0;
+  position: fixed;
+  padding: 1%;
+  display: none;
+}
+#image-expander img {
+  max-height: 90%;
+  max-width: 90%;
+  margin: 0 auto;
+  width: auto;
+  height: auto;
+  display: table;
 }
 .next-question {
   height: 70px;

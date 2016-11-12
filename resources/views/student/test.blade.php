@@ -13,6 +13,9 @@
         <div class="question-head">
             <h3 data-bind="text: current.question().text"></h3>
             <h1 data-bind="text: current.timeLeft"></h1>
+            <!-- ko if: current.question().image() -->
+            <img data-bind="attr: {src: '/' + current.question().image()}, click: $root.actions.image.expand"/>
+            <!-- /ko -->
         </div>
 
         <!-- ko if: current.answers().length -->
@@ -63,6 +66,13 @@
                 </div>
                 <button data-bind="click: $root.actions.goHome">Вернуться на главную</button>
             </div>
+        <!-- /ko -->
+    </div>
+    <div id="image-expander" data-bind="click: $root.actions.image.hide">
+        <!-- ko if: $root.current.question() -->
+            <!-- ko if: $root.current.question().image() -->
+            <img data-bind="attr: {src: '/' + $root.current.question().image()}"/>
+            <!-- /ko -->
         <!-- /ko -->
     </div>
 @endsection
