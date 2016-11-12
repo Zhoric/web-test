@@ -1,5 +1,5 @@
 @extends('shared.layout')
-@section('title', 'Дисциплины')
+@section('title', 'Тема')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>

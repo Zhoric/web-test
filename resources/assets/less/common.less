@@ -60,6 +60,13 @@ body{
   transition: background-color @duration ease-out @delay;
 }
 
+.transition(@what, @duration, @delay){
+  -webkit-transition: @what @duration ease-out @delay;
+  -moz-transition: @what @duration ease-out @delay;
+  -o-transition: @what @duration ease-out @delay;
+  transition: @what @duration ease-out @delay;
+}
+
 .transition-all(@duration, @delay){
   -webkit-transition: all @duration ease-out @delay;
   -moz-transition: all @duration ease-out @delay;

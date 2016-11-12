@@ -4,6 +4,7 @@
 $(document).ready(function(){
 
     ko.validation.init({
+        messagesOnModified: true,
         insertMessages: false
     });
 
@@ -11,30 +12,32 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.user = {
+            self.user = ko.validatedObservable({
                 name : {
-                    last: ko.observable().extend({}),
+                    last: ko.observable().extend({
+                        required: {}
+                    }),
                     first: ko.observable().extend({}),
                     patronymic: ko.observable().extend({})
                 },
                 email: ko.observable().extend({}),
                 password: ko.observable().extend({}),
                 group: ko.observable()
-            };
+            });
             self.groups = ko.observableArray([]);
             self.registerResult = ko.observable();
 
             self.stringify = function(){
                 var user = {
-                    lastname: self.user.name.last(),
-                    firstname: self.user.name.first(),
-                    patronymic: self.user.name.patronymic(),
-                    email: self.user.email(),
-                    password: self.user.password()
+                    lastname: self.user().name.last(),
+                    firstname: self.user().name.first(),
+                    patronymic: self.user().name.patronymic(),
+                    email: self.user().email(),
+                    password: self.user().password()
                 };
                 return JSON.stringify({
                     user: user,
-                    groupId: self.user.group().id()
+                    groupId: self.user().group().id()
                 });
             };
             self.register = function(){

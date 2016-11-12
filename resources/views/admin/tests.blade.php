@@ -1,5 +1,5 @@
 @extends('shared.layout')
-@section('title', 'Дисциплины')
+@section('title', 'Тесты')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
