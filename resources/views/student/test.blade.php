@@ -54,11 +54,12 @@
                 <h2>Результат теста</h2>
                 <div class="result-text">
                     <!-- ko if: $root.current.testResult().mark() -->
-                        <span>Ваш результат составляет: <span data-bind="text: $root.current.testResult().mark()"></span>/100 баллов.</span>
+                        <span class="text-middle">Ваш результат составляет: <span data-bind="text: $root.current.testResult().mark()"></span>/100 баллов.</span>
                     <!-- /ko -->
                     <!-- ko if: !$root.current.testResult().mark() -->
                     <span>Результат вашего теста вы сможете узнать после того, как преподаватель проверит ваши ответы на открытые вопросы.</span>
                     <!-- /ko -->
+                    <span class="date" data-bind="text: $root.current.testResult().dateTime()"></span>
                 </div>
                 <button data-bind="click: $root.actions.goHome">Вернуться на главную</button>
             </div>

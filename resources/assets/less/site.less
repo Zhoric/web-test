@@ -80,19 +80,39 @@ body{
   width: 95%;
   margin: 0 auto;
   .border-radius(10px);
+  border: 2px solid #bfbfbf;
   h3{
     text-align: center;
   }
   table{
-    border: 2px solid #bfbfbf;
-    border-radius: 10px;
-    td{
-      padding: 5px;
-      &:first-child{
-        width: 82%;
-        text-indent: 20px;
+    border-collapse:collapse;
+    thead{
+      border-bottom: 1px solid #bfbfbf;
+      th{
+        padding: 3px;
       }
     }
+    tbody{
+      tr{
+
+        &:nth-child(even){
+          background: #eeeeee;
+        }
+        td{
+          text-align: center;
+          padding: 5px;
+          width: 10%;
+          &:first-child{
+            text-align: left;
+            width: 70%;
+            text-indent: 20px;
+          }
+
+        }
+      }
+    }
+
+
   }
   button{
     .border-radius(5px);
