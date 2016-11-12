@@ -8,18 +8,19 @@
             <h2>Заявка на регистрацию</h2>
         </div>
         <div>
-            <input type="text" data-bind="value: user.name" placeholder="ФИО">
-            <label data-bind="validationElement: user.name"></label>
+            <input type="text" data-bind="value: user.name.last" placeholder="Фамилия">
+        </div>
+        <div>
+            <input type="text" data-bind="value: user.name.first" placeholder="Имя">
+        </div>
+        <div>
+            <input type="text" data-bind="value: user.name.patronymic" placeholder="Отчество">
         </div>
         <div>
             <input type="text" data-bind="value: user.email" placeholder="E-mail">
         </div>
         <div>
             <input type="password" data-bind="value: user.password" placeholder="Пароль">
-        </div>
-        <div>
-            <label data-bind="validationElement: user.admissionYear"></label>
-            <input type="text" data-bind="value: user.admissionYear" placeholder="Год поступления">
         </div>
         <div>
             <select data-bind="options: groups, optionsText: 'name', value: user.group, optionsCaption: 'Выберите группу'"></select>

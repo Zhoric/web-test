@@ -12,27 +12,26 @@ $(document).ready(function(){
             var self = this;
 
             self.user = {
-                name : ko.observable().extend({}),
+                name : {
+                    last: ko.observable().extend({}),
+                    first: ko.observable().extend({}),
+                    patronymic: ko.observable().extend({})
+                },
                 email: ko.observable().extend({}),
                 password: ko.observable().extend({}),
-                admissionYear: ko.observable().extend({}),
                 group: ko.observable()
             };
             self.groups = ko.observableArray([]);
             self.registerResult = ko.observable();
 
             self.stringify = function(){
-
-                var names = self.user.name().split(' ');
-                var user = {};
-
-                user.lastname = names[0];
-                user.firstname = names[1];
-                user.patronymic = names[2];
-                user.email = self.user.email();
-                user.password = self.user.password();
-
-
+                var user = {
+                    lastname: self.user.name.last(),
+                    firstname: self.user.name.first(),
+                    patronymic: self.user.name.patronymic(),
+                    email: self.user.email(),
+                    password: self.user.password()
+                };
                 return JSON.stringify({
                     user: user,
                     groupId: self.user.group().id()
