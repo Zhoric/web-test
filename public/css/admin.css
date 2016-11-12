@@ -368,7 +368,11 @@ button:hover {
 }
 .themes-add .select-theme,
 .themes-add .select-complexity {
-  width: 47%;
+  width: 46%;
+}
+.themes-add .select-theme select,
+.themes-add .select-complexity select {
+  width: 100%;
 }
 .themes-add .time {
   width: 13%;
@@ -391,7 +395,7 @@ button:hover {
   width: 96%;
 }
 .themes-add .answers-input input {
-  width: 93%;
+  width: 92%;
 }
 .themes-add .answers-input button {
   width: 35px;
@@ -640,7 +644,7 @@ button.sq-small {
   z-index: 2;
 }
 .image-uploader .upload-btn {
-  top: -1px;
+  top: 0px;
   color: #fff;
   padding: 7.5px;
   background: #2ecc71;
