@@ -104,6 +104,7 @@ class TestProcessManager
             $suitableQuestions = self::getSuitableQuestionsIds();
             self::validateSuitableQuestions($suitableQuestions);
 
+
             if (self::$_testResult != null){
                 return self::$_testResult;
             }
@@ -179,7 +180,6 @@ class TestProcessManager
         self::$_testResult = $testResult;
         self::getTestResultManager()->update($testResult);
         self::$_testResult->setDateTime($now->format(self::dateFormat));
-
     }
 
     /**

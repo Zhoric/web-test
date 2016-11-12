@@ -20,8 +20,8 @@ class TestResultRepository extends BaseRepository
     public function getLastAttemptNumber($testId, $userId)
     {
         $qb = $this->repo->createQueryBuilder('tr');
-        $countQuery = $qb->where('tr.user = ' . $testId)
-            ->where('tr.test = ' . $userId)
+        $countQuery = $qb->where('tr.user = ' . $userId)
+            ->where('tr.test = ' . $testId)
             ->select($qb->expr()->count('tr.id'))
             ->getQuery();
 
