@@ -1,6 +1,7 @@
 <?php
 
 namespace TestEngine;
+use DateTimeZone;
 use Exception;
 use DateTime;
 use GivenAnswer;
@@ -169,6 +170,7 @@ class TestProcessManager
     public static function calculateAnsSaveResult($testResultId){
         $testResultMark = TestResultCalculator::calculate($testResultId);
         $now = new DateTime();
+        $now->setTimezone(new DateTimeZone('Europe/Moscow'));
 
         $testResult = self::getTestResultManager()->getById($testResultId);
         $testResult->setMark($testResultMark);
