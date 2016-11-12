@@ -3,6 +3,7 @@
 namespace Repositories;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use League\Flysystem\Exception;
 use PaginationResult;
@@ -29,24 +30,26 @@ class TestResultRepository extends BaseRepository
 
     public function getByGroupAndTest($testId, $groupId)
     {
-        $sql = "SELECT * FROM test_result tr
-                JOIN student_group sg
-                ON sg.group_id = ?
-                JOIN user u 
-                ON tr.user_id = u.id AND sg.student_id = u.id
-                AND tr.date_time = 
-                (SELECT MAX(date_time) from test_result tr2
-                    where tr2.test_id = ? AND tr2.user_id = u.id)";
+        $maxQb = $this->repo->createQueryBuilder('tr');
+        $maxQuery = $maxQb->select('MAX(tr.dateTime)')
+            ->join(\StudentGroup::class, 'sg', Join::WITH, 'sg.group = :groupId')
+            ->setParameter('groupId', $groupId)
+            ->join(User::class, 'u', Join::WITH, 'tr.user = u.id AND sg.student = u.id')
+            ->where('tr.test = :testId')
+            ->setParameter('testId', $testId)
+            ->groupBy('tr.user, tr.test')
+            ->getQuery();
 
-        $rsm = new ResultSetMappingBuilder($this->em);
-        $rsm->addRootEntityFromClassMetadata(TestResult::class, 'tr');
-        $rsm->addJoinedEntityFromClassMetadata(User::class, 'u', 'tr', 'user', array('id' => 'user_id'));
+        $maxDateTimes = $maxQuery->execute();
+        $qb = $this->repo->createQueryBuilder('tr');
+        $query = $qb->join(\StudentGroup::class, 'sg', Join::WITH, 'sg.group = :groupId')
+            ->setParameter('groupId', $groupId)
+            ->join(User::class, 'u', Join::WITH, 'tr.user = u.id AND sg.student = u.id')
+            ->where($qb->expr()->in('tr.dateTime', '?1'))
+            ->setParameter(1,$maxDateTimes)
+            ->getQuery();
 
-        $query = $this->em->createNativeQuery($sql, $rsm);
-        $query->setParameter(1, $groupId);
-        $query->setParameter(2, $testId);
-
-        return $query->getArrayResult();
+        return $query->execute();
     }
 
     public function getLastForUser($userId, $testId){
