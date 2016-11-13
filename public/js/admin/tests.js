@@ -246,7 +246,7 @@ $(document).ready(function(){
                 },
                 select: function(data){
                     var item = self.multiselect.tags().find(function(item){
-                        return item.id === data.id();
+                        return item.id() === data.id();
                     });
                     if (!item) self.multiselect.tags.push(data);
                     return '';
@@ -271,7 +271,7 @@ $(document).ready(function(){
                         });
                     });
                 }
-            }
+            };
             self.mode = ko.observable('none');
             self.csed = {
                 test: {

@@ -175,7 +175,7 @@ input[type=checkbox]:checked + label:after {
   border: 1px solid #e3e3e3;
   border-bottom: none;
   padding: 10px;
-  margin: 0 auto;
+  margin: 0;
 }
 .multiselect-wrap .multiselect ul {
   padding: 0;
@@ -198,7 +198,7 @@ input[type=checkbox]:checked + label:after {
 }
 .multiselect-wrap input {
   width: 50.8%;
-  margin: 0 auto;
+  margin: 0;
   display: block;
   top: -4px;
   position: relative;
@@ -451,8 +451,17 @@ button:hover {
 .discipline-edit div:nth-child(3) {
   width: 93%;
 }
-.discipline-edit div:nth-child(3) select {
+.discipline-edit div:nth-child(3) .multiselect-wrap {
   width: 97%;
+}
+.discipline-edit div:nth-child(3) .multiselect-wrap .multiselect {
+  width: 97%;
+}
+.discipline-edit div:nth-child(3) .multiselect-wrap input {
+  width: 97.9%;
+}
+.discipline-edit div:nth-child(3) .knockout-autocomplete.menu {
+  width: 93%;
 }
 .discipline-edit .float-btn-group {
   float: right;

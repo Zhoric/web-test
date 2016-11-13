@@ -171,7 +171,6 @@
                 <!-- /ko -->
                 <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
             </div>
-            {{--<select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.selectedThemes" size="7" multiple="true"></select>--}}
         </div>
         <div class="isActive">
             <input id="test-is-active" type="checkbox" data-bind="checked: isActive"> <label for="test-is-active">Активный</label>

@@ -84,7 +84,7 @@ input[type=checkbox]{
     border: 1px solid #e3e3e3;
     border-bottom: none;
     padding: 10px;
-    margin: 0 auto;
+    margin: 0;
     ul{
       padding:0;
     }
@@ -107,7 +107,7 @@ input[type=checkbox]{
   }
   input{
     width: 50.8%;
-    margin: 0 auto;
+    margin: 0;
     display: block;
     top: -4px;
     position: relative;
@@ -376,9 +376,10 @@ button{
       }
       &:nth-child(3){
         width: 93%;
-        select{
-          width: 97%;
-        }
+        .multiselect-width(97%);
+        //select{
+        //  width: 97%;
+        //}
       }
     }
     .float-btn-group{

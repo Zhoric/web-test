@@ -1,6 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Дисциплины')
 @section('javascript')
+    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
 @endsection
 
@@ -13,8 +14,8 @@
         </div>
         <div>
             <label>Направление</label></br>
-            <select data-bind="options: $root.current.profile().profiles,
-                       optionsText: 'name',
+            <select data-bind="options: $root.multiselect.data,
+                       optionsText: 'fullname',
                        value: $root.filter.profile,
                        optionsCaption: 'Выберите профиль'"></select>
         </div>
@@ -158,9 +159,16 @@
         </div>
         <div>
             <label>Профили</label></br>
-            <!-- ko with: $root.current.profile() -->
-            <select data-bind="options: profiles, optionsText: 'fullname',  selectedOptions: selected" size="4" multiple="true"></select>
-            <!-- /ko -->
+            <div class="multiselect-wrap">
+                <!-- ko if: $root.multiselect.tags().length -->
+                <div class="multiselect">
+                    <ul data-bind="foreach: $root.multiselect.tags">
+                        <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: fullname"></span></li>
+                    </ul>
+                </div>
+                <!-- /ko -->
+                <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+            </div>
         </div>
         <div class="float-btn-group">
             <button data-bind="click: $root.csed.update" class="fa">&#xf00c;</button>
