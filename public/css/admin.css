@@ -123,6 +123,124 @@ span.radio-negative {
 .width100 {
   width: 100%;
 }
+input[type=checkbox] {
+  vertical-align: top;
+  width: 17px;
+  height: 17px;
+  margin: 0 3px 0 0;
+}
+input[type=checkbox] + label {
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 30px;
+}
+input[type=checkbox]:not(checked) {
+  position: absolute;
+  opacity: 0;
+}
+input[type=checkbox]:not(checked) + label {
+  position: relative;
+  padding: 0 0 0 35px;
+}
+input[type=checkbox]:not(checked) + label:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #CDD1DA;
+  background: #FFF;
+}
+input[type=checkbox]:not(checked) + label:after {
+  font-family: 'FontAwesome';
+  font-size: 17px;
+  content: '\f00c';
+  color: #16a085;
+  position: absolute;
+  left: 4px;
+  opacity: 0;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+.multiselect-wrap {
+  margin: 0 !important;
+}
+.multiselect-wrap .multiselect {
+  background: #fff;
+  width: 50%;
+  border: 1px solid #e3e3e3;
+  border-bottom: none;
+  padding: 10px;
+  margin: 0 auto;
+}
+.multiselect-wrap .multiselect ul {
+  padding: 0;
+}
+.multiselect-wrap .multiselect li {
+  list-style: none;
+  display: inline-block;
+  padding: 5px;
+  color: #fff;
+  margin: 2px 0;
+  background: #16a085;
+  border-radius: 5px;
+}
+.multiselect-wrap .multiselect span.fa {
+  font-size: 11px;
+  margin-right: 7px;
+  position: relative;
+  top: -5px;
+  cursor: pointer;
+}
+.multiselect-wrap input {
+  width: 50.8%;
+  margin: 0 auto;
+  display: block;
+  top: -4px;
+  position: relative;
+  border: 1px solid #e3e3e3;
+}
+.multiselect-wrap input:focus {
+  outline: none;
+}
+.multiselect-wrap input.full {
+  border-top: none;
+}
+.knockout-autocomplete.menu {
+  background-color: white;
+  padding: 3px 0;
+  height: auto;
+  width: 44%;
+}
+.knockout-autocomplete.menu li {
+  text-transform: inherit;
+  font-family: 'Roboto Regular';
+  cursor: pointer;
+  list-style: none;
+  margin: 0px 0;
+  padding: 3px 12px;
+  display: block;
+  background: #fff;
+  color: #000;
+}
+.knockout-autocomplete.menu li.selected {
+  background: #16a085;
+  color: #fff;
+}
+.knockout-autocomplete.floating-menu {
+  position: fixed;
+  border: thin #aaa solid;
+  margin: 0;
+  margin-top: 3px;
+  box-shadow: 1px 1px 4px rgba(50, 50, 50, 0.75);
+}
+.knockout-autocomplete.after-menu {
+  position: absolute;
+}
 .filter {
   height: 100px;
   border-bottom: 20px solid #fff;
@@ -518,8 +636,17 @@ button:hover {
 .test .org-info-edit .themes {
   width: 97%;
 }
-.test .org-info-edit .themes select {
-  width: 100%;
+.test .org-info-edit .themes .multiselect-wrap {
+  width: 99%;
+}
+.test .org-info-edit .themes .multiselect-wrap .multiselect {
+  width: 99%;
+}
+.test .org-info-edit .themes .multiselect-wrap input {
+  width: 99.9%;
+}
+.test .org-info-edit .themes .knockout-autocomplete .menu {
+  width: 95%;
 }
 .test .org-info-edit .btn-group {
   float: right;
@@ -763,49 +890,6 @@ button.sq-small {
   text-align: center;
   font-size: 18px;
   padding: 15px;
-}
-input[type=checkbox] {
-  vertical-align: top;
-  width: 17px;
-  height: 17px;
-  margin: 0 3px 0 0;
-}
-input[type=checkbox] + label {
-  cursor: pointer;
-  font-size: 17px;
-  line-height: 30px;
-}
-input[type=checkbox]:not(checked) {
-  position: absolute;
-  opacity: 0;
-}
-input[type=checkbox]:not(checked) + label {
-  position: relative;
-  padding: 0 0 0 35px;
-}
-input[type=checkbox]:not(checked) + label:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 22px;
-  height: 22px;
-  border: 1px solid #CDD1DA;
-  background: #FFF;
-}
-input[type=checkbox]:not(checked) + label:after {
-  font-family: 'FontAwesome';
-  font-size: 17px;
-  content: '\f00c';
-  color: #16a085;
-  position: absolute;
-  left: 4px;
-  opacity: 0;
-  -webkit-transition: all .2s;
-  transition: all .2s;
-}
-input[type=checkbox]:checked + label:after {
-  opacity: 1;
 }
 .plan-details div {
   display: inline-table;

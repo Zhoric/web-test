@@ -257,6 +257,22 @@ $(document).ready(function(){
                     return false;
                 },
             };
+            self.multiselect = {
+                tags: ko.observableArray([]),
+                show: function(data){
+                    return data.name;
+                },
+                select: function(data){
+                    var item = self.multiselect.tags().find(function(item){
+                        return item.id === data.id;
+                    });
+                    if (!item) self.multiselect.tags.push(data);
+                    return '';
+                },
+                remove: function(data){
+                    self.multiselect.tags.remove(data);
+                }
+            }
             self.mode = ko.observable('none');
             self.csed = {
                 test: {
@@ -328,7 +344,9 @@ $(document).ready(function(){
                 themes: function(){
                     var url = '/api/disciplines/' + self.filter.discipline().id() + '/themes';
                     $.get(url, function(response){
-                        self.current.themes(ko.mapping.fromJSON(response)());
+                        var result = JSON.parse(response);
+                        self.current.themes(result);
+                        //self.current.themes(ko.mapping.fromJSON(response)());
                     });
                 },
                 testThemes: function(id){
@@ -409,6 +427,7 @@ $(document).ready(function(){
             return {
                 current: self.current,
                 pagination: self.pagination,
+                multiselect: self.multiselect,
                 toggleCurrent: self.toggleCurrent,
                 mode: self.mode,
                 csed: self.csed,
