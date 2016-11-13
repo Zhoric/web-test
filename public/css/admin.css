@@ -645,7 +645,7 @@ button:hover {
 .test .org-info-edit .themes .multiselect-wrap input {
   width: 99.9%;
 }
-.test .org-info-edit .themes .knockout-autocomplete .menu {
+.test .org-info-edit .themes .knockout-autocomplete.menu {
   width: 95%;
 }
 .test .org-info-edit .btn-group {

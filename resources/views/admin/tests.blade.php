@@ -169,7 +169,7 @@
                     </ul>
                 </div>
                 <!-- /ko -->
-                <input data-bind="autocomplete: { data: $root.current.themes, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+                <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
             </div>
             {{--<select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.selectedThemes" size="7" multiple="true"></select>--}}
         </div>
