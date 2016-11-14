@@ -211,7 +211,7 @@ input[type=checkbox]:checked + label:after {
   border-top: none;
 }
 .knockout-autocomplete.menu {
-  background-color: white;
+  background-color: #fff;
   padding: 3px 0;
   height: auto;
   width: 44%;
@@ -297,6 +297,13 @@ input[type=checkbox]:checked + label:after {
   background: #2c3e50;
   cursor: pointer;
 }
+.menu li a {
+  border: 0;
+  color: #000;
+}
+.menu li a:hover {
+  color: #fff;
+}
 .content {
   width: 85%;
   margin: 100px auto;
@@ -314,8 +321,11 @@ input[type=checkbox]:checked + label:after {
   color: #ecf0f1;
   text-align: center;
   text-transform: uppercase;
-  border-bottom: 1px solid #ecf0f1;
+  border-bottom: 2px solid #ecf0f1;
   cursor: pointer;
+}
+.org-accordion .org-item:hover {
+  background: #34495e;
 }
 .org-accordion .org-item:active {
   background: #34495e;
@@ -382,7 +392,7 @@ table.theme a {
   border-bottom: 0;
 }
 table.theme a:hover {
-  color: #2ecc71;
+  color: #2ABB9B;
 }
 table.themes {
   width: 100%;
@@ -430,11 +440,11 @@ button.add-section:hover {
   background: #2980b9;
 }
 button {
-  background: #2ecc71;
+  background: #2ABB9B;
   width: 50px;
 }
 button:hover {
-  background: #27ae60;
+  background: #16a085;
 }
 .discipline-edit div:first-child {
   width: 20%;
@@ -684,7 +694,7 @@ button:hover {
   font-weight: bold;
 }
 .institutes .institute:hover {
-  background: #1abc9c;
+  background: #34495e;
 }
 .institutes .institute:active {
   background: #34495e;
@@ -712,9 +722,12 @@ button:hover {
   font-weight: bold;
 }
 .institutes .profiles .profile:hover {
-  background: #1abc9c;
+  background: #16a085;
 }
 .institutes .profiles .profile:active {
+  background: #34495e;
+}
+.institutes .profiles .profile button:hover {
   background: #34495e;
 }
 .info-group .details-group div {
@@ -786,10 +799,10 @@ button.sq-small {
   top: 0px;
   color: #fff;
   padding: 7.5px;
-  background: #2ecc71;
+  background: #2ABB9B;
 }
 .image-uploader .upload-btn:hover {
-  background: #27ae60;
+  background: #16a085;
 }
 .image-uploader img {
   max-width: 70px;

@@ -1,6 +1,10 @@
 @import (less) "common.less";
 
+@jungleGreen: #2ABB9B;
+
 @mainTheme: @greensea;
+@buttonGreen: @jungleGreen;
+@buttonHover: @mainTheme;
 @hover: @turquoise;
 @danger: @alizarin;
 @important: @pomegranade;
@@ -8,6 +12,7 @@
 @unimportant: @asbestos;
 @neutral: @clouds;
 @grey: @normal-grey;
+
 
 .label(){
   font-size: 12px;
@@ -49,7 +54,7 @@ input[type=checkbox]{
         font-family: 'FontAwesome';
         font-size: 17px;
         content: '\f00c';
-        color: @greensea;
+        color: @mainTheme;
         position: absolute;
         left: 4px;
         opacity: 0;
@@ -92,7 +97,7 @@ input[type=checkbox]{
       list-style: none;
       display: inline-block;
       padding: 5px;
-      color: #fff;
+      color: @white;
       margin: 2px 0;
       background: #16a085;
       border-radius: 5px;
@@ -122,7 +127,7 @@ input[type=checkbox]{
 }
 .knockout-autocomplete{
   &.menu {
-    background-color: white;
+    background-color: @white;
     padding: 3px 0;
     height: auto;
     width: 44%;
@@ -137,7 +142,7 @@ input[type=checkbox]{
       background: @white;
       color: @black;
       &.selected{
-        background: @greensea;
+        background: @mainTheme;
         color: @white;
       }
     }
@@ -184,12 +189,12 @@ input[type=checkbox]{
 
 .menu{
   top: 0;
-  background: #fff;
+  background: @white;
   height: 50px;
   width: 100%;
   margin: 0 auto;
   position: fixed;
-  border-bottom: 1px solid @wetasphalt;
+  border-bottom: 1px solid @active;
   z-index: 10;
   ul{
     text-align: center;
@@ -206,6 +211,13 @@ input[type=checkbox]{
       color: @white;
       background: @midnightblue;
       cursor: pointer;
+    }
+    a{
+      border:0;
+      color:@black;
+      &:hover{
+        color:@white;
+      };
     }
   }
 }
@@ -227,10 +239,10 @@ input[type=checkbox]{
     color: @neutral;
     text-align: center;
     text-transform: uppercase;
-    border-bottom: 1px solid @neutral;
+    border-bottom: 2px solid @neutral;
     cursor: pointer;
     &:hover{
-
+      background: @active;
     }
     &:active{
       background: @active;
@@ -298,7 +310,7 @@ table{
     a{
       border-bottom: 0;
       &:hover{
-        color: @emerland;
+        color: @buttonGreen;
       }
     }
     &s {
@@ -334,7 +346,7 @@ table{
 
 a.active-link{
   font-size: 13px;
-  color: @greensea;
+  color: @mainTheme;
   float: right;
   border-bottom: 0;
   &:hover{
@@ -352,10 +364,10 @@ button.add-section{
   }
 }
 button{
-  background: @emerland;
+  background: @buttonGreen;
   width: 50px;
   &:hover{
-    background: @nephritis;
+    background: @buttonHover;
   }
 }
 
@@ -491,9 +503,6 @@ button{
       position: relative;
       top: -17px;
       margin: 0;
-      input{
-
-      }
       div{
         display: block;
         margin: 0;
@@ -596,27 +605,27 @@ button{
     width: 100%;
     line-height: 50px;
     height: 50px;
-    background: @greensea;
-    color: @clouds;
+    background: @mainTheme;
+    color: @neutral;
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    border-bottom: 1px solid @clouds;
+    border-bottom: 1px solid @neutral;
     &.font-settings{
       text-transform: none;
       font-size: 17px;
       font-weight: bold;
     }
     &:hover{
-      background: @hover;
+      background: @active;
     }
     &:active{
-      background: @wetasphalt;
+      background: @active;
     }
     &-current{
-      background: @wetasphalt;
+      background: @active;
       &:hover{
-        background: @wetasphalt;
+        background: @active;
       }
     }
   }
@@ -625,8 +634,8 @@ button{
     background: @light-grey;
 
     .profile{
-      background: @greensea;
-      color: @clouds;
+      background: @mainTheme;
+      color: @neutral;
       width: 250px;
       height: 150px;
       margin: 5px 10px 5px 0px;
@@ -636,10 +645,13 @@ button{
       cursor: pointer;
       font-weight: bold;
       &:hover{
-        background: @hover;
+        background: @buttonHover;
       }
       &:active{
-        background: @wetasphalt;
+        background: @active;
+      }
+      button:hover{
+        background: @active;
       }
     }
   }
@@ -658,15 +670,15 @@ button{
   }
   label{
     font-size: 12px;
-    color: @asbestos;
+    color: @unimportant;
   }
   .study-form{
     &-selected{
       font-size: 18px;
-      color: @greensea;
+      color: @mainTheme;
     }
     font-size: 13px;
-    color: @asbestos;
+    color: @unimportant;
     line-height: 1.8;
     cursor: pointer;
   }
@@ -683,12 +695,12 @@ button{
 }
 
 .tyle-btn{
-  color: @clouds;
+  color: @neutral;
   width: 170px;
-  background: @wetasphalt;
+  background: @active;
   &-negative{
-    border: 2px solid @wetasphalt;
-    background: @greensea;
+    border: 2px solid @active;
+    background: @mainTheme;
   }
 }
 
@@ -727,9 +739,9 @@ button.sq-small{
     top: 0px;
     color: @white;
     padding: 7.5px;
-    background: @emerland;
+    background: @buttonGreen;
     &:hover{
-      background: @nephritis;
+      background: @buttonHover;
     }
   }
   img{
@@ -751,7 +763,7 @@ button.sq-small{
   h1{
     text-align: center;
     padding: 30px;
-    color: @greensea;
+    color: @mainTheme;
   }
   h3{
     padding: 10px 0 0 15px;
@@ -868,7 +880,7 @@ button.sq-small{
     width: 11%;
     label{
       font-size: 12px;
-      color: @asbestos;
+      color: @unimportant;
       line-height: 40px;
     }
     &:first-child{
@@ -877,10 +889,10 @@ button.sq-small{
     .plan-form{
       &-selected{
         font-size: 18px;
-        color: @greensea;
+        color: @mainTheme;
       }
       font-size: 13px;
-      color: @asbestos;
+      color: @unimportant;
       line-height: 1.8;
       cursor: pointer;
     }
