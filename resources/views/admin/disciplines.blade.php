@@ -80,13 +80,13 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="add-theme-modal">
-        <div>
-            <div><span>Добавление темы</span></div>
+        <div class="popup-theme">
+            <div><h3>Добавление темы</h3></div>
             <div>
-                <label>Название</label>
-                <input type="text" data-bind="value: $root.current.theme().name">
+                <label>Название</label></br>
+                <input type="text" data-bind="value: $root.current.theme().name" placeholder="Название темы">
             </div>
-            <div>
+            <div class="popup-btn-group">
                 <button data-bind="click: $root.csed.theme.add" class="fa">&#xf00c;</button>
                 <button class="fa danger arcticmodal-close">&#xf00d;</button>
             </div>

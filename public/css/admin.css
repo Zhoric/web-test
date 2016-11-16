@@ -923,6 +923,27 @@ button.sq-small {
 .popup-delete div:last-child button:first-child {
   margin: 0 5px;
 }
+.popup-theme div {
+  margin: 10px 0;
+}
+.popup-theme input {
+  width: 95%;
+}
+.popup-theme label {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+.popup-theme label span {
+  color: #c0392b;
+}
+.popup-theme .popup-btn-group {
+  float: right;
+  margin: 5px 4px;
+}
+#add-theme-modal {
+  width: 350px;
+  height: 160px;
+}
 .plan-details div {
   display: inline-table;
   margin: 10px 15px 25px;
