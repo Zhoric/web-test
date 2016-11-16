@@ -66,7 +66,7 @@
                         <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
                             buttonClass: 'upload-btn', fileNameClass: 'disabled',
                             buttonText: 'Выберите файл', changeButtonText: 'Изменить',
-                            clearButtonText: 'Очистить', noFileText: 'Файл не выбран'}" accept="image/*">
+                            clearButtonText: 'Очистить', clearButtonClass: 'clean-btn', noFileText: 'Файл не выбран'}" accept="image/*">
                     </div>
                 </div>
                 <div class="clear"></div>

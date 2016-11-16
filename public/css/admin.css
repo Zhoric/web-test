@@ -805,6 +805,15 @@ button.sq-small {
 .image-uploader .upload-btn:hover {
   background: #16a085;
 }
+.image-uploader .clean-btn {
+  background: #bfbfbf;
+  color: #fff;
+  padding: 7px;
+  border-radius: 0px 3px 3px 0;
+}
+.image-uploader .clean-btn:hover {
+  background: #D24D57;
+}
 .image-uploader img {
   max-width: 70px;
   max-height: 70px;
