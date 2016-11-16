@@ -58,8 +58,8 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
-        <div>
-            <div><span>Удалить выбранную дисциплину?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранную дисциплину?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
@@ -69,8 +69,8 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="remove-theme-modal">
-        <div>
-            <div><span>Удалить выбранную тему?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранную тему?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.theme.remove" class="fa">&#xf00c;</button>
                 <button class="fa danger arcticmodal-close">&#xf00d;</button>
@@ -216,7 +216,7 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="remove-section-modal">
-        <div>
+        <div class="popup-delete">
             <div><span>Удалить выбранную секцию?</span></div>
             <div>
                 <button data-bind="click: $root.csed.section.remove" class="fa">&#xf00c;</button>

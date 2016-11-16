@@ -73,8 +73,8 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
-        <div>
-            <div><span>Удалить выбранный тест?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранный тест?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.test.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.test.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>

@@ -914,6 +914,15 @@ button.sq-small {
   font-size: 18px;
   padding: 15px;
 }
+.popup-delete {
+  height: 80px;
+}
+.popup-delete div:last-child {
+  float: right;
+}
+.popup-delete div:last-child button:first-child {
+  margin: 0 5px;
+}
 .plan-details div {
   display: inline-table;
   margin: 10px 15px 25px;
