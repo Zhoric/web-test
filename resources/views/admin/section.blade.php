@@ -1,5 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Секция')
+
+
 @section('javascript')
     <script src="{{ URL::asset('js/admin/section.js')}}"></script>
 @endsection
