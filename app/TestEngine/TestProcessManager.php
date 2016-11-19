@@ -7,6 +7,7 @@ use DateTime;
 use GivenAnswer;
 use Illuminate\Session\SessionManager;
 use Managers\QuestionManager;
+use Managers\SettingsManager;
 use Managers\TestManager;
 use Managers\TestResultManager;
 use Question;
@@ -35,6 +36,11 @@ class TestProcessManager
      * @var QuestionManager
      */
     private static $_questionManager;
+
+    /**
+     * @var SettingsManager
+     */
+    private static $_settingsManager;
 
     /**
      * @var TestSession
@@ -78,6 +84,17 @@ class TestProcessManager
 
         return self::$_testResultManager;
     }
+
+    /**
+     * @return SettingsManager
+     */
+    private static function getSettingsManager(){
+        if (self::$_settingsManager == null){
+            self::$_settingsManager = app()->make(SettingsManager::class);
+        }
+        return self::$_settingsManager;
+    }
+
     /**
      * Инициализация процесса тестирования.
      */
@@ -261,12 +278,15 @@ class TestProcessManager
         }
 
         $timeLeftToEnd = self::getTimeLeftBeforeTestEnd();
-        if (GlobalTestSettings::testEndTolerance + $timeLeftToEnd <= 0){
+        $testEndTolerance = self::getSettingsManager()->get(GlobalTestSettings::testEndToleranceKey);
+        $questionEndTolerance = self::getSettingsManager()->get(GlobalTestSettings::questionEndToleranceKey);
+
+        if ($testEndTolerance + $timeLeftToEnd <= 0){
             throw new Exception('Время, отведённое на тест истекло!');
         }
         if ($questionId != null){
             $timeLeftToQuestion = self::getTimeLeftBeforeQuestionEnd();
-            if (GlobalTestSettings::questionEndTolerance + $timeLeftToQuestion <= 0){
+            if ($questionEndTolerance + $timeLeftToQuestion <= 0){
                 self::saveQuestionAnswer(self::$_session, $questionId, 0);
                 throw new Exception('Время, отведённое на данный вопрос истекло. Ответ не будет засчитан!');
             }

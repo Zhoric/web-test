@@ -3,6 +3,7 @@
 namespace TestEngine;
 
 use Exception;
+use Managers\SettingsManager;
 use Repositories\UnitOfWork;
 
 class TestResultCalculator
@@ -11,12 +12,23 @@ class TestResultCalculator
      * @var UnitOfWork
      */
     private static $_unitOfWork;
+    private static $_settingsManager;
 
     private static function getUnitOfWork(){
         if (self::$_unitOfWork == null){
             self::$_unitOfWork = app()->make(UnitOfWork::class);
         }
         return self::$_unitOfWork;
+    }
+
+    /**
+     * @return SettingsManager
+     */
+    private static function getSettingsManager(){
+        if (self::$_settingsManager == null){
+            self::$_settingsManager = app()->make(SettingsManager::class);
+        }
+        return self::$_settingsManager;
     }
 
     /**
@@ -31,9 +43,12 @@ class TestResultCalculator
             throw new Exception("Не удалось сформировать результат теста!");
         }
 
+        //Получение значения настройки, отвечающей за максимальное значение для оценки студента.
+        $maxMarkValue = self::getSettingsManager()->get(GlobalTestSettings::maxMarkValueKey);
+
         $resultPercents = self::getResultPercents($testResultId);
         $resultMark = ($resultPercents != null)
-            ? ($resultPercents / 100) * GlobalTestSettings::maxMarkValue
+            ? ($resultPercents / 100) * $maxMarkValue
             : null;
 
         return $resultMark;
