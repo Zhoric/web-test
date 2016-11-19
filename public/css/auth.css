@@ -126,7 +126,7 @@ body {
   transition: background-color 0.2s ease-out 1s;
 }
 body .incorrect {
-  background-color: #d32f2f;
+  background-color: #D24D57;
 }
 .register {
   margin: 7% auto 0;
@@ -167,6 +167,9 @@ body .incorrect {
 .login {
   height: 270px;
   margin: 10% auto 0;
+}
+.tooltip_templates {
+  display: none;
 }
 
 /*# sourceMappingURL=auth.css.map */
