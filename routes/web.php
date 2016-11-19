@@ -12,6 +12,8 @@
 */
 
 
+use Repositories\TestSettingRepository;
+
 Route::get('/','HomeController@index');
 Route::get('editor','DemoController@editor');
 Route::get('docker','DemoController@docker');

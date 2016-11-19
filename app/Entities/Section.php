@@ -7,7 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Section
  *
- * @ORM\Table(name="section", indexes={@ORM\Index(name="section_theme_id_foreign", columns={"theme_id"})})
+ * @ORM\Table(name="section", indexes={@ORM\Index(name="section_theme_id_foreign", columns={"theme_id"}),
+ *     @ORM\Index(name="section_discipline_id_foreign", columns={"discipline_id"})})
  * @ORM\Entity
  */
 class Section extends BaseEntity implements JsonSerializable
@@ -44,6 +45,16 @@ class Section extends BaseEntity implements JsonSerializable
      * })
      */
     protected $theme;
+
+    /**
+     * @var \Discipline
+     *
+     * @ORM\ManyToOne(targetEntity="Discipline")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="discipline_id", referencedColumnName="id")
+     * })
+     */
+    protected $discipline;
 
 
     /**
@@ -129,12 +140,21 @@ class Section extends BaseEntity implements JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * @return Discipline
      */
+    public function getDiscipline()
+    {
+        return $this->discipline;
+    }
+
+    /**
+     * @param Discipline $discipline
+     */
+    public function setDiscipline($discipline)
+    {
+        $this->discipline = $discipline;
+    }
+
     function jsonSerialize()
     {
         return array(
@@ -142,6 +162,7 @@ class Section extends BaseEntity implements JsonSerializable
             'name' => $this->name,
             'content' => $this->content,
             'themeId' => $this->theme->getId(),
+            'disciplineId' => $this->discipline->getId(),
             'themeName' => $this->theme->getName()
         );
     }

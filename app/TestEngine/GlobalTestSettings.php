@@ -11,17 +11,20 @@ abstract class GlobalTestSettings
     /**
      * Значение сложности вопроса по умолчанию.
      */
+    const defaultComplexityKey = 'defaultComplexity';
     const defaultComplexity = QuestionComplexity::Low;
 
     /**
      * Максимальная оценка за тест.
      */
+    const maxMarkValueKey = 'maxMarkValue';
     const maxMarkValue = 100;
 
     /**
      * Допуск времени (в секундах), отведённого на тест.
      * Т.е. время, в течение которого ещё можно отправить ответ, если время теста истекло.
      */
+    const testEndToleranceKey = 'testEndTolerance';
     const testEndTolerance = 30;
 
     /**
@@ -29,6 +32,7 @@ abstract class GlobalTestSettings
      * Т.е. время, в течение которого ещё можно отправить ответ на текущий вопрос,
      * если время, отведённое на данный вопрос, истекло.
      */
+    const questionEndToleranceKey = 'questionEndTolerance';
     const questionEndTolerance = 5;
 
     /**
@@ -39,10 +43,12 @@ abstract class GlobalTestSettings
     /**
      * Номер месяца, с которого отсчитывается первый семестр.
      */
+    const firstSemesterMounthKey = 'firstSemesterMounth';
     const firstSemesterMounth = 8;
 
     /**
      * Номер месяца, с которого отсчитывается второй семестр.
      */
+    const secondSemesterMounthKey = 'secondSemesterMounthKey';
     const secondSemesterMounth = 1;
 }
