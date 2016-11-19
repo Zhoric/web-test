@@ -69,19 +69,21 @@ class StudyPlanController extends Controller
     public function addDisciplinePlan(Request $request){
         $planData = $request->json('disciplinePlan');
         $studyPlanId = $request->json('studyPlanId');
+        $disciplineId = $request->json('disciplineId');
 
         $disciplinePlan = new DisciplinePlan();
         $disciplinePlan->fillFromJson($planData);
-        $this->_studyPlanManager->createDisciplinePlan($disciplinePlan, $studyPlanId);
+        $this->_studyPlanManager->createDisciplinePlan($disciplinePlan, $studyPlanId, $disciplineId);
     }
 
     public function updateDisciplinePlan(Request $request){
         $planData = $request->json('disciplinePlan');
         $studyPlanId = $request->json('studyPlanId');
+        $disciplineId = $request->json('disciplineId');
 
         $disciplinePlan = new DisciplinePlan();
         $disciplinePlan->fillFromJson($planData);
-        $this->_studyPlanManager->updateDisciplinePlan($disciplinePlan, $studyPlanId);
+        $this->_studyPlanManager->updateDisciplinePlan($disciplinePlan, $studyPlanId, $disciplineId);
     }
 
     public function deleteDisciplinePlan($id){

@@ -23,7 +23,7 @@ class UnitOfWork
 
     private $_userRepo;
     private $_disciplineRepo;
-    private $_disciplinePlanPlanRepo;
+    private $_disciplinePlanRepo;
     private $_instituteRepo;
     private $_profileRepo;
     private $_studyPlanRepo;
@@ -66,10 +66,10 @@ class UnitOfWork
     }
 
     public function disciplinePlans(){
-        if ($this->_disciplinePlanPlanRepo == null){
-            $this->_disciplinePlanPlanRepo = new DisciplinePlanRepository($this->_em);
+        if ($this->_disciplinePlanRepo == null){
+            $this->_disciplinePlanRepo = new DisciplinePlanRepository($this->_em);
         }
-        return $this->_disciplinePlanPlanRepo;
+        return $this->_disciplinePlanRepo;
     }
 
     public function profiles(){

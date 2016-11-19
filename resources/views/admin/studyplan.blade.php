@@ -12,8 +12,8 @@
             </div>
         </div>
         <div class="width100 studyplans">
-            <!-- ko foreach: $root.current().disciplineplans-->
-                <!--ko if: $root.current().disciplineplan().id() != id() && ($root.mode() === 'none' ||  $root.mode() === 'edit')-->
+            <!-- ko foreach: $root.current.disciplineplans-->
+                <!--ko if: ($root.current.disciplineplan().id() != id() && ($root.mode() === 'none' ||  $root.mode() === 'edit')) || ($root.mode() === 'delete' || $root.mode() === 'none')-->
                 <div class="plan-details">
                     <div><label>Дисциплина:</label><br>
                         <span data-bind="text: discipline"></span></div>
@@ -40,13 +40,13 @@
                         <span>Нет</span>
                         <!-- /ko -->
                     </div>
-                    <div><button data-bind="click: $root.plan().startEdit" class="fa success">&#xf040;</button>
-                        <button data-bind="click: $root.plan().startDelete" class="fa danger">&#xf014;</button>
+                    <div><button data-bind="click: $root.plan.startEdit" class="fa success">&#xf040;</button>
+                        <button data-bind="click: $root.plan.startDelete" class="fa danger">&#xf014;</button>
                     </div>
                 </div>
                 <!-- /ko -->
-                <!--ko if: $root.mode() === 'edit' && $root.current().disciplineplan().id() === id() -->
-                <div data-bind="template: {name: 'edit-mode', data: $root.current().disciplineplan()}"></div>
+                <!--ko if: $root.mode() === 'edit' && $root.current.disciplineplan().id() === id() -->
+                <div data-bind="template: {name: 'edit-mode', data: $root.current.disciplineplan()}"></div>
                 <!-- /ko -->
             <!-- /ko -->
         </div>
@@ -73,9 +73,9 @@
     </div>
 
 <script type="text/html" id="edit-mode">
-    <div class="plan-details">
+    <div class="plan-details-edit plan-details">
         <div><label>Дисциплина:</label><br>
-            <select data-bind="options: $root.current().disciplineplans(),
+            <select data-bind="options: $root.current.disciplineplans(),
                        optionsText: 'discipline',
                        value: $root.disciplineSelected(),
                        optionsCaption: 'Выберите дисциплину'"></select>
@@ -100,8 +100,8 @@
             <span> | </span>
             <span data-bind="click: function(){$data.hasExam(false);}, css: {'plan-form-selected': !hasExam()}" class="plan-form">Нет</span>
         </div>
-        <div><button data-bind="click: $root.plan().update" class="fa success">&#xf00c;</button>
-            <button data-bind="click: $root.plan().cancelEdit" class="fa danger">&#xf00d;</button>
+        <div><button data-bind="click: $root.plan.update" class="fa success">&#xf00c;</button>
+            <button data-bind="click: $root.plan.cancelEdit" class="fa danger">&#xf00d;</button>
         </div>
     </div>
 </script>
@@ -111,8 +111,8 @@
         <div class="popup-delete">
             <div><h3>Удалить выбранный план дисциплины?</h3></div>
             <div>
-                <button data-bind="click: $root.plan().delete" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.plan().cancelDelete" class="fa danger">&#xf00d;</button>
+                <button data-bind="click: $root.plan.delete" class="fa">&#xf00c;</button>
+                <button data-bind="click: $root.plan.cancelDelete" class="fa danger">&#xf00d;</button>
             </div>
         </div>
     </div>

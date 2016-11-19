@@ -3,7 +3,7 @@ $(document).ready(function () {
         return new function () {
             var self = this;
 
-            self.current = ko.observable({
+            self.current = {
                 disciplineplans : ko.observableArray([]),
                 disciplineplan: ko.observable({
                     id: ko.observable(0),
@@ -15,7 +15,10 @@ $(document).ready(function () {
                     discipline: ko.observable(''),
                     disciplineId: ko.observable(0)
                 })
-            });
+            };
+
+
+
             self.mode = ko.observable('none');
             self.filter = {
                 discipline : ko.observable('')
@@ -54,7 +57,7 @@ $(document).ready(function () {
            // self.mode('edit');
 
             self.emptyCurrentPlan = function () {
-                self.current().disciplineplan()
+                self.current.disciplineplan()
                     .id(0)
                     .startSemester(0)
                     .semestersCount(0)
@@ -80,7 +83,7 @@ $(document).ready(function () {
 
                     $.post(url, function(response){
                         var result = ko.mapping.fromJSON(response);
-                        self.current().disciplineplans(result.data());
+                        self.current.disciplineplans(result.data());
                         self.pagination.itemsCount(result.count());
                     });
                     //console.log(discipline);
@@ -95,12 +98,12 @@ $(document).ready(function () {
 
             self.get.disciplineplans();
 
-            self.plan = ko.observable({
+            self.plan = {
                 create: function () {
 
                 },
                 update: function () {
-                    var edit = self.current().disciplineplan();
+                    var edit = self.current.disciplineplan();
 
                     var plan = {
                         id: edit.id(),
@@ -108,52 +111,57 @@ $(document).ready(function () {
                         semestersCount: edit.semestersCount(),
                         hours: edit.hours(),
                         hasProject: edit.hasProject(),
-                        hasExam: edit.hasExam(),
-                        discipline: self.disciplineSelected().disciplineId()
+                        hasExam: edit.hasExam()
                     };
 
                     var currentUrl = window.location.href;
                     var studyplan = +currentUrl.substr(currentUrl.lastIndexOf('/')+1);
 
-                    var url = '/api/plan/discipline/update';
-                    var json = JSON.stringify({disciplinePlan: plan, studyPlanId: studyplan});
 
-                    var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open('POST', url, true);
-                    xmlhttp.send(json);
-                    xmlhttp.onreadystatechange = function() {
-                        self.get.disciplineplans();
+                    var url = '/api/plan/discipline/update';
+
+                    var json = JSON.stringify({
+                        disciplinePlan: plan,
+                        studyPlanId: studyplan,
+                        disciplineId: self.disciplineSelected().disciplineId()
+                    });
+
+                    $.post(url, json, function(){
                         self.emptyCurrentPlan();
-                    };
+                        self.get.disciplineplans();
+
+                    });
 
                 },
                 delete: function () {
                     self.toggleModal('#delete-plan-modal', 'close');
-                    var url = '/api/plan/discipline/delete/' + self.current().disciplineplan().id();
+                    var url = '/api/plan/discipline/delete/' + self.current.disciplineplan().id();
 
                     $.post(url, function(result){
                         self.emptyCurrentPlan();
                         self.get.disciplineplans();
+                        self.mode('none');
                     });
 
                 },
                 startEdit: function (data) {
                     self.mode('edit');
                     self.disciplineSelected(data);
-                    self.current().disciplineplan(data);
+                    self.current.disciplineplan(data);
                 },
                 startDelete: function (data) {
                     self.toggleModal('#delete-plan-modal', '');
-                    self.current().disciplineplan(data);
+                    self.current.disciplineplan(data);
+                    self.mode('delete');
                 },
                 cancelDelete: function () {
                     self.toggleModal('#delete-plan-modal', 'close');
-                    self.emptyCurrentPlan();
+                    self.mode('none');
                 },
                 cancelEdit: function () {
-                    self.emptyCurrentPlan();
+                    self.mode('none');
                 }
-            });
+            };
 
             self.toggleModal = function(selector, action){
                 $(selector).arcticmodal(action);

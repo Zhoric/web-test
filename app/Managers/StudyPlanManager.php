@@ -62,17 +62,21 @@ class StudyPlanManager
             ->getPlansDisciplinesByStudyplanAndNamePaginated($pageSize, $pageNum, $studyplanId, $name);
     }
 
-    public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId){
+    public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId, $disciplineId){
         $studyPlan = $this->_unitOfWork->studyPlans()->find($studyPlanId);
+        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
         $disciplinePlan->setStudyplan($studyPlan);
+        $disciplinePlan->setDiscipline($discipline);
 
         $this->_unitOfWork->disciplinePlans()->create($disciplinePlan);
         $this->_unitOfWork->commit();
     }
 
-    public function updateDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId){
+    public function updateDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId, $disciplineId){
         $studyPlan = $this->_unitOfWork->studyPlans()->find($studyPlanId);
+        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
         $disciplinePlan->setStudyplan($studyPlan);
+        $disciplinePlan->setDiscipline($discipline);
 
         $this->_unitOfWork->disciplinePlans()->update($disciplinePlan);
         $this->_unitOfWork->commit();
