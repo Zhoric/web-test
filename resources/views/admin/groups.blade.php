@@ -88,8 +88,8 @@
 <div class="g-hidden">
     <div class="box-modal" id="delete-group-modal">
         {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
-        <div>
-            <div><span>Удалить выбранную группу?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранную группу?</h3></div>
             <div>
                 <button data-bind="click: $root.approve" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.cancel" class="fa danger">&#xf00d;</button>
@@ -100,8 +100,8 @@
 <div class="g-hidden">
     <div class="box-modal" id="delete-student-modal">
         {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
-        <div>
-            <div><span>Удалить выбранного студента?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранного студента?</h3></div>
             <div>
                 <button data-bind="click: $root.student().delete" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.student().cancelDelete" class="fa danger">&#xf00d;</button>

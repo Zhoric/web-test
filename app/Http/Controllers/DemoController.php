@@ -56,8 +56,14 @@ class DemoController extends BaseController
     public function receiveCode(Request $request){
            $code = $request->input('code');
            $this->putCodeInFile($code);
-           return $code;
+           $this->runOnDocker();
+           $errors = $this->getErrors();
+           $result = $this->getResult();
+
+           $msg = $errors.' '.$result;
+           return $msg;
     }
+
     public function putCodeInFile($code){
         $fp = fopen("$this->app_path/temp_cache/file.c", "w");
         fwrite($fp, $code);
@@ -65,11 +71,25 @@ class DemoController extends BaseController
     }
     
 
-    public function compileOnDocker(){
+    public function runOnDocker(){
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+
         $command_pattern = "docker run -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet";
-        $command = 'gcc /opt/temp_cache/file.c';
-        $result =  exec("$command_pattern $command",$output);
-        dd($result);
+        $command = "sh /opt/temp_cache/run.sh";
+
+        exec("$command_pattern $command",$output);
+
+    }
+
+    public function getErrors(){
+        $errors = file_get_contents("$this->app_path/temp_cache/errors.txt");
+        return $errors;
+    }
+
+    public function getResult(){
+        $result = file_get_contents("$this->app_path/temp_cache/result.txt");
+        return $result;
     }
 
     public function index(){

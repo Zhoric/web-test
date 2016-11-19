@@ -1,13 +1,18 @@
 @import (less) "common.less";
 
+@jungleGreen: #2ABB9B;
+
 @mainTheme: @greensea;
-@hover: @turquoise;
+@buttonGreen: @jungleGreen;
+@buttonHover: @mainTheme;
 @danger: @alizarin;
 @important: @pomegranade;
+@crimson-red: #D24D57;
 @active: @wetasphalt;
 @unimportant: @asbestos;
 @neutral: @clouds;
 @grey: @normal-grey;
+
 
 .label(){
   font-size: 12px;
@@ -19,6 +24,143 @@
 .width100{
   width: 100%;
 }
+input[type=checkbox]{
+  vertical-align: top;
+  width: 17px;
+  height: 17px;
+  margin: 0 3px 0 0;
+  & + label {
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 30px;
+  }
+  &:not(checked) {
+    position: absolute;
+    opacity: 0;
+    & + label {
+      position: relative;
+      padding: 0 0 0 35px;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        border: 1px solid #CDD1DA;
+        background: #FFF;
+      }
+      &:after {
+        font-family: 'FontAwesome';
+        font-size: 17px;
+        content: '\f00c';
+        color: @mainTheme;
+        position: absolute;
+        left: 4px;
+        opacity: 0;
+        transition: all .2s;
+      }
+    }
+  }
+  &:checked + label:after {
+    opacity: 1;
+  }
+}
+
+.multiselect-width(@wpercent){
+  .multiselect-wrap {
+    width: @wpercent;
+    .multiselect {
+      width: @wpercent;
+    }
+    input{
+      width: @wpercent + 0.9;
+    }
+  }
+  .knockout-autocomplete.menu{
+    width: @wpercent - 4;
+  }
+}
+.multiselect-wrap{
+  margin:0 !important;
+  .multiselect{
+    background: @white;
+    width: 50%;
+    border: 1px solid #e3e3e3;
+    border-bottom: none;
+    padding: 10px;
+    margin: 0;
+    ul{
+      padding:0;
+    }
+    li{
+      list-style: none;
+      display: inline-block;
+      padding: 5px;
+      color: @white;
+      margin: 2px 0;
+      background: #16a085;
+      border-radius: 5px;
+    }
+    span.fa{
+      font-size: 13px;
+      margin-left: 5px;
+      position: relative;
+      float: right;
+      top: -3px;
+      cursor: pointer;
+    }
+  }
+  input{
+    width: 50.8%;
+    margin: 0;
+    display: block;
+    top: -4px;
+    position: relative;
+    border: 1px solid #e3e3e3;
+    &:focus{
+      outline: none;
+    }
+    &.full{
+      border-top: none;
+    }
+  }
+}
+.knockout-autocomplete{
+  &.menu {
+    background-color: @white;
+    padding: 3px 0;
+    height: auto;
+    width: 44%;
+    li {
+      text-transform: inherit;
+      font-family: 'Roboto Regular';
+      cursor: pointer;
+      list-style: none;
+      margin: 0px 0;
+      padding: 3px 12px;
+      display: block;
+      background: @white;
+      color: @black;
+      &.selected{
+        background: @mainTheme;
+        color: @white;
+      }
+    }
+  }
+  &.floating-menu {
+    position: fixed;
+    border: thin #aaa solid;
+    margin: 0;
+    margin-top: 3px;
+    -webkit-box-shadow: 1px 1px 4px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    1px 1px 4px rgba(50, 50, 50, 0.75);
+    box-shadow:         1px 1px 4px rgba(50, 50, 50, 0.75);
+  }
+  &.after-menu {
+    position: absolute;
+  }
+}
 
 .filter{
   height: 100px;
@@ -26,7 +168,7 @@
   padding: 20px 20px 0;
   div{
     display: inline-block;
-    margin: 10px 0px 0px 10px;
+    margin: 10px 0 0 10px;
     width: 48%;
   }
   label{
@@ -48,12 +190,12 @@
 
 .menu{
   top: 0;
-  background: #fff;
+  background: @white;
   height: 50px;
   width: 100%;
   margin: 0 auto;
   position: fixed;
-  border-bottom: 1px solid @wetasphalt;
+  border-bottom: 1px solid @active;
   z-index: 10;
   ul{
     text-align: center;
@@ -70,6 +212,13 @@
       color: @white;
       background: @midnightblue;
       cursor: pointer;
+    }
+    a{
+      border:0;
+      color:@black;
+      &:hover{
+        color:@white;
+      };
     }
   }
 }
@@ -91,10 +240,10 @@
     color: @neutral;
     text-align: center;
     text-transform: uppercase;
-    border-bottom: 1px solid @neutral;
+    border-bottom: 2px solid @neutral;
     cursor: pointer;
     &:hover{
-
+      background: @active;
     }
     &:active{
       background: @active;
@@ -162,7 +311,7 @@ table{
     a{
       border-bottom: 0;
       &:hover{
-        color: @emerland;
+        color: @buttonGreen;
       }
     }
     &s {
@@ -198,7 +347,7 @@ table{
 
 a.active-link{
   font-size: 13px;
-  color: @greensea;
+  color: @mainTheme;
   float: right;
   border-bottom: 0;
   &:hover{
@@ -216,10 +365,10 @@ button.add-section{
   }
 }
 button{
-  background: @emerland;
+  background: @buttonGreen;
   width: 50px;
   &:hover{
-    background: @nephritis;
+    background: @buttonHover;
   }
 }
 
@@ -240,9 +389,10 @@ button{
       }
       &:nth-child(3){
         width: 93%;
-        select{
-          width: 97%;
-        }
+        .multiselect-width(97%);
+        //select{
+        //  width: 97%;
+        //}
       }
     }
     .float-btn-group{
@@ -288,7 +438,10 @@ button{
   &-add{
     border-bottom: 20px solid @white;
     .select-theme, .select-complexity{
-      width: 47%;
+      width: 46%;
+      select{
+        width:100%;
+      }
     }
     .time{
       width: 13%;
@@ -311,7 +464,7 @@ button{
       &-input{
         width: 96%;
         input{
-          width: 93%;
+          width: 92%;
         }
         button{
           width: 35px;
@@ -433,9 +586,7 @@ button{
       }
       .themes{
         width: 97%;
-        select{
-          width: 100%;
-        }
+        .multiselect-width(99%);
       }
       .btn-group{
         float: right;
@@ -455,27 +606,27 @@ button{
     width: 100%;
     line-height: 50px;
     height: 50px;
-    background: @greensea;
-    color: @clouds;
+    background: @mainTheme;
+    color: @neutral;
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    border-bottom: 1px solid @clouds;
+    border-bottom: 1px solid @neutral;
     &.font-settings{
       text-transform: none;
       font-size: 17px;
       font-weight: bold;
     }
     &:hover{
-      background: @hover;
+      background: @active;
     }
     &:active{
-      background: @wetasphalt;
+      background: @active;
     }
     &-current{
-      background: @wetasphalt;
+      background: @active;
       &:hover{
-        background: @wetasphalt;
+        background: @active;
       }
     }
   }
@@ -484,8 +635,8 @@ button{
     background: @light-grey;
 
     .profile{
-      background: @greensea;
-      color: @clouds;
+      background: @mainTheme;
+      color: @neutral;
       width: 250px;
       height: 150px;
       margin: 5px 10px 5px 0px;
@@ -495,10 +646,13 @@ button{
       cursor: pointer;
       font-weight: bold;
       &:hover{
-        background: @hover;
+        background: @buttonHover;
       }
       &:active{
-        background: @wetasphalt;
+        background: @active;
+      }
+      button:hover{
+        background: @active;
       }
     }
   }
@@ -517,15 +671,15 @@ button{
   }
   label{
     font-size: 12px;
-    color: @asbestos;
+    color: @unimportant;
   }
   .study-form{
     &-selected{
       font-size: 18px;
-      color: @greensea;
+      color: @mainTheme;
     }
     font-size: 13px;
-    color: @asbestos;
+    color: @unimportant;
     line-height: 1.8;
     cursor: pointer;
   }
@@ -542,12 +696,12 @@ button{
 }
 
 .tyle-btn{
-  color: @clouds;
+  color: @neutral;
   width: 170px;
-  background: @wetasphalt;
+  background: @active;
   &-negative{
-    border: 2px solid @wetasphalt;
-    background: @greensea;
+    border: 2px solid @active;
+    background: @mainTheme;
   }
 }
 
@@ -583,12 +737,21 @@ button.sq-small{
   }
   .upload-btn{
     padding: 7.5px;
-    top: -1px;
+    top: 0px;
     color: @white;
     padding: 7.5px;
-    background: @emerland;
+    background: @buttonGreen;
     &:hover{
-      background: @nephritis;
+      background: @buttonHover;
+    }
+  }
+  .clean-btn{
+    background: #bfbfbf;
+    color: @white;
+    padding: 7px;
+    border-radius: 0px 3px 3px 0;
+    &:hover{
+      background: @crimson-red;
     }
   }
   img{
@@ -610,7 +773,7 @@ button.sq-small{
   h1{
     text-align: center;
     padding: 30px;
-    color: @greensea;
+    color: @mainTheme;
   }
   h3{
     padding: 10px 0 0 15px;
@@ -718,49 +881,36 @@ button.sq-small{
   }
 }
 
-input[type=checkbox]{
-  vertical-align: top;
-  width: 17px;
-  height: 17px;
-  margin: 0 3px 0 0;
-  & + label {
-    cursor: pointer;
-    font-size: 17px;
-    line-height: 30px;
-  }
-  &:not(checked) {
-    position: absolute;
-    opacity: 0;
-    & + label {
-      position: relative;
-      padding: 0 0 0 35px;
-      &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 22px;
-        height: 22px;
-        border: 1px solid #CDD1DA;
-        background: #FFF;
-      }
-      &:after {
-        font-family: 'FontAwesome';
-        font-size: 17px;
-        content: '\f00c';
-        color: @greensea;
-        position: absolute;
-        left: 4px;
-        opacity: 0;
-        transition: all .2s;
+.popup{
+  &-delete{
+    height: 80px;
+    div:last-child{
+      float: right;
+      button:first-child{
+        margin: 0 5px;
       }
     }
   }
-  &:checked + label:after {
-    opacity: 1;
+  &-theme{
+    div{
+      margin: 10px 0;
+    }
+    input{
+      width: 95%;
+    }
+    label{
+      .label();
+    }
+    .popup-btn-group{
+      float: right;
+      margin: 5px 4px;
+    }
   }
 }
-
+#add-theme-modal{
+  width: 350px;
+  height: 160px;
+}
 .plan-details {
   div {
     display: inline-table;
@@ -768,7 +918,7 @@ input[type=checkbox]{
     width: 11%;
     label{
       font-size: 12px;
-      color: @asbestos;
+      color: @unimportant;
       line-height: 40px;
     }
     &:first-child{
@@ -777,10 +927,10 @@ input[type=checkbox]{
     .plan-form{
       &-selected{
         font-size: 18px;
-        color: @greensea;
+        color: @mainTheme;
       }
       font-size: 13px;
-      color: @asbestos;
+      color: @unimportant;
       line-height: 1.8;
       cursor: pointer;
     }
@@ -796,3 +946,6 @@ input[type=checkbox]{
   }
 
 }
+
+
+

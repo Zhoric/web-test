@@ -44,6 +44,9 @@ input {
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
+textarea {
+  font-family: 'Roboto Regular';
+}
 select {
   width: 500px;
   height: 30px;
@@ -189,20 +192,32 @@ span.radio-negative {
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+  border: 2px solid #bfbfbf;
 }
 .details h3 {
   text-align: center;
 }
 .details table {
-  border: 2px solid #bfbfbf;
-  border-radius: 10px;
+  border-collapse: collapse;
 }
-.details table td {
+.details table thead {
+  border-bottom: 1px solid #bfbfbf;
+}
+.details table thead th {
+  padding: 3px;
+}
+.details table tbody tr:nth-child(even) {
+  background: #eeeeee;
+}
+.details table tbody tr td {
+  text-align: center;
   padding: 5px;
+  width: 10%;
 }
-.details table td:first-child {
-  width: 82%;
-  text-indent: 20px;
+.details table tbody tr td:first-child {
+  text-align: left;
+  width: 70%;
+  padding-left: 30px;
 }
 .details button {
   border-radius: 5px;

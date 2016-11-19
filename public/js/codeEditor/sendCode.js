@@ -8,8 +8,8 @@ function sendCode(){
     var editor = ace.edit("editor");
     var code = editor.getValue();
 
-    $.post('/receiveCode', {code: code} , function(){
-       alert('success');
+    $.post('/receiveCode', {code: code} , function(msg){
+       alert(msg);
     });
 
 }

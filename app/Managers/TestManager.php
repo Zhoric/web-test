@@ -85,7 +85,8 @@ class TestManager
         }
 
         //Если тест открытый с однострочным ответом - не отправляем студенту варианты ответов
-        if ($question->getType() == QuestionType::OpenOneString){
+        if ($question->getType() == QuestionType::OpenOneString
+            || $question->getType() == QuestionType::OpenManyStrings){
             $answers = null;
         }
 

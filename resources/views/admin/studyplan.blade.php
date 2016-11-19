@@ -108,8 +108,8 @@
 <div class="g-hidden">
     <div class="box-modal" id="delete-plan-modal">
         {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
-        <div>
-            <div><span>Удалить выбранный план дисциплины?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранный план дисциплины?</h3></div>
             <div>
                 <button data-bind="click: $root.plan().delete" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.plan().cancelDelete" class="fa danger">&#xf00d;</button>

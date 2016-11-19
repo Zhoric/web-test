@@ -1,5 +1,5 @@
 @extends('shared.layout')
-@section('title', 'Дисциплины')
+@section('title', 'Тема')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
@@ -66,7 +66,7 @@
                         <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
                             buttonClass: 'upload-btn', fileNameClass: 'disabled',
                             buttonText: 'Выберите файл', changeButtonText: 'Изменить',
-                            clearButtonText: 'Очистить', noFileText: 'Файл не выбран'}" accept="image/*">
+                            clearButtonText: 'Очистить', clearButtonClass: 'clean-btn', noFileText: 'Файл не выбран'}" accept="image/*">
                     </div>
                 </div>
                 <div class="clear"></div>
@@ -217,8 +217,8 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
-        <div>
-            <div><span>Удалить выбранный вопрос?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранный вопрос?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.question.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.question.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>

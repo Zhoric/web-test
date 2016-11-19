@@ -29,6 +29,17 @@
             <div class="details">
                 <!-- ko if: $root.current.tests().length -->
                 <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Название теста</th>
+                            <th colspan="2">Попытки</th>
+                            <th rowspan="2">Действия</th>
+                        </tr>
+                        <tr>
+                            <th>Использовано</th>
+                            <th>Осталось</th>
+                        </tr>
+                    </thead>
                     <tbody data-bind="foreach: $root.current.tests">
                         <tr data-bind="template: {name: 'test-template', data: test}"></tr>
                     </tbody>
@@ -45,5 +56,7 @@
 
 <script type="text/html" id="test-template">
     <td data-bind="text: subject"></td>
-    <td><button data-bind="click: $root.actions.startTest, enabled: $parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
+    <td data-bind="text: $parent.attemptsMade"></td>
+    <td data-bind="text: $parent.attemptsLeft"></td>
+    <td><button data-bind="click: $root.actions.startTest, disable: !$parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
 </script>

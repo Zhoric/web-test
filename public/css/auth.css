@@ -44,6 +44,9 @@ input {
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
+textarea {
+  font-family: 'Roboto Regular';
+}
 select {
   width: 500px;
   height: 30px;
@@ -127,7 +130,7 @@ body .incorrect {
 }
 .register {
   margin: 7% auto 0;
-  height: 430px;
+  height: 470px;
   width: 430px;
   background: #ecf0f1;
 }

@@ -23,6 +23,14 @@ $(document).ready(function(){
                 },
                 goHome: function(){
                     window.location.href = '/home';
+                },
+                image: {
+                    expand: function(){
+                        $('#image-expander').fadeIn();
+                    },
+                    hide: function(){
+                        $('#image-expander').fadeOut();
+                    },
                 }
             };
             self.toggleCurrent = {
@@ -67,14 +75,16 @@ $(document).ready(function(){
                         var res = ko.mapping.fromJSON(response);
                         if (res.hasOwnProperty('question')){
                             self.current.question(res.question);
-                            self.current.answers(res.answers());
                             self.current.timeLeft(res.question.time());
+                            if (res.answers() == null) {
+                                self.current.answers([]);
+                            }
+                            else{
+                                self.current.answers(res.answers());
+                            }
                         }
                         else{
-                            self.toggleCurrent.clear();
-                            console.log(response);
                             self.current.testResult(res);
-
                         }
                     });
                 }
@@ -112,7 +122,9 @@ $(document).ready(function(){
 
             self.current.timeLeft.subscribe(function(value){
                 if (!value){
-                    //self.actions.answer();
+                    if(self.current.question()){
+                        self.actions.answer();
+                    }
                 }
             });
 

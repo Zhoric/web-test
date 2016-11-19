@@ -64,10 +64,7 @@ $(document).ready(function(){
                         id: ko.observable(2),
                         name: ko.observable('Обучающий')
                     }]),
-                type: ko.observable(),
-
-                themes: ko.observableArray([]),
-                selectedThemes: ko.observableArray([])
+                type: ko.observable()
             };
             self.filter = {
                 name: ko.observable(''),
@@ -131,7 +128,7 @@ $(document).ready(function(){
                             .isRandom(true)
                             .themes([]);
                         self.current.type('');
-                        self.current.selectedThemes([]);
+                        self.multiselect.empty();
                     }
                 },
                 stringify: {
@@ -151,7 +148,7 @@ $(document).ready(function(){
                         if (self.mode() === 'edit'){
                             test.id = t.id();
                         }
-                        self.current.selectedThemes().find(function(item){
+                        self.multiselect.tags().find(function(item){
                             themes.push(item.id());
                         });
 
@@ -185,23 +182,7 @@ $(document).ready(function(){
                         asFalse: function(){
                             self.current.test().isRandom(false);
                         }
-                    },
-                    themes: function(){
-                        var selected = self.current.selectedThemes;
-                        var testThemes = self.current.test().themes();
-                        var commonThemes = self.current.themes();
-                        selected([]);
-                        commonThemes.find(function(item){
-                            var id = item.id();
-                            testThemes.find(function(theme){
-                                console.log(theme.id());
-                                if (theme.id() === id){
-                                    selected.push(item);
-                                }
-                            });
-                        });
-                        console.log(selected());
-                    },
+                    }
                 },
                 check: {
                     test: function(){
@@ -218,7 +199,7 @@ $(document).ready(function(){
                             return false;
                         }
 
-                        if (!self.current.selectedThemes().length){
+                        if (!self.multiselect.tags().length){
                             self.validationTooltip.open(selector, 'Выберите хотя бы одну тему');
                             return false;
                         }
@@ -257,6 +238,40 @@ $(document).ready(function(){
                     return false;
                 },
             };
+            self.multiselect = {
+                data: ko.observableArray([]),
+                tags: ko.observableArray([]),
+                show: function(data){
+                    return data.name();
+                },
+                select: function(data){
+                    var item = self.multiselect.tags().find(function(item){
+                        return item.id() === data.id();
+                    });
+                    if (!item) self.multiselect.tags.push(data);
+                    return '';
+                },
+                remove: function(data){
+                    self.multiselect.tags.remove(data);
+                },
+                empty: function(){
+                    console.log('empty');
+                    self.multiselect.tags([]);
+                },
+                fill: function(){
+                    var testThemes = self.current.test().themes();
+                    console.log('fill');
+                    self.multiselect.data().find(function(item){
+                        var id = item.id();
+                        testThemes.find(function(theme){
+                            if (theme.id() === id){
+                                //self.multiselect.tags.push(item);
+                                self.multiselect.select(item);
+                            }
+                        });
+                    });
+                }
+            };
             self.mode = ko.observable('none');
             self.csed = {
                 test: {
@@ -284,7 +299,6 @@ $(document).ready(function(){
                     },
                     startEdit: function(){
                         self.mode('edit');
-                        self.toggleCurrent.set.themes();
                         self.validationTooltip.checkIfExists('.approve-btn');
                     },
                     update: function(){
@@ -328,14 +342,14 @@ $(document).ready(function(){
                 themes: function(){
                     var url = '/api/disciplines/' + self.filter.discipline().id() + '/themes';
                     $.get(url, function(response){
-                        self.current.themes(ko.mapping.fromJSON(response)());
+                        self.multiselect.data(ko.mapping.fromJSON(response)());
                     });
                 },
                 testThemes: function(id){
                     var url = '/api/tests/' + id + '/themes';
                     $.get(url, function(response){
                         self.current.test().themes(ko.mapping.fromJSON(response)());
-                        console.log(self.current.test().themes());
+                        self.multiselect.fill();
                     });
                 }
             };
@@ -346,6 +360,7 @@ $(document).ready(function(){
 
                     $.post(url, json, function(){
                         self.mode('none');
+                        self.toggleCurrent.empty.test();
                         self.get.tests();
                     });
                 },
@@ -409,6 +424,7 @@ $(document).ready(function(){
             return {
                 current: self.current,
                 pagination: self.pagination,
+                multiselect: self.multiselect,
                 toggleCurrent: self.toggleCurrent,
                 mode: self.mode,
                 csed: self.csed,

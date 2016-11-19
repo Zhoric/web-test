@@ -14,11 +14,12 @@ $(document).ready(function(){
                     abbreviation: ko.observable(''),
                     description: ko.observable('')
                 }),
-                profile: ko.observable({
-                    profiles: ko.observableArray([]),
-                    selected: ko.observableArray([]),
-                    discipline: ko.observableArray([])
-                }),
+                profiles: ko.observableArray([]),
+                // profile: ko.observable({
+                //     profiles: ko.observableArray([]),
+                //     selected: ko.observableArray([]),
+                //     discipline: ko.observableArray([])
+                // }),
                 themes: ko.observableArray([]),
                 theme: ko.observable({
                     id: ko.observable(0),
@@ -31,7 +32,37 @@ $(document).ready(function(){
                     name: ko.observable(''),
                     content: ko.observable('')
                 })
-
+            };
+            self.multiselect = {
+                data: ko.observableArray([]),
+                tags: ko.observableArray([]),
+                show: function(data){
+                    return data.fullname();
+                },
+                select: function(data){
+                    var item = self.multiselect.tags().find(function(item){
+                        return item.id() === data.id();
+                    });
+                    if (!item) self.multiselect.tags.push(data);
+                    return '';
+                },
+                remove: function(data){
+                    self.multiselect.tags.remove(data);
+                },
+                empty: function(){
+                    self.multiselect.tags([]);
+                },
+                fill: function(){
+                    var profiles = self.current.profiles;
+                    self.multiselect.data().find(function(item){
+                        var id = item.id();
+                        profiles().find(function(profile){
+                            if (profile.profile_id() == id){
+                                self.multiselect.select(item);
+                            }
+                        });
+                    });
+                }
             };
             self.filter = {
                 discipline: ko.observable(''),
@@ -51,7 +82,8 @@ $(document).ready(function(){
                         .name('')
                         .abbreviation('')
                         .description('');
-                    self.current.profile().selected([]);
+                    self.current.profiles([]);
+                    self.multiselect.empty();
                 },
                 stringify: function(){
                     var edit = self.current.discipline();
@@ -62,29 +94,10 @@ $(document).ready(function(){
                         description: edit.description()
                     };
                     self.mode() === 'edit' ? forpost.id = edit.id() : null;
-                    self.current.profile().selected().forEach(function(item){
+                    self.multiselect.tags().find(function(item){
                         profiles.push(item.id());
                     });
                     return JSON.stringify({discipline: forpost, profileIds: profiles});
-                },
-                setInitialProfiles: function(){
-                    var discipline = self.current.profile().discipline();
-                    var profiles = self.current.profile().profiles;
-                    var selected = self.current.profile().selected;
-                    var received = self.current.profile().received;
-                    selected([]);
-                    if (discipline.length){
-                        discipline.forEach(function(disc){
-                            var profile = profiles().find(function(item){
-                                return  (item.id() == disc.profile_id()) ? item : null;
-                            });
-
-                            if (profile){
-                                selected.push(profile);
-                                received.push(profile);
-                            }
-                        });
-                    }
                 }
             };
             self.pagination = {
@@ -122,8 +135,8 @@ $(document).ready(function(){
                 show: function(data){
                     if (self.mode() === 'none' || self.current.discipline().id() !== data.id()){
                         self.mode('info');
-                        self.get.disciplineProfiles();
                         self.toggleCurrent.fill(data);
+                        self.get.disciplineProfiles();
                         self.get.themes();
                         return;
                     }
@@ -136,7 +149,6 @@ $(document).ready(function(){
                 },
                 startUpdate: function(){
                     self.mode('edit');
-                    self.toggleCurrent.setInitialProfiles();
                 },
                 startRemove: function(){
                     self.mode('delete');
@@ -250,15 +262,19 @@ $(document).ready(function(){
                 },
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();
+                    console.log(id);
                     if (id){
                         $.get('/api/disciplines/' + id + '/profiles', function(response){
-                            self.current.profile().discipline(ko.mapping.fromJSON(response)());
+                            self.current.profiles(ko.mapping.fromJSON(response)());
+                            console.log(self.current.profiles());
+                            self.multiselect.fill();
                         });
                     }
                 },
                 profiles: function(){
                     $.get('/api/profiles', function(response){
-                        self.current.profile().profiles(ko.mapping.fromJSON(response)());
+                        self.multiselect.data(ko.mapping.fromJSON(response)());
+                        console.log(self.multiselect.data());
                     });
                 },
                 themes: function(){
@@ -307,6 +323,7 @@ $(document).ready(function(){
             return {
                 disciplines: self.disciplines,
                 pagination: self.pagination,
+                multiselect: self.multiselect,
                 current: self.current,
                 moveTo: self.moveTo,
                 mode: self.mode,

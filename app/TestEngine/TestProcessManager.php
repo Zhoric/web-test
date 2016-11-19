@@ -1,6 +1,7 @@
 <?php
 
 namespace TestEngine;
+use DateTimeZone;
 use Exception;
 use DateTime;
 use GivenAnswer;
@@ -103,6 +104,7 @@ class TestProcessManager
             $suitableQuestions = self::getSuitableQuestionsIds();
             self::validateSuitableQuestions($suitableQuestions);
 
+
             if (self::$_testResult != null){
                 return self::$_testResult;
             }
@@ -169,6 +171,7 @@ class TestProcessManager
     public static function calculateAnsSaveResult($testResultId){
         $testResultMark = TestResultCalculator::calculate($testResultId);
         $now = new DateTime();
+        $now->setTimezone(new DateTimeZone('Europe/Moscow'));
 
         $testResult = self::getTestResultManager()->getById($testResultId);
         $testResult->setMark($testResultMark);
@@ -177,7 +180,6 @@ class TestProcessManager
         self::$_testResult = $testResult;
         self::getTestResultManager()->update($testResult);
         self::$_testResult->setDateTime($now->format(self::dateFormat));
-
     }
 
     /**

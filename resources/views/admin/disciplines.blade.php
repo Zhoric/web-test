@@ -1,6 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Дисциплины')
 @section('javascript')
+    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
 @endsection
 
@@ -13,8 +14,8 @@
         </div>
         <div>
             <label>Направление</label></br>
-            <select data-bind="options: $root.current.profile().profiles,
-                       optionsText: 'name',
+            <select data-bind="options: $root.multiselect.data,
+                       optionsText: 'fullname',
                        value: $root.filter.profile,
                        optionsCaption: 'Выберите профиль'"></select>
         </div>
@@ -57,8 +58,8 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
-        <div>
-            <div><span>Удалить выбранную дисциплину?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранную дисциплину?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
@@ -68,8 +69,8 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="remove-theme-modal">
-        <div>
-            <div><span>Удалить выбранную тему?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранную тему?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.theme.remove" class="fa">&#xf00c;</button>
                 <button class="fa danger arcticmodal-close">&#xf00d;</button>
@@ -79,13 +80,13 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="add-theme-modal">
-        <div>
-            <div><span>Добавление темы</span></div>
+        <div class="popup-theme">
+            <div><h3>Добавление темы</h3></div>
             <div>
-                <label>Название</label>
-                <input type="text" data-bind="value: $root.current.theme().name">
+                <label>Название</label></br>
+                <input type="text" data-bind="value: $root.current.theme().name" placeholder="Название темы">
             </div>
-            <div>
+            <div class="popup-btn-group">
                 <button data-bind="click: $root.csed.theme.add" class="fa">&#xf00c;</button>
                 <button class="fa danger arcticmodal-close">&#xf00d;</button>
             </div>
@@ -158,9 +159,16 @@
         </div>
         <div>
             <label>Профили</label></br>
-            <!-- ko with: $root.current.profile() -->
-            <select data-bind="options: profiles, optionsText: 'fullname',  selectedOptions: selected" size="4" multiple="true"></select>
-            <!-- /ko -->
+            <div class="multiselect-wrap">
+                <!-- ko if: $root.multiselect.tags().length -->
+                <div class="multiselect">
+                    <ul data-bind="foreach: $root.multiselect.tags">
+                        <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: fullname"></span></li>
+                    </ul>
+                </div>
+                <!-- /ko -->
+                <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+            </div>
         </div>
         <div class="float-btn-group">
             <button data-bind="click: $root.csed.update" class="fa">&#xf00c;</button>
@@ -208,7 +216,7 @@
 </div>
 <div class="g-hidden">
     <div class="box-modal" id="remove-section-modal">
-        <div>
+        <div class="popup-delete">
             <div><span>Удалить выбранную секцию?</span></div>
             <div>
                 <button data-bind="click: $root.csed.section.remove" class="fa">&#xf00c;</button>

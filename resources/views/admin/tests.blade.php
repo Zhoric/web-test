@@ -1,11 +1,13 @@
 @extends('shared.layout')
-@section('title', 'Дисциплины')
+@section('title', 'Тесты')
 @section('javascript')
-    <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
+    {{--<link rel="stylesheet" href="{{ URL::asset('css/knockout.autocomplete.css')}}"/>--}}
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
+    <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
 @endsection
 
 @section('content')
@@ -23,6 +25,16 @@
                        optionsCaption: 'Выберете дисциплину'"></select>
         </div>
     </div>
+
+    {{--<div class="multiselect-wrap">--}}
+        {{--<div class="multiselect">--}}
+            {{--<ul data-bind="foreach: $root.multiselect.tags">--}}
+                {{--<li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: name"></span></li>--}}
+            {{--</ul>--}}
+        {{--</div>--}}
+        {{--<input data-bind="autocomplete: { data: $root.current.themes, format: $root.multiselect.show, onSelect: $root.multiselect.select}" value=""/>--}}
+    {{--</div>--}}
+
     <div class="org-accordion">
         <div data-bind="click: $root.csed.test.toggleAdd" class="org-item">
             <span class="fa">&#xf067;</span>
@@ -61,8 +73,8 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
-        <div>
-            <div><span>Удалить выбранный тест?</span></div>
+        <div class="popup-delete">
+            <div><h3>Удалить выбранный тест?</h3></div>
             <div>
                 <button data-bind="click: $root.csed.test.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.test.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
@@ -149,7 +161,16 @@
         </div>
         <div class="themes">
             <label>Темы</label></br>
-            <select data-bind="options: $root.current.themes, optionsText: 'name',  selectedOptions: $root.current.selectedThemes" size="7" multiple="true"></select>
+            <div class="multiselect-wrap">
+                <!-- ko if: $root.multiselect.tags().length -->
+                <div class="multiselect">
+                    <ul data-bind="foreach: $root.multiselect.tags">
+                        <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: name"></span></li>
+                    </ul>
+                </div>
+                <!-- /ko -->
+                <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+            </div>
         </div>
         <div class="isActive">
             <input id="test-is-active" type="checkbox" data-bind="checked: isActive"> <label for="test-is-active">Активный</label>
