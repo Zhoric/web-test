@@ -3,6 +3,7 @@
   <entity name="Section" table="section">
     <indexes>
       <index name="section_theme_id_foreign" columns="theme_id"/>
+      <index name="section_discipline_id_foreign" columns="theme_id"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
@@ -20,6 +21,11 @@
     <many-to-one field="theme" target-entity="Theme" fetch="LAZY">
       <join-columns>
         <join-column name="theme_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="discipline" target-entity="Discipline" fetch="LAZY">
+      <join-columns>
+        <join-column name="discipline_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>
