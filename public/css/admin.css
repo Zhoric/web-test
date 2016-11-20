@@ -433,6 +433,9 @@ a.active-link:hover {
 button.move {
   width: 150px;
 }
+button.move-section {
+  width: 160px;
+}
 button.add-section {
   width: 300px;
   background: #3498db;
@@ -910,13 +913,6 @@ button.sq-small {
 }
 #sections-modal table td:last-child button.info {
   background: #3498db;
-}
-.section {
-  padding: 20px;
-}
-.section div:first-child {
-  text-align: center;
-  font-size: 18px;
 }
 #cancel-modal div {
   text-align: center;

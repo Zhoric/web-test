@@ -227,5 +227,8 @@ span.radio-negative {
 .details button:disabled {
   background: #bfbfbf;
 }
+.section {
+  padding: 40px 30px;
+}
 
 /*# sourceMappingURL=site.css.map */

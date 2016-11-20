@@ -55,6 +55,7 @@ Route::get('welcome',function (){
 
 Route::get('/test/{id}', function(){return View('student.test');});
 Route::get('/home', function(){return View('student.home');});
+Route::get('/section/{id}', function(){return View('student.section');});
 
 
 Route::group(['prefix' => 'admin'], function(){
@@ -67,13 +68,13 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('theme/{id}', function(){return View('admin.themes');});
     Route::get('tests/{id}', function(){return View('admin.tests');});
     Route::get('tests', function(){return View('admin.tests');});
-    Route::get('editor/new/{id}', function(){return View('admin.editor');});
+    Route::get('editor/new/{discipline_id}/{theme_id}', function(){return View('admin.editor');});
     Route::get('editor/{id}', function(){return View('admin.editor');});
-    Route::get('section/{id}', function(){return View('admin.section');});
     Route::get('studyplans', function(){return View('admin.studyplans');});
     Route::get('studyplan/{id}', function(){return View('admin.studyplan');});
     Route::get('institutes', function(){return View('admin.institutes');});
     Route::get('manual', function(){return View('admin.manual');});
+    Route::get('manualSections', function(){return View('admin.manualSections');});
 });
 
 
@@ -246,6 +247,7 @@ Route::group(['prefix' => 'api'], function() {
    */
     Route::group(['prefix' => 'sections'], function () {
         Route::get('theme/{id}', 'SectionController@getAllSectionsByTheme');
+        Route::get('discipline/{id}', 'SectionController@getAllSectionsByDiscipline');
         Route::post('create', 'SectionController@create');
         Route::post('update', 'SectionController@update');
         Route::post('delete/{id}', 'SectionController@delete');

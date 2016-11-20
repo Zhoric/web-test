@@ -16,7 +16,11 @@ class SectionController extends Controller
     }
 
     public function getAllSectionsByTheme($themeId){
-         return json_encode($this->_sectionManager->getSectionsByTheme($themeId));
+        return json_encode($this->_sectionManager->getSectionsByTheme($themeId));
+    }
+
+    public function getAllSectionsByDiscipline($disciplineId){
+        return json_encode($this->_sectionManager->getSectionsByDiscipline($disciplineId));
     }
 
     public function getSection($id){
@@ -26,19 +30,21 @@ class SectionController extends Controller
     public function create(Request $request){
         $sectionData = $request->json('section');
         $themeId = $request->json('themeId');
+        $disciplineId = $request->json('disciplineId');
 
         $section = new Section();
         $section->fillFromJson($sectionData);
-        $this->_sectionManager->addSection($section, $themeId);
+        $this->_sectionManager->addSection($section, $themeId, $disciplineId);
     }
 
     public function update(Request $request){
         $sectionData = $request->json('section');
         $themeId = $request->json('themeId');
+        $disciplineId = $request->json('disciplineId');
 
         $section = new Section();
         $section->fillFromJson($sectionData);
-        $this->_sectionManager->updateSection($section, $themeId);
+        $this->_sectionManager->updateSection($section, $themeId, $disciplineId);
     }
 
     public function delete($sectionId){

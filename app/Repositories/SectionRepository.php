@@ -15,4 +15,8 @@ class SectionRepository extends BaseRepository
     public function getByTheme($themeId){
         return $this->repo->findBy(['theme' => $themeId]);
     }
+
+    public function getByDiscipline($disciplineId){
+        return $this->repo->findBy(['discipline' => $disciplineId, 'theme' => null]);
+    }
 }

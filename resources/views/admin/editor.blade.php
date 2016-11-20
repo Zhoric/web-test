@@ -10,7 +10,7 @@
             <button data-bind="click: $root.cancel" class="fa danger">&#xf00d;</button>
         </div>
         <div class="section-name">
-            <label>Название секции</label>
+            <label>Название раздела</label>
             <input type="text" data-bind="value: $root.section().name">
         </div>
         <textarea id="editor" data-bind="value: $root.section().content"></textarea>

@@ -173,6 +173,12 @@ $(document).ready(function(){
                     }
                     self.mode('info');
                 },
+                showSections: function (data) {
+                    self.current.discipline(data);
+                    self.get.sectionsByDiscipline();
+                    self.toggleModal('#sections-modal', '');
+
+                },
                 theme: {
                     startAdd: function(){
                         console.log('add theme');
@@ -207,11 +213,11 @@ $(document).ready(function(){
                     },
                     showSections : function(data) {
                         self.current.theme(data);
-                        self.get.sections();
+                        self.get.sectionsByTheme();
                         self.toggleModal('#sections-modal', '');
                     },
                     addSection : function (data) {
-                        window.location.href = '/admin/editor/new/' + self.current.theme().id();
+                        window.location.href = '/admin/editor/new/' + self.current.discipline().id() + '/' + self.current.theme().id();
                     }
                 },
                 section: {
@@ -231,7 +237,7 @@ $(document).ready(function(){
 
                     },
                     info: function (data) {
-                        window.location.href = '/admin/section/' + data.id();
+                        window.location.href = '/section/' + data.id();
                     }
                     
                 }
@@ -283,8 +289,14 @@ $(document).ready(function(){
                         self.current.themes(ko.mapping.fromJSON(response)());
                     });
                 },
-                sections: function() {
+                sectionsByTheme: function() {
                     var url = '/api/sections/theme/' + self.current.theme().id() ;
+                    $.get(url, function(response){
+                        self.current.sections(ko.mapping.fromJSON(response)());
+                    });
+                },
+                sectionsByDiscipline: function () {
+                    var url = '/api/sections/discipline/' + self.current.discipline().id() ;
                     $.get(url, function(response){
                         self.current.sections(ko.mapping.fromJSON(response)());
                     });

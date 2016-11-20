@@ -139,6 +139,7 @@
         <i>
             <button class="move" data-bind="click: $root.csed.theme.startAdd"><span class="fa">&#xf067;</span>&nbsp;Добавить тему</button>
             <button class="move" data-bind="click: $root.moveTo.tests"><span class="fa">&#xf044;</span>&nbsp;Тесты</button>
+            <button class="move move-section" data-bind="click: $root.csed.showSections"><span class="fa">&#xf0f6;</span>&nbsp;Общие разделы</button>
         </i>
         <i>
             <button data-bind="click: $root.csed.startUpdate" class="fa">&#xf040;</button>
@@ -182,7 +183,7 @@
         <div class="box-modal_close arcticmodal-close">закрыть</div>
         <div class="width100">
             <div>
-                <button data-bind="click: $root.csed.theme.addSection" class="add-section"><span class="fa">&#xf067;</span>&nbsp;Добавить новую секцию</button>
+                <button data-bind="click: $root.csed.theme.addSection" class="add-section"><span class="fa">&#xf067;</span>&nbsp;Добавить новый раздел</button>
             </div>
             <!-- ko if:  $root.current.sections().length > 0-->
             <div class="section-info">
@@ -194,7 +195,7 @@
                 <!-- ko foreach: $root.current.sections-->
                 <tr>
                     <td data-bind="text: $index()+1"></td>
-                    <td><a data-bind="text: name"></a></td>
+                    <td><a data-bind="click: $root.csed.section.info, text: name"></a></td>
                     <td><button data-bind="click: $root.csed.section.info" class="fa success">&#xf0f6;</button>
                         <button data-bind="click: $root.csed.section.edit" class="fa info">&#xf040;</button>
                         <button data-bind="click: $root.csed.section.startRemove" class="fa danger">&#xf014;</button>
@@ -207,7 +208,7 @@
             <!-- /ko -->
             <!-- ko if:  $root.current.sections().length == 0-->
             <div class="section-info">
-                <p>Для данной темы секции отсутствуют</p>
+                <p>Для данной части разделы отсутствуют</p>
             </div>
             <!-- /ko -->
 
@@ -217,7 +218,7 @@
 <div class="g-hidden">
     <div class="box-modal" id="remove-section-modal">
         <div class="popup-delete">
-            <div><span>Удалить выбранную секцию?</span></div>
+            <div><span>Удалить выбранный раздел?</span></div>
             <div>
                 <button data-bind="click: $root.csed.section.remove" class="fa">&#xf00c;</button>
                 <button class="fa danger arcticmodal-close">&#xf00d;</button>

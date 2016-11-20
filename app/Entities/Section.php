@@ -150,6 +150,7 @@ class Section extends BaseEntity implements JsonSerializable
     /**
      * @param Discipline $discipline
      */
+
     public function setDiscipline($discipline)
     {
         $this->discipline = $discipline;
@@ -161,9 +162,8 @@ class Section extends BaseEntity implements JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
-            'themeId' => $this->theme->getId(),
-            'disciplineId' => $this->discipline->getId(),
-            'themeName' => $this->theme->getName()
+            'theme' => $this->theme,
+            'disciplineId' => $this->discipline->getId()
         );
     }
 }
