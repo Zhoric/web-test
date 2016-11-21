@@ -75,6 +75,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('institutes', function(){return View('admin.institutes');});
     Route::get('manual', function(){return View('admin.manual');});
     Route::get('manualSections', function(){return View('admin.manualSections');});
+    Route::get('results', function(){return View('admin.results');});
 });
 
 

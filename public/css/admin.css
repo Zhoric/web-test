@@ -166,6 +166,12 @@ input[type=checkbox]:not(checked) + label:after {
 input[type=checkbox]:checked + label:after {
   opacity: 1;
 }
+span.ok {
+  color: #16a085;
+}
+span.not-ok {
+  color: #D24D57;
+}
 .multiselect-wrap {
   margin: 0 !important;
 }
@@ -980,6 +986,47 @@ button.sq-small {
 }
 .plan-details select {
   width: 200px;
+}
+.results .filter {
+  height: 170px;
+}
+.results .filter div {
+  width: 48%;
+}
+.results .org-info {
+  border: 1px solid #d3d3d3;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  background: #fff;
+  cursor: pointer;
+}
+.results .org-info:hover {
+  border: 1px solid #16a085;
+}
+.results .org-info span {
+  font-size: 16px;
+}
+.results .org-info .row {
+  width: 97%;
+}
+.results .org-info .date {
+  float: right;
+  top: -25px;
+  right: 10px;
+  position: relative;
+}
+.results .org-info .mark {
+  width: 20%;
+}
+.results .org-info .attempt {
+  width: 10%;
+}
+.results .org-info .name {
+  width: 40%;
+}
+.results a.result:hover {
+  color: #000;
 }
 
 /*# sourceMappingURL=admin.css.map */

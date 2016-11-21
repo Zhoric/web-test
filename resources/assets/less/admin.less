@@ -66,6 +66,14 @@ input[type=checkbox]{
     opacity: 1;
   }
 }
+span{
+  &.ok{
+    color: @mainTheme;
+  }
+  &.not-ok{
+    color: @crimson-red;
+  }
+}
 
 .multiselect-width(@wpercent){
   .multiselect-wrap {
@@ -945,5 +953,50 @@ button.sq-small{
 
 }
 
+
+.results{
+  .filter{
+    height: 170px;
+    div{
+      width: 48%;
+    }
+  }
+  .org-info{
+    border: 1px solid @grey;
+    .border-radius(2px);
+    background: @white;
+    cursor:pointer;
+    &:hover{
+      border: 1px solid @mainTheme;
+    }
+    span{
+      font-size: 16px;
+    }
+    .row{
+      width: 97%;
+    }
+    .date{
+      float:right;
+      top: -25px;
+      right: 10px;
+      position: relative;
+      //color: @unimportant;
+    }
+    .mark{
+      width: 20%;
+    }
+    .attempt{
+      width: 10%;
+    }
+    .name{
+      width: 40%;
+    }
+  }
+  a.result{
+    &:hover{
+      color: @black;
+    }
+  }
+}
 
 
