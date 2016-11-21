@@ -300,7 +300,10 @@ Route::group(['prefix' => 'api'], function() {
     */
     Route::group(['prefix' => 'results'], function () {
         Route::get('show', 'TestResultController@getByGroupAndTest');
-        Route::get('/{id}', 'TestResultController@getById');
+        Route::post('setMark', 'TestResultController@setAnswerMark');
+        Route::post('a', function (){return null;});
+
+        Route::get('{id}', 'TestResultController@getById');
     });
 
 });

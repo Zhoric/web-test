@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Managers\TestResultManager;
-use TestResult;
-
+use TestEngine\TestResultCalculator;
 
 class TestResultController extends Controller
 {
@@ -22,9 +22,15 @@ class TestResultController extends Controller
      * @return array
      */
     public function getByGroupAndTest(Request $request){
-        $testId = $request->query('testId');
-        $groupId = $request->query('groupId');
-        return json_encode($this->_testResultManager->getByGroupAndTest($groupId, $testId));
+        try{
+            $testId = $request->query('testId');
+            $groupId = $request->query('groupId');
+
+            $results = $this->_testResultManager->getByGroupAndTest($groupId, $testId);
+            return $this->successJSONResponse($results);
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
     }
 
     /**
@@ -33,20 +39,48 @@ class TestResultController extends Controller
      * @return \TestResultViewModel
      */
     public function getById($id){
-        return json_encode($this->_testResultManager->getByIdWithAnswers($id));
+        try{
+            $result = $this->_testResultManager->getByIdWithAnswers($id);
+            return $this->successJSONResponse($result);
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
     }
 
     public function getExtraAttemptsCount(Request $request){
-        $testId = $request->query('testId');
-        $userId = $request->query('userId');
-        return json_encode($this->_testResultManager->getExtraAttemptsCount($userId, $testId));
+        try{
+            $testId = $request->query('testId');
+            $userId = $request->query('userId');
+            $count = $this->_testResultManager->getExtraAttemptsCount($userId, $testId);
+
+            return $this->successJSONResponse($count);
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
+
     }
 
     public function setExtraAttempts(Request $request){
-        $testId = $request->json('testId');
-        $userId = $request->json('userId');
-        $count = $request->json('count');
-        $this->_testResultManager->setExtraAttempts($userId, $testId, $count);
+        try{
+            $testId = $request->json('testId');
+            $userId = $request->json('userId');
+            $count = $request->json('count');
+            $this->_testResultManager->setExtraAttempts($userId, $testId, $count);
+
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
     }
 
+    public function setAnswerMark(Request $request){
+        try{
+            $givenAnswerId = $request->json('answerId');
+            $mark = $request->json('mark');
+            $resultMark = TestResultCalculator::setAnswerMark($givenAnswerId, $mark);
+            return json_encode($this->successJSONResponse($resultMark));
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
+    }
 }
