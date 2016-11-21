@@ -54,16 +54,39 @@ class DemoController extends BaseController
     }
 
     public function receiveCode(Request $request){
-           $code = $request->input('code');
-           $this->putCodeInFile($code);
-           $this->runOnDocker();
-           $errors = $this->getErrors();
-           $result = $this->getResult();
+        try {
+            $code = $request->input('code');
+            $this->putCodeInFile($code);
+            $this->runOnDocker();
+            $errors = $this->getErrors();
+            $result = $this->getResult();
 
-           $msg = $errors.' '.$result;
+            $msg = $errors . ' ' . $result;
+        }
+        catch(\Exception $e){
+            return $e->getMessage();
+        }
            return $msg;
     }
 
+
+    /*
+     *
+     * #include <stdio.h>
+
+
+int main(){
+
+for(int i = 0; i < 10 ;i++){
+    for(int j = 0; j < i; j++){
+        printf("8");
+    }
+    printf("\n");
+}
+
+return 0;
+}
+     */
     public function putCodeInFile($code){
         $fp = fopen("$this->app_path/temp_cache/file.c", "w");
         fwrite($fp, $code);
