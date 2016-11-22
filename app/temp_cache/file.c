@@ -1,10 +1,8 @@
 #include <stdio.h>
 
-
 int main(){
 
-printf("Hello world!\n");
-dasafdf
+printf("hello world!");
 
 return 0;
 }

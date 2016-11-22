@@ -6,6 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Process;
 
+
+use CodeQuestionEngine\CodeFileManager;
+use CodeQuestionEngine\DockerEngine;
+use CodeQuestionEngine\EngineGlobalSettings;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
@@ -17,6 +21,7 @@ use Managers\UserManager;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use Repositories\UserRepository;
+use CodeQuestionEngine\CodeQuestionManager;
 use User;
 use Auth;
 
@@ -24,10 +29,16 @@ class DemoController extends BaseController
 {
     private $_uow;
     private $app_path;
+    private $manager;
+    private $engine;
+    private $fileManager;
 
-    public function __construct(UnitOfWork $uow)
+    public function __construct(UnitOfWork $uow, CodeQuestionManager $manager, DockerEngine $engine, CodeFileManager $fileManager)
     {
         $this->_uow = $uow;
+        $this->engine = $engine;
+        $this->manager = $manager;
+        $this->fileManager = $fileManager;
         $this->app_path = app_path();
     }
 
@@ -45,8 +56,10 @@ class DemoController extends BaseController
 
     public function auth(){
 
-        $user = Auth::user();
-        dd($user);
+
+
+
+
     }
 
     public function editor(){
@@ -54,7 +67,16 @@ class DemoController extends BaseController
     }
 
     public function receiveCode(Request $request){
-        try {
+
+
+        $code = $request->input('code');
+
+
+        $result = $this->manager->run($code);
+
+        return $result;
+
+        /*try {
             $code = $request->input('code');
             $this->putCodeInFile($code);
             $this->runOnDocker();
@@ -67,6 +89,7 @@ class DemoController extends BaseController
             return $e->getMessage();
         }
            return $msg;
+        */
     }
 
 
