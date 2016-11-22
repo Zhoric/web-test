@@ -21,7 +21,11 @@ $(document).ready(function(){
                         text: ko.observable()
                     }),
                     rightPercentage: ko.observable()
-                })
+                }),
+                mark: {
+                    isInput: ko.observable(false),
+                    value: ko.observable('Оценить')
+                }
             };
             self.actions = {
                 answer: {
@@ -30,6 +34,19 @@ $(document).ready(function(){
                             self.current.answer().id(0) :
                             self.toggleCurrent.fill.answer(data);
                     }
+                },
+                mark: {
+                    edit: function(){
+                        self.current.mark.isInput(true);
+                        self.current.mark.value('');
+                    },
+                    approve: function(){
+                        self.current.mark.isInput(false);
+                    },
+                    cancel: function(){
+                        self.current.mark.isInput(false);
+                        self.current.mark.value('Оценить');
+                    },
                 }
             },
 
@@ -43,215 +60,8 @@ $(document).ready(function(){
                             .rightPercentage(d.rightPercentage());
                     }
                 },
-                empty: {
-                    question: function(){
-                        self.current.question()
-                            .id(0)
-                            .text('')
-                            .time(0)
-                            .complexity(0)
-                            .type(0)
-                            .minutes('')
-                            .seconds('')
-                            .image(null)
-                            .showImage(null);
-                        self.current.answers([]);
-                        self.toggleCurrent.empty.file();
-                    },
-                    answer: function(){
-                        self.current.answer().text('').isRight(false);
-                    },
-                    answers: function(){
-                        self.current.answers([]);
-                    },
-                    file: function(){
-                        self.current.fileData()
-                            .file('')
-                            .dataURL('')
-                            .base64String('');
-                    }
-                },
-                stringify: {
-                    theme: function(){
-                        var disciplineId = self.current.discipline().id();
-                        var themeForPost = {
-                            id: self.current.theme().id(),
-                            name: self.current.theme().name(),
-                            discipline: disciplineId
-                        };
-
-                        return JSON.stringify({
-                            theme: themeForPost,
-                            disciplineId: disciplineId
-                        });
-                    },
-                    question: function(){
-                        var answers = [];
-                        var curq = self.current.question();
-                        var fileData = self.current.fileData()
-                        var file = fileData.file() ? fileData.base64String() : null;
-                        var fileType = fileData.file() ? fileData.file().type : null;
-                        var question = {
-                            type: curq.type().id(),
-                            text: curq.text(),
-                            complexity: curq.complexity().id(),
-                            time: +curq.minutes() * 60 + +curq.seconds()
-                        };
-
-                        if (curq.image() && !fileType){
-                            fileType = 'OLD';
-                        }
-
-                        self.mode() === 'edit' ? question.id = curq.id() : '';
-                        self.current.answers().find(function(item){
-                            var answer = {
-                                text: item.text(),
-                                isRight: item.isRight()
-                            };
-                            answers.push(answer);
-                        });
-
-                        return JSON.stringify({question: question, theme: self.theme().id(), answers: answers, file: file, fileType: fileType});
-                    }
-                },
-                set: {
-                    complexity: function(data){
-                        var complexityId = data.complexity();
-                        var complexity = '';
-                        self.filter.complexityTypes().find(function(item){
-                            if (item.id() === complexityId) {
-                                complexity = item.name();
-                                return;
-                            }
-                            return;
-                        });
-                        return complexity;
-                    },
-                    type: function(data){
-                        var typeId = data.type();
-                        var type = '';
-                        self.filter.types().find(function(item){
-                            if (item.id() === typeId) {
-                                type = item.name();
-                                return;
-                            }
-                            return;
-                        });
-                        return type;
-                    },
-                    answerCorrectness: function(data, e){
-                        var level = $(e.target).attr('level') == 1 ? true : false;
-                        var type = self.current.question().type() ? self.current.question().type().id() : 0;
-                        self.current.answers().find(function(item){
-                            if (type === 1){
-                                if (level){
-                                    item.isRight(false);
-                                }
-                            }
-                            if (item.id() === data.id())
-                                item.isRight(level);
-                        });
-                    },
-                },
-                check: {
-                    question: function(){
-                        var q = self.current.question;
-                        var selector = '.approve-btn';
-
-                        if (!q.isValid()){
-                            self.validationTooltip.open(selector, 'Поля не заполнены');
-                            return false;
-                        }
-
-                        var ansr = self.current.answers();
-                        var tId = q().type().id();
-
-                        if (tId === 1 || tId === 2){
-                            if (ansr.length < 2){
-                                self.validationTooltip.open(selector, 'Должно быть хотя бы 2 ответа');
-                                return false;
-                            }
-                            var correct = 0;
-                            ansr.find(function(item){
-                                if (item.isRight()) ++correct;
-                            });
-                            if (!correct){
-                                self.validationTooltip.open(selector, 'Не выбрано ни одного правильного варианта ответа');
-                                return false;
-                            }
-                        }
-                        if (tId === 3) {
-                            if (!ansr.length) {
-                                self.validationTooltip.open(selector, 'Должен быть хотя бы один вариант ответа');
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    }
-                }
             };
             self.mode = ko.observable('none');
-            self.csed = {
-                theme: {
-                    edit: function(){
-                        self.mode('theme.edit');
-                    },
-                    update: function(){
-                        if (!self.current.theme().name.isValid()) return;
-                        self.theme().name(self.current.theme().name());
-                        self.post.theme();
-                        self.mode('none');
-                    },
-                    cancel: function(){
-                        self.mode('none');
-                        self.toggleCurrent.fill.theme(self.theme());
-                    }
-                },
-                question: {
-                    toggleAdd: function(){
-                        self.mode() === 'add' ? self.mode('none') : self.mode('add');
-                        self.toggleCurrent.empty.question();
-                        self.validationTooltip.checkIfExists('.approve-btn');
-                    },
-                    cancel: function(){
-                        self.mode('none');
-                        self.toggleCurrent.empty.question();
-                    },
-                    update: function(){
-                        var isQok = self.toggleCurrent.check.question();
-                        if (!isQok) return;
-                        self.mode() === 'add' ? self.post.question('create') : self.post.question('update');
-                    },
-                    edit: function(data){
-                        self.get.questionWithAnswers(data.id());
-                        self.validationTooltip.checkIfExists('.approve-btn');
-                        self.mode('edit');
-                    },
-                    startDelete: function(data){
-                        self.get.questionWithAnswers(data.id());
-                        self.mode('delete');
-                        self.toggleModal('#delete-modal', '');
-                    },
-                    remove: function(){
-                        self.post.removedQuestion();
-                        self.toggleModal('#delete-modal', 'close');
-                    }
-                },
-                answer: {
-                    show: function(){
-
-                    }
-                },
-                image: {
-                    expand: function(){
-                        $('.expanded-image').show();
-                    },
-                    remove: function(){
-                        self.current.question().showImage(null);
-                    }
-                }
-            };
 
             self.get = {
                 result: function(){

@@ -75,8 +75,13 @@
                 <!-- ko if: rightPercentage()-->
                 <span data-bind="text: rightPercentage"></span>
                 <!-- /ko -->
-                <!-- ko if: !rightPercentage() -->
-                <span>Оценить</span>
+                <!-- ko if: !rightPercentage() && !$root.current.mark.isInput() -->
+                <span data-bind="text: $root.current.mark.value, click: $root.actions.mark.edit"></span>
+                <!-- /ko -->
+                <!-- ko if: $root.current.mark.isInput() -->
+                <input type="text" data-bind="value: $root.current.mark.value">
+                <span class="fa" data-bind="click: $root.actions.mark.approve">&#xf00c;</span>
+                <span class="fa" data-bind="click: $root.actions.mark.cancel">&#xf00d;</span>
                 <!-- /ko -->
             </div>
         </div>

@@ -1112,5 +1112,14 @@ button.sq-small {
   font-size: 17px;
   color: #5D8CAE;
 }
+.result-details .answers .answer-details .mark span.fa {
+  padding: 0 5px;
+  font-size: 20px;
+}
+.result-details .answers .answer-details .mark input {
+  width: 55px;
+  padding: 3px;
+  font-size: 12px;
+}
 
 /*# sourceMappingURL=admin.css.map */
