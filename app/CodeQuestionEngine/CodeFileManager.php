@@ -55,9 +55,28 @@ class CodeFileManager
         return $errors;
     }
 
-    public function getResult($dirPath){
+    public function getStudentResult($dirPath){
         $result = file_get_contents("$dirPath/result.txt");
         return $result;
+    }
+
+    /**
+     * Возвращает результат тестового случая под номером $testCaseNum
+     * Результат лежит в папке $dirPath
+     * @param $dirPath
+     * @param $testCaseNum
+     * @return string
+     */
+
+    public function getCorrectResult($dirPath,$testCaseNum){
+        $result = file_get_contents("$dirPath/testCase$testCaseNum.txt");
+        return $result;
+    }
+
+    public function compareResults($dirPath,$testCaseNum){
+
+        $student_result = $this->getStudentResult($dirPath);
+
     }
 
     public function putCodeInFile($code,$dirPath){
@@ -83,7 +102,6 @@ class CodeFileManager
             $text = fread($baseShellScript, filesize($shPath)); //читаем
             fclose($baseShellScript);
 
-
             $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
 
             $command = "cd /opt/$cache_dir/$uniqueDirName/\n";
@@ -91,8 +109,6 @@ class CodeFileManager
             $uniqueScript = fopen("$this->app_path/$cache_dir/$uniqueDirName/run.sh", "w");
             fwrite($uniqueScript, $command . $text);
             fclose($uniqueScript);
-
-
         }
         catch (\Exception $e)
         {
@@ -101,6 +117,21 @@ class CodeFileManager
         }
 
     }
+
+
+    /**
+     * Проверяет работу программы студента на корректность.
+     * @param $dirPath - путь к папке, где хранится исходный код студента, файлы с test-case`ами
+     * для проверки и результаты работы кода студента
+     */
+    public function checkIfCorrectTestCase($dirPath){
+        $result = $this->getStudentResult($dirPath);
+
+    }
+
+
+
+
 
 
 

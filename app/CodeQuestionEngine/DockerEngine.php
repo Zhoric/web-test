@@ -27,6 +27,7 @@ class DockerEngine
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
         $memory_limit = EngineGlobalSettings::MEMORY_LIMIT;
         $image_name = EngineGlobalSettings::IMAGE_NAME;
+        //DEBUG COMMENT
       //$this->command_pattern = "docker run -v $this->app_path/$cache_dir:/opt/$cache_dir -m $memory_limit $image_name /sbin/my_init --skip-startup-files --quiet";
         $this->app_path = app_path();
     }

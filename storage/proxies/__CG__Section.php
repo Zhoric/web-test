@@ -64,10 +64,10 @@ class Section extends \Section implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'name', 'content', 'id', 'theme'];
+            return ['__isInitialized__', 'name', 'content', 'id', 'theme', 'discipline'];
         }
 
-        return ['__isInitialized__', 'name', 'content', 'id', 'theme'];
+        return ['__isInitialized__', 'name', 'content', 'id', 'theme', 'discipline'];
     }
 
     /**
@@ -252,6 +252,28 @@ class Section extends \Section implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTheme', []);
 
         return parent::getTheme();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDiscipline()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDiscipline', []);
+
+        return parent::getDiscipline();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDiscipline($discipline)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDiscipline', [$discipline]);
+
+        return parent::setDiscipline($discipline);
     }
 
     /**

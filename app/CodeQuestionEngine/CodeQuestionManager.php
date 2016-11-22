@@ -30,27 +30,31 @@ class CodeQuestionManager
      * @return string
      */
     public function run($code){
-        try {
-            $dirPath = $this->fileManager->createDir(Auth::user());
-            $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
-            $this->fileManager->putCodeInFile($code,$dirPath);
-            $this->fileManager->createShellScript($dirPath);
+            try {
+                $dirPath = $this->fileManager->createDir(Auth::user());
+                $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
-            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
-            $cache_dir = EngineGlobalSettings::CACHE_DIR;
+                $this->fileManager->putCodeInFile($code, $dirPath);
+                $this->fileManager->createShellScript($dirPath);
 
-            $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
-            $errors = $this->fileManager->getErrors($dirPath);
-            $result = $this->fileManager->getResult($dirPath);
+                $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
+                $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
-            $msg = $errors . ' ' . $result;
-        }
-        catch(\Exception $e){
-            return $e->getMessage();
-        }
+                $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
+                $errors = $this->fileManager->getErrors($dirPath);
+                $result = $this->fileManager->getStudentResult($dirPath);
+
+                $msg = $errors . ' ' . $result;
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+
         return $msg;
     }
+
+
+
 
 
 }

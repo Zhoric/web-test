@@ -7,7 +7,7 @@
 <body>
 
 <div id="editor"></div>
-<input type="button" value="Отправить код" onclick="sendCode()">
+<input type="button" id="button" value="Отправить код" onclick="sendCode()">
 
 
 <script src="{{ URL::asset('js/aui.js') }}" type="text/javascript" charset="utf-8"></script>

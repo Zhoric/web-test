@@ -1,0 +1,4 @@
+code.c: In function ‘main’:
+code.c:9:1: error: expected ‘;’ before ‘}’ token
+ }
+ ^

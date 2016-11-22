@@ -12,10 +12,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ParamsSet extends BaseEntity implements JsonSerializable
 {
+
     /**
      * @var string
      *
-     * @ORM\Column(name="expected_output", type="string", length=100, nullable=false)
+     * @ORM\Column(name="input", type="text", length=65535, nullable=false)
+     */
+    protected $input;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="expected_output", type="text", length=65535, nullable=false)
      */
     protected $expectedOutput;
 
@@ -97,16 +104,29 @@ class ParamsSet extends BaseEntity implements JsonSerializable
         return $this->program;
     }
 
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
+
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return array('id' => $this->id,
+                     'input' => $this->input,
+                     'expectedOutput' => $this->expectedOutput,
+                     'program' => $this->program);
+    }
+
+    /**
+     * @return string
+     */
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+    /**
+     * @param string $input
+     */
+    public function setInput($input)
+    {
+        $this->input = $input;
     }
 }
 

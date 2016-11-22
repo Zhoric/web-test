@@ -43,6 +43,7 @@ class UnitOfWork
     private $_testThemeRepo;
     private $_roleRepo;
     private $_settingsRepo;
+    private $_paramsSetRepo;
 
 
     public function users(){
@@ -50,6 +51,13 @@ class UnitOfWork
             $this->_userRepo = new UserRepository($this->_em);
         }
         return $this->_userRepo;
+    }
+
+    public function paramsSets(){
+        if ($this->_paramsSetRepo == null){
+            $this->_paramsSetRepo = new ParamsSetRepository($this->_em);
+        }
+        return $this->_paramsSetRepo;
     }
 
     public function disciplines(){

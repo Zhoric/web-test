@@ -64,10 +64,10 @@ class ParamsSet extends \ParamsSet implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'expectedOutput', 'id', 'program'];
+            return ['__isInitialized__', 'input', 'expectedOutput', 'id', 'program'];
         }
 
-        return ['__isInitialized__', 'expectedOutput', 'id', 'program'];
+        return ['__isInitialized__', 'input', 'expectedOutput', 'id', 'program'];
     }
 
     /**
@@ -241,6 +241,28 @@ class ParamsSet extends \ParamsSet implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
 
         return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInput()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInput', []);
+
+        return parent::getInput();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setInput($input)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setInput', [$input]);
+
+        return parent::setInput($input);
     }
 
     /**
