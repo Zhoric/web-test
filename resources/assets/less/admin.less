@@ -13,6 +13,11 @@
 @neutral: @clouds;
 @grey: @normal-grey;
 
+@patronus: #5D8CAE;
+
+//@patronus-shade: #D2D7D3;
+@patronus-shade: #eeeeee;
+
 
 .label(){
   font-size: 12px;
@@ -980,7 +985,6 @@ button.sq-small{
       top: -25px;
       right: 10px;
       position: relative;
-      //color: @unimportant;
     }
     .mark{
       width: 20%;
@@ -995,6 +999,87 @@ button.sq-small{
   a.result{
     &:hover{
       color: @black;
+    }
+  }
+}
+
+.result-details{
+  .org-info{
+    border-bottom: 20px solid @white;
+    span{
+      font-size: 16px;
+    }
+  }
+  .answers{
+    background: @white;
+    cursor: pointer;
+    .answer{
+      padding: 10px;
+      border-bottom: 1px solid @grey;
+      &:first-child{
+        border-top: 1px solid @grey;
+      }
+      span{
+        font-size: 15px;
+        padding: 0 3px;
+      }
+      span.tagged-label{
+        color: @patronus;
+        font-size: 15px;
+        float: right;
+        position: relative;
+      }
+      &.current{
+        background: @patronus;
+        border-color: @patronus;
+        color: @white;
+        span.tagged-label{
+          background: @patronus;
+          color: @white;
+        }
+      }
+      &:hover{
+        background: @patronus;
+        color: @white;
+        span.tagged-label{
+          background: @patronus;
+          color: @white;
+        }
+      }
+    }
+    .answer-details{
+      padding: 15px;
+      background: @patronus-shade;
+      display:flex;
+      div{
+        height: 100%;
+        display: inline-block;
+      }
+      .icon{
+        font-size: 21px;
+        margin: 0 15px;
+        float: left;
+      }
+      .question, .answer-text{
+        width: 40%;
+      }
+      span.text{
+        display: table;
+        text-align: justify;
+        font-size: 12px;
+      }
+      .mark{
+        position: relative;
+        padding: 0 20px;
+        top: -5px;
+        label{
+          .label();
+        }
+        span{
+          font-size: 17px;
+          color: @patronus;
+        }
+      }
     }
   }
 }

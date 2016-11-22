@@ -83,9 +83,18 @@ class TestResultManager
      */
     public function getByIdWithAnswers($testResultId){
         $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+        $test = $testResult->getTest();
+        $testId = $test->getId();
+        $userId = $testResult->getUser()->getId();
         $answers =  $this->_unitOfWork->givenAnswers()->getByTestResult($testResultId);
 
-        return new TestResultViewModel($testResult, $answers);
+        $extraAttempts = $this->_unitOfWork->extraAttempts()->findByTestAndUser($testId, $userId);
+        $extraAttemptsCount = $extraAttempts != null ? $extraAttempts->getCount() : 0;
+        $attemptsAllowedByDefault = $test->getAttempts();
+
+        $totalAttemptsAllowed = $attemptsAllowedByDefault + $extraAttemptsCount;
+
+        return new TestResultViewModel($testResult, $answers, $test, $totalAttemptsAllowed);
     }
 
     /**
@@ -114,7 +123,6 @@ class TestResultManager
 
         $existingExtraAttempts = $this->_unitOfWork
             ->extraAttempts()->findByTestAndUser($testId, $userId);
-
 
         if ($existingExtraAttempts != null){
             $existingExtraAttempts->setCount($attemptsCount);

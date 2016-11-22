@@ -1,8 +1,8 @@
 @extends('shared.layout')
 @section('title', 'Результаты')
 @section('javascript')
-    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
-    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
+    {{--<link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>--}}
+    {{--<link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>--}}
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/admin/results.js')}}"></script>
 @endsection

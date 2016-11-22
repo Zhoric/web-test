@@ -1028,5 +1028,89 @@ button.sq-small {
 .results a.result:hover {
   color: #000;
 }
+.result-details .org-info {
+  border-bottom: 20px solid #fff;
+}
+.result-details .org-info span {
+  font-size: 16px;
+}
+.result-details .answers {
+  background: #fff;
+  cursor: pointer;
+}
+.result-details .answers .answer {
+  padding: 10px;
+  border-bottom: 1px solid #d3d3d3;
+}
+.result-details .answers .answer:first-child {
+  border-top: 1px solid #d3d3d3;
+}
+.result-details .answers .answer span {
+  font-size: 15px;
+  padding: 0 3px;
+}
+.result-details .answers .answer span.tagged-label {
+  color: #5D8CAE;
+  font-size: 15px;
+  float: right;
+  position: relative;
+}
+.result-details .answers .answer.current {
+  background: #5D8CAE;
+  border-color: #5D8CAE;
+  color: #fff;
+}
+.result-details .answers .answer.current span.tagged-label {
+  background: #5D8CAE;
+  color: #fff;
+}
+.result-details .answers .answer:hover {
+  background: #5D8CAE;
+  color: #fff;
+}
+.result-details .answers .answer:hover span.tagged-label {
+  background: #5D8CAE;
+  color: #fff;
+}
+.result-details .answers .answer-details {
+  padding: 15px;
+  background: #eeeeee;
+  display: -webkit-box;
+  display: flex;
+}
+.result-details .answers .answer-details div {
+  height: 100%;
+  display: inline-block;
+}
+.result-details .answers .answer-details .icon {
+  font-size: 21px;
+  margin: 0 15px;
+  float: left;
+}
+.result-details .answers .answer-details .question,
+.result-details .answers .answer-details .answer-text {
+  width: 40%;
+}
+.result-details .answers .answer-details span.text {
+  display: table;
+  text-align: justify;
+  font-size: 12px;
+}
+.result-details .answers .answer-details .mark {
+  position: relative;
+  padding: 0 20px;
+  top: -5px;
+}
+.result-details .answers .answer-details .mark label {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+.result-details .answers .answer-details .mark label span {
+  color: #c0392b;
+}
+.result-details .answers .answer-details .mark span {
+  font-size: 17px;
+  color: #5D8CAE;
+}
 
 /*# sourceMappingURL=admin.css.map */
