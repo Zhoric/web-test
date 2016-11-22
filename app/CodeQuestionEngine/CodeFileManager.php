@@ -86,11 +86,13 @@ class CodeFileManager
 
             $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
 
-            $command = "cd /opt/$cache_dir/$uniqueDirName\n";
+            $command = "cd /opt/$cache_dir/$uniqueDirName/\n";
 
             $uniqueScript = fopen("$this->app_path/$cache_dir/$uniqueDirName/run.sh", "w");
             fwrite($uniqueScript, $command . $text);
             fclose($uniqueScript);
+
+
         }
         catch (\Exception $e)
         {

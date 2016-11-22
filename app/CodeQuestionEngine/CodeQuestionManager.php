@@ -40,8 +40,6 @@ class CodeQuestionManager
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
-
-
             $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
             $errors = $this->fileManager->getErrors($dirPath);
             $result = $this->fileManager->getResult($dirPath);

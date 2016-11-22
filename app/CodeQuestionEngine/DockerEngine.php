@@ -27,7 +27,7 @@ class DockerEngine
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
         $memory_limit = EngineGlobalSettings::MEMORY_LIMIT;
         $image_name = EngineGlobalSettings::IMAGE_NAME;
-        $this->command_pattern = "docker run -v $this->app_path/$cache_dir:/opt/$cache_dir -m $memory_limit $image_name /sbin/my_init --skip-startup-files --quiet";
+      //$this->command_pattern = "docker run -v $this->app_path/$cache_dir:/opt/$cache_dir -m $memory_limit $image_name /sbin/my_init --skip-startup-files --quiet";
         $this->app_path = app_path();
     }
 
@@ -41,7 +41,7 @@ class DockerEngine
         error_reporting(E_ALL);
         ini_set('display_errors',1);
 
-        exec("$this->command_pattern $command",$output);
+        exec("docker run -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet $command",$output);
 
         return $output;
     }
