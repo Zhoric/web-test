@@ -72,8 +72,8 @@
             </div>
             <div class="mark">
                 <label>Правильность ответа</label></br>
-                <!-- ko if: rightPercentage()-->
-                <span data-bind="text: rightPercentage"></span>
+                <!-- ko if: rightPercentage() && !$root.current.mark.isInput() -->
+                <span data-bind="text: rightPercentage, click: $root.actions.mark.edit"></span>
                 <!-- /ko -->
                 <!-- ko if: !rightPercentage() && !$root.current.mark.isInput() -->
                 <span data-bind="text: $root.current.mark.value, click: $root.actions.mark.edit"></span>

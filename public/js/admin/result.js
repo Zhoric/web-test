@@ -36,12 +36,20 @@ $(document).ready(function(){
                     }
                 },
                 mark: {
-                    edit: function(){
+                    edit: function(data){
                         self.current.mark.isInput(true);
                         self.current.mark.value('');
+                        if (data.rightPercentage()){
+                            self.current.mark.value(data.rightPercentage());
+                        }
                     },
-                    approve: function(){
-                        self.current.mark.isInput(false);
+                    approve: function(data){
+                        var value = self.current.mark.value;
+                        if ($.isNumeric(value()) && value() <= 100 && value() >= 0 && value() !== ''){
+                            data.rightPercentage(value());
+                            self.current.mark.isInput(false);
+                        }
+                        value('Оценить');
                     },
                     cancel: function(){
                         self.current.mark.isInput(false);
