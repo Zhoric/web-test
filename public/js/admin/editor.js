@@ -9,7 +9,16 @@ $(document).ready(function () {
                 content: ko.observable(''),
                 disciplineId: ko.observable(0)
             });
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.theme = ko.observable(null);
 
             self.mode = ko.observable('none');
@@ -133,7 +142,8 @@ $(document).ready(function () {
                 section : self.section,
                 approve: self.approve,
                 text: self.text,
-                cancel: self.cancel
+                cancel: self.cancel,
+                errors: self.errors
             }
         };
     };

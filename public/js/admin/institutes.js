@@ -12,12 +12,26 @@ $(document).ready(function(){
             self.currentPlans = ko.observableArray([]);
             self.currentInstitute = ko.observable(0);
 
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
             self.getInstitutes = function(){
-                $.get('/api/institutes', function(data){
-                    var res = ko.mapping.fromJSON(data);
-                    self.institutes(res());
+
+                $.get('/api/institutes', function(response){
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.institutes(result.Data());
+                        return
+                    }
+                    self.errors.show(result.Message());
                 });
             };
             self.getInstitutes();
@@ -29,14 +43,22 @@ $(document).ready(function(){
                 }
                 self.currentInstitute(data.id());
                 $.get('/api/institute/'+ data.id() + '/profiles', function(response){
-                    var res = ko.mapping.fromJSON(response);
-                    self.currentProfiles(res());
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.currentProfiles(result.Data());
+                        return
+                    }
+                    self.errors.show(result.Message());
                 });
             };
             self.getPlans = function(data){
                 $.get('/api/profile/'+ data.id() + '/plans', function(response){
-                    var res = ko.mapping.fromJSON(response);
-                    self.currentPlans(res());
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.currentPlans(result.Data());
+                        return
+                    }
+                    self.errors.show(result.Message());
                 });
             };
 
@@ -61,7 +83,8 @@ $(document).ready(function(){
                 getProfiles: self.getProfiles,
                 moveToGroup: self.moveToGroup,
                 showPlans: self.showPlans,
-                moveToPlan: self.moveToPlan
+                moveToPlan: self.moveToPlan,
+                errors: self.errors
             };
         };
     };

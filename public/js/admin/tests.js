@@ -9,7 +9,16 @@ $(document).ready(function(){
     var testsViewModel = function(){
         return new function(){
             var self = this;
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.current = {
                 test: ko.validatedObservable({
                     id: ko.observable(0),
@@ -430,7 +439,8 @@ $(document).ready(function(){
                 csed: self.csed,
                 filter: self.filter,
                 events: self.events,
-                toggleModal: self.toggleModal
+                toggleModal: self.toggleModal,
+                errors: self.errors
             };
         };
     };

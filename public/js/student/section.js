@@ -10,10 +10,21 @@ $(document).ready(function () {
                 content: ko.observable('')
             });
 
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.getSection = function () {
              var currentUrl = window.location.href;
              var sectionId = +currentUrl.substr(currentUrl.lastIndexOf('/')+1);
              var url = '/api/sections/' + sectionId;
+
 
 
              var xmlhttp = new XMLHttpRequest();
@@ -36,7 +47,8 @@ $(document).ready(function () {
 
             return {
                 section : self.section,
-                getSection: self.getSection
+                getSection: self.getSection,
+                errors: self.errors
             }
         };
     };

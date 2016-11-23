@@ -17,6 +17,16 @@ $(document).ready(function () {
             self.filter = {
                 profile : ko.observable()
             };
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
 
             self.get = {
@@ -54,7 +64,8 @@ $(document).ready(function () {
                 current: self.current,
                 filter: self.filter,
                 get: self.get,
-                move: self.move
+                move: self.move,
+                errors: self.errors
             }
         };
     };

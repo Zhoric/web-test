@@ -13,7 +13,16 @@ $(document).ready(function(){
             self.totalPages = ko.observable(20);
             self.onPageCount = ko.observable(10);
             self.itemsAmount = ko.observable(300);
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
 
             self.selectPage = function(page){
@@ -53,7 +62,8 @@ $(document).ready(function(){
 
                 pageNumberVisible: self.pageNumberVisible,
                 selectPage: self.selectPage,
-                dotsVisible: self.dotsVisible
+                dotsVisible: self.dotsVisible,
+                errors: self.errors
             };
         };
     };

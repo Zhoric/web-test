@@ -22,6 +22,16 @@ $(document).ready(function(){
                 groups: ko.observableArray([]),
                 tests: ko.observableArray([])
             };
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
             self.showResult = function(data){
                 window.location.href = '/admin/result/' + data.id();
@@ -87,7 +97,8 @@ $(document).ready(function(){
             return {
                 current: self.current,
                 filter: self.filter,
-                showResult: self.showResult
+                showResult: self.showResult,
+                errors: self.errors
             };
         };
     };

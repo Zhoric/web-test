@@ -10,6 +10,16 @@ $(document).ready(function(){
             self.currentProfile = ko.observable(0);
             self.currentGroups = ko.observableArray([]);
             self.currentPlan = ko.observable();
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
             self.getProfiles = function(){
                 $.get('', function(data){
@@ -48,7 +58,8 @@ $(document).ready(function(){
                 currentGroups: self.currentGroups,
                 currentPlan: self.currentPlan,
 
-                getGroupsOfProfile: self.getGroupsOfProfile
+                getGroupsOfProfile: self.getGroupsOfProfile,
+                errors: self.errors
             };
         };
     };

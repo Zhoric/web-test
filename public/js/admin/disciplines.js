@@ -7,6 +7,16 @@ $(document).ready(function(){
             var self = this;
 
             self.disciplines = ko.observableArray([]);
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.current = {
                 discipline: ko.observable({
                     id: ko.observable(0),
@@ -341,7 +351,8 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
-                toggleModal: self.toggleModal
+                toggleModal: self.toggleModal,
+                errors: self.errors
             };
         };
     };

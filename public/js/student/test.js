@@ -16,7 +16,16 @@ $(document).ready(function(){
 
                 testResult: ko.observable()
             };
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.actions = {
                 answer: function(){
                     self.post.answers();
@@ -128,11 +137,11 @@ $(document).ready(function(){
                 }
             });
 
-
             return {
                 toggleCurrent: self.toggleCurrent,
                 current: self.current,
-                actions: self.actions
+                actions: self.actions,
+                errors: self.errors
             };
         };
     };

@@ -9,7 +9,16 @@ $(document).ready(function(){
             self.groups = ko.observableArray([]);
             self.groupStudyForm = ko.observable('Очная');
             self.mode = ko.observable('none');
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.current = ko.observable({
                 groupStudents : ko.observable([]),
                 profileId : ko.observable(''),
@@ -538,7 +547,8 @@ $(document).ready(function(){
 
                 startRemove: self.startRemove,
                 startTransfer: self.startTransfer,
-                student: self.student
+                student: self.student,
+                errors: self.errors
             };
         };
     };

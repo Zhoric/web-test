@@ -16,9 +16,16 @@ $(document).ready(function () {
                     disciplineId: ko.observable(0)
                 })
             };
-
-
-
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
             self.mode = ko.observable('none');
             self.filter = {
                 discipline : ko.observable('')
@@ -185,7 +192,8 @@ $(document).ready(function () {
                 pagination: self.pagination,
                 mode: self.mode,
                 plan: self.plan,
-                disciplineSelected: self.disciplineSelected
+                disciplineSelected: self.disciplineSelected,
+                errors: self.errors
             }
         };
     };

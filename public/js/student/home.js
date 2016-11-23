@@ -16,6 +16,16 @@ $(document).ready(function(){
                 rowId: ko.observable(0)
             };
             self.mode = ko.observable('none');
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
             self.actions = {
                 disciplineDetails: function(parent, data){
@@ -87,7 +97,8 @@ $(document).ready(function(){
             return {
                 current: self.current,
                 actions: self.actions,
-                mode: self.mode
+                mode: self.mode,
+                errors: self.errors
             };
         };
     };

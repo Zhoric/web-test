@@ -14,6 +14,17 @@ $(document).ready(function() {
                 groups: ko.observableArray([])
             });
 
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
+
             self.getProfiles = function () {
                 $.get("/getProfiles", function (data) {
                     var res = ko.mapping.fromJSON(data);
@@ -36,7 +47,8 @@ $(document).ready(function() {
                 currentProfile: self.currentProfile,
                 getProfiles: self.getProfiles,
                 changeCurrentProfile: self.changeCurrentProfile,
-                printData: self.printData
+                printData: self.printData,
+                errors: self.errors
             };
         };
     };
