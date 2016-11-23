@@ -12,6 +12,7 @@
 @unimportant: @asbestos;
 @neutral: @clouds;
 @grey: @normal-grey;
+@warning: #E29C45;
 
 @patronus: #5D8CAE;
 
@@ -172,6 +173,31 @@ span{
   }
   &.after-menu {
     position: absolute;
+  }
+}
+
+#errors-modal{
+  width: 300px;
+  h3{
+    display: inline-block;
+  }
+  h4{
+    padding: 0 5px 5px;
+    margin: 0 5px 5px;
+  }
+  .fa{
+    padding-right:5px;
+    font-size: 20px;
+    color: @warning;
+  }
+  .button-holder{
+    height: 30px;
+    button{
+      width: 70px;
+      height: 30px;
+      font-size: 15px;
+      float: right;
+    }
   }
 }
 

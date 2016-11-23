@@ -248,6 +248,30 @@ span.not-ok {
 .knockout-autocomplete.after-menu {
   position: absolute;
 }
+#errors-modal {
+  width: 300px;
+}
+#errors-modal h3 {
+  display: inline-block;
+}
+#errors-modal h4 {
+  padding: 0 5px 5px;
+  margin: 0 5px 5px;
+}
+#errors-modal .fa {
+  padding-right: 5px;
+  font-size: 20px;
+  color: #E29C45;
+}
+#errors-modal .button-holder {
+  height: 30px;
+}
+#errors-modal .button-holder button {
+  width: 70px;
+  height: 30px;
+  font-size: 15px;
+  float: right;
+}
 .filter {
   height: 100px;
   border-bottom: 20px solid #fff;

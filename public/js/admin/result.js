@@ -9,6 +9,17 @@ $(document).ready(function(){
 
             self.theme = ko.observable({});
 
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
+
             self.current = {
                 result: ko.observable(),
                 test: ko.observable(),
@@ -47,8 +58,9 @@ $(document).ready(function(){
                         var value = self.current.mark.value;
                         if ($.isNumeric(value()) && value() <= 100 && value() >= 0 && value() !== ''){
                             data.rightPercentage(value());
-                            self.current.mark.isInput(false);
+                            self.post.mark(data.id(), value());
                         }
+                        self.current.mark.isInput(false);
                         value('Оценить');
                     },
                     cancel: function(){
@@ -79,25 +91,32 @@ $(document).ready(function(){
 
                     $.get(url, function(response){
                         var result = ko.mapping.fromJSON(response);
-                        console.log(result);
                         if (result.Success()){
                             self.current.answers(result.Data.answers());
                             self.current.result(result.Data.testResult);
                             self.current.attempts(result.Data.attemptsAllowed);
                             self.current.test(result.Data.test);
-                            console.log(self.current.result());
+                            return;
                         }
-                        else{
-                            //result.Message
-                        }
+                        self.errors.show(result.Message());
                     })
                 }
             };
             self.post = {
-
+                mark: function(id, mark){
+                    var url = '/api/results/setMark';
+                    $.post(url, JSON.stringify({answerId: id, mark: mark}), function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.get.result();
+                            return;
+                        }
+                        self.errors.show(result.Message());
+                    });
+                },
             };
 
-            self.get.result();
+            //self.get.result();
 
             self.events = {
                 focusout: function(data, e){
@@ -128,6 +147,7 @@ $(document).ready(function(){
 
 
             return {
+                errors: self.errors,
                 actions: self.actions,
                 toggleCurrent: self.toggleCurrent,
                 current: self.current,
