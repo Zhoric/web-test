@@ -272,6 +272,25 @@ span.not-ok {
   font-size: 15px;
   float: right;
 }
+#code-editor-modal {
+  width: 800px;
+  height: 450px;
+}
+#code-editor-modal#editor {
+  position: relative;
+}
+#code-editor-modal .cancel,
+#code-editor-modal #button {
+  margin: 15px 0 0;
+  color: #fff;
+  background: #16a085;
+  cursor: pointer;
+  border: 0;
+  padding: 10px;
+}
+#code-editor-modal .cancel {
+  background: #D24D57;
+}
 .filter {
   height: 100px;
   border-bottom: 20px solid #fff;
@@ -554,7 +573,7 @@ button:hover {
   top: 20px;
 }
 .themes-add .time input {
-  width: 30px;
+  width: 45px;
   font-size: 25px;
   text-align: center;
 }
@@ -569,7 +588,7 @@ button:hover {
   width: 96%;
 }
 .themes-add .answers-input input {
-  width: 92%;
+  width: 94%;
 }
 .themes-add .answers-input button {
   width: 35px;

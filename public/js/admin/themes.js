@@ -67,7 +67,8 @@ $(document).ready(function(){
                     image: ko.observable(),
                     showImage: ko.observable(),
                     isOpenMultiLine: ko.observable(false),
-                    isOpenSingleLine: ko.observable(false)
+                    isOpenSingleLine: ko.observable(false),
+                    isCode: ko.observable(false)
                 }),
                 fileData: ko.observable({
                     file: ko.observable(),
@@ -88,7 +89,8 @@ $(document).ready(function(){
                     {id: ko.observable(1), name: ko.observable('Закрытый с одним правильным ответом')},
                     {id: ko.observable(2), name: ko.observable('Закрытый с несколькими правильными ответами')},
                     {id: ko.observable(3), name: ko.observable('Открытый однострочный')},
-                    {id: ko.observable(4), name: ko.observable('Открытый многострочный')}
+                    {id: ko.observable(4), name: ko.observable('Открытый многострочный')},
+                    {id: ko.observable(5), name: ko.observable('Программный код')},
                     ]),
                 complexityTypes: ko.observableArray([
                     {id: ko.observable(1), name: ko.observable('Лёгкий')},
@@ -481,7 +483,7 @@ $(document).ready(function(){
                     var json = self.toggleCurrent.stringify.question();
                     $.post(url, json, function(response){
                         var result = ko.mapping.fromJSON(response);
-                        if (!result.Success()) {
+                        if (result.Success()) {
                             self.toggleCurrent.empty.question();
                             self.mode('none');
                             self.get.questions();
@@ -494,7 +496,7 @@ $(document).ready(function(){
                     var url = '/api/questions/delete/' + self.current.question().id();
                     $.post(url, function(response){
                         var result = ko.mapping.fromJSON(response);
-                        if (!result.Success()) {
+                        if (result.Success()) {
                             self.mode('none');
                             self.toggleCurrent.empty.question();
                             self.get.questions();
@@ -553,6 +555,7 @@ $(document).ready(function(){
                 if (!value) return;
                 self.current.question().isOpenSingleLine(false);
                 self.current.question().isOpenMultiLine(false);
+                self.current.question().isCode(false);
                 if (value.id() === 1){
                     self.current.answers().find(function(item){
                         item.isRight(false);
@@ -568,6 +571,11 @@ $(document).ready(function(){
                 }
                 if (value.id() === 4){
                     self.current.question().isOpenMultiLine(true);
+                    self.current.answers([]);
+                    return;
+                }
+                if (value.id() === 5){
+                    self.current.question().isCode(true);
                     self.current.answers([]);
                     return;
                 }
@@ -591,6 +599,12 @@ $(document).ready(function(){
                 }
             });
 
+            self.code = {
+                compile: function(){
+                    self.toggleModal('#code-editor-modal', '');
+                }
+            };
+
             return {
                 theme: self.theme,
                 pagination: self.pagination,
@@ -601,7 +615,8 @@ $(document).ready(function(){
                 filter: self.filter,
                 events: self.events,
                 toggleModal: self.toggleModal,
-                errors: self.errors
+                errors: self.errors,
+                code: self.code
             };
         };
     };

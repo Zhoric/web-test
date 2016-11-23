@@ -200,6 +200,24 @@ span{
     }
   }
 }
+#code-editor-modal{
+  width: 800px;
+  height: 450px;
+  &#editor{
+    position:relative;
+  }
+  .cancel, #button{
+    margin: 15px 0 0;
+    color: @white;
+    background: @mainTheme;
+    cursor: pointer;
+    border: 0;
+    padding: 10px;
+  }
+  .cancel{
+    background: @crimson-red;
+  }
+}
 
 .filter{
   height: 100px;
@@ -490,7 +508,7 @@ button{
       position: relative;
       top: 20px;
       input{
-        width: 30px;
+        width: 45px;
         font-size: 25px;
         text-align: center;
       }
@@ -506,7 +524,7 @@ button{
       &-input{
         width: 96%;
         input{
-          width: 92%;
+          width: 94%;
         }
         button{
           width: 35px;
