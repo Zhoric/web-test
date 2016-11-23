@@ -95,4 +95,14 @@ class DisciplineRepository extends BaseRepository
         return $query->execute();
     }
 
+    function getByProfile($profileId){
+        $qb = $this->repo->createQueryBuilder('d');
+        $query = $qb->join(ProfileDiscipline::class, 'pd', Join::WITH, 'pd.discipline = d.id')
+            ->where('pd.profile = :profile')
+            ->setParameter('profile', $profileId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
 }

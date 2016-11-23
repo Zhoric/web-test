@@ -136,6 +136,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'profile'], function () {
         Route::get('{id}/groups', 'OrgStructureController@getProfileGroups');
         Route::get('{id}/plans', 'OrgStructureController@getProfilePlans');
+        Route::get('{id}/disciplines', 'OrgStructureController@getProfileDisciplines');
 
         Route::post('create', 'OrgStructureController@createProfile');
         Route::post('update', 'OrgStructureController@updateProfile');

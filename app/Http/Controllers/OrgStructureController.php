@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 
 use Managers\OrgStructureManager;
@@ -38,8 +39,21 @@ class OrgStructureController extends Controller
         return json_encode($this->_orgStructureManager->getProfilePlans($id));
     }
 
+    public function getProfileDisciplines($id){
+        try{
+            $disciplines = $this->_orgStructureManager->getProfileDisciplines($id);
+            return $this->successJSONResponse($disciplines);
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
+    }
+
     public function deleteProfile($id){
-        $this->_orgStructureManager->deleteProfile($id);
+        try{
+            $this->_orgStructureManager->deleteProfile($id);
+        } catch (Exception $exception){
+            return $this->faultJSONResonse($exception->getMessage());
+        }
     }
 
     /*
