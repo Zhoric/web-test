@@ -38,6 +38,11 @@ class OrgStructureManager
             ->where('Studyplan.profile = '.$profileId);
     }
 
+    public function getProfileDisciplines($profileId){
+        return $this->_unitOfWork
+            ->disciplines()
+            ->getByProfile($profileId);
+    }
 
     public function addInstitute(Institute $institute){
 
