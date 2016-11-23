@@ -37,12 +37,21 @@ $(document).ready(function () {
 
                     $.get(url, function (response) {
                         var result = ko.mapping.fromJSON(response);
-                        self.studyplans(result());
+                        if (result.Success()){
+                            self.studyplans(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 profiles: function () {
                     $.get('/api/profiles', function (response) {
-                        self.current.profile().profiles(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.profile().profiles(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };

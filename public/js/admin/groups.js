@@ -113,16 +113,26 @@ $(document).ready(function(){
             self.studyplanSelect().institute.subscribe(function(data){
                 if (data){
                     if (!self.studyplanSelect().profile() && !self.profiles().length){
-                        $.get('/api/institute/' + data.id() + '/profiles', function(data){
-                            self.profiles(ko.mapping.fromJSON(data)())
+                        $.get('/api/institute/' + data.id() + '/profiles', function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (result.Success()){
+                                self.profiles(result.Data());
+                                return;
+                            }
+                            self.errors.show(result.Message());
                         });
                     }
                 }
             });
             self.studyplanSelect().profile.subscribe(function(data){
                 if (data){
-                    $.get('/api/profile/' + data.id() + '/plans', function(data){
-                        self.studyplans(ko.mapping.fromJSON(data)());
+                    $.get('/api/profile/' + data.id() + '/plans', function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.studyplans(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             });
@@ -130,8 +140,13 @@ $(document).ready(function(){
 
             self.selectStudyPlan = function(){
                 if (!self.studyplanSelect().institute() && !self.institutes().length) {
-                    $.get('/api/institutes', function(data){
-                        self.institutes(ko.mapping.fromJSON(data)())
+                    $.get('/api/institutes', function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.institutes(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
                 self.toggleModal('#select-plan-modal', '');
@@ -157,7 +172,6 @@ $(document).ready(function(){
             };
 
             self.fillCurrentGroup = function(data, mode){
-                console.log(data);
                 self.current().group()
                     .id(data.id())
                     .name(data.name())
@@ -181,21 +195,15 @@ $(document).ready(function(){
                 var pageSize = 'pageSize=' + self.pagination().pageSize();
                 var url = '/api/groups/show?' + page + '&' + pageSize + '&' + name + '&' + profileId;
 
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open('GET', url, true);
-                xmlhttp.send(null);
-                xmlhttp.onreadystatechange = function() { // (3)
-                    if (xmlhttp.readyState != 4) return;
-
-                    if (xmlhttp.status != 200) {
-                        alert(xmlhttp.status + ': ' + xmlhttp.statusText);
-                    } else {
-                        var result = ko.mapping.fromJSON(xmlhttp.responseText);
-                        self.groups(result.data());
-                        self.pagination().itemsCount(result.count());
+                $.get(url, function(response){
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.groups(result.Data.data());
+                        self.pagination().itemsCount(result.Data.count());
+                        return;
                     }
-
-                }
+                    self.errors.show(result.Message());
+                });
             };
             self.getAlterGroups = function(){
                 var url = window.location.href;
@@ -218,35 +226,37 @@ $(document).ready(function(){
 
                 $.get(url, function(response){
                     var result = ko.mapping.fromJSON(response);
-                    self.groups(result.data());
-                    self.pagination().itemsCount(result.count());
+                    if (result.Success()){
+                        self.groups(result.Data.data());
+                        self.pagination().itemsCount(result.Data.count());
+                        return;
+                    }
+                    self.errors.show(result.Message());
                 });
             };
             self.getGroups();
             //self.getAlterGroups();
 
             self.getStudents = function(){
-                var xmlhttp = new XMLHttpRequest();
                 var url = '/api/groups/' + self.current().group().id() + '/students';
-                xmlhttp.open('GET', url, true);
-                xmlhttp.send(null);
-                xmlhttp.onreadystatechange = function() { // (3)
-                    if (xmlhttp.readyState != 4) return;
-
-                    if (xmlhttp.status != 200) {
-                        alert(xmlhttp.status + ': ' + xmlhttp.statusText);
-                    } else {
-                        var result = ko.mapping.fromJSON(xmlhttp.responseText);
-                        self.current().groupStudents(result());
+                $.get(url, function(response){
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.current().groupStudents(result.Data());
+                        return;
                     }
-
-                }
+                    self.errors.show(result.Message());
+                });
             };
             self.getAlterStudents = function(){
                 var url = '/api/groups/' + self.current().group().id() + '/students';
-                $.get(url, function(data){
-                    var res = ko.mapping.fromJSON(data);
-                    self.current().groupStudents(res());
+                $.get(url, function(response){
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.current().groupStudents(result.Data());
+                        return;
+                    }
+                    self.errors.show(result.Message());
                 });
             };
 
@@ -285,9 +295,14 @@ $(document).ready(function(){
                     $.post(
                         '/api/groups/student/setGroup',
                         JSON.stringify({studentId: self.current().student().id(), groupId: self.groupSelect().id()}),
-                        function(result){
-                            self.emptyCurrentStudent();
-                            self.getStudents();
+                        function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (result.Success()){
+                                self.emptyCurrentStudent();
+                                self.getStudents();
+                                return;
+                            }
+                            self.errors.show(result.Message());
                         });
 
 
@@ -309,9 +324,14 @@ $(document).ready(function(){
                     self.toggleModal('#delete-student-modal', 'close');
                     var url = '/api/groups/student/delete/' + self.current().student().id();
 
-                    $.post(url, function(result){
-                        self.emptyCurrentStudent();
-                        self.getStudents();
+                    $.post(url, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.emptyCurrentStudent();
+                            self.getStudents();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });                    
                 },
                 
@@ -346,20 +366,14 @@ $(document).ready(function(){
                     var url = '/api/groups/student/update';
                     var json = JSON.stringify({student: student});
 
-                    var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open('POST', url, true);
-                    xmlhttp.send(json);
-                    xmlhttp.onreadystatechange = function() {
-                        self.getStudents();
-                    };
-
-                    // $.post(
-                    //     '/api/groups/student/update',
-                    //     JSON.stringify({student: student}),
-                    //     function(result){
-                    //         self.getStudents();
-                    //     });
-
+                    $.post(url, json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.getStudents();
+                            return;
+                        }
+                        self.errors.show(result.Message());
+                    });
                     self.mode('info');
                 }
 
@@ -371,7 +385,10 @@ $(document).ready(function(){
                     $.post(
                         '/api/groups/delete/' + edit.id(),
                         {},
-                        function(result){});
+                        function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (!result.Success()) self.errors.show(result.Message());
+                        });
                     self.groups.remove(function(item){
                         if (item.id() === edit.id())
                             return item;
@@ -395,7 +412,10 @@ $(document).ready(function(){
                     $.post(
                         '/api/groups/update',
                         JSON.stringify({group: group, studyPlanId: planId}),
-                        function(result){});
+                        function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (!result.Success()) self.errors.show(result.Message());
+                        });
                     self.groups().find(function(item){
                         if (item.id() === edit.id()){
                             item.prefix(edit.prefix())
@@ -413,22 +433,13 @@ $(document).ready(function(){
                     var json = JSON.stringify({group: group, studyPlanId: planId});
                     var url = '/api/groups/create';
 
-                    var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open('POST', url, true);
-                    xmlhttp.send(json);
-                    xmlhttp.onreadystatechange = function() {
-                        self.groups([]);
-                        self.emptyCurrentGroup();
-                        self.getGroups();
-                    };
-
-                    // $.post(
-                    //     '/api/groups/create',
-                    //     JSON.stringify({group: group, studyPlanId: planId}),
-                    //     function(result){});
-                    // self.groups([]);
-                    // self.emptyCurrentGroup();
-                    // self.getGroups();
+                    $.post(url, json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (!result.Success()) self.errors.show(result.Message());
+                    });
+                    self.groups([]);
+                    self.emptyCurrentGroup();
+                    self.getGroups();
                 }
 
 
@@ -439,7 +450,10 @@ $(document).ready(function(){
                     $.post(
                         '/api/groups/delete/' + edit.id(),
                         {},
-                        function(result){});
+                        function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (!result.Success()) self.errors.show(result.Message());
+                        });
                     self.groups.remove(function(item){
                         if (item.id() === edit.id())
                             return item;
@@ -463,7 +477,10 @@ $(document).ready(function(){
                     $.post(
                         '/api/groups/update',
                         JSON.stringify({group: group, studyPlanId: planId}),
-                        function(result){});
+                        function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (!result.Success()) self.errors.show(result.Message());
+                        });
                     self.groups().find(function(item){
                         if (item.id() === edit.id()){
                             item.prefix(edit.prefix())
@@ -481,7 +498,10 @@ $(document).ready(function(){
                     $.post(
                         '/api/groups/create',
                         JSON.stringify({group: group, studyPlanId: planId}),
-                        function(result){});
+                        function(response){
+                            var result = ko.mapping.fromJSON(response);
+                            if (!result.Success()) self.errors.show(result.Message());
+                        });
                     self.groups([]);
                     self.emptyCurrentGroup();
                     self.getGroups();

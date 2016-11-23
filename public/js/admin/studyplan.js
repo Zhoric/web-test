@@ -90,16 +90,13 @@ $(document).ready(function () {
 
                     $.post(url, function(response){
                         var result = ko.mapping.fromJSON(response);
-                        self.current.disciplineplans(result.data());
-                        self.pagination.itemsCount(result.count());
+                        if (result.Success()){
+                            self.current.disciplineplans(result.Data.data());
+                            self.pagination.itemsCount(result.Data.count());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
-                    //console.log(discipline);
-                    /*var url = '/api/plan/profile/' + profile;
-
-                    $.get(url, function (response) {
-                        var result = ko.mapping.fromJSON(response);
-                        self.disciplineplans(result());
-                    }); */
                 }
             };
 
@@ -133,10 +130,14 @@ $(document).ready(function () {
                         disciplineId: self.disciplineSelected().disciplineId()
                     });
 
-                    $.post(url, json, function(){
-                        self.emptyCurrentPlan();
-                        self.get.disciplineplans();
-
+                    $.post(url, json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.emptyCurrentPlan();
+                            self.get.disciplineplans();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
 
                 },
@@ -144,10 +145,15 @@ $(document).ready(function () {
                     self.toggleModal('#delete-plan-modal', 'close');
                     var url = '/api/plan/discipline/delete/' + self.current.disciplineplan().id();
 
-                    $.post(url, function(result){
-                        self.emptyCurrentPlan();
-                        self.get.disciplineplans();
-                        self.mode('none');
+                    $.post(url, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.emptyCurrentPlan();
+                            self.get.disciplineplans();
+                            self.mode('none');
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
 
                 },
