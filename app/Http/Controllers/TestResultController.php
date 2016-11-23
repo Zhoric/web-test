@@ -29,7 +29,7 @@ class TestResultController extends Controller
             $results = $this->_testResultManager->getByGroupAndTest($groupId, $testId);
             return $this->successJSONResponse($results);
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
@@ -43,7 +43,7 @@ class TestResultController extends Controller
             $result = $this->_testResultManager->getByIdWithAnswers($id);
             return $this->successJSONResponse($result);
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ class TestResultController extends Controller
 
             return $this->successJSONResponse($count);
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
 
     }
@@ -69,7 +69,7 @@ class TestResultController extends Controller
 
             return $this->successJSONResponse();
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
@@ -78,9 +78,9 @@ class TestResultController extends Controller
             $givenAnswerId = $request->json('answerId');
             $mark = $request->json('mark');
             $resultMark = TestResultCalculator::setAnswerMark($givenAnswerId, $mark);
-            return json_encode($this->successJSONResponse($resultMark));
+            return $this->successJSONResponse($resultMark);
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 }

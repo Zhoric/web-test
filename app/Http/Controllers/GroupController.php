@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Group;
 use Illuminate\Http\Request;
 
@@ -19,78 +20,135 @@ class GroupController extends Controller
 
     public function getAll()
     {
-        return json_encode($this->_groupManager->getAll());
+        try{
+            $groups = $this->_groupManager->getAll();
+            return $this->successJSONResponse($groups);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getProfileGroupsByNamePaginated(Request $request){
-        $pageNum =  $request->query('page');
-        $pageSize = $request->query('pageSize');
-        $profileId = $request->query('profile');
-        $groupName = $request->query('name');
+        try{
+            $pageNum =  $request->query('page');
+            $pageSize = $request->query('pageSize');
+            $profileId = $request->query('profile');
+            $groupName = $request->query('name');
 
-        $paginationResult = $this->_groupManager
-            ->getProfileGroupsByNamePaginated($pageNum, $pageSize, $groupName, $profileId);
+            $paginationResult = $this->_groupManager
+                ->getProfileGroupsByNamePaginated($pageNum, $pageSize, $groupName, $profileId);
 
-        return json_encode($paginationResult);
+            return $this->successJSONResponse($paginationResult);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
-        public function getGroup($id){
-        return json_encode($this->_groupManager->getGroup($id));
+    public function getGroup($id){
+        try{
+            $group = $this->_groupManager->getGroup($id);
+            return $this->successJSONResponse($group);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function create(Request $request){
-        $groupData = $request->json('group');
-        $studyPlanId = $request->json('studyPlanId');
+        try{
+            $groupData = $request->json('group');
+            $studyPlanId = $request->json('studyPlanId');
 
-        $group = new Group();
-        $group->fillFromJson($groupData);
-        $this->_groupManager->addGroup($group, $studyPlanId);
+            $group = new Group();
+            $group->fillFromJson($groupData);
+            $this->_groupManager->addGroup($group, $studyPlanId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
 
     public function update(Request $request){
-        $groupData = $request->json('group');
-        $studyPlanId = $request->json('studyPlanId');
+        try{
+            $groupData = $request->json('group');
+            $studyPlanId = $request->json('studyPlanId');
 
-        $group = new Group();
-        $group->fillFromJson($groupData);
-        $this->_groupManager->updateGroup($group, $studyPlanId);
+            $group = new Group();
+            $group->fillFromJson($groupData);
+            $this->_groupManager->updateGroup($group, $studyPlanId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function delete($groupId){
-        $this->_groupManager->deleteGroup($groupId);
+        try{
+            $this->_groupManager->deleteGroup($groupId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
-    //    Работа со студентами группы
+    /* ------------------------ Работа со студентами группы ---------------------------- */
+
     public function getGroupStudents($groupId){
-        return json_encode($this->_groupManager->getGroupStudents($groupId));
+        try{
+            $students = $this->_groupManager->getGroupStudents($groupId);
+            return $this->successJSONResponse($students);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function createStudent(Request $request){
-        $studentData = $request->json('student');
-        $groupId = $request->json('groupId');
+        try{
+            $studentData = $request->json('student');
+            $groupId = $request->json('groupId');
 
-        $student = new User();
-        $student->fillFromJson($studentData);
-        $this->_groupManager->addStudent($student, $groupId);
+            $student = new User();
+            $student->fillFromJson($studentData);
+            $this->_groupManager->addStudent($student, $groupId);
+
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function updateStudent(Request $request){
-        $studentData = $request->json('student');
+        try{
+            $studentData = $request->json('student');
 
-        $student = new User();
-        $student->fillFromJson($studentData);
-        $this->_groupManager->updateStudent($student);
+            $student = new User();
+            $student->fillFromJson($studentData);
+            $this->_groupManager->updateStudent($student);
+
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function setStudentGroup(Request $request){
-        $studentId = $request->json('studentId');
-        $groupId = $request->json('groupId');
+        try {
+            $studentId = $request->json('studentId');
+            $groupId = $request->json('groupId');
 
-        $this->_groupManager->setStudentGroup($studentId, $groupId);
+            $this->_groupManager->setStudentGroup($studentId, $groupId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception) {
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function deleteStudent($id){
-        $this->_groupManager->deleteStudent($id);
+        try{
+            $this->_groupManager->deleteStudent($id);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 }

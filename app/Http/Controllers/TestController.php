@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Managers\TestManager;
 use Test;
@@ -19,60 +20,87 @@ class TestController extends Controller
     }
 
     public function create(Request $request){
-        $testData = $request->json('test');
-        $themeIds = $request->json('themeIds');
-        $disciplineId = $request->json('disciplineId');
+        try{
+            $testData = $request->json('test');
+            $themeIds = $request->json('themeIds');
+            $disciplineId = $request->json('disciplineId');
 
-        $test = new Test();
-        $test->fillFromJson($testData);
-        $this->_testManager->create($test, $themeIds, $disciplineId);
+            $test = new Test();
+            $test->fillFromJson($testData);
+            $this->_testManager->create($test, $themeIds, $disciplineId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function update(Request $request){
-        $testData = $request->json('test');
-        $themeIds = $request->json('themeIds');
-        $disciplineId = $request->json('disciplineId');
+        try{
+            $testData = $request->json('test');
+            $themeIds = $request->json('themeIds');
+            $disciplineId = $request->json('disciplineId');
 
-        $test = new Test();
-        $test->fillFromJson($testData);
-        $this->_testManager->update($test, $themeIds, $disciplineId);
+            $test = new Test();
+            $test->fillFromJson($testData);
+            $this->_testManager->update($test, $themeIds, $disciplineId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function delete($id){
-        $this->_testManager->delete($id);
+        try{
+            $this->_testManager->delete($id);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getByNameAndDisciplinePaginated(Request $request){
-        $pageNum =  $request->query('page');
-        $pageSize = $request->query('pageSize');
-        $disciplineId = $request->query('discipline');
-        $name = $request->query('name');
+        try{
+            $pageNum =  $request->query('page');
+            $pageSize = $request->query('pageSize');
+            $disciplineId = $request->query('discipline');
+            $name = $request->query('name');
 
-        $paginationResult = $this->_testManager
-            ->getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId);
+            $paginationResult = $this->_testManager
+                ->getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId);
 
-        return json_encode($paginationResult);
+            return $this->successJSONResponse($paginationResult);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     /*
      * Получение тестов по конкретной дисциплине на главной странице для студента.
      */
     public function getStudentTestsByDiscipline(Request $requst){
-        $currentUser = Auth::user();
-        if (isset($currentUser)){
-            $userId = $currentUser->getId();
-            $disciplineId = $requst->query('discipline');
-            $tests = $this->_testManager->getTestsByUserAndDiscipline($userId, $disciplineId);
-            return json_encode($tests);
-        } else {
-            return json_encode(['message' => 'Невозможно получить данные о пользователе!']);
-        }
+        try{
+            $currentUser = Auth::user();
+            if (isset($currentUser)){
+                $userId = $currentUser->getId();
+                $disciplineId = $requst->query('discipline');
+                $tests = $this->_testManager->getTestsByUserAndDiscipline($userId, $disciplineId);
 
+                return $this->successJSONResponse($tests);
+            } else {
+                throw new Exception('Невозможно получить данные о пользователе!');
+            }
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getThemesOfTest($testId){
-        $themes = $this->_testManager->getThemesOfTest($testId);
-        return json_encode($themes);
+        try{
+            $themes = $this->_testManager->getThemesOfTest($testId);
+            return $this->successJSONResponse($themes);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
 

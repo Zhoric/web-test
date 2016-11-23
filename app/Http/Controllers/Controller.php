@@ -16,7 +16,7 @@ class Controller extends BaseController
         return json_encode(new JsonResult(true, $data, $message));
     }
 
-    protected function faultJSONResonse($message = null){
+    protected function faultJSONResponse($message = null){
         return json_encode(new JsonResult(false, null, $message));
     }
 }

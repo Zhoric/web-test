@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Managers\SectionManager;
 use Illuminate\Http\Request;
 use Section;
@@ -16,39 +17,69 @@ class SectionController extends Controller
     }
 
     public function getAllSectionsByTheme($themeId){
-        return json_encode($this->_sectionManager->getSectionsByTheme($themeId));
+        try{
+            $sections = $this->_sectionManager->getSectionsByTheme($themeId);
+            return $this->successJSONResponse($sections);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getAllSectionsByDiscipline($disciplineId){
-        return json_encode($this->_sectionManager->getSectionsByDiscipline($disciplineId));
+        try{
+            $sections = $this->_sectionManager->getSectionsByDiscipline($disciplineId);
+            return $this->successJSONResponse($sections);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getSection($id){
-        return json_encode($this->_sectionManager->getSection($id));
+        try{
+            $section = $this->_sectionManager->getSection($id);
+            return $this->successJSONResponse($section);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function create(Request $request){
-        $sectionData = $request->json('section');
-        $themeId = $request->json('themeId');
-        $disciplineId = $request->json('disciplineId');
+        try{
+            $sectionData = $request->json('section');
+            $themeId = $request->json('themeId');
+            $disciplineId = $request->json('disciplineId');
 
-        $section = new Section();
-        $section->fillFromJson($sectionData);
-        $this->_sectionManager->addSection($section, $themeId, $disciplineId);
+            $section = new Section();
+            $section->fillFromJson($sectionData);
+            $this->_sectionManager->addSection($section, $themeId, $disciplineId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function update(Request $request){
-        $sectionData = $request->json('section');
-        $themeId = $request->json('themeId');
-        $disciplineId = $request->json('disciplineId');
+        try{
+            $sectionData = $request->json('section');
+            $themeId = $request->json('themeId');
+            $disciplineId = $request->json('disciplineId');
 
-        $section = new Section();
-        $section->fillFromJson($sectionData);
-        $this->_sectionManager->updateSection($section, $themeId, $disciplineId);
+            $section = new Section();
+            $section->fillFromJson($sectionData);
+            $this->_sectionManager->updateSection($section, $themeId, $disciplineId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function delete($sectionId){
-        $this->_sectionManager->deleteSection($sectionId);
+        try{
+            $this->_sectionManager->deleteSection($sectionId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
 

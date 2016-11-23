@@ -18,42 +18,49 @@ class UserController extends Controller
     }
 
     public function getRoleByUser(){
-
-        $user = Auth::user();
-        if(isset($user)) {
-            try {
-                $role = $this->userManager->getUserRole($user->getId());
-                if ($role == null){
-                    throw new Exception('Невозможно определить роль пользователя!');
+        try{
+            $user = Auth::user();
+            if(isset($user)) {
+                try {
+                    $role = $this->userManager->getUserRole($user->getId());
+                    if ($role == null){
+                        throw new Exception('Невозможно определить роль пользователя!');
+                    }
+                    return $this->successJSONResponse($role->getSlug());
+                } catch (Exception $exception)
+                {
+                    $this->faultJSONResponse($exception->getMessage());
                 }
-                return json_encode(['result' => $role->getSlug(), 'success' => true]);
             }
-            catch (Exception $e)
-            {
-                return json_encode(['result' => $e->getMessage(), 'success' => false]);
+            else {
+                throw new Exception('Пользователь не авторизован!');
             }
-        }
-        else {
-            return json_encode(['result' => 'Пользователь не авторизован!', 'success' => false]);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
     public function getCurrentUserInfo(){
         try{
             $currentUserInfo = $this->userManager->getCurrentUserInfo();
-            return json_encode($currentUserInfo);
+            return $this->successJSONResponse($currentUserInfo);
         } catch (Exception $exception){
-            return json_encode(['message' => $exception->getMessage()]);
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
     public function setUserPassword(Request $request){
-        $userId = $request->json('userId');
-        $password = $request->json('password');
+        try{
+            $userId = $request->json('userId');
+            $password = $request->json('password');
 
-        $user = $this->userManager->getUser($userId);
-        $user->setPassword(bcrypt($password));
-        $this->userManager->update($user);
-            }
+            $user = $this->userManager->getUser($userId);
+            $user->setPassword(bcrypt($password));
+            $this->userManager->update($user);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
 
 }

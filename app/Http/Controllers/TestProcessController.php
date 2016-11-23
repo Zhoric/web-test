@@ -19,16 +19,21 @@ class TestProcessController extends Controller
      * Простановка в переменных сессии браузера идентификатора сессии тестирования.
      */
     public function startTest(Request $request){
-        $result = null;
+        try{
+            $result = null;
             $testId = $request->json('testId');
             $currentUser = Auth::user();
             if (isset($currentUser)){
                 $userId = $currentUser->getId();
                 $result = TestProcessManager::initTest($userId, $testId);
                 $request->session()->set('sessionId', $result);
+                $this->successJSONResponse();
             } else {
-                return json_encode(['message' => 'Для начала тестирования необходимо авторизоваться!']);
+                throw new Exception('Для начала тестирования необходимо авторизоваться!');
             }
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     /*
@@ -37,10 +42,14 @@ class TestProcessController extends Controller
      * результат теста вместо следующего вопроса.
      */
     public function getNextQuestion(Request $request){
-        $sessionId = $request->session()->get('sessionId');
-        $nextQuestionRequestResult = TestProcessManager::getNextQuestion($sessionId);
+        try{
+            $sessionId = $request->session()->get('sessionId');
+            $nextQuestionRequestResult = TestProcessManager::getNextQuestion($sessionId);
 
-        return json_encode($nextQuestionRequestResult);
+            return $this->successJSONResponse($nextQuestionRequestResult);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     /*
@@ -49,18 +58,22 @@ class TestProcessController extends Controller
      * или текст ответа (answerText).
      */
     public function answer(Request $request){
-        $sessionId = $request->session()->get('sessionId');
-        $questionId = $request->json('questionId');
-        $answersIds = $request->json('answerIds');
-        $answerText = $request->json('answerText');
+        try{
+            $sessionId = $request->session()->get('sessionId');
+            $questionId = $request->json('questionId');
+            $answersIds = $request->json('answerIds');
+            $answerText = $request->json('answerText');
 
-        $questionAnswer = new QuestionAnswer();
-        $questionAnswer->setQuestionId($questionId);
-        $questionAnswer->setAnswerIds($answersIds);
-        $questionAnswer->setAnswerText($answerText);
+            $questionAnswer = new QuestionAnswer();
+            $questionAnswer->setQuestionId($questionId);
+            $questionAnswer->setAnswerIds($answersIds);
+            $questionAnswer->setAnswerText($answerText);
 
-        $result = TestProcessManager::processAnswer($sessionId, $questionAnswer);
+            $result = TestProcessManager::processAnswer($sessionId, $questionAnswer);
 
-        return json_encode($result);
+            return $this->successJSONResponse($result);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 }

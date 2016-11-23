@@ -19,24 +19,49 @@ class OrgStructureController extends Controller
 
     public function getAllInstitutes()
     {
-        return json_encode($this->_orgStructureManager->getInstitutes());
+        try{
+            $institutes = $this->_orgStructureManager->getInstitutes();
+            return $this->successJSONResponse($institutes);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getAllProfiles(){
-        return json_encode($this->_orgStructureManager->getProfiles());
+        try{
+            $profiles = $this->_orgStructureManager->getProfiles();
+            return $this->successJSONResponse($profiles);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getInstituteProfiles($id)
     {
-        return json_encode($this->_orgStructureManager->getInstituteProfiles($id));
+        try{
+            $profiles = $this->_orgStructureManager->getInstituteProfiles($id);
+            return $this->successJSONResponse($profiles);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getProfileGroups($id){
-        return json_encode($this->_orgStructureManager->getProfileGroups($id));
+        try{
+            $profileGroups = $this->_orgStructureManager->getProfileGroups($id);
+            return $this->successJSONResponse($profileGroups);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getProfilePlans($id){
-        return json_encode($this->_orgStructureManager->getProfilePlans($id));
+        try{
+            $profilePlans = $this->_orgStructureManager->getProfilePlans($id);
+            return $this->successJSONResponse($profilePlans);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function getProfileDisciplines($id){
@@ -44,15 +69,16 @@ class OrgStructureController extends Controller
             $disciplines = $this->_orgStructureManager->getProfileDisciplines($id);
             return $this->successJSONResponse($disciplines);
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
     public function deleteProfile($id){
         try{
             $this->_orgStructureManager->deleteProfile($id);
+            return $this->successJSONResponse();
         } catch (Exception $exception){
-            return $this->faultJSONResonse($exception->getMessage());
+            return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
@@ -63,17 +89,27 @@ class OrgStructureController extends Controller
      * body: { "profile": {"name":"test","semesters":5,"fullname":"fullnameTEST"} }
      */
     public function createProfile(Request $request){
-        $profileData = $request->json('profile');
-        $profile = new Profile();
-        $profile->fillFromJson($profileData);
-        $this->_orgStructureManager->addProfile($profile);
+        try{
+            $profileData = $request->json('profile');
+            $profile = new Profile();
+            $profile->fillFromJson($profileData);
+            $this->_orgStructureManager->addProfile($profile);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function updateProfile(Request $request){
-        $profileData = $request->json('profile');
-        $profile = new Profile();
-        $profile->fillFromJson($profileData);
-        $this->_orgStructureManager->updateProfile($profile);
+        try{
+            $profileData = $request->json('profile');
+            $profile = new Profile();
+            $profile->fillFromJson($profileData);
+            $this->_orgStructureManager->updateProfile($profile);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
 }

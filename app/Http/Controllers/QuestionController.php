@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Helpers\FileHelper;
 use Illuminate\Http\Request;
 use Managers\QuestionManager;
@@ -22,18 +23,22 @@ class QuestionController extends Controller
      *  Текст - необязательный параметр
      */
     public function getByThemeAndTextPaginated(Request $request){
-        $pageNum =  $request->query('page');
-        $pageSize = $request->query('pageSize');
-        $text = $request->query('name');
-        $themeId = $request->query('theme');
-        $type = $request->query('type');
-        $complexity = $request->query('complexity');
+        try{
+            $pageNum =  $request->query('page');
+            $pageSize = $request->query('pageSize');
+            $text = $request->query('name');
+            $themeId = $request->query('theme');
+            $type = $request->query('type');
+            $complexity = $request->query('complexity');
 
-        $paginationResult = $this->_questionManager
-            ->getByParamsPaginated($pageSize, $pageNum,
-                $themeId, $text, $type, $complexity);
+            $paginationResult = $this->_questionManager
+                ->getByParamsPaginated($pageSize, $pageNum,
+                    $themeId, $text, $type, $complexity);
 
-        return json_encode($paginationResult);
+            return $this->successJSONResponse($paginationResult);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     /*
@@ -48,21 +53,26 @@ class QuestionController extends Controller
      *    }
      */
     public function create(Request $request){
-        $questionData = $request->json('question');
-        $answers = (array) $request->json('answers');
-        $themeId = $request->json('theme');
-        $file = $request->json('file');
-        $fileType = $request->json('fileType');
+        try{
+            $questionData = $request->json('question');
+            $answers = (array) $request->json('answers');
+            $themeId = $request->json('theme');
+            $file = $request->json('file');
+            $fileType = $request->json('fileType');
 
-        $question = new Question();
-        $question->fillFromJson($questionData);
+            $question = new Question();
+            $question->fillFromJson($questionData);
 
-        if ($file != null){
-            $filePath = FileHelper::save($file, $fileType);
-            $question->setImage($filePath);
+            if ($file != null){
+                $filePath = FileHelper::save($file, $fileType);
+                $question->setImage($filePath);
+            }
+            $this->_questionManager->create($question,$themeId, $answers);
+
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
         }
-
-        $this->_questionManager->create($question,$themeId, $answers);
     }
 
 
@@ -73,38 +83,52 @@ class QuestionController extends Controller
      * Если при редактировании изображение удалено, то поля file и fileType должны быть null.
      */
     public function update(Request $request){
-        $questionData = $request->json('question');
-        $answers = $request->json('answers');
-        $themeId = $request->json('theme');
-        $file = $request->json('file');
-        $fileType = $request->json('fileType');
+        try{
+            $questionData = $request->json('question');
+            $answers = $request->json('answers');
+            $themeId = $request->json('theme');
+            $file = $request->json('file');
+            $fileType = $request->json('fileType');
 
-        $question = new Question();
-        $question->fillFromJson($questionData);
+            $question = new Question();
+            $question->fillFromJson($questionData);
 
-        $oldQuestion = $this->_questionManager->getById($question->getId());
-        $oldImage = $oldQuestion->getImage();
-        if ($oldImage != null && $fileType != 'OLD'){
-            FileHelper::delete($oldImage);
+            $oldQuestion = $this->_questionManager->getById($question->getId());
+            $oldImage = $oldQuestion->getImage();
+            if ($oldImage != null && $fileType != 'OLD'){
+                FileHelper::delete($oldImage);
+            }
+
+            if ($file != null){
+                $filePath = FileHelper::save($file, $fileType);
+                $question->setImage($filePath);
+            }
+
+            $this->_questionManager->update($question,$themeId, $answers);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
         }
-
-        if ($file != null){
-            $filePath = FileHelper::save($file, $fileType);
-            $question->setImage($filePath);
-        }
-
-        $this->_questionManager->update($question,$themeId, $answers);
     }
 
     public function delete($id){
-        $this->_questionManager->delete($id);
+        try{
+            $this->_questionManager->delete($id);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     /*
      *   Получение вопроса с ответами по id
      */
     public function get($id){
-        $question =  $this->_questionManager->getWithAnswers($id);
-        return json_encode($question);
+        try{
+            $question =  $this->_questionManager->getWithAnswers($id);
+            return $this->successJSONResponse($question);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 }

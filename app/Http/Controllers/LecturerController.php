@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Discipline;
+use Exception;
 use Illuminate\Http\Request;
 use Managers\LecturerManager;
 use User;
@@ -19,35 +20,48 @@ class LecturerController extends Controller
 
     //TODO: получать преподавателя со всеми id дисциплин
     public function getByNamePaginated(Request $request){
-        $pageNum =  $request->query('page');
-        $pageSize = $request->query('pageSize');
-        $name = $request->query('name');
+        try{
+            $pageNum =  $request->query('page');
+            $pageSize = $request->query('pageSize');
+            $name = $request->query('name');
 
-        $paginationResult = $this->_lecturerManager
-            ->getByNamePaginated($pageNum, $pageSize, $name);
+            $paginationResult = $this->_lecturerManager
+                ->getByNamePaginated($pageNum, $pageSize, $name);
 
-        return json_encode($paginationResult);
+            return $this->successJSONResponse($paginationResult);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function create(Request $request){
-        $lecturerData = $request->json('lecturer');
-        $disciplineIds = $request->json('disciplineIds');
+        try{
+            $lecturerData = $request->json('lecturer');
+            $disciplineIds = $request->json('disciplineIds');
 
-        $lecturer = new User();
-        $lecturer->fillFromJson($lecturerData);
-        $this->_lecturerManager->addLecturer($lecturer, $disciplineIds);
+            $lecturer = new User();
+            $lecturer->fillFromJson($lecturerData);
+            $this->_lecturerManager->addLecturer($lecturer, $disciplineIds);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function update(Request $request){
-        $lecturerData = $request->json('lecturer');
-        $disciplineIds = $request->json('disciplineIds');
+        try{
+            $lecturerData = $request->json('lecturer');
+            $disciplineIds = $request->json('disciplineIds');
 
-        $lecturer = new User();
-        $lecturer->fillFromJson($lecturerData);
-        $this->_lecturerManager->updateLecturer($lecturer, $disciplineIds);
+            $lecturer = new User();
+            $lecturer->fillFromJson($lecturerData);
+            $this->_lecturerManager->updateLecturer($lecturer, $disciplineIds);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 
     public function delete($id){
-        $this->_disciplineManager->deleteDiscipline($id);
     }
 }
