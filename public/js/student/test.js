@@ -81,37 +81,51 @@ $(document).ready(function(){
             self.get = {
                 question: function(){
                     $.get('/api/tests/nextQuestion', function(response){
-                        var res = ko.mapping.fromJSON(response);
-                        if (res.hasOwnProperty('question')){
-                            self.current.question(res.question);
-                            self.current.timeLeft(res.question.time());
-                            if (res.answers() == null) {
-                                self.current.answers([]);
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            if (result.Data.hasOwnProperty('question')){
+                                self.current.question(result.Data.question);
+                                self.current.timeLeft(result.Data.question.time());
+                                if (result.Data.answers() == null) {
+                                    self.current.answers([]);
+                                }
+                                else{
+                                    self.current.answers(result.Data.answers());
+                                }
                             }
                             else{
-                                self.current.answers(res.answers());
+                                self.current.testResult(result.Data);
                             }
+                            return;
                         }
-                        else{
-                            self.current.testResult(res);
-                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };
             self.post = {
                 answers: function(){
                     var json = self.toggleCurrent.stringify.answer();
-                    $.post('/api/tests/answer', json, function(){
-                        self.toggleCurrent.clear();
-                        self.get.question();
+                    $.post('/api/tests/answer', json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.toggleCurrent.clear();
+                            self.get.question();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 startTest: function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
 
-                    $.post('/api/tests/start', JSON.stringify({testId: id}), function(){
+                    $.post('/api/tests/start', JSON.stringify({testId: id}), function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
                             self.get.question();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };

@@ -37,7 +37,7 @@ $(document).ready(function () {
                     alert(xmlhttp.status + ': ' + xmlhttp.statusText);
                  } else {
                  var result = ko.mapping.fromJSON(xmlhttp.responseText);
-                     self.section(result);
+                     self.section(result.Data);
                  }
              }
              };

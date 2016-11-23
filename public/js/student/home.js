@@ -75,16 +75,24 @@ $(document).ready(function(){
                 disciplines: function(){
                     var url = '/api/disciplines/actual';
                     $.get(url, function(response){
-                        self.current.disciplines(ko.mapping.fromJSON(response)());
-                        self.actions.splitDisciplinesByRows();
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.disciplines(result.Data());
+                            self.actions.splitDisciplinesByRows();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 tests: function(){
-                    console.log('getting tests');
                     var url = '/api/tests/showForStudent?discipline=' + self.current.disciplineId();
                     $.get(url, function(response){
-                        self.current.tests(ko.mapping.fromJSON(response)());
-                        console.log(self.current.tests());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.tests(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };
