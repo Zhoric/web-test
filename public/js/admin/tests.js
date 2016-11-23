@@ -328,8 +328,13 @@ $(document).ready(function(){
             self.get = {
                 disciplines: function(){
                     $.get('/api/disciplines/', function(response){
-                        self.current.disciplines(ko.mapping.fromJSON(response)());
-                        self.toggleCurrent.set.filter();
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.current.disciplines(result.Data());
+                            self.toggleCurrent.set.filter();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 tests: function(){
@@ -342,23 +347,37 @@ $(document).ready(function(){
                         page + pageSize + name;
 
                     $.get(url, function(response){
-                        var res = ko.mapping.fromJSON(response);
-                        self.current.tests(res.data());
-                        self.pagination.itemsCount(res.count());
-                        self.get.themes();
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.current.tests(result.Data.data());
+                            self.pagination.itemsCount(result.Data.count());
+                            self.get.themes();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 themes: function(){
                     var url = '/api/disciplines/' + self.filter.discipline().id() + '/themes';
                     $.get(url, function(response){
-                        self.multiselect.data(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.multiselect.data(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 testThemes: function(id){
                     var url = '/api/tests/' + id + '/themes';
                     $.get(url, function(response){
-                        self.current.test().themes(ko.mapping.fromJSON(response)());
-                        self.multiselect.fill();
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.current.test().themes(result.Data());
+                            self.multiselect.fill();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };
@@ -367,17 +386,27 @@ $(document).ready(function(){
                     var url = '/api/tests/' + action;
                     var json = self.toggleCurrent.stringify.test();
 
-                    $.post(url, json, function(){
-                        self.mode('none');
-                        self.toggleCurrent.empty.test();
-                        self.get.tests();
+                    $.post(url, json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.mode('none');
+                            self.toggleCurrent.empty.test();
+                            self.get.tests();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 removedTest: function(){
-                    $.post('/api/tests/delete/' + self.current.test().id(), function(){
-                        self.toggleModal('#delete-modal', 'close');
-                        self.get.tests();
-                        self.mode('none');
+                    $.post('/api/tests/delete/' + self.current.test().id(), function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.toggleModal('#delete-modal', 'close');
+                            self.get.tests();
+                            self.mode('none');
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };

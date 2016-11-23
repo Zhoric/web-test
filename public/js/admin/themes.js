@@ -404,8 +404,14 @@ $(document).ready(function(){
             self.get = {
                 discipline: function(){
                     $.get('/api/disciplines/' + self.theme().discipline(), function(response){
-                        var res = ko.mapping.fromJSON(response);
-                        self.current.discipline().id(res.id()).name(res.name());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.current.discipline()
+                                .id(result.Data.id())
+                                .name(result.Data.name());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 questions: function(){
@@ -421,9 +427,13 @@ $(document).ready(function(){
                         name + type + complexity;
 
                     $.get(url, function(response){
-                        var res = ko.mapping.fromJSON(response);
-                        self.current.questions(res.data());
-                        self.pagination.itemsCount(res.count());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.current.questions(result.Data.data());
+                            self.pagination.itemsCount(result.Data.count());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 theme: function(){
@@ -431,17 +441,26 @@ $(document).ready(function(){
                     var themeId = +url.substr(url.lastIndexOf('/')+1);
 
                     $.get('/api/disciplines/themes/' + themeId, function(response){
-                        self.theme(ko.mapping.fromJSON(response));
-                        self.get.discipline();
-                        self.get.questions();
-                        self.toggleCurrent.fill.theme(self.theme());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.theme(result.Data);
+                            self.get.discipline();
+                            self.get.questions();
+                            self.toggleCurrent.fill.theme(self.theme());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 questionWithAnswers: function(id){
                     var url = '/api/questions/' + id;
                     $.get(url, function(response){
-                        var res = ko.mapping.fromJSON(response);
-                        self.toggleCurrent.fill.question(res.question, res.answers);
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.toggleCurrent.fill.question(result.Data.question, result.Data.answers);
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };
@@ -450,23 +469,38 @@ $(document).ready(function(){
                     var url = '/api/disciplines/themes/update';
                     var json = self.toggleCurrent.stringify.theme();
 
-                    $.post(url, json, function(){});
+                    $.post(url, json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (!result.Success()) {
+                            self.errors.show(result.Message());
+                        }
+                    });
                 },
                 question: function(action){
                     var url = '/api/questions/' + action;
                     var json = self.toggleCurrent.stringify.question();
-                    $.post(url, json, function(){
-                        self.toggleCurrent.empty.question();
-                        self.mode('none');
-                        self.get.questions();
+                    $.post(url, json, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (!result.Success()) {
+                            self.toggleCurrent.empty.question();
+                            self.mode('none');
+                            self.get.questions();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 removedQuestion: function(){
                     var url = '/api/questions/delete/' + self.current.question().id();
-                    $.post(url, function(){
-                        self.mode('none');
-                        self.toggleCurrent.empty.question();
-                        self.get.questions();
+                    $.post(url, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (!result.Success()) {
+                            self.mode('none');
+                            self.toggleCurrent.empty.question();
+                            self.get.questions();
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     })
                 }
             };

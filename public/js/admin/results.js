@@ -40,24 +40,44 @@ $(document).ready(function(){
             self.get = {
                 profiles: function(){
                     $.get('/api/profiles', function(response){
-                        self.filter.profiles(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.filter.profiles(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 disciplines: function(){
                     $.get('/api/disciplines', function(response){
-                        self.filter.disciplines(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.filter.disciplines(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 groups: function(){
                     var url = '/api/profile/'+ self.filter.profile().id() +'/groups';
                     $.get(url, function(response){
-                        self.filter.groups(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.filter.groups(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 tests: function(){
                     var url = '/api/disciplines/' + self.filter.discipline().id()+ '/tests';
                     $.get(url, function(response){
-                        self.filter.tests(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.filter.tests(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 results: function(){
@@ -66,8 +86,12 @@ $(document).ready(function(){
                     var url = '/api/results/show?groupId='+ group + '&testId=' + test;
 
                     $.get(url, function(response){
-                        self.current.results(ko.mapping.fromJSON(response)());
-                        console.log(self.current.results());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()) {
+                            self.current.results(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
             };

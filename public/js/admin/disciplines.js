@@ -272,43 +272,70 @@ $(document).ready(function(){
 
                     $.get(url, function(response){
                         var result = ko.mapping.fromJSON(response);
-                        self.disciplines(result.data());
-                        self.pagination.itemsCount(result.count());
+                        if (result.Success()){
+                            console.log(result);
+                            self.disciplines(result.Data.data());
+                            self.pagination.itemsCount(result.Data.count());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();
-                    console.log(id);
                     if (id){
                         $.get('/api/disciplines/' + id + '/profiles', function(response){
-                            self.current.profiles(ko.mapping.fromJSON(response)());
-                            console.log(self.current.profiles());
-                            self.multiselect.fill();
+                            var result = ko.mapping.fromJSON(response);
+                            if (result.Success()){
+                                self.current.profiles(result.Data());
+                                self.multiselect.fill();
+                                return;
+                            }
+                            self.errors.show(result.Message());
                         });
                     }
                 },
                 profiles: function(){
                     $.get('/api/profiles', function(response){
-                        self.multiselect.data(ko.mapping.fromJSON(response)());
-                        console.log(self.multiselect.data());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.multiselect.data(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 themes: function(){
                     var url = '/api/disciplines/' + self.current.discipline().id() +'/themes';
                     $.get(url, function(response){
-                        self.current.themes(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.themes(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 sectionsByTheme: function() {
                     var url = '/api/sections/theme/' + self.current.theme().id() ;
                     $.get(url, function(response){
-                        self.current.sections(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.sections(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 sectionsByDiscipline: function () {
                     var url = '/api/sections/discipline/' + self.current.discipline().id() ;
                     $.get(url, function(response){
-                        self.current.sections(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.sections(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };
@@ -317,10 +344,15 @@ $(document).ready(function(){
 
 
             self.post = function(url, json){
-                $.post(url, json, function(result){
-                    self.mode('none');
-                    self.toggleCurrent.empty();
-                    self.get.disciplines();
+                $.post(url, json, function(response){
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.mode('none');
+                        self.toggleCurrent.empty();
+                        self.get.disciplines();
+                        return;
+                    }
+                    self.errors.show(result.Message());
                 });
             };
             self.toggleModal = function(selector, action){
