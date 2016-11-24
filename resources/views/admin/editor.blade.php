@@ -16,9 +16,7 @@
         <textarea id="editor" data-bind="value: $root.section().content"></textarea>
 
     </div>
-    @ckeditor('editor', ['language' => 'ru',
-                         'filebrowserBrowseUrl' => '/elfinder/ckeditor',
-                         'extraPlugins' => 'oembed,video,html5audio'])
+    @ckeditor('editor', ['language' => 'ru', 'filebrowserBrowseUrl' => '/elfinder/ckeditor', 'extraPlugins' => 'oembed,video,html5audio'])
 @endsection
 <div class="g-hidden">
     <div class="box-modal" id="cancel-modal">

@@ -25,21 +25,16 @@ $(document).ready(function () {
              var sectionId = +currentUrl.substr(currentUrl.lastIndexOf('/')+1);
              var url = '/api/sections/' + sectionId;
 
+             $.get(url, function(response){
+                var result = ko.mapping.fromJSON(response);
+                if (result.Success()){
+                    self.section(result.Data);
+                    return;
+                }
+                self.errors.show(result.Message());
+              });
 
 
-             var xmlhttp = new XMLHttpRequest();
-             xmlhttp.open('GET', url, true);
-             xmlhttp.send(null);
-             xmlhttp.onreadystatechange = function() { // (3)
-                 if (xmlhttp.readyState != 4) return;
-
-                 if (xmlhttp.status != 200) {
-                    alert(xmlhttp.status + ': ' + xmlhttp.statusText);
-                 } else {
-                 var result = ko.mapping.fromJSON(xmlhttp.responseText);
-                     self.section(result.Data);
-                 }
-             }
              };
 
              self.getSection();

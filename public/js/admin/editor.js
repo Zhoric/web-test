@@ -35,28 +35,24 @@ $(document).ready(function () {
                     var sectionId = +urlParts[urlParts.length-1];
                     var url = '/api/sections/' + sectionId;
 
-                    var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open('GET', url, true);
-                    xmlhttp.send(null);
-                    xmlhttp.onreadystatechange = function() { // (3)
-                        if (xmlhttp.readyState != 4) return;
 
-                        if (xmlhttp.status != 200) {
-                            alert(xmlhttp.status + ': ' + xmlhttp.statusText);
-                        } else {
-                            var result = ko.mapping.fromJSON(xmlhttp.responseText);
-
+                    $.get(url, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
                             self.section()
-                                .id(result.id())
-                                .name(result.name())
-                                .content(result.content())
-                                .disciplineId(result.disciplineId());
+                                .id(result.Data.id())
+                                .name(result.Data.name())
+                                .content(result.Data.content())
+                                .disciplineId(result.Data.disciplineId());
 
-                            if (ko.isObservable(result.theme))
+                            if (ko.isObservable(result.Data.theme))
                                 self.theme(null);
-                            else self.theme(result.theme);
+                            else self.theme(result.Data.theme);
+                            return;
                         }
-                    }
+                        self.errors.show(result.Message());
+                    });
+
                 }
                 else{
                     self.mode('create');
@@ -84,16 +80,19 @@ $(document).ready(function () {
                var json = JSON.stringify({section: section, themeId: themeId, disciplineId: disciplineId});
                var url = '/api/sections/create';
 
-               var xmlhttp = new XMLHttpRequest();
-               xmlhttp.open('POST', url, true);
-               xmlhttp.send(json);
-               xmlhttp.onreadystatechange = function () {
-                   self.text("Раздел был успешно создан!");
-                   self.toggleModal('#cancel-modal', '');
-                   setTimeout(function () {
-                       window.location.href = '/admin/disciplines/';
-                   }, 1500);
-               };
+               $.post(url, json, function(response){
+                   var result = ko.mapping.fromJSON(response);
+                   if (result.Success()){
+                       self.text("Раздел был успешно создан!");
+                       self.toggleModal('#cancel-modal', '');
+                       setTimeout(function () {
+                           window.location.href = '/admin/disciplines/';
+                       }, 1500);
+                       return;
+                   }
+                   self.errors.show(result.Message());
+               });
+
            };
            self.update = function () {
                var section = {
@@ -110,18 +109,21 @@ $(document).ready(function () {
 
 
                var json = JSON.stringify({section: section, themeId: themeId, disciplineId: disciplineId});
-               url = '/api/sections/update';
+               var url = '/api/sections/update';
 
-               xmlhttp = new XMLHttpRequest();
-               xmlhttp.open('POST', url, true);
-               xmlhttp.send(json);
-               xmlhttp.onreadystatechange = function () {
-                   self.text("Раздел был успешно изменен!");
-                   self.toggleModal('#cancel-modal', '');
-                   setTimeout(function () {
-                       window.location.href = '/admin/disciplines/';
-                   }, 1500);
-               };
+               $.post(url, json, function(response){
+                   var result = ko.mapping.fromJSON(response);
+                   if (result.Success()){
+                       self.text("Раздел был успешно изменен!");
+                       self.toggleModal('#cancel-modal', '');
+                       setTimeout(function () {
+                           window.location.href = '/admin/disciplines/';
+                       }, 1500);
+                       return;
+                   }
+                   self.errors.show(result.Message());
+               });
+
            };
 
            self.approve = function () {

@@ -273,7 +273,6 @@ $(document).ready(function(){
                     $.get(url, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()){
-                            console.log(result);
                             self.disciplines(result.Data.data());
                             self.pagination.itemsCount(result.Data.count());
                             return;
