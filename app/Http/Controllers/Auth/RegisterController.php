@@ -59,6 +59,7 @@ class RegisterController extends Controller
      */
     protected function create(Request $request)
     {
+
         try{
             $userData = $request->json('user');
             $groupId = $request->json('groupId');
@@ -75,35 +76,54 @@ class RegisterController extends Controller
             $createdUser = $this->authManager->createNewUser($user, $role, false);
 
             if(isset($createdUser)) {
-
                 $this->groupManager->setStudentGroup($groupId, $createdUser->getId());
             }
             else {
                 throw new Exception('Ошибка при создании пользователя.');
             }
-            return $createdUser;
+
+            return $this->successJSONResponse($createdUser);
         } catch (Exception $exception){
-            return json_encode(['message' => $exception->getMessage()]);
+            return $this->faultJSONResponse($exception->getMessage());
         }
+
     }
 
     public function checkIfEmailExists(Request $request){
-        $email = $request->json('email');
-        $exists = $this->authManager->checkIfEmailExists($email);
-        return json_encode($exists);
+
+        try {
+            $email = $request->json('email');
+            $exists = $this->authManager->checkIfEmailExists($email);
+            return $this->successJSONResponse($exists);
+        }
+        catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
 
     }
 
     public function register(Request $request){
-        $user = $this->create($request);
-        if(empty($user)){
-            return json_encode(['message' => 'Ошибка при регистрации!', 'success' => false]);
-        }
-        event(new Registered($user));
-        //TODO:: после регистрации не залогинивать юзера. Это заявка на регистрацию
-        $this->guard()->login($user);
 
-        return json_encode(['message' => 'Ваша заявка на регистрацию принята! Ждите', 'success' => true]);
+
+        try {
+            $user = $this->create($request);
+            if(empty($user)){
+                throw new Exception('Ошибка при регистрации');
+            }
+            event(new Registered($user));
+            //TODO:: после регистрации не залогинивать юзера. Это заявка на регистрацию
+            $this->guard()->login($user);
+
+
+            $message = 'Ваша заявка на регистрацию принята! Ждите';
+            return $this->successJSONResponse(null,$message);
+        }
+        catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+
+
+
     }
 
 }
