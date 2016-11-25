@@ -309,4 +309,15 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('{id}', 'TestResultController@getById');
     });
 
+    /*-----------------------------------------------------------------------------
+   *                           ПРОГРАММЫ
+   *------------------------------------------------------------------------------
+   */
+    Route::group(['prefix' => 'program'], function () {
+        Route::post('run', 'ProgramController@run');
+
+    });
+
+
+
 });
