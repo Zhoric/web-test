@@ -109,8 +109,7 @@ class ParamsSet extends BaseEntity implements JsonSerializable
     {
         return array('id' => $this->id,
                      'input' => $this->input,
-                     'expectedOutput' => $this->expectedOutput,
-                     'program' => $this->program);
+                     'expectedOutput' => $this->expectedOutput);
     }
 
     /**

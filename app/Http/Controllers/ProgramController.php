@@ -12,6 +12,7 @@ use CodeQuestionEngine\CodeQuestionManager;
 use Illuminate\Http\Request;
 use Exception;
 use ParamsSet;
+use ProgramViewModel;
 use Repositories\UnitOfWork;
 
 class ProgramController extends Controller
@@ -29,14 +30,9 @@ class ProgramController extends Controller
     }
 
     /*
-     *   Добавление вопроса вместе с ответами
+     *   Запуск программы на выполнение.
      *   Пример валидного JSON-запроса:
-     *   {"question" : {"type": 1, "text": "Текст вопроса?", "complexity": 2, "time": 30},
-     *    "theme" : 2,
-     *    "answers" : [{"text":"Правильный ответ","isRight":true},
-     *                 {"text":"Неправильный ответ","isRight":false}],
-     *    "file" : "Содержимое файла в base64",
-     *    "fileType" : "Тип файла",
+     *   {
      *    "program" : "Текст программы",
      *    "paramSets" : [{"input":"Входные параметры1", "expectedOutput":"Выходной параметр1"},
      *      {"input":"Входные параметры2", "expectedOutput":"Выходной параметр2"}],
@@ -61,7 +57,6 @@ class ProgramController extends Controller
 
             }
 
-
             $mark = $this->codeManager->runQuestionProgramWithParamSets($program,$paramsSetsObjects);
 
             return $this->successJSONResponse('Ваша оценка: '.$mark.'/100');
@@ -70,5 +65,14 @@ class ProgramController extends Controller
         }
     }
 
+    public function getByQuestion($id){
+        try{
+            $program = $this->unitOfWork->programs()->getByQuestion($id);
+            $paramSets = $this->unitOfWork->paramsSets()->getByProgram($program->getId());
+            return $this->successJSONResponse(new ProgramViewModel($program, $paramSets));
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
 
 }

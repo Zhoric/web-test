@@ -315,6 +315,7 @@ Route::group(['prefix' => 'api'], function() {
    */
     Route::group(['prefix' => 'program'], function () {
         Route::post('run', 'ProgramController@run');
+        Route::get('byQuestion/{id}','ProgramController@getByQuestion');
 
     });
 
