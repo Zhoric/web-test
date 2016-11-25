@@ -114,14 +114,16 @@ class CodeFileManager
             $baseShellScript = fopen($shPath, "r"); // открываем для чтения
             $text = fread($baseShellScript, filesize($shPath)); //читаем
             fclose($baseShellScript);
-
             $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
-
             $command = "cd /opt/$cache_dir/$uniqueDirName/\n";
-
-            $uniqueScript = fopen("$this->app_path/$cache_dir/$uniqueDirName/run.sh", "w");
+            $filePath = "$this->app_path/$cache_dir/$uniqueDirName/run.sh";
+            $uniqueScript = fopen($filePath, "w");
             fwrite($uniqueScript, $command . $text);
             fclose($uniqueScript);
+
+            $file = file_get_contents($filePath);
+            $file = str_replace('run', './a.out 1> result.txt < input.txt', $file);
+            file_put_contents($filePath, $file);
         }
         catch (\Exception $e)
         {
@@ -132,15 +134,13 @@ class CodeFileManager
     }
 
     /**
-     * Метод берет базовый шелл-скрипт и создает на его основе скрипт, который запускает
-     * на выполнение код, лежащий в уникальной папке пользователя с параметрами, лежащими в
-     * файле.
+     * Создает шелл скрипт для прогона тестовых случаев
      * @param $dirPath - путь к уникальной папке пользователя
-     * @param $inputFilename - имя файла с входными данными
      * @throws
      */
-    public function createShellScriptForTestCase($dirPath,$inputFilename){
+    public function createShellScriptForTestCases($dirPath,$casesCount){
         try {
+
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
             $sh_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $shPath = "$this->app_path/$cache_dir/$sh_name";
@@ -148,19 +148,19 @@ class CodeFileManager
             $baseShellScript = fopen($shPath, "r"); // открываем для чтения
             $text = fread($baseShellScript, filesize($shPath)); //читаем
             fclose($baseShellScript);
-
             $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
-
             $command = "cd /opt/$cache_dir/$uniqueDirName/\n";
             $filePath = "$this->app_path/$cache_dir/$uniqueDirName/run.sh";
-
             $uniqueScript = fopen($filePath, "w");
             fwrite($uniqueScript, $command . $text);
             fclose($uniqueScript);
 
-
             $file = file_get_contents($filePath);
-            $file = str_replace('input.txt', $inputFilename, $file);
+            $command = '';
+            for($i =0; $i < $casesCount ; $i++){
+                $command.= "./a.out 1> student_result_$i.txt < test_input_$i.txt\n";
+            }
+            $file = str_replace('run', $command, $file);
             file_put_contents($filePath, $file);
         }
         catch (\Exception $e)
@@ -169,6 +169,8 @@ class CodeFileManager
             throw new \Exception("Ошибка при создании скрипта: $msg");
         }
     }
+
+
 
     /**
      * Создает файл с результатами работы программы студента для тестого прогона с номером $number.

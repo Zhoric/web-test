@@ -72,18 +72,12 @@ class CodeQuestionManager
             $this->fileManager->putCodeInFile($code, $dirPath);
             $cases_count = $this->fileManager->createTestCasesFiles($programId,$dirPath);
 
-            for($i = 0; $i < $cases_count ; $i ++){
-                $this->fileManager->createShellScriptForTestCase($dirPath,"test_input_$i.txt");
-                $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
-                $cache_dir = EngineGlobalSettings::CACHE_DIR;
-                $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
-                //DEBUG COMMENT
-               // $errors = $this->fileManager->getErrors($dirPath);
+            $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
 
-                $result = $this->fileManager->getStudentResult($dirPath);
-                $this->fileManager->createResultFile($dirPath,$result,$i);
+            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
+            $cache_dir = EngineGlobalSettings::CACHE_DIR;
+            $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
 
-            }
 
         } catch (\Exception $e) {
             return $e->getMessage();
