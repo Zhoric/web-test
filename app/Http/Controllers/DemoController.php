@@ -44,7 +44,9 @@ class DemoController extends BaseController
     public function receiveCode(Request $request){
         $code = $request->input('code');
 
-        $result = $this->manager->runQuestionProgram($code,1);
+      //  $result = $this->manager->runQuestionProgram($code,1);
+
+        $result = $this->manager->run($code);
         return $result;
 
     }

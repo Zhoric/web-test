@@ -10,6 +10,7 @@
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
     <script src="{{ URL::asset('js/ace.js') }}"></script>
+    <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
 @endsection
 
 @section('content')
