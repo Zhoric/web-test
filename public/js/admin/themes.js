@@ -528,7 +528,7 @@ $(document).ready(function(){
                     })
                 },
                 program: function(json){
-                    $.post('api/program/run', json, function(response){
+                    $.post('/api/program/run', json, function(response){
                         console.log(response);
                     });
                 }

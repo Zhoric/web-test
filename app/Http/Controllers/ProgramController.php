@@ -46,7 +46,7 @@ class ProgramController extends Controller
         try{
 
             $program = $request->json('program');
-            $program = $this->fileManager->utf8_urldecode($program);
+            $program = json_decode($program);
 
             $paramSets = (array) $request->json('paramSets');
 
@@ -61,9 +61,10 @@ class ProgramController extends Controller
 
             }
 
+
             $mark = $this->codeManager->runQuestionProgramWithParamSets($program,$paramsSetsObjects);
 
-            return $this->successJSONResponse($mark);
+            return $this->successJSONResponse('Ваша оценка: '.$mark.'/100');
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }

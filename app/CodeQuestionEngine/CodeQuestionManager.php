@@ -98,7 +98,7 @@ class CodeQuestionManager
             $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
             $this->fileManager->putCodeInFile($code, $dirPath);
-            $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($dirPath,$paramSets);
+            $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($paramSets,$dirPath);
 
             $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
 
