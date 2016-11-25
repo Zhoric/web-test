@@ -190,7 +190,7 @@ $(document).ready(function(){
             self.current.timeLeft.subscribe(function(value){
                 if (!value){
                     if(self.current.question()){
-                        //self.actions.answer();
+                        self.actions.answer();
                     }
                 }
             });
