@@ -115,8 +115,13 @@ $(document).ready(function(){
                 var url = '/register';
                 var json = self.stringify();
                 $.post(url, json, function(response){
-                    self.registerResult(ko.mapping.fromJSON(response));
-                    self.modal('#register-info', '');
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.registerResult(result.Data);
+                        self.modal('#register-info', '');
+                        return;
+                    }
+                    self.errors.show(result.Message());
                 });
             };
 
@@ -140,7 +145,12 @@ $(document).ready(function(){
             self.get = {
                 groups: function(){
                     $.get('api/groups/', function(response){
-                        self.groups(ko.mapping.fromJSON(response)());
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.groups(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };

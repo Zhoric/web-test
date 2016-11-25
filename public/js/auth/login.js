@@ -35,8 +35,13 @@ $(document).ready(function(){
                  var url = '/login';
                  var json = self.stringify();
                 $.post(url, json, function(response){
-                    self.loginResult(ko.mapping.fromJSON(response));
-                    self.loginResult().success() ? window.location.href = '/home' : self.modal('#login-info', '');
+                    var result = ko.mapping.fromJSON(response);
+                    if (result.Success()){
+                        self.loginResult(result.Data);
+                        self.loginResult().success() ? window.location.href = '/home' : self.modal('#login-info', '');
+                        return;
+                    }
+                    self.errors.show(result.Message());
                 });
             };
             self.acceptInformation = function(){
