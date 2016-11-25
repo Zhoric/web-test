@@ -275,3 +275,15 @@
         </div>
     </div>
 </div>
+<div class="g-hidden">
+    <div class="box-modal" id="compile-modal">
+        <div class="">
+            <div>
+                <h3 data-bind="text: $root.code.result.text"></h3>
+            </div>
+            <div>
+                <button class="fa arcticmodal-close">&#xf00c;</button>
+            </div>
+        </div>
+    </div>
+</div>

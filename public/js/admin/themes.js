@@ -529,7 +529,12 @@ $(document).ready(function(){
                 },
                 program: function(json){
                     $.post('/api/program/run', json, function(response){
-                        console.log(response);
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.code.show(result.Data());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 }
             };
@@ -628,6 +633,13 @@ $(document).ready(function(){
 
             self.code = {
                 text: ko.observable(),
+                result: {
+                    text: ko.observable(),
+                    show: function(message){
+                        self.code.result.text(message);
+                        self.toggleModal('#compile-modal', '');
+                    }
+                },
                 params: {
                     set: ko.observableArray([]),
                     input: ko.observable(),
@@ -651,7 +663,7 @@ $(document).ready(function(){
                         params.set.remove(function(item){
                             return item.id === data.id;
                         });
-                    },
+                    }
                 },
                 open: function(){
                     self.toggleModal('#code-editor-modal', '');
