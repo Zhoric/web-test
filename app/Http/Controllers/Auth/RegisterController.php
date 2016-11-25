@@ -116,7 +116,7 @@ class RegisterController extends Controller
 
 
             $message = 'Ваша заявка на регистрацию принята! Ждите';
-            return $this->successJSONResponse(null,$message);
+            return $this->successJSONResponse($message);
         }
         catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
