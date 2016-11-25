@@ -1,6 +1,9 @@
 <?php
 
 namespace TestEngine;
+use CodeQuestionEngine\CodeQuestionManager;
+use Exception;
+use Repositories\UnitOfWork;
 
 
 /**
@@ -8,6 +11,31 @@ namespace TestEngine;
  */
 class AnswerChecker
 {
+    private static $_codeQuestionManager;
+    private static $_unitOfWork;
+
+    /**
+     * @return UnitOfWork
+     */
+    private static function getUnitOfWork(){
+        if (self::$_unitOfWork == null){
+            self::$_unitOfWork = app()->make(UnitOfWork::class);
+        }
+        return self::$_unitOfWork;
+    }
+
+    /**
+     * Получение менеджера вопросов с программным кодом для подсчёта оценки за ответ на
+     * вопрос с кодом.
+     * @return CodeQuestionManager
+     */
+    private static function getCodeQuestionManager(){
+        if (self::$_codeQuestionManager == null){
+            self::$_codeQuestionManager = app()->make(CodeQuestionManager::class);
+        }
+        return self::$_codeQuestionManager;
+    }
+
     /**
      * Подсчёт оценки (в процентах) за ответ на закрытый вопрос.
      * @param $answers - Все варианты ответа.
@@ -44,9 +72,19 @@ class AnswerChecker
 
     /**
      * Подсчёт оценки за ответ на вопрос с программным кодом.
+     * @param $questionId
+     * @param $studentCode - код, написанный студентом.
+     * @return mixed
+     * @throws \Exception
+     * @internal param $questionId - идентификатор вопроса.
      */
-    public static function calculatePointsForProgramAnswer(){
-
+    public static function calculatePointsForProgramAnswer($questionId, $studentCode){
+        $program = self::getUnitOfWork()->programs()->getByQuestion($questionId);
+        if (!isset($program)){
+            throw new Exception('По данному вопросу не найден программный код!');
+        }
+        $programId = $program->getId();
+        return self::getCodeQuestionManager()->runQuestionProgram($studentCode, $programId);
     }
 
     /**

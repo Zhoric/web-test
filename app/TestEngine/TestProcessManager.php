@@ -363,8 +363,9 @@ class TestProcessManager
                 break;
             }
             case QuestionType::WithProgram:{
-                $answerText = $questionAnswer->getAnswerText();
-
+                $studentCode = $questionAnswer->getAnswerText();
+                $questionId = $question->getId();
+                $answerResultPoints = AnswerChecker::calculatePointsForProgramAnswer($questionId, $studentCode);
                 break;
             }
         }
