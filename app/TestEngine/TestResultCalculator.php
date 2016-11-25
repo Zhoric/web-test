@@ -47,7 +47,7 @@ class TestResultCalculator
         $maxMarkValue = self::getSettingsManager()->get(GlobalTestSettings::maxMarkValueKey);
 
         $resultPercents = self::getResultPercents($testResultId);
-        $resultMark = ($resultPercents != null)
+        $resultMark = ($resultPercents !== null)
             ? ($resultPercents / 100) * $maxMarkValue
             : null;
 
