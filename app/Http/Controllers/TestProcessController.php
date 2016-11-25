@@ -27,7 +27,7 @@ class TestProcessController extends Controller
                 $userId = $currentUser->getId();
                 $result = TestProcessManager::initTest($userId, $testId);
                 $request->session()->set('sessionId', $result);
-                $this->successJSONResponse();
+                return $this->successJSONResponse();
             } else {
                 throw new Exception('Для начала тестирования необходимо авторизоваться!');
             }
