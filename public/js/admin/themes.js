@@ -503,7 +503,6 @@ $(document).ready(function(){
                 question: function(action){
                     var url = '/api/questions/' + action;
                     var json = self.toggleCurrent.stringify.question();
-                    console.log(json);
                     $.post(url, json, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
@@ -527,6 +526,11 @@ $(document).ready(function(){
                         }
                         self.errors.show(result.Message());
                     })
+                },
+                program: function(json){
+                    $.post('api/program/run', json, function(response){
+                        console.log(response);
+                    });
                 }
             };
 
@@ -624,7 +628,6 @@ $(document).ready(function(){
 
             self.code = {
                 text: ko.observable(),
-
                 params: {
                     set: ko.observableArray([]),
                     input: ko.observable(),
@@ -650,8 +653,13 @@ $(document).ready(function(){
                         });
                     },
                 },
-                compile: function(){
+                open: function(){
                     self.toggleModal('#code-editor-modal', '');
+                },
+                compile: function(){
+                    var program = encodeURI(editor.getValue());
+                    self.post.program();
+                    console.log(program);
                 },
                 approve: function(){
                     self.code.text(editor.getValue());

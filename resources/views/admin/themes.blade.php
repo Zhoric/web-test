@@ -105,7 +105,7 @@
 
             <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
             <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea></br>
-            <span class="radio radio-neutral compile-code" data-bind="click: $root.code.compile">Скомпилировать код программы</span>
+            <span class="radio radio-neutral compile-code" data-bind="click: $root.code.open">Скомпилировать код программы</span>
             <span class="radio radio-positive save-params" data-bind="click: $root.code.params.add">Добавить набор параметров</span>
 
             <table>
@@ -269,7 +269,7 @@
     <div class="box-modal" id="code-editor-modal">
         <div>
             <div id="editor"></div>
-            <input type="button" id="button" value="Скомпилировать" onclick="sendCode()">
+            <input type="button" id="button" value="Скомпилировать" data-bind="click: $root.code.compile"/>
             <input type="button" class="cancel arcticmodal-close" value="Отмена">
             <input type="button" class="save arcticmodal-close" data-bind="click: $root.code.approve" value="Сохранить">
         </div>
