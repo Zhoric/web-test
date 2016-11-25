@@ -8,9 +8,9 @@
     <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
     <script src="{{ URL::asset('js/ace.js') }}"></script>
     <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
+    <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
 @endsection
 
 @section('content')

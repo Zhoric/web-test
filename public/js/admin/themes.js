@@ -679,7 +679,6 @@ $(document).ready(function(){
                         params.push(param);
                     });
                     var json = JSON.stringify({program: program, paramSets: params});
-                    console.log(json);
                     self.post.program(json);
                 },
                 approve: function(){

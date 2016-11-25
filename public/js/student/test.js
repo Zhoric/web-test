@@ -2,18 +2,41 @@
  * Created by nyanjii on 28.10.16.
  */
 $(document).ready(function(){
+    var editor = ace.edit("editor");
+    editor.getSession().setMode("ace/mode/c_cpp");
 
     var testingViewModel = function(){
         return new function(){
             var self = this;
 
+            self.code = {
+                task: ko.observable(''),
+                text: ko.observable(''),
+                write: function(){
+                    self.toggleModal('#code-editor-modal', '');
+                },
+                clear: function(){
+                    editor.setValue('');
+                },
+                fill: function(data){
+                    self.code.task(self.current.question().text());
+                    editor.setValue(data.program.template());
+                },
+                empty: function(){
+                    self.code
+                        .text('')
+                        .task('');
+                },
+                approve: function(){
+                    self.code.text(editor.getValue());
+                }
+            };
             self.current = {
                 question: ko.observable(),
                 answers: ko.observableArray([]),
                 answerText: ko.observable(''),
                 singleAnswer: ko.observable(0),
                 timeLeft : ko.observable(-1),
-
                 testResult: ko.observable()
             };
             self.errors = {
@@ -66,7 +89,9 @@ $(document).ready(function(){
                         if (qType === 3 || qType === 4){
                             answer.answerText = self.current.answerText();
                         }
-
+                        if (qType === 5){
+                            answer.answerText = self.code.text();
+                        }
                         return JSON.stringify(answer);
                     }
                 },
@@ -75,6 +100,7 @@ $(document).ready(function(){
                     self.current.answerText('');
                     self.current.answers([]);
                     self.current.question(null);
+                    self.code.clear();
                 }
             };
 
@@ -85,6 +111,9 @@ $(document).ready(function(){
                         if (result.Success()){
                             if (result.Data.hasOwnProperty('question')){
                                 self.current.question(result.Data.question);
+                                if (self.current.question().type() === 5){
+                                    self.get.code();
+                                };
                                 self.current.timeLeft(result.Data.question.time());
                                 if (result.Data.answers() == null) {
                                     self.current.answers([]);
@@ -95,16 +124,31 @@ $(document).ready(function(){
                             }
                             else{
                                 self.current.testResult(result.Data);
+                                self.code.empty();
                             }
                             return;
                         }
                         self.errors.show(result.Message());
+                        self.code.empty();
                     });
-                }
+                },
+                code: function(){
+                    var id = self.current.question().id();
+                    var url = '/api/program/byQuestion/' + id;
+                    $.get(url , function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.code.fill(result.Data);
+                            return;
+                        }
+                        self.errors.show(result.Message());
+                    });
+                },
             };
             self.post = {
                 answers: function(){
                     var json = self.toggleCurrent.stringify.answer();
+                    console.log(json);
                     $.post('/api/tests/answer', json, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()){
@@ -146,7 +190,7 @@ $(document).ready(function(){
             self.current.timeLeft.subscribe(function(value){
                 if (!value){
                     if(self.current.question()){
-                        self.actions.answer();
+                        //self.actions.answer();
                     }
                 }
             });
@@ -155,6 +199,7 @@ $(document).ready(function(){
                 toggleCurrent: self.toggleCurrent,
                 current: self.current,
                 actions: self.actions,
+                code: self.code,
                 errors: self.errors
             };
         };

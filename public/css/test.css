@@ -127,6 +127,51 @@ span.radio-neutral {
 span.radio-neutral:hover {
   color: #16a085;
 }
+#code-editor-modal {
+  width: 800px;
+  height: 500px;
+  overflow: auto;
+}
+#code-editor-modal#editor {
+  position: relative;
+}
+#code-editor-modal .cancel,
+#code-editor-modal .save,
+#code-editor-modal #button {
+  margin: 15px 0 0;
+  color: #fff;
+  background: #264348;
+  cursor: pointer;
+  border: 0;
+  padding: 10px;
+}
+#code-editor-modal .cancel {
+  background: #bfbfbf;
+  float: right;
+}
+#code-editor-modal .cancel:hover {
+  background: #D24D57;
+}
+#code-editor-modal .save {
+  background: #2ABB9B;
+  margin-right: 5px;
+  float: right;
+}
+#code-editor-modal .ace_editor,
+#code-editor-modal .code-task {
+  display: inline-table;
+  position: relative;
+}
+#code-editor-modal .ace_editor {
+  width: 60%;
+  height: 87%;
+  border: 1px solid #e3e3e3;
+}
+#code-editor-modal .code-task {
+  width: 38%;
+  top: 10px;
+  white-space: pre-wrap;
+}
 body {
   background: #264348 !important;
 }
@@ -338,6 +383,17 @@ input[type=checkbox]:not(checked) + label:after {
 }
 input[type=checkbox]:checked + label:after {
   opacity: 1;
+}
+button.write-code-btn {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  margin: 10px 35px;
+}
+label.code-text {
+  color: #bfbfbf;
+  display: block;
+  white-space: pre-wrap;
 }
 
 /*# sourceMappingURL=test.css.map */

@@ -1,9 +1,57 @@
 @import (less) "common.less";
 
+@jungleGreen: #2ABB9B;
+@buttonGreen: @jungleGreen;
+@crimson-red: #D24D57;
+@warning: #E29C45;
 @danger: @alizarin;
 @mainTheme: @indigo;
 @grey: @greish;
 @green: @nephritis;
+
+
+#code-editor-modal{
+  width: 800px;
+  height: 500px;
+  overflow: auto;
+  &#editor{
+    position:relative;
+  }
+  .cancel, .save, #button{
+    margin: 15px 0 0;
+    color: @white;
+    background: @mainTheme;
+    cursor: pointer;
+    border: 0;
+    padding: 10px;
+  }
+  .cancel{
+    background: #bfbfbf;
+    float: right;
+    &:hover{
+      background: @crimson-red;
+    }
+  }
+  .save{
+    background: @buttonGreen;
+    margin-right: 5px;
+    float: right;
+  }
+  .ace_editor, .code-task{
+    display: inline-table;
+    position: relative;
+  }
+  .ace_editor{
+    width: 60%;
+    height: 87%;
+    border: 1px solid #e3e3e3;
+  }
+  .code-task{
+    width: 38%;
+    top: 10px;
+    white-space: pre-wrap;
+  }
+}
 
 body{
   background: @mainTheme !important;
@@ -211,5 +259,19 @@ input[type=checkbox]{
   }
   &:checked + label:after {
     opacity: 1;
+  }
+}
+
+button{
+  &.write-code-btn{
+    .border-radius(5px);
+    margin: 10px 35px;
+  }
+}
+label{
+  &.code-text{
+    color: #bfbfbf;
+    display: block;
+    white-space: pre-wrap;
   }
 }

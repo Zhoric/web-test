@@ -4,6 +4,8 @@
     <link rel="stylesheet" href="{{ URL::asset('css/test.css')}}"/>
 @endsection
 @section('javascript')
+    <script src="{{ URL::asset('js/ace.js') }}"></script>
+    <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
     <script src="{{ URL::asset('js/student/test.js')}}"></script>
 @endsection
 
@@ -44,6 +46,12 @@
         <div class="question-answers">
             <label>Введите свой ответ</label> </br>
             <textarea data-bind="value: $root.current.answerText" type=""></textarea>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: $root.current.question().type() === 5-->
+        <div class="question-answers">
+            <button class="write-code-btn" data-bind="click: $root.code.write">Ввести код</button>
+            <label class="code-text" data-bind="text: $root.code.text"></label>
         </div>
         <!-- /ko -->
         <div class="next-question">
@@ -87,6 +95,17 @@
             <div class="button-holder">
                 <button data-bind="click: $root.errors.accept">OK</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="code-editor-modal">
+        <div>
+            <div id="editor"></div>
+            <div class="code-task" data-bind="text: $root.code.task"></div>
+            <input type="button" class="cancel" data-bind="click: $root.code.clear" value="Очистить">
+            <input type="button" class="save arcticmodal-close" data-bind="click: $root.code.approve" value="Подтвердить">
         </div>
     </div>
 </div>
