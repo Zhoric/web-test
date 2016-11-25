@@ -24,4 +24,9 @@ abstract class QuestionType
      * Открытый вопрос с многострочным ответом (проверяется вручную).
      */
     const OpenManyStrings = 4;
+
+    /**
+     * Вопрос с программным кодом.
+     */
+    const WithProgram = 5;
 }

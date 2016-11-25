@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="program", indexes={@ORM\Index(name="program_question_id_foreign", columns={"question_id"})})
  * @ORM\Entity
  */
-class Program
+class Program extends BaseEntity implements JsonSerializable
 {
     /**
      * @var string
@@ -126,6 +126,15 @@ class Program
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'template' => $this->template,
+            'lang' => $this->lang
+        );
     }
 }
 

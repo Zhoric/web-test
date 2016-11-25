@@ -90,7 +90,15 @@ class TestManager
             $answers = null;
         }
 
-        return new QuestionViewModel($question, $answers);
+        //Достаём программный код из вопроса, если он есть.
+        $program = $this->_unitOfWork->programs()->getByQuestion($question->getId());
+
+        if (isset($program)){
+            $paramSets = $this->_unitOfWork->paramsSets()->getByProgram($program);
+            return new QuestionViewModel($question, $answers, $program, $paramSets);
+        } else {
+            return new QuestionViewModel($question, $answers);
+        }
     }
 
     /**

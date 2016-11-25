@@ -101,7 +101,6 @@ class QuestionManager
 
         if (isset($program)){
             $paramSets = $this->_unitOfWork->paramsSets()->getByProgram($program);
-
             return new QuestionViewModel($question, $answers, $program, $paramSets);
         } else {
             return new QuestionViewModel($question, $answers);
