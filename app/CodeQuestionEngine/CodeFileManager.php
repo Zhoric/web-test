@@ -247,6 +247,10 @@ class CodeFileManager
 
 
     public function calculateMark($dirPath,$casesCount){
+
+        if($casesCount == 0){
+            throw new Exception('Отсутствует тестовые параметры');
+        }
         $right_count = 0;
         for($i = 0; $i < $casesCount ;$i++){
             if($this->compareOutputs($dirPath,"test_output_$i.txt","student_result_$i.txt")){

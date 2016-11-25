@@ -178,14 +178,14 @@ class TestProcessManager
      */
     public static function processTestEnd(){
         $testResultId = self::$_session->getTestResultId();
-        self::calculateAnsSaveResult($testResultId);
+        self::calculateAndSaveResult($testResultId);
     }
 
     /**
      * Подсчёт и сохранение оценки за тест.
      * @param $testResultId
      */
-    public static function calculateAnsSaveResult($testResultId){
+    public static function calculateAndSaveResult($testResultId){
         $testResultMark = TestResultCalculator::calculate($testResultId);
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone('Europe/Moscow'));
