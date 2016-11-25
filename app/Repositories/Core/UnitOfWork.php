@@ -44,7 +44,7 @@ class UnitOfWork
     private $_roleRepo;
     private $_settingsRepo;
     private $_paramsSetRepo;
-
+    private $_programRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -205,6 +205,13 @@ class UnitOfWork
             $this->_settingsRepo = new TestSettingRepository($this->_em);
         }
         return $this->_settingsRepo;
+    }
+
+    public function programs(){
+        if ($this->_programRepo == null){
+            $this->_programRepo = new ProgramRepository($this->_em);
+        }
+        return $this->_programRepo;
     }
 
     public function commit(){

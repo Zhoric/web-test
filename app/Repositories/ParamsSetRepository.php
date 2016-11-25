@@ -19,5 +19,14 @@ class ParamsSetRepository extends BaseRepository
     }
 
 
+    
+    public function deleteProgramParams($programId){
+        $qb = $this->repo->createQueryBuilder('pp');
+        $deleteQuery = $qb->delete()
+            ->where('pp.program = :program')
+            ->setParameter('program', $programId)
+            ->getQuery();
 
+        $deleteQuery->execute();
+    }
 }

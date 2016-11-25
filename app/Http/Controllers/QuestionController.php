@@ -47,9 +47,12 @@ class QuestionController extends Controller
      *   {"question" : {"type": 1, "text": "Текст вопроса?", "complexity": 2, "time": 30},
      *    "theme" : 2,
      *    "answers" : [{"text":"Правильный ответ","isRight":true},
-     *                 {"text":"Неправильный ответ","isRight":false}]
+     *                 {"text":"Неправильный ответ","isRight":false}],
      *    "file" : "Содержимое файла в base64",
-     *    "fileType" : "Тип файла"
+     *    "fileType" : "Тип файла",
+     *    "program" : "Текст программы",
+     *    "paramSets" : [{"input":"Входные параметры1", "expectedOutput":"Выходной параметр1"},
+     *      {"input":"Входные параметры2", "expectedOutput":"Выходной параметр2"}],
      *    }
      */
     public function create(Request $request){
@@ -59,6 +62,8 @@ class QuestionController extends Controller
             $themeId = $request->json('theme');
             $file = $request->json('file');
             $fileType = $request->json('fileType');
+            $program = $request->json('program');
+            $paramSets = (array) $request->json('paramSets');
 
             $question = new Question();
             $question->fillFromJson($questionData);
@@ -67,7 +72,7 @@ class QuestionController extends Controller
                 $filePath = FileHelper::save($file, $fileType);
                 $question->setImage($filePath);
             }
-            $this->_questionManager->create($question,$themeId, $answers);
+            $this->_questionManager->create($question,$themeId,$answers,$program,$paramSets);
 
             return $this->successJSONResponse();
         } catch (Exception $exception){
@@ -89,6 +94,8 @@ class QuestionController extends Controller
             $themeId = $request->json('theme');
             $file = $request->json('file');
             $fileType = $request->json('fileType');
+            $program = $request->json('program');
+            $paramSets = (array) $request->json('paramSets');
 
             $question = new Question();
             $question->fillFromJson($questionData);
@@ -104,7 +111,7 @@ class QuestionController extends Controller
                 $question->setImage($filePath);
             }
 
-            $this->_questionManager->update($question,$themeId, $answers);
+            $this->_questionManager->update($question,$themeId, $answers, $program, $paramSets);
             return $this->successJSONResponse();
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

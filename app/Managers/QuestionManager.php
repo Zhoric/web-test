@@ -3,7 +3,10 @@
 namespace Managers;
 
 use Answer;
+use Exception;
 use GivenAnswer;
+use ParamsSet;
+use Program;
 use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Question;
@@ -25,7 +28,8 @@ class QuestionManager
                 $themeId, $text, $type, $complexity);
     }
 
-    public function create(Question $question, $themeId, array $answers = null){
+    public function create(Question $question, $themeId,
+                           array $answers = null, $program = null, $paramSets = null){
         $theme = $this->_unitOfWork->themes()->find($themeId);
         $question->setTheme($theme);
         $this->_unitOfWork->questions()->create($question);
@@ -41,9 +45,14 @@ class QuestionManager
         }
 
         $this->_unitOfWork->commit();
+
+        if (isset($program)){
+            $this->addQuestionProgram($question, $program, $paramSets);
+        }
     }
 
-    public function update(Question $question, $themeId, array $answers = null){
+    public function update(Question $question, $themeId,
+                           array $answers = null, $program = null, $paramSets = null){
         $theme = $this->_unitOfWork->themes()->find($themeId);
         $question->setTheme($theme);
         $this->_unitOfWork->questions()->update($question);
@@ -53,16 +62,22 @@ class QuestionManager
 
         $this->_unitOfWork->answers()->deleteQuestionAnswers($question->getId());
 
-        foreach ($answers as $answer){
-            $newAnswer = new Answer();
-            $newAnswer->setText($answer['text']);
-            $newAnswer->setIsRight($answer['isRight']);
-            $newAnswer->setQuestion($question);
+        if (isset($answers)){
+            foreach ($answers as $answer){
+                $newAnswer = new Answer();
+                $newAnswer->setText($answer['text']);
+                $newAnswer->setIsRight($answer['isRight']);
+                $newAnswer->setQuestion($question);
 
-            $this->_unitOfWork->answers()->create($newAnswer);
+                $this->_unitOfWork->answers()->create($newAnswer);
+            }
         }
 
         $this->_unitOfWork->commit();
+
+        if (isset($program)){
+            $this->updateQuestionProgram($question, $program, $paramSets);
+        }
     }
 
     public function delete($id){
@@ -91,6 +106,72 @@ class QuestionManager
 
     public function createQuestionAnswer(GivenAnswer $givenAnswer){
         $this->_unitOfWork->givenAnswers()->create($givenAnswer);
+        $this->_unitOfWork->commit();
+    }
+
+    /**
+     * Добавление программы и тестовых наборов параметров к вопросу.
+     * @param $question
+     * @param $programText
+     * @param $paramSets
+     * @throws Exception
+     */
+    private function addQuestionProgram($question, $programText, $paramSets){
+        $program = new Program();
+        $program->setQuestion($question);
+        $program->setTemplate($programText);
+        //TODO[NZ]: Добавить перечисление языков и выбор языка при добавлении вопроса.
+        $program->setLang(1);
+        $this->_unitOfWork->programs()->create($program);
+        $this->_unitOfWork->commit();
+
+        if (!isset($paramSets)){
+            throw new Exception('Не указаны тестовые наборы данных для программы!');
+        }
+
+        foreach ($paramSets as $paramSet){
+            $newParamSet = new ParamsSet();
+            $newParamSet->setProgram($program);
+            $newParamSet->setInput($paramSet['input']);
+            $newParamSet->setExpectedOutput($paramSet['expectedOutput']);
+
+            $this->_unitOfWork->paramsSets()->create($newParamSet);
+        }
+
+        $this->_unitOfWork->commit();
+    }
+
+    /**
+     * Обновление программы и тестовых наборов параметров к вопросу.
+     * @param $question
+     * @param $programText
+     * @param $paramSets
+     * @throws Exception
+     */
+    private function updateQuestionProgram($question, $programText, $paramSets){
+        $program = $this->_unitOfWork->programs()->getByQuestion($question->getId());
+        if (!isset($program)){
+            throw new Exception('Невозможно обновить данные вопроса. Программа не найдена!');
+        }
+        $program->setTemplate($programText);
+        $this->_unitOfWork->programs()->update($program);
+        $this->_unitOfWork->commit();
+
+        if (!isset($paramSets)){
+            throw new Exception('Не указаны тестовые наборы данных для программы!');
+        }
+
+        $this->_unitOfWork->paramsSets()->deleteProgramParams($program->getId());
+
+        foreach ($paramSets as $paramSet){
+            $newParamSet = new ParamsSet();
+            $newParamSet->setProgram($program);
+            $newParamSet->setInput($paramSet['input']);
+            $newParamSet->setExpectedOutput($paramSet['expectedOutput']);
+
+            $this->_unitOfWork->paramsSets()->create($newParamSet);
+        }
+
         $this->_unitOfWork->commit();
     }
 
