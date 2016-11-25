@@ -7,6 +7,17 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
+
             self.user = {
                 email: ko.observable(''),
                 password: ko.observable('')
@@ -25,7 +36,6 @@ $(document).ready(function(){
                  var json = self.stringify();
                 $.post(url, json, function(response){
                     self.loginResult(ko.mapping.fromJSON(response));
-                    console.log(self.loginResult());
                     self.loginResult().success() ? window.location.href = '/home' : self.modal('#login-info', '');
                 });
             };

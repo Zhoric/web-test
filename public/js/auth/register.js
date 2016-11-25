@@ -11,6 +11,18 @@ $(document).ready(function(){
 
     var registerViewModel = function(){
         return new function(){
+            var self = this;
+
+            self.errors = {
+                message: ko.observable(),
+                show: function(message){
+                    self.errors.message(message);
+                    self.toggleModal('#errors-modal', '');
+                },
+                accept: function(){
+                    self.toggleModal('#errors-modal', 'close');
+                }
+            };
 
             self.user = ko.validatedObservable({
                 name : {

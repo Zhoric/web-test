@@ -3,6 +3,9 @@
  */
 $(document).ready(function(){
 
+    var editor = ace.edit("editor");
+    editor.getSession().setMode("ace/mode/c_cpp");
+
     ko.validation.init({
         messagesOnModified: true,
         insertMessages: false
@@ -600,8 +603,38 @@ $(document).ready(function(){
             });
 
             self.code = {
+                text: ko.observable(),
+
+                params: {
+                    set: ko.observableArray([]),
+                    input: ko.observable(),
+                    output: ko.observable(),
+                    id: ko.observable(1),
+                    add: function(){
+                        var params = self.code.params;
+                        var input = params.input();
+                        var output = params.output();
+                        var id = params.id();
+                        if (!input || !output) return;
+                        params.set.push({
+                            id: 'param_' + id,
+                            input: input,
+                            output: output
+                        });
+                        params.input('').output('').id(id + 1);
+                    },
+                    remove: function(data){
+                        var params = self.code.params;
+                        params.set.remove(function(item){
+                            return item.id === data.id;
+                        });
+                    },
+                },
                 compile: function(){
                     self.toggleModal('#code-editor-modal', '');
+                },
+                approve: function(){
+                    self.code.text(editor.getValue());
                 }
             };
 

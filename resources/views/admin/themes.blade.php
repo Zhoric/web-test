@@ -9,9 +9,7 @@
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
-    <script src="{{ URL::asset('js/aui.js') }}" type="text/javascript" charset="utf-8"></script>
-    <script src="{{URL::asset('js/codeEditor/init.js') }}" type="text/javascript" charset="utf-8"></script>
-    <script src="{{URL::asset('js/codeEditor/sendCode.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ URL::asset('js/ace.js') }}"></script>
 @endsection
 
 @section('content')
@@ -101,13 +99,33 @@
             <textarea tooltip-mark="question_tooltip" type="text" data-bind="value: $root.current.question().text, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}"></textarea>
         </div>
         <!-- ko if: $root.current.question().isCode() && $root.current.question().type() -->
-        <button class="width200" data-bind="click: $root.code.compile">КОД</button>
+        <div class="code">
+            <label>Параметрические пары <span>*</span></label></br>
+
+            <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
+            <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea></br>
+            <span class="radio radio-neutral compile-code" data-bind="click: $root.code.compile">Скомпилировать код программы</span>
+            <span class="radio radio-positive save-params" data-bind="click: $root.code.params.add">Добавить набор параметров</span>
+
+            <table>
+                <tbody data-bind="foreach: $root.code.params.set">
+                <tr>
+                    <td data-bind="text: input" class="input"></td>
+                    <td data-bind="text: output" class="output"></td>
+                    <td>
+                        <button class="fa sq-small danger" data-bind="click: $root.code.params.remove">&#xf014;</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
         <!-- /ko -->
         <!-- ko if: !$root.current.question().isOpenMultiLine() && !$root.current.question().isCode() && $root.current.question().type() -->
         <div class="answers-input">
             <label>Варианты ответов <span>*</span></label></br>
             <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup'"/>
-            <button data-bind="click: $root.csed.answer.add" class="fa">&#xf067;</button>
+            <button data-bind="click: $root.csed.answer.add" class="fa sq-small">&#xf067;</button>
         </div>
         <!-- ko if: $root.current.answers().length -->
         <div class="answers-table">
@@ -205,8 +223,7 @@
     </div>
     <!-- /ko -->
 </div>
-
-
+@endsection
 <div class="tooltip_templates">
     <span id="minutes_tooltip">
         <span data-bind="validationMessage: $root.current.question().minutes"></span>
@@ -232,7 +249,6 @@
         </div>
     </div>
 </div>
-@endsection
 <div class="g-hidden">
     <div class="box-modal" id="errors-modal">
         <div>
@@ -251,11 +267,10 @@
 <div class="g-hidden">
     <div class="box-modal" id="code-editor-modal">
         <div>
-            <div id="editor">
-
-            </div>
-            <input type="button" id="button" value="Скомпилировать код" onclick="sendCode()">
+            <div id="editor"></div>
+            <input type="button" id="button" value="Скомпилировать" onclick="sendCode()">
             <input type="button" class="cancel arcticmodal-close" value="Отмена">
+            <input type="button" class="save arcticmodal-close" data-bind="click: $root.code.approve" value="Сохранить">
         </div>
     </div>
 </div>

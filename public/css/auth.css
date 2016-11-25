@@ -120,6 +120,13 @@ span.radio-negative {
   color: #e74c3c;
   font-size: 18px;
 }
+span.radio-neutral {
+  color: #7f8c8d;
+  font-size: 18px;
+}
+span.radio-neutral:hover {
+  color: #16a085;
+}
 body {
   background-color: #4aa272;
   -webkit-transition: background-color 0.2s ease-out 1s;

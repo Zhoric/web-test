@@ -120,6 +120,13 @@ span.radio-negative {
   color: #e74c3c;
   font-size: 18px;
 }
+span.radio-neutral {
+  color: #7f8c8d;
+  font-size: 18px;
+}
+span.radio-neutral:hover {
+  color: #16a085;
+}
 .width100 {
   width: 100%;
 }
@@ -280,6 +287,7 @@ span.not-ok {
   position: relative;
 }
 #code-editor-modal .cancel,
+#code-editor-modal .save,
 #code-editor-modal #button {
   margin: 15px 0 0;
   color: #fff;
@@ -290,6 +298,17 @@ span.not-ok {
 }
 #code-editor-modal .cancel {
   background: #D24D57;
+  float: right;
+}
+#code-editor-modal .save {
+  background: #2ABB9B;
+  margin-right: 5px;
+  float: right;
+}
+#code-editor-modal .ace_editor {
+  width: 100%;
+  height: 87%;
+  border: 1px solid #e3e3e3;
 }
 .filter {
   height: 100px;
@@ -559,6 +578,11 @@ button:hover {
 .themes-add {
   border-bottom: 20px solid #fff;
 }
+.themes-add .sq-small {
+  width: 35px;
+  height: 34px;
+  margin-left: 10px;
+}
 .themes-add .select-theme,
 .themes-add .select-complexity {
   width: 46%;
@@ -589,11 +613,6 @@ button:hover {
 }
 .themes-add .answers-input input {
   width: 94%;
-}
-.themes-add .answers-input button {
-  width: 35px;
-  height: 34px;
-  margin-left: 15px;
 }
 .themes-add .answers-table {
   width: 96%;
@@ -655,6 +674,30 @@ button:hover {
   height: auto;
   position: absolute;
   cursor: pointer;
+}
+.themes-add .code {
+  width: 97%;
+}
+.themes-add .code textarea {
+  height: 50px;
+  width: 49%;
+}
+.themes-add .code .save-params {
+  float: right;
+  margin-right: 15px;
+}
+.themes-add .code table {
+  width: 98%;
+}
+.themes-add .code table td {
+  white-space: pre-wrap;
+}
+.themes-add .code table td.input,
+.themes-add .code table td.output {
+  width: 50%;
+}
+.themes-add .code table td:last-child {
+  text-align: center;
 }
 .test .org-info-details {
   width: 95%;
