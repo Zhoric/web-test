@@ -103,8 +103,6 @@ class RegisterController extends Controller
     }
 
     public function register(Request $request){
-
-
         try {
             $user = $this->create($request);
             if(empty($user)){
@@ -121,9 +119,6 @@ class RegisterController extends Controller
         catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
-
-
-
     }
 
 }

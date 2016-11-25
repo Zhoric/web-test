@@ -43,6 +43,13 @@ class AnswerChecker
     }
 
     /**
+     * Подсчёт оценки за ответ на вопрос с программным кодом.
+     */
+    public static function calculatePointsForProgramAnswer(){
+
+    }
+
+    /**
      * Подготовка строки ответа к сравнению.
      * @param $string - Входная строка.
      * @return string

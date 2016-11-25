@@ -362,6 +362,11 @@ class TestProcessManager
                 $answerResultPoints = AnswerChecker::calculatePointsForSingleStringAnswer($answers, $answerText);
                 break;
             }
+            case QuestionType::WithProgram:{
+                $answerText = $questionAnswer->getAnswerText();
+
+                break;
+            }
         }
 
         return $answerResultPoints;

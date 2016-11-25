@@ -92,7 +92,7 @@ class TestResultCalculator
 
         foreach ($answers as $answer) {
 
-            if ($answer->getRightPercentage() == null) {
+            if ($answer->getRightPercentage() === null) {
                 return null;
             }
 
@@ -103,7 +103,6 @@ class TestResultCalculator
             $maxMark += $complexity * GlobalTestSettings::complexityDifferenceCoef;
             $studentMark += $complexity * $answer->getRightPercentage() * GlobalTestSettings::complexityDifferenceCoef;
         }
-
         return $maxMark != 0 ? ceil($studentMark/$maxMark) : 0;
     }
 
