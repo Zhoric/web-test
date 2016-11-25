@@ -86,11 +86,6 @@ class CodeFileManager
         return $result;
     }
 
-    public function compareResults($dirPath,$testCaseNum){
-
-        $student_result = $this->getStudentResult($dirPath);
-
-    }
 
     public function putCodeInFile($code,$dirPath){
         $fp = fopen("$dirPath/code.c", "w");
@@ -229,7 +224,25 @@ class CodeFileManager
      * true - если они идентичны
      * false - если нет
      */
-    public function compareOutputs(){
+    public function compareOutputs($dirPath,$inputFileName,$outputFileName){
+
+        $input = file_get_contents("$dirPath/$inputFileName");
+        $output = file_get_contents("$dirPath/$outputFileName");
+
+        return $input === $output;
+
+    }
+
+
+    public function calculateMark($dirPath,$casesCount){
+        $right_count = 0;
+        for($i = 0; $i < $casesCount ;$i++){
+            if($this->compareOutputs($dirPath,"test_output_$i.txt","student_result_$i.txt")){
+                $right_count++;
+            }
+        }
+
+        return ($right_count/$casesCount) * 100;
 
     }
 

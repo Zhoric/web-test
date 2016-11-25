@@ -59,7 +59,7 @@ class CodeQuestionManager
 
     /**
      * Запускает код на выполнение с входными параметрами, которые берутся из базы и заполняются преподавателем при
-     * добавлении вопроса.
+     * добавлении вопроса. Возвращает оценку студента
      * @param $code
      * @param $programId
      * @return mixed
@@ -77,19 +77,16 @@ class CodeQuestionManager
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
             $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
-
+           $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
 
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-        return;
+        return $result;
 
     }
 
 
-    public function calculateMark($casesCount){
-
-    }
 
 
 
