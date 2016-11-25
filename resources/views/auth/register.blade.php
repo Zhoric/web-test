@@ -57,7 +57,7 @@
 <div class="g-hidden">
     <div class="box-modal" id="register-info">
         <!-- ko if: registerResult()-->
-        <h3 data-bind="text: registerResult().message"></h3>
+        <h3 data-bind="text: registerResult().Data"></h3>
         <button data-bind="click: acceptInformation">OK</button>
         <!-- /ko -->
     </div>

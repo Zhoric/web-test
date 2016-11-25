@@ -117,7 +117,7 @@ $(document).ready(function(){
                 $.post(url, json, function(response){
                     var result = ko.mapping.fromJSON(response);
                     if (result.Success()){
-                        self.registerResult(result.Data);
+                        self.registerResult(result);
                         self.modal('#register-info', '');
                         return;
                     }
@@ -159,7 +159,7 @@ $(document).ready(function(){
             };
             self.acceptInformation = function(){
                 self.modal('register-info', 'close');
-                if (self.registerResult().success()){
+                if (self.registerResult().Success()){
                     window.location.href = '/login';
                 }
             };
@@ -171,7 +171,6 @@ $(document).ready(function(){
                     var template = '#' + $(e.target).attr('tooltip-mark') + ' span';
 
                     var template_content = $(template).text();
-                    console.log(template_content);
                     if (!template_content) return;
 
                     if (!$(e.target).hasClass('tooltipstered')){
@@ -225,7 +224,8 @@ $(document).ready(function(){
                         var saveButton = 'button[tooltip-mark=overall_tooltip]';
                         if (!$(saveButton).hasClass('tooltipstered')) return;
                         $(saveButton).tooltipster('close');
-                    }
+                    },
+
                 }
             };
 
