@@ -97,7 +97,15 @@ class QuestionManager
         $question = $this->_unitOfWork->questions()->find($questionId);
         $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
 
-        return new QuestionViewModel($question, $answers);
+        $program = $this->_unitOfWork->programs()->getByQuestion($question->getId());
+
+        if (isset($program)){
+            $paramSets = $this->_unitOfWork->paramsSets()->getByProgram($program);
+
+            return new QuestionViewModel($question, $answers, $program, $paramSets);
+        } else {
+            return new QuestionViewModel($question, $answers);
+        }
     }
 
     public function getById($id){

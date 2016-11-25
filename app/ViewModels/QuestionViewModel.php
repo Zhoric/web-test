@@ -4,18 +4,24 @@ class QuestionViewModel implements JsonSerializable
 {
     private $_question;
     private $_answers;
+    private $_program;
+    private $_paramSets;
 
-    public function __construct($question, $answers)
+    public function __construct($question, $answers, $program = null, $paramSets = null)
     {
         $this->_question = $question;
         $this->_answers = $answers;
+        $this->_program = $program;
+        $this->_paramSets = $paramSets;
     }
 
     function jsonSerialize()
     {
         return array(
             'question' => $this->_question,
-            'answers' => $this->_answers
+            'answers' => $this->_answers,
+            'program' => $this->_program,
+            'paramSets' => $this->_paramSets
         );
     }
 
