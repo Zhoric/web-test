@@ -589,7 +589,8 @@ button:hover {
 }
 .themes-add .select-theme select,
 .themes-add .select-complexity select {
-  width: 100%;
+  width: 99%;
+  margin: 0;
 }
 .themes-add .time {
   width: 13%;
@@ -602,10 +603,10 @@ button:hover {
   text-align: center;
 }
 .themes-add .question-text {
-  width: 96%;
+  width: 97%;
 }
 .themes-add .question-text textarea {
-  width: 99%;
+  width: 98%;
   height: 100px;
 }
 .themes-add .answers-input {

@@ -195,10 +195,12 @@ $(document).ready(function(){
                     },
                     question: function(){
                         var answers = [];
+                        var params = [];
                         var curq = self.current.question();
                         var fileData = self.current.fileData()
                         var file = fileData.file() ? fileData.base64String() : null;
                         var fileType = fileData.file() ? fileData.file().type : null;
+                        var program = self.code.text() ? self.code.text() : null;
                         var question = {
                             type: curq.type().id(),
                             text: curq.text(),
@@ -206,11 +208,12 @@ $(document).ready(function(){
                             time: +curq.minutes() * 60 + +curq.seconds()
                         };
 
+                        self.mode() === 'edit' ? question.id = curq.id() : '';
+
                         if (curq.image() && !fileType){
                             fileType = 'OLD';
                         }
 
-                        self.mode() === 'edit' ? question.id = curq.id() : '';
                         self.current.answers().find(function(item){
                             var answer = {
                                 text: item.text(),
@@ -219,7 +222,23 @@ $(document).ready(function(){
                             answers.push(answer);
                         });
 
-                        return JSON.stringify({question: question, theme: self.theme().id(), answers: answers, file: file, fileType: fileType});
+                        self.code.params.set().find(function(item){
+                            var parameter = {
+                                input: item.input,
+                                expectedOutput: item.output
+                            }
+                            params.push(parameter);
+                        });
+
+                        return JSON.stringify({
+                            question: question,
+                            theme: self.theme().id(),
+                            answers: answers,
+                            file: file,
+                            fileType: fileType,
+                            program: program,
+                            paramSets: params
+                        });
                     }
                 },
                 set: {
@@ -484,6 +503,7 @@ $(document).ready(function(){
                 question: function(action){
                     var url = '/api/questions/' + action;
                     var json = self.toggleCurrent.stringify.question();
+                    console.log(json);
                     $.post(url, json, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
