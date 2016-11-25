@@ -241,7 +241,7 @@ class CodeFileManager
         $input = file_get_contents("$dirPath/$inputFileName");
         $output = file_get_contents("$dirPath/$outputFileName");
 
-        return $input === $output;
+        return $input == $output;
 
     }
 
@@ -254,7 +254,8 @@ class CodeFileManager
             }
         }
 
-        return ($right_count/$casesCount) * 100;
+
+        return floor(($right_count/$casesCount) * 100);
 
     }
 
