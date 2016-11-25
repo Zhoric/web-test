@@ -657,9 +657,18 @@ $(document).ready(function(){
                     self.toggleModal('#code-editor-modal', '');
                 },
                 compile: function(){
-                    var program = encodeURI(editor.getValue());
-                    self.post.program();
-                    console.log(program);
+                    var program = JSON.stringify(editor.getValue());
+                    var params = [];
+                    self.code.params.set().find(function(item){
+                        var param = {
+                            input: item.input,
+                            expectedOutput: item.output
+                        };
+                        params.push(param);
+                    });
+                    var json = JSON.stringify({program: program, paramSets: params});
+                    console.log(json);
+                    self.post.program(json);
                 },
                 approve: function(){
                     self.code.text(editor.getValue());
