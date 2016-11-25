@@ -531,7 +531,7 @@ $(document).ready(function(){
                     $.post('/api/program/run', json, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()){
-                            self.code.show(result.Data());
+                            self.code.result.show(result.Data());
                             return;
                         }
                         self.errors.show(result.Message());
