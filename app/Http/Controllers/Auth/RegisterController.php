@@ -82,7 +82,7 @@ class RegisterController extends Controller
                 throw new Exception('Ошибка при создании пользователя.');
             }
 
-            return $this->successJSONResponse($createdUser);
+            return $createdUser;
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
