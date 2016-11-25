@@ -66,6 +66,9 @@ class CodeQuestionManager
      */
     public function runQuestionProgram($code,$programId){
         try {
+            //Код приходит только формате после применения функции JSON.stringify()
+            //поэтому его надо декодировать
+            $code = json_decode($code);
             $dirPath = $this->fileManager->createDir(Auth::user());
             $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
@@ -85,6 +88,9 @@ class CodeQuestionManager
         return $result;
 
     }
+
+
+
 
     /**
      * Запускает код на выполнение с входными параметрами, которые передаются в виде массива. Возвращает результат работы программы
