@@ -86,6 +86,34 @@ class CodeQuestionManager
 
     }
 
+    /**
+     * Запускает код на выполнение с входными параметрами, которые передаются в виде массива. Возвращает результат работы программы
+     * @param $code
+     * @param array $paramSets
+     * @return mixed
+     */
+    public function runQuestionProgramWithParamSets($code,array $paramSets){
+        try {
+            $dirPath = $this->fileManager->createDir(Auth::user());
+            $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
+
+            $this->fileManager->putCodeInFile($code, $dirPath);
+            $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($dirPath,$paramSets);
+
+            $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
+
+            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
+            $cache_dir = EngineGlobalSettings::CACHE_DIR;
+            $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
+            $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        return $result;
+
+    }
+
 
 
 

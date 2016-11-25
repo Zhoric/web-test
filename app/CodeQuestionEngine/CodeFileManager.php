@@ -218,6 +218,18 @@ class CodeFileManager
         return $count;
     }
 
+    public function createTestCasesFilesByParamsSetsArray(array $paramsSets,$dirPath){
+        $count = count($paramsSets);
+        for($i = 0; $i < $count; $i++){
+            $this->putTestCaseInFiles($paramsSets[$i]->getInput(),
+                $paramsSets[$i]->getExpectedOutput(),
+                $i,
+                $dirPath);
+        }
+
+        return $count;
+    }
+
 
     /**
      * Сравнивает эталонный результат тестового случая с результатом студента.
