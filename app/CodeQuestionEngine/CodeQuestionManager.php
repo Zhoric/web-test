@@ -66,9 +66,6 @@ class CodeQuestionManager
      */
     public function runQuestionProgram($code,$programId){
         try {
-            //Код приходит только формате после применения функции JSON.stringify()
-            //поэтому его надо декодировать
-            $code = json_decode($code);
             $dirPath = $this->fileManager->createDir(Auth::user());
             $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 

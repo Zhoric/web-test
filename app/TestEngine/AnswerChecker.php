@@ -84,7 +84,8 @@ class AnswerChecker
             throw new Exception('По данному вопросу не найден программный код!');
         }
         $programId = $program->getId();
-        return self::getCodeQuestionManager()->runQuestionProgram($studentCode, $programId);
+        $rightPercentage =  self::getCodeQuestionManager()->runQuestionProgram($studentCode, $programId);
+        return $rightPercentage;
     }
 
     /**
