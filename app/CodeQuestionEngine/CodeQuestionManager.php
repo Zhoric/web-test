@@ -111,7 +111,8 @@ class CodeQuestionManager
                 throw new \Exception($errors);
             }
             $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
-
+            $result.="\n";
+            $result.= $this->fileManager->getResultsForCompare($dirPath,$cases_count);
 
         return $result;
 

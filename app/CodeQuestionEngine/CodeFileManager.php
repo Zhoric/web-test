@@ -259,6 +259,36 @@ class CodeFileManager
 
     }
 
+    /**
+     * Метод, возвращающий текстовую информацию о результатах теста в формате
+     * Тестовый случай №:
+     * Входные параметры:
+     * Ожидаемый вывод:
+     * Вывод студента:
+     * @param $dirPath
+     * @param $casesCount
+     * @return string
+     *
+     */
+    public function getResultsForCompare($dirPath,$casesCount){
+        $info = '';
+
+        for($i = 0;$i < $casesCount; $i++) {
+            $input = file_get_contents("$dirPath/test_input_$i.txt");
+            $expected = file_get_contents("$dirPath/test_output_$i.txt");
+            $student_output = file_get_contents("$dirPath/student_result_$i.txt");
+
+            $info.="Тестовый случай №:$i";
+            $info.="Входные параметры: $input\n";
+            $info.="Ожидаемый вывод: $expected\n";
+            $info.="Вывод студента: $student_output\n\n";
+        }
+
+        return $info;
+
+
+    }
+
 
     function utf8_urldecode($str) {
         $str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($str));

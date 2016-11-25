@@ -59,7 +59,8 @@ class ProgramController extends Controller
 
             $mark = $this->codeManager->runQuestionProgramWithParamSets($program,$paramsSetsObjects);
 
-            return $this->successJSONResponse('Ваша оценка: '.$mark.'/100');
+
+            return $this->successJSONResponse('Ваша оценка: '.$mark);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
