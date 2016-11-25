@@ -1,5 +1,7 @@
 <?php
 namespace CodeQuestionEngine;
+use Mockery\CountValidator\Exception;
+use Repositories\UnitOfWork;
 use User;
 /**
  * Created by PhpStorm.
@@ -11,9 +13,11 @@ class CodeFileManager
 {
 
     private $app_path;
-    public function __construct()
+    private $_uow;
+    public function __construct(UnitOfWork $uow)
     {
         $this->app_path = app_path();
+        $this->_uow = $uow;
     }
 
     /**
@@ -39,6 +43,15 @@ class CodeFileManager
             throw new \Exception("Не удалось создать директорию!");
         }
         return $dirPath;
+    }
+
+    /**
+     * Создает пустой файл для входных параметров
+     * @param $dirPath
+     */
+    public function createEmptyInputFile($dirPath){
+        $fp = fopen("$dirPath/input.txt", "w");
+        fclose($fp);
     }
 
 
@@ -118,16 +131,111 @@ class CodeFileManager
 
     }
 
+    /**
+     * Метод берет базовый шелл-скрипт и создает на его основе скрипт, который запускает
+     * на выполнение код, лежащий в уникальной папке пользователя с параметрами, лежащими в
+     * файле.
+     * @param $dirPath - путь к уникальной папке пользователя
+     * @param $inputFilename - имя файла с входными данными
+     * @throws
+     */
+    public function createShellScriptForTestCase($dirPath,$inputFilename){
+        try {
+            $cache_dir = EngineGlobalSettings::CACHE_DIR;
+            $sh_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
+            $shPath = "$this->app_path/$cache_dir/$sh_name";
+
+            $baseShellScript = fopen($shPath, "r"); // открываем для чтения
+            $text = fread($baseShellScript, filesize($shPath)); //читаем
+            fclose($baseShellScript);
+
+            $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
+
+            $command = "cd /opt/$cache_dir/$uniqueDirName/\n";
+            $filePath = "$this->app_path/$cache_dir/$uniqueDirName/run.sh";
+
+            $uniqueScript = fopen($filePath, "w");
+            fwrite($uniqueScript, $command . $text);
+            fclose($uniqueScript);
+
+
+            $file = file_get_contents($filePath);
+            $file = str_replace('input.txt', $inputFilename, $file);
+            file_put_contents($filePath, $file);
+        }
+        catch (\Exception $e)
+        {
+            $msg = $e->getMessage();
+            throw new \Exception("Ошибка при создании скрипта: $msg");
+        }
+    }
 
     /**
-     * Проверяет работу программы студента на корректность.
-     * @param $dirPath - путь к папке, где хранится исходный код студента, файлы с test-case`ами
-     * для проверки и результаты работы кода студента
+     * Создает файл с результатами работы программы студента для тестого прогона с номером $number.
+     *
+     * @param $dirPath - путь к уникальной папке пользователя
+     * @param $number - номер тестового прогона
+     * @param $result - результат работы программы студента
      */
-    public function checkIfCorrectTestCase($dirPath){
-        $result = $this->getStudentResult($dirPath);
+    public function createResultFile($dirPath,$result,$number){
+        $fp = fopen("$dirPath/student_result_$number.txt", "w");
+        fwrite($fp, $result);
+        fclose($fp);
+    }
+
+    /**
+     * Метод, который создает в уникальной папке пользователя пару файлов с тестовыми случаями для определенной задачи
+     *
+     * @param $input - входные данные (например, 2+2)
+     * @param $output - выходные данные (4)
+     * @param $number - номер тестового случая
+     * @param $dirPath  - путь к уникальной папке пользователя
+     */
+    public function putTestCaseInFiles($input,$output,$number,$dirPath){
+        $fp = fopen("$dirPath/test_input_$number.txt", "w");
+        fwrite($fp, $input);
+        fclose($fp);
+
+        $fp = fopen("$dirPath/test_output_$number.txt", "w");
+        fwrite($fp, $output);
+        fclose($fp);
 
     }
+
+    /**
+     * Метод, который создает в уникальной папке пользователя файлы для всех тестовых случаев определенной задачи
+     * @param $programId
+     * @param $dirPath - путь к уникальной папке пользователя
+     * @return int $count - число полученных тестовых случаев
+     */
+    public function createTestCasesFiles($programId,$dirPath){
+       $paramsSets =   $this->_uow->paramsSets()->getByProgram($programId);
+        $count = count($paramsSets);
+        for($i = 0; $i < $count; $i++){
+            $this->putTestCaseInFiles($paramsSets[$i]->getInput(),
+                                      $paramsSets[$i]->getExpectedOutput(),
+                                      $i,
+                                      $dirPath);
+        }
+
+        return $count;
+    }
+
+
+    /**
+     * Сравнивает эталонный результат тестового случая с результатом студента.
+     * true - если они идентичны
+     * false - если нет
+     */
+    public function compareOutputs(){
+
+    }
+
+
+
+
+
+
 
 
 

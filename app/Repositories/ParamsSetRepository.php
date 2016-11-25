@@ -14,4 +14,10 @@ class ParamsSetRepository extends BaseRepository
         parent::__construct($em, ParamsSet::class);
     }
 
+    public function getByProgram($programId){
+        return $this->repo->findBy(['program' => $programId]);
+    }
+
+
+
 }

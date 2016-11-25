@@ -2,6 +2,7 @@
 namespace CodeQuestionEngine;
 
 use Auth;
+use Repositories\UnitOfWork;
 
 
 /**
@@ -16,12 +17,14 @@ class CodeQuestionManager
 
     private $dockerEngine;
     private $fileManager;
+    private $_uow;
 
 
-    public function __construct(DockerEngine $dockerEngine, CodeFileManager $fileManager)
+    public function __construct(DockerEngine $dockerEngine, CodeFileManager $fileManager,UnitOfWork $uow)
     {
         $this->dockerEngine = $dockerEngine;
         $this->fileManager = $fileManager;
+        $this->_uow = $uow;
     }
 
     /**
@@ -36,6 +39,7 @@ class CodeQuestionManager
                 $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
                 $this->fileManager->putCodeInFile($code, $dirPath);
+                $this->fileManager->createEmptyInputFile($dirPath);
                 $this->fileManager->createShellScript($dirPath);
 
                 $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
@@ -52,6 +56,54 @@ class CodeQuestionManager
 
         return $msg;
     }
+
+    /**
+     * Запускает код на выполнение с входными параметрами, которые берутся из базы и заполняются преподавателем при
+     * добавлении вопроса.
+     * @param $code
+     * @param $programId
+     * @return mixed
+     */
+    public function runQuestionProgram($code,$programId){
+        try {
+            $dirPath = $this->fileManager->createDir(Auth::user());
+            $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
+
+            $this->fileManager->putCodeInFile($code, $dirPath);
+            $cases_count = $this->fileManager->createTestCasesFiles($programId,$dirPath);
+
+            for($i = 0; $i < $cases_count ; $i ++){
+                $this->fileManager->createShellScriptForTestCase($dirPath,"test_input_$i.txt");
+                $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
+                $cache_dir = EngineGlobalSettings::CACHE_DIR;
+                $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
+                //DEBUG COMMENT
+               // $errors = $this->fileManager->getErrors($dirPath);
+
+                $result = $this->fileManager->getStudentResult($dirPath);
+                $this->fileManager->createResultFile($dirPath,$result,$i);
+
+            }
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        return;
+
+    }
+
+
+    public function calculateMark($casesCount){
+
+    }
+
+
+
+
+
+
+
+
 
 
 
