@@ -22,6 +22,7 @@ $(document).ready(function(){
 
             self.current = {
                 result: ko.observable(),
+                results: ko.observableArray([]),
                 test: ko.observable(),
                 attempts: ko.observable(),
                 answers: ko.observableArray([]),
@@ -85,6 +86,18 @@ $(document).ready(function(){
                     },
 
                 },
+                results: {
+                    view: function(){
+                        if (!self.current.results.length){
+                            self.get.results();
+                        }
+                        commonHelper.modal.open('#attempts-modal');
+                    },
+                    select: function(data){
+                        commonHelper.modal.close('#attempts-modal');
+                        window.location.href = '/admin/result/' + data.id();
+                    }
+                },
             },
 
             self.toggleCurrent = {
@@ -120,6 +133,21 @@ $(document).ready(function(){
                         }
                         self.errors.show(result.Message());
                     })
+                },
+                results: function(){
+                    var result = self.current.result();
+                    var user = result.user.id();
+                    var test = result.testId();
+                    var url = '/api/results/getByUserAndTest?userId='+ user + '&testId=' + test;
+                    $.get(url, function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            self.current.results(result.Data());
+
+                            return;
+                        }
+                        self.errors.show(result.Message());
+                    });
                 }
             };
             self.post = {

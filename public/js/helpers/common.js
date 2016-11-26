@@ -21,5 +21,13 @@ var commonHelper = {
     shortenText: function(text, length){
         var dots = (text.length > length) ? ' ...' : '';
         return text.substr(0, length) + dots;
+    },
+    modal: {
+        open: function(selector){
+            $(selector).arcticmodal();
+        },
+        close: function(selector){
+            $(selector).arcticmodal('close');
+        }
     }
 };

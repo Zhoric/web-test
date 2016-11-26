@@ -47,7 +47,7 @@
                 <span class="not-ok" data-bind="if: mark() === null">Требуется проверка</span>
             </div>
             <div class="attempts">
-                <label>Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1">(Все попытки)</span></label></br>
+                <label>Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1, click: $root.actions.results.view">(Все попытки)</span></label></br>
                 <span data-bind="text: attempt"></span>
                 <span>/</span>
                 <span data-bind="text: $root.current.attempts()"></span>
@@ -93,22 +93,6 @@
     <!-- /ko -->
 </div>
 
-
-{{--<div class="tooltip_templates">--}}
-    {{--<span id="minutes_tooltip">--}}
-        {{--<span data-bind="validationMessage: $root.current.question().minutes"></span>--}}
-    {{--</span>--}}
-    {{--<span id="seconds_tooltip">--}}
-        {{--<span data-bind="validationMessage: $root.current.question().seconds"></span>--}}
-    {{--</span>--}}
-    {{--<span id="theme-name_tooltip">--}}
-        {{--<span data-bind="validationMessage: $root.current.theme().name"></span>--}}
-    {{--</span>--}}
-    {{--<span id="question_tooltip">--}}
-        {{--<span data-bind="validationMessage: $root.current.question().text"></span>--}}
-    {{--</span>--}}
-{{--</div>--}}
-
 @endsection
 
 <div class="g-hidden">
@@ -121,6 +105,25 @@
             </div>
             <div class="button-holder">
                 <button data-bind="click: $root.errors.accept">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="attempts-modal">
+        <div class="box-modal_close arcticmodal-close">закрыть</div>
+        <div data-bind="if: $root.current.results().length ">
+            <div data-bind="foreach: $root.current.results">
+                <div class="" data-bind="click: $root.actions.results.select">
+                    <span data-bind="text: attempt"></span>
+                    <span data-bind="if: mark() !== null">
+                        <span data-bind="text: mark"></span>
+                        <span>/100</span>
+                    </span>
+                    <span data-bind="if: mark() === null">Требуется проверка</span>
+                    <span data-bind="text: dateTime.date"></span>
+                </div>
             </div>
         </div>
     </div>
