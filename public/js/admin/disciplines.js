@@ -6,17 +6,11 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.errors = errors();
+            self.pagination = pagination();
+
             self.disciplines = ko.observableArray([]);
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+
             self.current = {
                 discipline: ko.observable({
                     id: ko.observable(0),
@@ -25,11 +19,6 @@ $(document).ready(function(){
                     description: ko.observable('')
                 }),
                 profiles: ko.observableArray([]),
-                // profile: ko.observable({
-                //     profiles: ko.observableArray([]),
-                //     selected: ko.observableArray([]),
-                //     discipline: ko.observableArray([])
-                // }),
                 themes: ko.observableArray([]),
                 theme: ko.observable({
                     id: ko.observable(0),
@@ -110,36 +99,7 @@ $(document).ready(function(){
                     return JSON.stringify({discipline: forpost, profileIds: profiles});
                 }
             };
-            self.pagination = {
-                currentPage: ko.observable(1),
-                pageSize: ko.observable(10),
-                itemsCount: ko.observable(1),
-                totalPages: ko.observable(1),
 
-                selectPage: function(page){
-                    self.pagination.currentPage(page);
-                    self.get.disciplines();
-                },
-                dotsVisible: function(index){
-                    var total = self.pagination.totalPages();
-                    var current = self.pagination.currentPage();
-                    if (total > 11 && index == total-1 && index > current + 2  ||total > 11 && index == current - 1 && index > 3)  {
-                        return true;
-                    }
-                    return false;
-                },
-                pageNumberVisible: function(index){
-                    var total = self.pagination.totalPages();
-                    var current = self.pagination.currentPage();
-                    if (total < 12 ||
-                        index > (current - 2) && index < (current + 2) ||
-                        index > total - 2 ||
-                        index < 3) {
-                        return true;
-                    }
-                    return false;
-                },
-            };
             self.mode = ko.observable('none');
             self.csed = {
                 show: function(data){
@@ -162,16 +122,15 @@ $(document).ready(function(){
                 },
                 startRemove: function(){
                     self.mode('delete');
-                    self.toggleModal('#delete-modal', '');
+                    commonHelper.modal.open('#delete-modal');
                 },
                 update: function(){
                     var url = self.mode() === 'add' ? '/api/disciplines/create' : '/api/disciplines/update';
                     var json = self.toggleCurrent.stringify();
-                    console.log(url + ' : ' + json);
                     self.post(url, json);
                 },
                 remove: function(){
-                    self.toggleModal('#delete-modal', 'close');
+                    commonHelper.modal.close('#delete-modal');
                     var url = '/api/disciplines/delete/' + self.current.discipline().id();
                     self.post(url, '');
                 },
@@ -186,14 +145,14 @@ $(document).ready(function(){
                 showSections: function (data) {
                     self.current.discipline(data);
                     self.get.sectionsByDiscipline();
-                    self.toggleModal('#sections-modal', '');
+
+                    commonHelper.modal.open('#sections-modal');
 
                 },
                 theme: {
                     startAdd: function(){
-                        console.log('add theme');
                         self.current.theme().id(0).name('');
-                        self.toggleModal('#add-theme-modal', '');
+                        commonHelper.modal.open('#add-theme-modal');
                     },
                     add: function(){
                         var url = '/api/disciplines/themes/create';
@@ -203,28 +162,26 @@ $(document).ready(function(){
                             },
                             disciplineId: self.current.discipline().id()
                         });
-                        console.log(url + ' : ' + json);
                         $.post(url, json, function(){
-                            self.toggleModal('#add-theme-modal', 'close');
+                            commonHelper.modal.close('#add-theme-modal');
                             self.get.themes();
                         });
                     },
                     startRemove: function(data){
-                        self.toggleModal('#remove-theme-modal', '');
+                        commonHelper.modal.open('#remove-theme-modal');
                         self.current.theme().id(data.id()).name(data.name());
-
                     },
                     remove: function(){
                         var url = '/api/disciplines/themes/delete/' + self.current.theme().id();
                         $.post(url, function(){
-                            self.toggleModal('#remove-theme-modal', 'close');
+                            commonHelper.modal.close('#remove-theme-modal');
                             self.get.themes();
                         });
                     },
                     showSections : function(data) {
                         self.current.theme(data);
                         self.get.sectionsByTheme();
-                        self.toggleModal('#sections-modal', '');
+                        commonHelper.modal.open('#sections-modal');
                     },
                     addSection : function (data) {
                         window.location.href = '/admin/editor/new/' + self.current.discipline().id() + '/' + self.current.theme().id();
@@ -232,13 +189,13 @@ $(document).ready(function(){
                 },
                 section: {
                     startRemove: function (data) {
-                        self.toggleModal('#remove-section-modal', '');
+                        commonHelper.modal.open('#remove-section-modal');
                         self.current.section(data);
                     },
                     remove: function () {
                         var url = '/api/sections/delete/' + self.current.section().id();
                         $.post(url, function(){
-                            self.toggleModal('#remove-section-modal', 'close');
+                            commonHelper.modal.close('#remove-section-modal');
                             self.get.sections();
                         });
                     },
@@ -354,9 +311,6 @@ $(document).ready(function(){
                     self.errors.show(result.Message());
                 });
             };
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
 
             // SUBSCRIPTIONS
             self.pagination.itemsCount.subscribe(function(value){
@@ -365,6 +319,9 @@ $(document).ready(function(){
                         value/self.pagination.pageSize()
                     ));
                 }
+            });
+            self.pagination.currentPage.subscribe(function(value){
+                self.get.disciplines();
             });
             self.filter.discipline.subscribe(function(){
                 self.get.disciplines();
@@ -382,7 +339,6 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
-                toggleModal: self.toggleModal,
                 errors: self.errors
             };
         };
