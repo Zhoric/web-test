@@ -1088,6 +1088,13 @@ button.sq-small{
     span{
       font-size: 16px;
     }
+    label{
+      span.clickable{
+        .label();
+        color: @patronus;
+        cursor: pointer;
+      }
+    }
   }
   .answers{
     background: @white;
@@ -1131,7 +1138,6 @@ button.sq-small{
       background: @patronus-shade;
       display:flex;
       div{
-        height: 100%;
         display: inline-block;
       }
       .icon{

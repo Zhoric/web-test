@@ -1121,6 +1121,15 @@ button.sq-small {
 .result-details .org-info span {
   font-size: 16px;
 }
+.result-details .org-info label span.clickable {
+  font-size: 12px;
+  color: #7f8c8d;
+  color: #5D8CAE;
+  cursor: pointer;
+}
+.result-details .org-info label span.clickable span {
+  color: #c0392b;
+}
 .result-details .answers {
   background: #fff;
   cursor: pointer;
@@ -1166,7 +1175,6 @@ button.sq-small {
   display: flex;
 }
 .result-details .answers .answer-details div {
-  height: 100%;
   display: inline-block;
 }
 .result-details .answers .answer-details .icon {

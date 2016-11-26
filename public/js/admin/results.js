@@ -35,7 +35,15 @@ $(document).ready(function(){
 
             self.showResult = function(data){
                 window.location.href = '/admin/result/' + data.id();
-            },
+            };
+            self.actions = {
+                parseDate: function(){
+                    self.current.results().find(function(item){
+                        var date = item.dateTime.date;
+                        date(commonHelper.parseDate(date()));
+                    });
+                }
+            };
 
             self.get = {
                 profiles: function(){
@@ -89,6 +97,7 @@ $(document).ready(function(){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
                             self.current.results(result.Data());
+                            self.actions.parseDate();
                             return;
                         }
                         self.errors.show(result.Message());

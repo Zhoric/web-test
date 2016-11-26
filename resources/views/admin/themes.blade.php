@@ -105,7 +105,7 @@
 
             <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
             <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea></br>
-            <span class="radio radio-neutral compile-code" data-bind="click: $root.code.open">Скомпилировать код программы</span>
+            <span class="radio radio-neutral compile-code" data-bind="click: $root.code.open">Отладка программы</span>
             <span class="radio radio-positive save-params" data-bind="click: $root.code.params.add">Добавить набор параметров</span>
 
             <table>
@@ -239,6 +239,7 @@
         <span data-bind="validationMessage: $root.current.question().text"></span>
     </span>
 </div>
+
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
         <div class="popup-delete">
@@ -264,7 +265,6 @@
         </div>
     </div>
 </div>
-
 <div class="g-hidden">
     <div class="box-modal" id="code-editor-modal">
         <div>

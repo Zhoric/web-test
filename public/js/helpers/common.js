@@ -1,0 +1,24 @@
+/**
+ * Created by nyanjii on 26.11.16.
+ */
+var commonHelper = {
+    parseDate: function(date){
+        date = new Date(date);
+        var options = {
+            timezone: 'UTC',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+        };
+        date = date.toLocaleString("ru", options);
+        date = date.replace(',', ' ');
+
+        return date;
+    },
+    shortenText: function(text, length){
+        return text.substr(length);
+    }
+};

@@ -1,9 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Результаты')
 @section('javascript')
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>--}}
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>--}}
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/admin/results.js')}}"></script>
 @endsection
 
@@ -15,7 +13,7 @@
             <select data-bind="options: $root.filter.profiles,
                        optionsText: 'name',
                        value: $root.filter.profile,
-                       optionsCaption: 'Выберите напраление'"></select>
+                       optionsCaption: 'Выберите направление'"></select>
         </div>
         <div>
             <label>Группа</label></br>

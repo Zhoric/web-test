@@ -52,6 +52,7 @@ class TestResultCalculator
             : null;
 
         if ($resultMark !== null){
+            $resultMark = floor($resultMark);
             $resultMark = $resultMark > 100 ? 100 : $resultMark;
             $resultMark = $resultMark < 0 ? 0 : $resultMark;
         }

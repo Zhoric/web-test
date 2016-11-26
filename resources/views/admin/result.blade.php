@@ -8,11 +8,12 @@
     <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/admin/result.js')}}"></script>
 @endsection
 
 @section('content')
-<button data-bind="click: $root.errors.show">Jgldjf</button>
+<div class="content result-details">
     <div class="org-info" data-bind="if: current.result()">
         <div class="main-info width100" data-bind="with: current.result">
             <div class="name">
@@ -39,11 +40,14 @@
             <!-- /ko -->
             <div class="mark">
                 <label>Оценка</label></br>
+                <!-- ko if: mark() -->
                 <span data-bind="text: mark"></span>
                 <span>/100</span>
+                <!-- /ko -->
+                <span class="not-ok">Требуется проверка</span>
             </div>
             <div class="attempts">
-                <label>Количество попыток</label></br>
+                <label>Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1">(Предыдущие попытки)</span></label></br>
                 <span data-bind="text: attempt"></span>
                 <span>/</span>
                 <span data-bind="text: $root.current.attempts()"></span>
@@ -104,6 +108,9 @@
         {{--<span data-bind="validationMessage: $root.current.question().text"></span>--}}
     {{--</span>--}}
 {{--</div>--}}
+
+@endsection
+
 <div class="g-hidden">
     <div class="box-modal" id="errors-modal">
         <div>
@@ -118,4 +125,3 @@
         </div>
     </div>
 </div>
-@endsection

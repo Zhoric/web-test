@@ -67,7 +67,13 @@ $(document).ready(function(){
                         self.current.mark.isInput(false);
                         self.current.mark.value('Оценить');
                     },
-                }
+                },
+                result:{
+                    fixDate: function(){
+                        var date = self.current.result().dateTime.date;
+                        date(commonHelper.parseDate(date()));
+                    }
+                },
             },
 
             self.toggleCurrent = {
@@ -94,6 +100,7 @@ $(document).ready(function(){
                         if (result.Success()){
                             self.current.answers(result.Data.answers());
                             self.current.result(result.Data.testResult);
+                            self.actions.result.fixDate();
                             self.current.attempts(result.Data.attemptsAllowed);
                             self.current.test(result.Data.test);
                             return;
@@ -116,7 +123,7 @@ $(document).ready(function(){
                 },
             };
 
-            //self.get.result();
+            self.get.result();
 
             self.events = {
                 focusout: function(data, e){
