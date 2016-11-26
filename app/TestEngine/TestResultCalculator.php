@@ -51,6 +51,11 @@ class TestResultCalculator
             ? ($resultPercents / 100) * $maxMarkValue
             : null;
 
+        if ($resultMark !== null){
+            $resultMark = $resultMark > 100 ? 100 : $resultMark;
+            $resultMark = $resultMark < 0 ? 0 : $resultMark;
+        }
+
         return $resultMark;
     }
 

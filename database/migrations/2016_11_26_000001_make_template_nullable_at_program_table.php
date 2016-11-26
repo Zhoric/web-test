@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class MakeRightPercentageNullableAtGivenAnswerTable extends Migration
+class MakeTemplateNullableAtProgramTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class MakeRightPercentageNullableAtGivenAnswerTable extends Migration
      */
     public function up()
     {
-        Schema::table('given_answer', function(Blueprint $table)
+        Schema::table('program', function(Blueprint $table)
         {
-            $table->smallInteger('right_percentage')->nullable()->default(NULL)->change();
+            $table->text('template')->nullable()->default(NULL)->change();
         });
     }
 
@@ -26,8 +26,8 @@ class MakeRightPercentageNullableAtGivenAnswerTable extends Migration
      */
     public function down()
     {
-        Schema::table('user', function (Blueprint $table) {
-            $table->smallInteger('right_percentage')->change();
+        Schema::table('program', function (Blueprint $table) {
+            $table->text('template')->change();
         });
     }
 }
