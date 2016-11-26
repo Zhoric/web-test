@@ -19,6 +19,7 @@ var commonHelper = {
         return date;
     },
     shortenText: function(text, length){
-        return text.substr(length);
+        var dots = (text.length > length) ? ' ...' : '';
+        return text.substr(0, length) + dots;
     }
 };

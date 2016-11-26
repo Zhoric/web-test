@@ -47,7 +47,7 @@
                 <span class="not-ok" data-bind="if: mark() === null">Требуется проверка</span>
             </div>
             <div class="attempts">
-                <label>Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1">(Предыдущие попытки)</span></label></br>
+                <label>Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1">(Все попытки)</span></label></br>
                 <span data-bind="text: attempt"></span>
                 <span>/</span>
                 <span data-bind="text: $root.current.attempts()"></span>
@@ -55,10 +55,10 @@
         </div>
     </div>
 
+    <!-- ko if: current.answers().length -->
     <div class="answers" data-bind="foreach: current.answers">
         <div class="answer" data-bind="click: $root.actions.answer.show, css: {'current': $root.current.answer().id() === id()}">
-            <span data-bind="text: $index() + 1"></span>&nbsp;
-            <span data-bind="text: question.text"></span>
+            <span data-bind="text: $root.actions.answer.fit.question($data)"></span>
             <!-- ko if: rightPercentage() === null -->
             <span class="tagged-label fa">&#xf123;</span>
             <!-- /ko -->
@@ -90,7 +90,7 @@
         </div>
         <!-- /ko -->
     </div>
-
+    <!-- /ko -->
 </div>
 
 

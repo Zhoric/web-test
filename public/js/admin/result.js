@@ -44,6 +44,13 @@ $(document).ready(function(){
                         self.current.answer().id() === data.id() ?
                             self.current.answer().id(0) :
                             self.toggleCurrent.fill.answer(data);
+                    },
+
+                    fit: {
+                        question: function(data){
+                            var q = data.question.text();
+                            return commonHelper.shortenText(q, 100);
+                        }
                     }
                 },
                 mark: {
@@ -69,10 +76,14 @@ $(document).ready(function(){
                     },
                 },
                 result:{
-                    fixDate: function(){
+                    date: function(){
                         var date = self.current.result().dateTime.date;
                         date(commonHelper.parseDate(date()));
-                    }
+                    },
+                    fit: function(){
+                        self.actions.result.date();
+                    },
+
                 },
             },
 
@@ -100,9 +111,11 @@ $(document).ready(function(){
                         if (result.Success()){
                             self.current.answers(result.Data.answers());
                             self.current.result(result.Data.testResult);
-                            self.actions.result.fixDate();
                             self.current.attempts(result.Data.attemptsAllowed);
                             self.current.test(result.Data.test);
+
+                            self.actions.result.fit();
+
                             return;
                         }
                         self.errors.show(result.Message());
