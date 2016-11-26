@@ -40,11 +40,11 @@
             <!-- /ko -->
             <div class="mark">
                 <label>Оценка</label></br>
-                <!-- ko if: mark() -->
+                <!-- ko if: mark() !== null -->
                 <span data-bind="text: mark"></span>
                 <span>/100</span>
                 <!-- /ko -->
-                <span class="not-ok">Требуется проверка</span>
+                <span class="not-ok" data-bind="if: mark() === null">Требуется проверка</span>
             </div>
             <div class="attempts">
                 <label>Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1">(Предыдущие попытки)</span></label></br>
@@ -59,7 +59,7 @@
         <div class="answer" data-bind="click: $root.actions.answer.show, css: {'current': $root.current.answer().id() === id()}">
             <span data-bind="text: $index() + 1"></span>&nbsp;
             <span data-bind="text: question.text"></span>
-            <!-- ko if: !rightPercentage() -->
+            <!-- ko if: rightPercentage() === null -->
             <span class="tagged-label fa">&#xf123;</span>
             <!-- /ko -->
         </div>
@@ -75,10 +75,10 @@
             </div>
             <div class="mark">
                 <label>Правильность ответа</label></br>
-                <!-- ko if: rightPercentage() && !$root.current.mark.isInput() -->
+                <!-- ko if: rightPercentage() !== null && !$root.current.mark.isInput() -->
                 <span data-bind="text: rightPercentage, click: $root.actions.mark.edit"></span>
                 <!-- /ko -->
-                <!-- ko if: !rightPercentage() && !$root.current.mark.isInput() -->
+                <!-- ko if: rightPercentage() === null && !$root.current.mark.isInput() -->
                 <span data-bind="text: $root.current.mark.value, click: $root.actions.mark.edit"></span>
                 <!-- /ko -->
                 <!-- ko if: $root.current.mark.isInput() -->
