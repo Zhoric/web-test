@@ -60,6 +60,11 @@ class TestResultController extends Controller
 
     }
 
+    /**
+     * Установка дополнительных попыток для прохождения теста студентом.
+     * @param Request $request
+     * @return string
+     */
     public function setExtraAttempts(Request $request){
         try{
             $testId = $request->json('testId');
@@ -73,12 +78,34 @@ class TestResultController extends Controller
         }
     }
 
+    /**
+     * Ручная установка оценки за вопрос теста с последующим пересчётом итоговой оценки за тест.
+     * @param Request $request
+     * @return string
+     */
     public function setAnswerMark(Request $request){
         try{
             $givenAnswerId = $request->json('answerId');
             $mark = $request->json('mark');
             $resultMark = TestResultCalculator::setAnswerMark($givenAnswerId, $mark);
             return $this->successJSONResponse($resultMark);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    /**
+     * Получение результатов по заданному тесту и студенту.
+     * @param Request $request
+     * @return string
+     */
+    public function getByUserAndTest(Request $request){
+        try{
+            $testId = $request->query('testId');
+            $userId = $request->query('userId');
+
+            $results = $this->_testResultManager->getResultsByUserAndTest($userId, $testId);
+            return $this->successJSONResponse($results);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }

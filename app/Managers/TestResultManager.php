@@ -63,7 +63,6 @@ class TestResultManager
     public function update(TestResult $testResult){
         $this->_unitOfWork->testResults()->update($testResult);
         $this->_unitOfWork->commit();
-
     }
 
     /**
@@ -139,6 +138,13 @@ class TestResultManager
         $this->_unitOfWork->commit();
     }
 
+    public function getResultsByUserAndTest($userId, $testId){
+        $testResults = $this
+            ->_unitOfWork
+            ->testResults()
+            ->getByUserAndTest($userId, $testId);
 
+        return $testResults;
+    }
 
 }

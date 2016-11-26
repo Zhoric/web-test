@@ -43,6 +43,7 @@ class AnswerChecker
      * @return int - Оценка, %.
      */
     public static function calculatePointsForClosedAnswer($answers, $studentAnswers){
+
         $studentAnswers = ($studentAnswers == null) ? [] : $studentAnswers;
         $totalRightAnswersCount = self::calculateTotalRightAnswers($answers);
         $studentRightAnswersCount = self::calculateRightStudentAnswers($answers, $studentAnswers);

@@ -66,6 +66,9 @@ class TestResultRepository extends BaseRepository
         } catch (Exception $exception){
             return null;
         }
+    }
 
+    public function getByUserAndTest($userId, $testId){
+        return $this->repo->findBy(['user' => $userId, 'test' => $testId]);
     }
 }
