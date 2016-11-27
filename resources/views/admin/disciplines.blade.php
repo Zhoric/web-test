@@ -1,9 +1,7 @@
 @extends('shared.layout')
 @section('title', 'Дисциплины')
 @section('javascript')
-    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-pager.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
+
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
 @endsection
@@ -212,6 +210,4 @@
 </div>
 
 @include('admin.shared.error-modal')
-
-
 @endsection

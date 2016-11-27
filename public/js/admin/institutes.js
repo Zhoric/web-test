@@ -63,7 +63,7 @@ $(document).ready(function(){
             };
 
             self.moveToGroup = function(data){
-                var url = 'groups/' + data.id();
+                var url = '/admin/groups/' + data.id();
                 window.location.href = url;
             };
             self.moveToPlan = function(data){
