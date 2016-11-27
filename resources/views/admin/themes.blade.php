@@ -112,7 +112,7 @@
                 <tbody data-bind="foreach: $root.code.params.set">
                 <tr>
                     <td data-bind="text: input" class="input"></td>
-                    <td data-bind="text: output" class="output"></td>
+                    <td data-bind="text: expectedOutput" class="output"></td>
                     <td>
                         <button class="fa sq-small danger" data-bind="click: $root.code.params.remove">&#xf014;</button>
                     </td>
@@ -136,9 +136,9 @@
                         <td data-bind="text: $index()+1"></td>
                         <td data-bind="text: text"></td>
                         <td data-bind="visible: !$root.current.question().isOpenSingleLine()">
-                            <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.toggleCurrent.set.answerCorrectness">Правильный</span>
+                            <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.alter.set.answerCorrectness">Правильный</span>
                             <span>|</span>
-                            <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.toggleCurrent.set.answerCorrectness" >Неправильный</span>
+                            <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.alter.set.answerCorrectness" >Неправильный</span>
                         </td>
                         <td>
                             <button class="fa sq-small danger" data-bind="click: $root.csed.answer.remove">&#xf014;</button>
@@ -191,8 +191,8 @@
             <!-- ko foreach: $root.current.questions-->
                 <tr>
                     <td data-bind="text: text"></td>
-                    <td data-bind="text: $root.toggleCurrent.set.type($data)"></td>
-                    <td data-bind="text: $root.toggleCurrent.set.complexity($data)"></td>
+                    <td data-bind="text: $root.alter.set.type($data)"></td>
+                    <td data-bind="text: $root.alter.set.complexity($data)"></td>
                     <td>
                         <button data-bind="click: $root.csed.question.edit" class="fa">&#xf040;</button>
                         <button data-bind="click: $root.csed.question.startDelete" class="fa danger">&#xf014;</button>
@@ -203,27 +203,9 @@
         </table>
     </div>
 
-    <!-- ko if: $root.pagination.itemsCount() > $root.pagination.pageSize() -->
-    <div class="pager-wrap">
-        <!-- ko if: ($root.pagination.totalPages()) > 0 -->
-        <div class="pager">
-            <!-- ko ifnot: $root.pagination.currentPage() == 1 -->
-            <button class="" data-bind="click: $root.pagination.selectPage.bind($data, 1)">&lsaquo;&lsaquo;</button>
-            <button class="" data-bind="click: $root.pagination.selectPage.bind($data, ($root.pagination.currentPage() - 1))">&lsaquo;</button>
-            <!-- /ko -->
-            <!-- ko foreach: new Array($root.pagination.totalPages()) -->
-            <span data-bind="visible: $root.pagination.dotsVisible($index() + 1)">...</span>
-            <button class="" data-bind="click: $root.pagination.selectPage.bind($data, ($index()+1)), text: ($index()+1), visible: $root.pagination.pageNumberVisible($index() + 1), css: {current: ($index() + 1) == $root.pagination.currentPage()}"></button>
-            <!-- /ko -->
-            <!-- ko ifnot: $root.pagination.currentPage() == $root.pagination.totalPages() -->
-            <button class="" data-bind="click: $root.pagination.selectPage.bind($data, ($root.pagination.currentPage() + 1))">&rsaquo;</button>
-            <button class="" data-bind="click: $root.pagination.selectPage.bind($data, $root.pagination.totalPages())">&rsaquo;&rsaquo;</button>
-            <!-- /ko -->
-        </div>
-        <!-- /ko -->
-    </div>
-    <!-- /ko -->
+    @include('admin.shared.pagination')
 </div>
+    @include('admin.shared.error-modal')
 @endsection
 <div class="tooltip_templates">
     <span id="minutes_tooltip">
@@ -247,20 +229,6 @@
             <div>
                 <button data-bind="click: $root.csed.question.remove" class="fa">&#xf00c;</button>
                 <button data-bind="click: $root.csed.question.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal" id="errors-modal">
-        <div>
-            <div>
-                <span class="fa">&#xf071;</span>
-                <h3>Произошла ошибка</h3>
-                <h4 data-bind="text: $root.errors.message"></h4>
-            </div>
-            <div class="button-holder">
-                <button data-bind="click: $root.errors.accept">OK</button>
             </div>
         </div>
     </div>

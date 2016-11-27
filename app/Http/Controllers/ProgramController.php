@@ -69,8 +69,12 @@ class ProgramController extends Controller
     public function getByQuestion($id){
         try{
             $program = $this->unitOfWork->programs()->getByQuestion($id);
-            $paramSets = $this->unitOfWork->paramsSets()->getByProgram($program->getId());
-            return $this->successJSONResponse(new ProgramViewModel($program, $paramSets));
+            if (isset($program)){
+                $paramSets = $this->unitOfWork->paramsSets()->getByProgram($program->getId());
+                return $this->successJSONResponse(new ProgramViewModel($program, $paramSets));
+            } else {
+                throw new Exception('Данный вопрос не содержит программу!');
+            }
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }

@@ -10,21 +10,17 @@ $(document).ready(function(){
         messagesOnModified: true,
         insertMessages: false
     });
+
     var themeViewModel = function(){
         return new function(){
             var self = this;
 
+            self.errors = errors();
+            self.pagination = pagination();
+
+
             self.theme = ko.observable({});
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+
             self.current = {
                 theme: ko.observable({
                     id: ko.observable(0),
@@ -83,6 +79,7 @@ $(document).ready(function(){
                     isRight: ko.observable(false)
                 }),
                 answers: ko.observableArray([]),
+                code: ko.observable()
             };
             self.filter = {
                 name: ko.observable(''),
@@ -121,7 +118,7 @@ $(document).ready(function(){
                 }
             };
 
-            self.toggleCurrent = {
+            self.alter = {
                 fill: {
                     theme: function(data){
                         self.current.theme()
@@ -129,7 +126,7 @@ $(document).ready(function(){
                             .name(data.name());
                     },
                     question: function(data, answers){
-                        self.toggleCurrent.empty.file();
+                        self.alter.empty.file();
                         var type = self.filter.types().find(function(item){
                             return item.id() === data.type();
                         });
@@ -164,7 +161,8 @@ $(document).ready(function(){
                             .image(null)
                             .showImage(null);
                         self.current.answers([]);
-                        self.toggleCurrent.empty.file();
+                        self.alter.empty.file();
+                        self.code.empty();
                     },
                     answer: function(){
                         self.current.answer().text('').isRight(false);
@@ -224,8 +222,8 @@ $(document).ready(function(){
 
                         self.code.params.set().find(function(item){
                             var parameter = {
-                                input: item.input,
-                                expectedOutput: item.output
+                                input: item.input(),
+                                expectedOutput: item.expectedOutput()
                             }
                             params.push(parameter);
                         });
@@ -318,36 +316,7 @@ $(document).ready(function(){
                     }
                 }
             };
-            self.pagination = {
-                currentPage: ko.observable(1),
-                pageSize: ko.observable(10),
-                itemsCount: ko.observable(1),
-                totalPages: ko.observable(1),
 
-                selectPage: function(page){
-                    self.pagination.currentPage(page);
-                    self.get.questions();
-                },
-                dotsVisible: function(index){
-                    var total = self.pagination.totalPages();
-                    var current = self.pagination.currentPage();
-                    if (total > 11 && index == total-1 && index > current + 2  ||total > 11 && index == current - 1 && index > 3)  {
-                        return true;
-                    }
-                    return false;
-                },
-                pageNumberVisible: function(index){
-                    var total = self.pagination.totalPages();
-                    var current = self.pagination.currentPage();
-                    if (total < 12 ||
-                        index > (current - 2) && index < (current + 2) ||
-                        index > total - 2 ||
-                        index < 3) {
-                        return true;
-                    }
-                    return false;
-                },
-            };
             self.mode = ko.observable('none');
             self.csed = {
                 theme: {
@@ -362,21 +331,21 @@ $(document).ready(function(){
                     },
                     cancel: function(){
                         self.mode('none');
-                        self.toggleCurrent.fill.theme(self.theme());
+                        self.alter.fill.theme(self.theme());
                     }
                 },
                 question: {
                     toggleAdd: function(){
                         self.mode() === 'add' ? self.mode('none') : self.mode('add');
-                        self.toggleCurrent.empty.question();
+                        self.alter.empty.question();
                         self.validationTooltip.checkIfExists('.approve-btn');
                     },
                     cancel: function(){
                         self.mode('none');
-                        self.toggleCurrent.empty.question();
+                        self.alter.empty.question();
                     },
                     update: function(){
-                        var isQok = self.toggleCurrent.check.question();
+                        var isQok = self.alter.check.question();
                         if (!isQok) return;
                         self.mode() === 'add' ? self.post.question('create') : self.post.question('update');
                     },
@@ -388,11 +357,11 @@ $(document).ready(function(){
                     startDelete: function(data){
                         self.get.questionWithAnswers(data.id());
                         self.mode('delete');
-                        self.toggleModal('#delete-modal', '');
+                        commonHelper.modal.open('#delete-modal');
                     },
                     remove: function(){
                         self.post.removedQuestion();
-                        self.toggleModal('#delete-modal', 'close');
+                        commonHelper.modal.close('#delete-modal');
                     }
                 },
                 answer: {
@@ -407,7 +376,7 @@ $(document).ready(function(){
                             text: ko.observable(text),
                             isRight: ko.observable(isRight)
                         });
-                        self.toggleCurrent.empty.answer();
+                        self.alter.empty.answer();
                     },
                     remove: function(data){
                         self.current.answers.remove(function(item){
@@ -423,6 +392,73 @@ $(document).ready(function(){
                         self.current.question().showImage(null);
                     }
                 }
+            };
+
+            self.code = {
+                text: ko.observable(),
+                program: ko.observable(),
+                result: {
+                    text: ko.observable(),
+                    show: function(message){
+                        self.code.result.text(message);
+                        commonHelper.modal.open('#compile-modal');
+                    }
+                },
+                params: {
+                    set: ko.observableArray([]),
+                    input: ko.observable(),
+                    output: ko.observable(),
+                    id: ko.observable(1),
+                    add: function(){
+                        var params = self.code.params;
+                        var input = params.input();
+                        var output = params.output();
+                        var id = params.id();
+                        if (!input || !output) return;
+                        params.set.push({
+                            id: ko.observable('param_' + id),
+                            input: ko.observable(input),
+                            expectedOutput: ko.observable(output)
+                        });
+                        params.input('').output('').id(id + 1);
+                    },
+                    remove: function(data){
+                        var params = self.code.params;
+                        params.set.remove(function(item){
+                            return item.id === data.id;
+                        });
+                    }
+                },
+                open: function(){
+                    commonHelper.modal.open('#code-editor-modal');
+                    editor.setValue(self.code.text());
+                },
+                compile: function(){
+                    var program = JSON.stringify(editor.getValue());
+                    var params = [];
+                    self.code.params.set().find(function(item){
+                        var param = {
+                            input: item.input,
+                            expectedOutput: item.output
+                        };
+                        params.push(param);
+                    });
+                    var json = JSON.stringify({program: program, paramSets: params});
+                    self.post.program(json);
+                },
+                approve: function(){
+                    self.code.text(editor.getValue());
+                },
+                fill: function(data){
+                    self.code.params.set(data.paramSets());
+                    self.code.program(data.program);
+                    self.code.text(data.program.template());
+                },
+                empty: function(){
+                    self.code.params.set([]);
+                    self.code.program(null);
+                    self.code.text('');
+                },
             };
 
             self.get = {
@@ -470,7 +506,7 @@ $(document).ready(function(){
                             self.theme(result.Data);
                             self.get.discipline();
                             self.get.questions();
-                            self.toggleCurrent.fill.theme(self.theme());
+                            self.alter.fill.theme(self.theme());
                             return;
                         }
                         self.errors.show(result.Message());
@@ -481,17 +517,33 @@ $(document).ready(function(){
                     $.get(url, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
-                            self.toggleCurrent.fill.question(result.Data.question, result.Data.answers);
+                            self.alter.fill.question(result.Data.question, result.Data.answers);
+                            if (result.Data.question.type() === 5){
+                                self.get.code();
+                            }
                             return;
                         }
                         self.errors.show(result.Message());
                     });
-                }
+                },
+                code: function(){
+                    var id = self.current.question().id();
+                    var url = '/api/program/byQuestion/' + id;
+                    $.get(url , function(response){
+                        var result = ko.mapping.fromJSON(response);
+                        if (result.Success()){
+                            console.log(result);
+                            self.code.fill(result.Data);
+                            return;
+                        }
+                        self.errors.show(result.Message());
+                    });
+                },
             };
             self.post = {
                 theme: function(){
                     var url = '/api/disciplines/themes/update';
-                    var json = self.toggleCurrent.stringify.theme();
+                    var json = self.alter.stringify.theme();
 
                     $.post(url, json, function(response){
                         var result = ko.mapping.fromJSON(response);
@@ -502,11 +554,11 @@ $(document).ready(function(){
                 },
                 question: function(action){
                     var url = '/api/questions/' + action;
-                    var json = self.toggleCurrent.stringify.question();
+                    var json = self.alter.stringify.question();
                     $.post(url, json, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
-                            self.toggleCurrent.empty.question();
+                            self.alter.empty.question();
                             self.mode('none');
                             self.get.questions();
                             return;
@@ -520,7 +572,7 @@ $(document).ready(function(){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
                             self.mode('none');
-                            self.toggleCurrent.empty.question();
+                            self.alter.empty.question();
                             self.get.questions();
                             return;
                         }
@@ -562,10 +614,6 @@ $(document).ready(function(){
                 }
             };
 
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
-
             //SUBSCRIPTIONS
             self.pagination.itemsCount.subscribe(function(value){
                 if (value){
@@ -573,6 +621,9 @@ $(document).ready(function(){
                         value/self.pagination.pageSize()
                     ));
                 }
+            });
+            self.pagination.currentPage.subscribe(function(value){
+                self.get.questions();
             });
             self.filter.type.subscribe(function(){
                 self.get.questions();
@@ -631,71 +682,17 @@ $(document).ready(function(){
                 }
             });
 
-            self.code = {
-                text: ko.observable(),
-                result: {
-                    text: ko.observable(),
-                    show: function(message){
-                        self.code.result.text(message);
-                        self.toggleModal('#compile-modal', '');
-                    }
-                },
-                params: {
-                    set: ko.observableArray([]),
-                    input: ko.observable(),
-                    output: ko.observable(),
-                    id: ko.observable(1),
-                    add: function(){
-                        var params = self.code.params;
-                        var input = params.input();
-                        var output = params.output();
-                        var id = params.id();
-                        if (!input || !output) return;
-                        params.set.push({
-                            id: 'param_' + id,
-                            input: input,
-                            output: output
-                        });
-                        params.input('').output('').id(id + 1);
-                    },
-                    remove: function(data){
-                        var params = self.code.params;
-                        params.set.remove(function(item){
-                            return item.id === data.id;
-                        });
-                    }
-                },
-                open: function(){
-                    self.toggleModal('#code-editor-modal', '');
-                },
-                compile: function(){
-                    var program = JSON.stringify(editor.getValue());
-                    var params = [];
-                    self.code.params.set().find(function(item){
-                        var param = {
-                            input: item.input,
-                            expectedOutput: item.output
-                        };
-                        params.push(param);
-                    });
-                    var json = JSON.stringify({program: program, paramSets: params});
-                    self.post.program(json);
-                },
-                approve: function(){
-                    self.code.text(editor.getValue());
-                }
-            };
+
 
             return {
                 theme: self.theme,
                 pagination: self.pagination,
-                toggleCurrent: self.toggleCurrent,
+                alter: self.alter,
                 current: self.current,
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
                 events: self.events,
-                toggleModal: self.toggleModal,
                 errors: self.errors,
                 code: self.code
             };
