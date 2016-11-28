@@ -9,11 +9,12 @@ use App\Process;
 
 use CodeQuestionEngine\CodeFileManager;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Managers\ProfileManager;
+use Managers\UISettingsCacheManager;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
-use Auth;
 
 class DemoController extends BaseController
 {
@@ -51,6 +52,44 @@ class DemoController extends BaseController
 
     }
 
+    /**
+     * Установка настроек. Пример тела запроса:
+     * {"settings": {"hello":"hello world!", "test": 666}}
+     * @param Request $request
+     * @throws \Exception
+     */
+    public function setSettings(Request $request){
+        $settings = $request->json('settings');
+        $currentUser = Auth::user();
 
+        if (!isset($currentUser)){
+            throw new \Exception('Для данного действия необходима авторизация!');
+        }
+
+        $userId = $currentUser->getId();
+        $settMan = app()->make(UISettingsCacheManager::class);
+        $settMan->setValues($userId, $settings);
+    }
+
+    /**
+     * Получение настроек. Пример тела запроса:
+     * {"settings":["hello","test"]}
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     */
+    public function getSettings(Request $request){
+        $settingKeys = $request->json()->get("settings");
+        $currentUser = Auth::user();
+
+        if (!isset($currentUser)){
+            throw new \Exception('Для данного действия необходима авторизация!');
+        }
+
+        $userId = $currentUser->getId();
+        $settMan = app()->make(UISettingsCacheManager::class);
+        $settings = $settMan->getValues($userId, $settingKeys);
+        return json_encode($settings);
+    }
 
 }

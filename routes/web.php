@@ -106,6 +106,11 @@ Route::get('/getGroupSemester', function (\Illuminate\Http\Request $request){
     dd($result);
 });
 
+Route::post('/setSettings', 'DemoController@setSettings');
+Route::post('/getSettings', 'DemoController@getSettings');
+
+
+
 /*---------------------------------------------------------------------*/
 
 
@@ -309,15 +314,21 @@ Route::group(['prefix' => 'api'], function() {
     });
 
     /*-----------------------------------------------------------------------------
-   *                           ПРОГРАММЫ
+   *                                ПРОГРАММЫ
    *------------------------------------------------------------------------------
    */
     Route::group(['prefix' => 'program'], function () {
         Route::post('run', 'ProgramController@run');
         Route::get('byQuestion/{id}','ProgramController@getByQuestion');
-
     });
 
-
+    /*-----------------------------------------------------------------------------
+    *                             НАСТРОЙКИ ДЛЯ UI
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'uisettings'], function () {
+        Route::post('get', 'UISettingsController@getSettings');
+        Route::post('set', 'UISettingsController@setSettings');
+    });
 
 });

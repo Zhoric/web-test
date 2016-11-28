@@ -7,6 +7,7 @@ use Exception;
 use GivenAnswer;
 use ParamsSet;
 use Program;
+use QuestionType;
 use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Question;
@@ -46,7 +47,7 @@ class QuestionManager
 
         $this->_unitOfWork->commit();
 
-        if (isset($program)){
+        if ($question->getType() === QuestionType::WithProgram){
             $this->addQuestionProgram($question, $program, $paramSets);
         }
     }
@@ -75,7 +76,7 @@ class QuestionManager
 
         $this->_unitOfWork->commit();
 
-        if (isset($program)){
+        if ($question->getType() === QuestionType::WithProgram){
             $this->updateQuestionProgram($question, $program, $paramSets);
         }
     }
