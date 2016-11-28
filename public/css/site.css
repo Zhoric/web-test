@@ -127,6 +127,9 @@ span.radio-neutral {
 span.radio-neutral:hover {
   color: #16a085;
 }
+.text-center {
+  text-align: center;
+}
 .menu {
   width: 100%;
   height: 62px;

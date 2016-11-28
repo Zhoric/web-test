@@ -127,5 +127,8 @@ span.radio-neutral {
 span.radio-neutral:hover {
   color: #16a085;
 }
+.text-center {
+  text-align: center;
+}
 
 /*# sourceMappingURL=common.css.map */

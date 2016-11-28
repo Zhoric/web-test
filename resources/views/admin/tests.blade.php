@@ -26,19 +26,15 @@
         </div>
     </div>
 
-    {{--<div class="multiselect-wrap">--}}
-        {{--<div class="multiselect">--}}
-            {{--<ul data-bind="foreach: $root.multiselect.tags">--}}
-                {{--<li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: name"></span></li>--}}
-            {{--</ul>--}}
-        {{--</div>--}}
-        {{--<input data-bind="autocomplete: { data: $root.current.themes, format: $root.multiselect.show, onSelect: $root.multiselect.select}" value=""/>--}}
-    {{--</div>--}}
-
     <div class="org-accordion">
+        <!-- ko if: $root.filter.discipline() -->
         <div data-bind="click: $root.csed.test.toggleAdd" class="org-item">
             <span class="fa">&#xf067;</span>
         </div>
+        <!-- /ko -->
+        <!-- ko if: !$root.filter.discipline() && !$root.current.tests.length -->
+        <h3 class="text-center">Пожалуйста, выберите дисциплину</h3>
+        <!-- /ko -->
         <!-- ko if: $root.mode() === 'add'-->
             <div data-bind="template: {name: 'show-details', data: $root.current.test}"></div>
         <!-- /ko -->

@@ -446,9 +446,13 @@ $(document).ready(function(){
                     ));
                 }
             });
-            self.filter.discipline.subscribe(function(){
+            self.filter.discipline.subscribe(function(value){
                 self.mode('none');
-                self.get.tests();
+                if (value){
+                    self.get.tests();
+                    return;
+                }
+                self.current.tests([]);
             });
             self.filter.name.subscribe(function(){
                 self.get.tests();

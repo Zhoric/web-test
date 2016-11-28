@@ -127,6 +127,9 @@ span.radio-neutral {
 span.radio-neutral:hover {
   color: #16a085;
 }
+.text-center {
+  text-align: center;
+}
 #code-editor-modal {
   width: 800px;
   height: 500px;
