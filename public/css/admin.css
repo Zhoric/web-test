@@ -130,6 +130,9 @@ span.radio-neutral:hover {
 .text-center {
   text-align: center;
 }
+#compile-modal h3 {
+  white-space: pre-wrap;
+}
 .width100 {
   width: 100%;
 }
