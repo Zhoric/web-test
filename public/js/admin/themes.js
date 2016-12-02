@@ -436,10 +436,12 @@ $(document).ready(function(){
                 compile: function(){
                     var program = JSON.stringify(editor.getValue());
                     var params = [];
+
                     self.code.params.set().find(function(item){
+                        console.log(item);
                         var param = {
-                            input: item.input,
-                            expectedOutput: item.output
+                            input: item.input(),
+                            expectedOutput: item.expectedOutput()
                         };
                         params.push(param);
                     });
