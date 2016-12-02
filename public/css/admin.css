@@ -130,6 +130,10 @@ span.radio-neutral:hover {
 .text-center {
   text-align: center;
 }
+#compile-modal {
+  max-height: 450px;
+  overflow: auto;
+}
 #compile-modal h3 {
   white-space: pre-wrap;
 }
