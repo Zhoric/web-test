@@ -65,8 +65,7 @@ class CodeQuestionManager
      * @return mixed
      */
     public function runQuestionProgram($code,$programId){
-        try {
-            $dirPath = $this->fileManager->createDir(Auth::user());
+          $dirPath = $this->fileManager->createDir(Auth::user());
             $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
             $this->fileManager->putCodeInFile($code, $dirPath);
@@ -79,9 +78,6 @@ class CodeQuestionManager
             $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
            $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
 
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
         return $result;
 
     }

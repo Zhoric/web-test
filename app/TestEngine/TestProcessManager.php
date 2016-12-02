@@ -100,8 +100,7 @@ class TestProcessManager
      */
     public static function initTest($userId, $testId)
     {
-        //DEBUG COMMENT
-        //self::validateAttemptNumber($userId, $testId);
+        self::validateAttemptNumber($userId, $testId);
 
         $sessionId = TestSessionHandler::createTestSession($testId, $userId);
         return $sessionId;
@@ -112,7 +111,6 @@ class TestProcessManager
      * и списка вопросов, на которые уже были даны ответы.
      */
     public static function getNextQuestion($sessionId){
-        try{
             self::$_testManager = TestSessionHandler::getTestManager();
             self::$_session = TestSessionHandler::getSession($sessionId);
 
@@ -120,7 +118,6 @@ class TestProcessManager
 
             $suitableQuestions = self::getSuitableQuestionsIds();
             self::validateSuitableQuestions($suitableQuestions);
-
 
             if (self::$_testResult != null){
                 return self::$_testResult;
@@ -133,10 +130,6 @@ class TestProcessManager
                 self::$_session->getSessionId(),
                 $question->getTime());
 
-        } catch (Exception $exception){
-            return array('message' => $exception->getMessage());
-        }
-
         return self::$_testManager->getQuestionWithAnswers($nextQuestionId, false);
     }
 
@@ -145,6 +138,7 @@ class TestProcessManager
      * @param $sessionId - Идентификатор сессии.
      * @param QuestionAnswer $questionAnswer - Ответ на вопрос теста.
      * @return array
+     * @throws Exception
      */
     public static function processAnswer($sessionId, QuestionAnswer $questionAnswer){
         try{
@@ -154,10 +148,7 @@ class TestProcessManager
             $questionId = $questionAnswer->getQuestionId();
 
             self::validateTestSession($questionId);
-
-
-            //DEBUG COMMENT
-            //self::validateQuestionToAnswer($questionId);
+            self::validateQuestionToAnswer($questionId);
 
             $question = self::getQuestionManager()->getWithAnswers($questionId);
 
@@ -165,11 +156,16 @@ class TestProcessManager
             $answerText = self::getAnswerText($question, $questionAnswer);
 
             self::saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
-
             self::updateTestSession($questionId);
 
         } catch (Exception $exception){
-            return array('message' => 'Ошибка при обработке ответа: '.$exception->getMessage());
+            $questionId = $questionAnswer->getQuestionId();
+            $question = self::getQuestionManager()->getWithAnswers($questionId);
+            $text = self::getAnswerText($question, $questionAnswer);
+            self::saveQuestionAnswer(self::$_session, $questionId, 0, $text);
+            self::updateTestSession($questionId);
+
+            throw $exception;
         }
     }
 
@@ -186,6 +182,7 @@ class TestProcessManager
      * @param $testResultId
      */
     public static function calculateAndSaveResult($testResultId){
+
         $testResultMark = TestResultCalculator::calculate($testResultId);
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone('Europe/Moscow'));
@@ -193,6 +190,7 @@ class TestProcessManager
         $testResult = self::getTestResultManager()->getById($testResultId);
         $testResult->setMark($testResultMark);
         $testResult->setDateTime($now);
+
 
         self::$_testResult = $testResult;
         self::getTestResultManager()->update($testResult);
@@ -328,7 +326,7 @@ class TestProcessManager
 
         $attemptsAllowed = $test->getAttempts();
 
-        $extraAttempts = self::$_testResultManager->getExtraAttemptsCount($userId, $testId);
+        $extraAttempts = self::getTestResultManager()->getExtraAttemptsCount($userId, $testId);
         $lastAttempt = self::getTestManager()->getTestAttemptsUsedCount($userId, $testId);
 
         if ($attemptsAllowed != 0 && $lastAttempt >= $attemptsAllowed + $extraAttempts){
