@@ -37,6 +37,17 @@ class DemoController extends BaseController
 
     }
 
+    public function docker(){
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command_pattern = 'docker run -v $PWD/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet';
+        $command = 'echo hello wold';
+        $result =  exec("$command_pattern $command",$output);
+        dd($result,$output);
+        return;
+
+    }
+
 
     public function editor(){
         return view('editor');
