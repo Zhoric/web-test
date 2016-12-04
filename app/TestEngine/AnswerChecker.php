@@ -86,13 +86,10 @@ class AnswerChecker
         }
         $programId = $program->getId();
 
-        try {
+        
             $rightPercentage = self::getCodeQuestionManager()->runQuestionProgram($studentCode, $programId);
-        }
-        catch(Exception $e){
 
-            $rightPercentage = 0;
-        }
+
         return $rightPercentage;
     }
 
