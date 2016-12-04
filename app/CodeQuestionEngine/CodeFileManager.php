@@ -283,9 +283,9 @@ class CodeFileManager
             $student_output = file_get_contents("$dirPath/student_result_$i.txt");
 
             $info.="Тестовый случай №:$i\n";
-            $info.="Входные параметры: $input\n";
-            $info.="Ожидаемый вывод: $expected\n";
-            $info.="Вывод студента: $student_output\n";
+            $info.="Входные параметры:\n$input\n";
+            $info.="Ожидаемый вывод:\n$expected\n";
+            $info.="Вывод студента:\n$student_output\n";
         }
 
         return $info;
