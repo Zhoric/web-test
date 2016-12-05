@@ -3,7 +3,9 @@
 namespace TestEngine;
 
 use Exception;
+use GivenAnswer;
 use Managers\SettingsManager;
+use QuestionType;
 use Repositories\UnitOfWork;
 
 class TestResultCalculator
@@ -97,7 +99,7 @@ class TestResultCalculator
         $answers = self::getUnitOfWork()->givenAnswers()->getByTestResult($testResultId);
 
         foreach ($answers as $answer) {
-
+            $answer = self::processNullPointsAnswer($answer);
             if ($answer->getRightPercentage() === null) {
                 return null;
             }
@@ -110,6 +112,33 @@ class TestResultCalculator
             $studentMark += $complexity * $answer->getRightPercentage() * GlobalTestSettings::complexityDifferenceCoef;
         }
         return $maxMark != 0 ? ceil($studentMark/$maxMark) : 0;
+    }
+
+    /**
+     * Обработка ответа без оценки.
+     * Если оценка отсутствует у ответа на открытый многострочный вопрос - общий результат также невозможно подсчитать.
+     * Необходима проверка преподавателя.
+     * Если не проставлена оценка за другой тип вопроса, значит, ответ не был дан и будет оценён в 0 баллов.
+     * @param GivenAnswer $answer
+     * @return GivenAnswer - Возвращает ответ на вопрос с
+     * @throws Exception
+     */
+    private static function processNullPointsAnswer(GivenAnswer $answer){
+
+        if ($answer->getRightPercentage() === null) {
+            $questionAnswered = $answer->getQuestion();
+            if (!isset($questionAnswered)) {
+                throw new Exception('Невозможно подсчитать результат! Отсутствуют данные о вопросе!');
+            }
+
+            if ($questionAnswered->getType() !== QuestionType::OpenManyStrings) {
+                $answer->setRightPercentage(0);
+
+                self::$_unitOfWork->givenAnswers()->update($answer);
+                self::$_unitOfWork->commit();
+            }
+        }
+        return $answer;
     }
 
 }
