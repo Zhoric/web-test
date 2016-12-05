@@ -2,8 +2,10 @@
 @section('title', 'Тест')
 @section('style')
     <link rel="stylesheet" href="{{ URL::asset('css/test.css')}}"/>
+
 @endsection
 @section('javascript')
+    <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/ace.js') }}"></script>
     <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
     <script src="{{ URL::asset('js/student/test.js')}}"></script>

@@ -250,7 +250,7 @@
                 <h3 data-bind="text: $root.code.result.text"></h3>
             </div>
             <div>
-                <button class="fa arcticmodal-close">&#xf00c;</button>
+                <button class="arcticmodal-close width200">OK</button>
             </div>
         </div>
     </div>

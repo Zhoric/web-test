@@ -9,48 +9,58 @@
 
 @section('menu')
     <div class="menu">
-        <span>Главная</span>
-        <span>Результаты</span>
-        <span>Статистика</span>
-        <span><i class="fa">&#xf29c;</i>&nbsp;FAQ</span>
-        <span data-bind="click: $root.actions.logout">Выход</span>
+        <div class="current">
+            <span><i class="fa">&#xf015;</i>Главная</span>
+        </div>
+        <div>
+            <span><i class="fa">&#xf123;</i>Результаты</span>
+        </div>
+        <div>
+            <span><i class="fa">&#xf080;</i>Статистика</span>
+        </div>
+        <div>
+            <span><i class="fa">&#xf29c;</i>&nbsp;FAQ</span>
+        </div>
+        <div>
+            <span data-bind="click: $root.actions.logout">Выход<i class="fa">&#xf08b;</i></span>
+        </div>
     </div>
 @endsection
 
 @section('content')
     <div class="content">
-        <!-- ko foreach: $root.current.rows -->
-        <div class="row" data-bind="foreach: disciplines">
-            <div class="discipline" data-bind="click: $root.actions.disciplineDetails.bind($data, $parent), css: {'current': $root.current.disciplineId() === id()},">
-                <span data-bind="text: abbreviation"></span>
-            </div>
-        </div>
-            <!-- ko if: $root.current.rowId() === rowId() && $root.mode() === 'details' -->
-            <div class="details">
-                <!-- ko if: $root.current.tests().length -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2">Название теста</th>
-                            <th colspan="2">Попытки</th>
-                            <th rowspan="2">Действия</th>
-                        </tr>
-                        <tr>
-                            <th>Использовано</th>
-                            <th>Осталось</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: $root.current.tests">
-                        <tr data-bind="template: {name: 'test-template', data: test}"></tr>
-                    </tbody>
-                </table>
-                <!-- /ko -->
-                <!-- ko if: !$root.current.tests().length -->
-                    <h3>По данной дисциплине пока нет тестов</h3>
-                <!-- /ko -->
+        <div class="items">
+            <!-- ko foreach: $root.current.rows -->
+            <div class="row" data-bind="foreach: disciplines">
+                <div class="discipline">
+                    <div class="discipline-head" data-bind="click: $root.actions.details, css: {'current': $root.current.disciplineId() === id()},">
+                        <span data-bind="text: abbreviation"></span>
+                    </div>
+                    <div class="discipline-body">
+                        <span>5/10</span>
+                    </div>
+                </div>
             </div>
             <!-- /ko -->
-        <!-- /ko -->
+        </div>
+        <div class="filter">
+            <div class="filter-block">
+                <label class="title">Дисциплина</label>
+                <input class="custom-radio" type="text" placeholder="Название/аббревиатура"/>
+            </div>
+            <div class="filter-block">
+                <input class="custom-radio" type="radio" id="all-discipines"/><label for="all-discipines">Все</label>
+            </div>
+            <div class="filter-block">
+                <input class="custom-radio" type="radio" id="has-tests"/><label for="has-tests">Имеются не пройденные тесты</label>
+            </div>
+            <div class="filter-block">
+                <input class="custom-radio" type="radio" id="has-no-tests"/><label for="has-no-tests">Все тесты пройдены</label>
+            </div>
+            <div class="filter-block">
+                <span class="clear">Очистить</span>
+            </div>
+        </div>
     </div>
 @endsection
 
