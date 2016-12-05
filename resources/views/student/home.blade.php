@@ -8,23 +8,7 @@
 @endsection
 
 @section('menu')
-    <div class="menu">
-        <div class="current">
-            <span><i class="fa">&#xf015;</i>Главная</span>
-        </div>
-        <div>
-            <span><i class="fa">&#xf123;</i>Результаты</span>
-        </div>
-        <div>
-            <span><i class="fa">&#xf080;</i>Статистика</span>
-        </div>
-        <div>
-            <span><i class="fa">&#xf29c;</i>&nbsp;FAQ</span>
-        </div>
-        <div>
-            <span data-bind="click: $root.actions.logout">Выход<i class="fa">&#xf08b;</i></span>
-        </div>
-    </div>
+    @include('student.menu')
 @endsection
 
 @section('content')
@@ -55,33 +39,9 @@
                 <input class="custom-radio" type="radio" id="has-tests"/><label for="has-tests">Имеются не пройденные тесты</label>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="has-no-tests"/><label for="has-no-tests">Все тесты пройдены</label>
-            </div>
-            <div class="filter-block">
                 <span class="clear">Очистить</span>
             </div>
         </div>
     </div>
+    @include('shared.error-modal')
 @endsection
-
-<script type="text/html" id="test-template">
-    <td data-bind="text: subject"></td>
-    <td data-bind="text: $parent.attemptsMade"></td>
-    <td data-bind="text: $parent.attemptsLeft"></td>
-    <td><button data-bind="click: $root.actions.startTest, disable: !$parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
-</script>
-
-<div class="g-hidden">
-    <div class="box-modal" id="errors-modal">
-        <div>
-            <div>
-                <span class="fa">&#xf071;</span>
-                <h3>Произошла ошибка</h3>
-                <h4 data-bind="text: $root.errors.message"></h4>
-            </div>
-            <div class="button-holder">
-                <button data-bind="click: $root.errors.accept">OK</button>
-            </div>
-        </div>
-    </div>
-</div>

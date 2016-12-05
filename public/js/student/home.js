@@ -7,6 +7,8 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.errors = errors();
+
             self.current = {
                 user: ko.observable(),
                 disciplineId: ko.observable(0),
@@ -15,36 +17,17 @@ $(document).ready(function(){
                 rows: ko.observableArray([]),
                 rowId: ko.observable(0)
             };
-            self.mode = ko.observable('none');
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
+
+            self.filter = {
+                name: ko.observable(),
+                clear: function(){
+
                 },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
             };
 
             self.actions = {
-                disciplineDetails: function(parent, data){
-                    var c = self.current;
-                    if (c.disciplineId() === data.id()){
-                        self.current.disciplineId(0);
-                        self.current.rowId(0);
-                        self.mode('none');
-                        self.current.tests([]);
-                        return;
-                    }
-                    self.mode('details');
-                    self.current.disciplineId(data.id());
-                    self.current.rowId(parent.rowId());
-                    console.log('web');
-                    self.get.tests();
-                },
-                startTest: function(data){
-                    window.location.href = '/test/' + data.id();
+                details: function(data){
+                    window.location.href = '/discipline/' + data.id();
                 },
                 splitDisciplinesByRows: function(){
                     var row = [];
@@ -84,29 +67,14 @@ $(document).ready(function(){
                         }
                         self.errors.show(result.Message());
                     });
-                },
-                tests: function(){
-                    var url = '/api/tests/showForStudent?discipline=' + self.current.disciplineId();
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.tests(result.Data());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
                 }
             };
             self.get.disciplines();
 
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
-
             return {
                 current: self.current,
+                filter: self.filter,
                 actions: self.actions,
-                mode: self.mode,
                 errors: self.errors
             };
         };

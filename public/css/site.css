@@ -186,6 +186,9 @@ body {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
+.items h1 {
+  padding: 15px;
+}
 .filter {
   display: inline-block;
   background: #fff;
@@ -240,11 +243,39 @@ body {
 }
 .row .discipline-body {
   height: 110px;
-  background: #EEEEEE;
+  background: #EDEEF0;
   color: #5D8CAE;
   line-height: 110px;
   font-size: 40px;
   text-align: center;
+}
+.tests {
+  margin-top: 20px;
+}
+.tests .test {
+  background: #EDEEF0;
+  color: #000;
+  padding: 10px 20px;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+.tests .test:hover {
+  color: #5D8CAE;
+}
+.tests .test:hover span.start {
+  display: inline;
+}
+.tests .test:hover span.attempts {
+  display: none;
+}
+.tests .test span.attempts,
+.tests .test span.start {
+  float: right;
+}
+.tests .test span.start {
+  font-size: 20px;
+  cursor: pointer;
+  display: none;
 }
 input[type=radio].custom-radio {
   vertical-align: top;

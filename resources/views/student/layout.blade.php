@@ -12,15 +12,13 @@
     <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
     <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
 
     @yield('javascript')
 </head>
 <body>
     @yield('menu')
     @yield('content')
-
-    <div class="footer">
-
-    </div>
+    <div class="footer"></div>
 </body>
 </html>

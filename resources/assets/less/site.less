@@ -11,7 +11,7 @@
 
 @patronus: #5D8CAE;
 @porcelain: #F2F1EF;
-@patronus-shade: #EEEEEE;
+@patronus-shade: #EDEEF0;
 @filch: #6C7A89;
 @unimportant: #7f8c8d;
 
@@ -70,6 +70,9 @@ body{
   height: auto;
   padding: 20px;
   .border-radius(5px);
+  h1{
+    padding: 15px;
+  }
 }
 .filter{
   display: inline-block;
@@ -130,6 +133,33 @@ body{
     }
   }
 
+}
+.tests{
+  margin-top: 20px;
+  .test{
+    background: @patronus-shade;
+    color: @black;
+    padding: 10px 20px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    &:hover{
+      color: @patronus;
+      span.start{
+        display: inline;
+      }
+      span.attempts{
+        display: none;
+      }
+    }
+    span.attempts, span.start{
+      float:right;
+    }
+    span.start{
+      font-size: 20px;
+      cursor: pointer;
+      display: none;
+    }
+  }
 }
 
 input[type=radio].custom-radio{
