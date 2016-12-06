@@ -3,6 +3,7 @@
 namespace Managers;
 
 use Discipline;
+use DisciplineInfoViewModel;
 use Repositories\UnitOfWork;
 use Theme;
 
@@ -105,7 +106,51 @@ class DisciplineManager
         }
         $groupId = $userGroup->getGroup()->getId();
 
-        return $this->_unitOfWork->disciplines()
+        $discplines = $this->_unitOfWork->disciplines()
             ->getActualDisciplinesForGroup($groupId, $currentSemester);
+
+        $discplinesVms = [];
+
+        foreach ($discplines as $discpline){
+            $testsCount = $this->getTestsCount($discpline);
+            $passedCount = $this->getTestsPassedCount($discpline, $studentId);
+            $disciplineVM = new DisciplineInfoViewModel($discpline, $testsCount, $passedCount);
+            array_push($discplinesVms, $disciplineVM);
+        }
+
+        return $discplinesVms;
+    }
+
+    /**
+     * Подсчёт общего количества тестов по дисциплине.
+     * @param Discipline $discipline
+     * @return int
+     */
+    private function getTestsCount(Discipline $discipline){
+        $testsCount = 0;
+        $tests = $this->_unitOfWork->tests()->getByDiscipline($discipline->getId());
+
+        foreach ($tests as $test){
+            if ($test->isActive()){
+                $testsCount++;
+            }
+        }
+
+        return $testsCount;
+    }
+
+    /**
+     * Подсчёт количества пройденных тестов по дисциплине.
+     * (пройденным считается тест, который студент пытался пройти хотя бы один раз.
+     * @param Discipline $discipline
+     * @return mixed
+     */
+    private function getTestsPassedCount(Discipline $discipline, $studentId){
+        $count = $this
+            ->_unitOfWork
+            ->tests()
+            ->getPassedTestsCount($studentId, $discipline->getId());
+
+        return intval($count);
     }
 }

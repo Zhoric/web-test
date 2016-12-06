@@ -215,7 +215,7 @@ class Test extends BaseEntity implements JsonSerializable
     /**
      * @return boolean
      */
-    public function isIsActive()
+    public function IsActive()
     {
         return $this->isActive;
     }

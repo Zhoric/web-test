@@ -6,9 +6,13 @@ use DisciplineLecturer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Discipline;
+use Group;
 use Illuminate\Support\Facades\DB;
 use PaginationResult;
 use ProfileDiscipline;
+use Test;
+use TestTheme;
+use Theme;
 
 class DisciplineRepository extends BaseRepository
 {
@@ -84,7 +88,10 @@ class DisciplineRepository extends BaseRepository
     function getActualDisciplinesForGroup($groupId, $currentSemester){
         $qb = $this->repo->createQueryBuilder('d');
         $query = $qb->join(\DisciplinePlan::class, 'dp', Join::WITH, 'dp.discipline = d.id')
-            ->join(\Group::class, 'g', Join::WITH, 'g.studyplan = dp.studyplan')
+            ->join(Group::class, 'g', Join::WITH, 'g.studyplan = dp.studyplan')
+            ->join(Theme::class, 'th', Join::WITH, 'th.discipline = d.id')
+            ->join(TestTheme::class, 'tt', Join::WITH, 'tt.theme = th.id')
+            ->join(Test::class, 't', Join::WITH, 'tt.test = t.id AND t.isActive = true')
             ->where('g.id = :groupId AND dp.startSemester <= :currentSemester')
             ->setParameter('groupId', $groupId)
             ->setParameter('currentSemester', $currentSemester)

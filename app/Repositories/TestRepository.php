@@ -79,4 +79,18 @@ class TestRepository extends BaseRepository
 
         return $query->execute();
     }
+
+    public function getPassedTestsCount($userId, $disciplineId){
+
+        $qb = $this->repo->createQueryBuilder('t');
+        $query = $qb
+            ->select($qb->expr()->countDistinct('t.id'))
+            ->join(\TestResult::class, 'tr', Join::WITH, 'tr.test = t.id')
+            ->where('t.discipline = :discipline AND tr.user = :user')
+            ->setParameter('discipline', $disciplineId)
+            ->setParameter('user', $userId)
+            ->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
 }

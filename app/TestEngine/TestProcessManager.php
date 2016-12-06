@@ -130,6 +130,8 @@ class TestProcessManager
                 self::$_session->getSessionId(),
                 $question->getTime());
 
+            self::updateTestSession($nextQuestionId);
+
         return self::$_testManager->getQuestionWithAnswers($nextQuestionId, false);
     }
 
@@ -156,14 +158,12 @@ class TestProcessManager
             $answerText = self::getAnswerText($question, $questionAnswer);
 
             self::saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
-            self::updateTestSession($questionId);
 
         } catch (Exception $exception){
             $questionId = $questionAnswer->getQuestionId();
             $question = self::getQuestionManager()->getWithAnswers($questionId);
             $text = self::getAnswerText($question, $questionAnswer);
             self::saveQuestionAnswer(self::$_session, $questionId, 0, $text);
-            self::updateTestSession($questionId);
 
             throw $exception;
         }
@@ -310,7 +310,8 @@ class TestProcessManager
     private static function validateQuestionToAnswer($questionId){
         $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
 
-        if (in_array($questionId, $answeredQuestionsIds)){
+        if (in_array($questionId, $answeredQuestionsIds) &&
+                $questionId != $answeredQuestionsIds[count($answeredQuestionsIds) - 1]){
             throw new Exception('Вы уже отвечали на этот вопрос!');
         }
     }
