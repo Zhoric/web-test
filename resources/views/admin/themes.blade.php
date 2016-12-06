@@ -239,7 +239,7 @@
             <div id="editor"></div>
             <input type="button" id="button" value="Скомпилировать" data-bind="click: $root.code.compile"/>
             <input type="button" class="cancel arcticmodal-close" value="Отмена">
-            <input type="button" class="save arcticmodal-close" data-bind="click: $root.code.approve" value="Сохранить">
+            <input type="button" class="save" data-bind="click: $root.code.approve" value="Сохранить">
         </div>
     </div>
 </div>
@@ -255,3 +255,18 @@
         </div>
     </div>
 </div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="save-code-modal">
+        <div class="">
+            <div>
+                <h3>Программный код будет показан студенту во время тестирования. Вы действительно хотите сохранить написанный код?</h3>
+            </div>
+            <div>
+                <button class="arcticmodal-close width200" data-bind="click: $root.code.save">OK</button>
+                <button class="arcticmodal-close width200" data-bind="click: $root.code.clear">Очистить</button>
+            </div>
+        </div>
+    </div>
+</div>
+

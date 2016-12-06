@@ -449,7 +449,16 @@ $(document).ready(function(){
                     self.post.program(json);
                 },
                 approve: function(){
+                    commonHelper.modal.open('#save-code-modal');
+                },
+                save: function(){
                     self.code.text(editor.getValue());
+                    commonHelper.modal.close('#code-editor-modal');
+                },
+                clear: function(){
+                    self.code.text('');
+                    editor.setValue('');
+                    commonHelper.modal.close('#code-editor-modal');
                 },
                 fill: function(data){
                     self.code.params.set(data.paramSets());
