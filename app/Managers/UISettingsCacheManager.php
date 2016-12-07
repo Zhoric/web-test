@@ -19,6 +19,11 @@ class UISettingsCacheManager
     private $_redisClient;
 
     /**
+     * Время хранения настроек в кэше.
+     */
+    const cacheExpiration = '+ 1 day';
+
+    /**
      * @return Redis
      */
     private function getRedisClient(){
@@ -49,11 +54,12 @@ class UISettingsCacheManager
     /**
      * Установка значений настроек.
      * @param $userId
-     * @param $settings
+     * @param $settings - список пар "ключ - значение".
      */
     public function setValues($userId, $settings){
         foreach ($settings as $key => $value){
             $this->getRedisClient()->set($key.$userId, $value);
+            $this->getRedisClient()->expireat($key.$userId, strtotime(self::cacheExpiration));
         }
     }
 }
