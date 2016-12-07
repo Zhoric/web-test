@@ -419,17 +419,13 @@ class TestProcessManager
         $answerText = '';
         switch ($questionType){
             case QuestionType::ClosedOneAnswer: {
-                foreach ($answers as $answer){
-                    if (in_array($answer->getId(), $studentAnswersIds)){
-                        $answerText .= $answer->getText().'; ';
-                    }
-                }
+                $answerText = $answers[0]->getText();
                 break;
             }
             case QuestionType::ClosedManyAnswers: {
                 foreach ($answers as $answer){
                     if (in_array($answer->getId(), $studentAnswersIds)){
-                        $answerText .= $answer->getText().'; ';
+                        $answerText .= $answer->getText().'</answer>';
                     }
                 }
                 break;
