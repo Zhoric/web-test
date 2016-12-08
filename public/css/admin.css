@@ -483,6 +483,17 @@ button.move:hover {
 .text-center {
   text-align: center;
 }
+.a-style-none a,
+.a-style-none a:hover {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 0;
+}
+h3 {
+  color: #6C7A89;
+}
 input {
   background: #fff;
   padding: 0;
@@ -536,6 +547,22 @@ input {
   margin: 0 8px;
   font-size: 23px;
 }
+.items .result a,
+.items .result a:hover {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 0;
+}
+.items .result a {
+  display: block;
+  width: 100%;
+  border: 1px solid #BFBFBF;
+}
+.items .result a:hover {
+  border: 1px solid #5D8CAE;
+}
 .details {
   border-top: 1px solid #BFBFBF;
   border-bottom: 1px solid #BFBFBF;
@@ -581,6 +608,14 @@ input {
 .details-row.theme span {
   min-width: 100px;
   width: 15%;
+}
+.details-row.date label {
+  float: right;
+  position: relative;
+  top: -20px;
+  right: 5px;
+  color: #BFBFBF;
+  font-size: 12px;
 }
 .details.discipline .profile {
   width: 98%;
@@ -679,7 +714,7 @@ table.questions td:last-child {
   text-align: right;
 }
 .action-button {
-  width: 98%;
+  width: 100%;
   background: #EDEEF0;
   color: #6C7A89;
   cursor: pointer;

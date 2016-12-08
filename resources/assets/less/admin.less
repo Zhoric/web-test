@@ -14,9 +14,19 @@
 @grey: @normal-grey;
 @warning: #E29C45;
 
-//@patronus: #5D8CAE;
+.a-style-none{
+  a, a:hover{
+    margin:0;
+    padding:0;
+    color: @black;
+    text-decoration: none;
+    border-bottom: 0;
+  }
+}
 
-
+h3{
+  color: @filch;
+}
 
 input{
   background: @white;
@@ -78,6 +88,20 @@ input{
   }
 }
 
+.items{
+  .result{
+    .a-style-none();
+    a{
+      display: block;
+      width: 100%;
+      border:1px solid @akcio;
+      &:hover{
+        border: 1px solid @patronus;
+      }
+    }
+  }
+}
+
 .details{
   border-top: 1px solid @akcio;
   border-bottom: 1px solid @akcio;
@@ -122,6 +146,16 @@ input{
   span{
     min-width:100px;
     width:15%;
+  }
+}
+.details-row.date{
+  label{
+    float: right;
+    position: relative;
+    top: -20px;
+    right: 5px;
+    color: @akcio;
+    font-size: 12px;
   }
 }
 

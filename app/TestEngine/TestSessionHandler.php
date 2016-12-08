@@ -121,7 +121,7 @@ class TestSessionHandler
     private static function initializeSession($sessionId, $userId, Test $test){
         $testId = $test->getId();
         $testEndTime = $date = new DateTime('+'.$test->getTimeTotal().' seconds');
-       // $testEndTime = $date = new DateTime('+45 seconds');
+        //$testEndTime = $date = new DateTime('+50 seconds');
 
         $testEndTime = $testEndTime->format(self::dateSerializationFormat);
         $answersQuality = 0;
