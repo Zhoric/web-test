@@ -9,16 +9,7 @@ $(document).ready(function(){
     var testsViewModel = function(){
         return new function(){
             var self = this;
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+            self.errors = errors();
             self.current = {
                 test: ko.validatedObservable({
                     id: ko.observable(0),
@@ -55,25 +46,14 @@ $(document).ready(function(){
                             message: 'Только целое десятичное число'
                         }
                     }),
-                    type: ko.observable(0),
+                    type: ko.observable(true),
                     isActive: ko.observable(true),
                     isRandom: ko.observable(true),
                     themes: ko.observableArray([])
                 }),
                 tests: ko.observableArray([]),
 
-                disciplines: ko.observableArray([]),
-
-                types: ko.observableArray([
-                    {
-                        id: ko.observable(1),
-                        name: ko.observable('Контроль знаний')
-                    },
-                    {
-                        id: ko.observable(2),
-                        name: ko.observable('Обучающий')
-                    }]),
-                type: ko.observable()
+                disciplines: ko.observableArray([])
             };
             self.filter = {
                 name: ko.observable(''),
@@ -97,12 +77,12 @@ $(document).ready(function(){
                     self.validationTooltip.init(selector);
                 }
             };
-            self.toggleCurrent = {
+            self.alter = {
                 fill: {
                     test: function(data){
                         var minutes = Math.floor(data.timeTotal()/60);
                         var seconds = data.timeTotal()%60;
-                        self.toggleCurrent.fill.type(data.type());
+                        var type = data.type() === 1;
 
                         self.current.test()
                             .id(data.id())
@@ -111,16 +91,10 @@ $(document).ready(function(){
                             .timeTotal(data.timeTotal())
                             .minutes(minutes ? minutes : '00')
                             .seconds(seconds ? seconds : '00')
-                            .type(data.type())
+                            .type(type)
                             .isActive(data.isActive())
                             .isRandom(data.isRandom());
                         self.get.testThemes(data.id());
-                    },
-                    type: function(id){
-                        var type = self.current.types().find(function(item){
-                            return item.id() === id;
-                        });
-                        self.current.type(type);
                     }
                 },
                 empty: {
@@ -132,11 +106,10 @@ $(document).ready(function(){
                             .timeTotal(0)
                             .minutes('')
                             .seconds('')
-                            .type(0)
+                            .type(true)
                             .isActive(true)
                             .isRandom(true)
                             .themes([]);
-                        self.current.type('');
                         self.multiselect.empty();
                     }
                 },
@@ -150,7 +123,7 @@ $(document).ready(function(){
                             subject: t.subject(),
                             attempts: t.attempts(),
                             timeTotal: totalTime,
-                            type: t.type(),
+                            type: t.type() ? 1 : 2,
                             isActive: t.isActive(),
                             isRandom: t.isRandom()
                         };
@@ -191,20 +164,23 @@ $(document).ready(function(){
                         asFalse: function(){
                             self.current.test().isRandom(false);
                         }
+                    },
+                    type: {
+                        asTrue: function(){
+                            self.current.test().type(true);
+                        },
+                        asFalse: function(){
+                            self.current.test().type(false);
+                        }
                     }
                 },
                 check: {
                     test: function(){
                         var test = self.current.test;
-                        var selector = '.approve-btn';
+                        var selector = '.save-button';
 
                         if (!test.isValid()){
                             self.validationTooltip.open(selector, 'Поля не заполнены');
-                            return false;
-                        }
-
-                        if (!self.current.type()){
-                            self.validationTooltip.open(selector, 'Тип не выбран');
                             return false;
                         }
 
@@ -217,36 +193,7 @@ $(document).ready(function(){
                     }
                 }
             };
-            self.pagination = {
-                currentPage: ko.observable(1),
-                pageSize: ko.observable(10),
-                itemsCount: ko.observable(1),
-                totalPages: ko.observable(1),
-
-                selectPage: function(page){
-                    self.pagination.currentPage(page);
-                    self.get.tests();
-                },
-                dotsVisible: function(index){
-                    var total = self.pagination.totalPages();
-                    var current = self.pagination.currentPage();
-                    if (total > 11 && index == total-1 && index > current + 2  ||total > 11 && index == current - 1 && index > 3)  {
-                        return true;
-                    }
-                    return false;
-                },
-                pageNumberVisible: function(index){
-                    var total = self.pagination.totalPages();
-                    var current = self.pagination.currentPage();
-                    if (total < 12 ||
-                        index > (current - 2) && index < (current + 2) ||
-                        index > total - 2 ||
-                        index < 3) {
-                        return true;
-                    }
-                    return false;
-                },
-            };
+            self.pagination = pagination();
             self.multiselect = {
                 data: ko.observableArray([]),
                 tags: ko.observableArray([]),
@@ -264,17 +211,14 @@ $(document).ready(function(){
                     self.multiselect.tags.remove(data);
                 },
                 empty: function(){
-                    console.log('empty');
                     self.multiselect.tags([]);
                 },
                 fill: function(){
                     var testThemes = self.current.test().themes();
-                    console.log('fill');
                     self.multiselect.data().find(function(item){
                         var id = item.id();
                         testThemes.find(function(theme){
                             if (theme.id() === id){
-                                //self.multiselect.tags.push(item);
                                 self.multiselect.select(item);
                             }
                         });
@@ -290,16 +234,16 @@ $(document).ready(function(){
                         }
                         else{
                             self.mode('info');
-                            self.toggleCurrent.fill.test(data);
+                            self.alter.fill.test(data);
                         }
                     },
                     toggleAdd: function(){
-                        self.toggleCurrent.empty.test();
+                        self.alter.empty.test();
                         self.mode() === 'add' ? self.mode('none') : self.mode('add');
-                        self.validationTooltip.checkIfExists('.approve-btn');
+                        self.validationTooltip.checkIfExists('.save-button');
                     },
                     startRemove: function(data){
-                        self.toggleCurrent.fill.test(data);
+                        self.alter.fill.test(data);
                         self.mode('delete');
                         self.toggleModal('#delete-modal', '');
                     },
@@ -308,16 +252,16 @@ $(document).ready(function(){
                     },
                     startEdit: function(){
                         self.mode('edit');
-                        self.validationTooltip.checkIfExists('.approve-btn');
+                        self.validationTooltip.checkIfExists('.save-button');
                     },
                     update: function(){
-                        if (!self.toggleCurrent.check.test()) return;
+                        if (!self.alter.check.test()) return;
                         self.mode() === 'add' ? self.post.test('create') : self.post.test('update');
                     },
                     cancel: function(){
                         if (self.mode() === 'add' || self.mode() === 'edit'){
                             self.mode('none');
-                            self.toggleCurrent.empty.test();
+                            self.alter.empty.test();
                             return;
                         }
                         self.mode('info');
@@ -331,7 +275,7 @@ $(document).ready(function(){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
                             self.current.disciplines(result.Data());
-                            self.toggleCurrent.set.filter();
+                            self.alter.set.filter();
                             return;
                         }
                         self.errors.show(result.Message());
@@ -384,13 +328,13 @@ $(document).ready(function(){
             self.post = {
                 test: function(action){
                     var url = '/api/tests/' + action;
-                    var json = self.toggleCurrent.stringify.test();
+                    var json = self.alter.stringify.test();
 
                     $.post(url, json, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
                             self.mode('none');
-                            self.toggleCurrent.empty.test();
+                            self.alter.empty.test();
                             self.get.tests();
                             return;
                         }
@@ -446,6 +390,10 @@ $(document).ready(function(){
                     ));
                 }
             });
+            self.pagination.currentPage.subscribe(function(value){
+                self.get.tests();
+            });
+
             self.filter.discipline.subscribe(function(value){
                 self.mode('none');
                 if (value){
@@ -457,17 +405,12 @@ $(document).ready(function(){
             self.filter.name.subscribe(function(){
                 self.get.tests();
             });
-            self.current.type.subscribe(function(value){
-                if (value){
-                    self.current.test().type(value.id());
-                }
-            });
 
             return {
                 current: self.current,
                 pagination: self.pagination,
                 multiselect: self.multiselect,
-                toggleCurrent: self.toggleCurrent,
+                alter: self.alter,
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,

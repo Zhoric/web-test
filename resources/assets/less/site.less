@@ -9,98 +9,13 @@
 @crimson-red: #D24D57;
 @warning: #E29C45;
 
-@patronus: #5D8CAE;
-@porcelain: #F2F1EF;
-@patronus-shade: #EDEEF0;
-@filch: #6C7A89;
-@unimportant: #7f8c8d;
 
 
-label.title{
-  display: block;
-  font-size: 12px;
-  color: @unimportant;
-  margin-bottom: 3px;
-}
 
-body{
-  background: @porcelain;
-  font-family: 'Roboto Regular' !important;
-}
-.menu{
-  height: 50px;
-  width: 100%;
-  background: @white;
-  div{
-    height: 100%;
-    width: auto;
-    color: @black;
-    display: inline-block;
-    padding: 0 10px;
-    cursor: pointer;
-    margin-right: -4px;
-    &:hover{
-      background: @patronus;
-      color: @white;
-    }
-    &.current{
-      background: @patronus;
-      color: @white;
-    }
-    &:last-child{
-      float: right;
-    }
-  }
-  span{
-    line-height: 50px;
-    font-size: 16px;
-    i{
-      padding: 0 5px;
-    }
-  }
-}
-.content{
-  width: 90%;
-  margin: 5% auto;
-}
-.items{
-  display: inline-block;
-  background: @white;
-  width: 70%;
-  height: auto;
-  padding: 20px;
-  .border-radius(5px);
-  h1{
-    padding: 15px;
-  }
-}
-.filter{
-  display: inline-block;
-  background: @white;
-  float: right;
-  width: 20%;
-  height: auto;
-  padding: 20px;
-  .border-radius(5px);
-  position: fixed;
-  margin: 0 3%;
-  input[type=text]{
-    width: 100%;
-  }
-  .filter-block{
-    width: 100%;
-    margin-bottom: 7px;
-  }
-  span.clear{
-    float: right;
-    font-size: 15px;
-    color: @unimportant;
-    cursor: pointer;
-    &:hover{
-      color: @patronus;
-    }
-  }
-}
+
+
+
+
 
 .row{
   width: 100%;
@@ -138,9 +53,10 @@ body{
   margin-top: 20px;
   .test{
     background: @patronus-shade;
-    color: @black;
+    color: @filch;
+    cursor: pointer;
     padding: 10px 20px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     font-size: 16px;
     &:hover{
       color: @patronus;

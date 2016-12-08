@@ -4,7 +4,7 @@
 
 @mainTheme: @greensea;
 @buttonGreen: @jungleGreen;
-@buttonHover: @mainTheme;
+@buttonHover: @patronus;
 @crimson-red: #D24D57;
 @danger: @alizarin;
 @important: @pomegranade;
@@ -14,10 +14,169 @@
 @grey: @normal-grey;
 @warning: #E29C45;
 
-@patronus: #5D8CAE;
+//@patronus: #5D8CAE;
+
+input{
+  background: @white;
+  padding:0;
+  height: 30px;
+  font-size: 15px;
+  border:1px solid #d3d3d3;
+}
+.inline{
+  display: inline-block;
+}
+
+.items{
+  &-head{
+    margin: 15px 0;
+    label.adder{
+      float: right;
+      line-height: 22px;
+    }
+    h1{
+      display: inline;
+    }
+    h3{
+      color: @filch;
+    }
+  }
+  &-body{
+    margin: 20px 0;
+  }
+}
+
+.items{
+  &.disciplines{
+    .item .tags{
+      text-align: right;
+      float:right;
+      min-width: 80px;
+    }
+  }
+  .item{
+    background: @patronus-shade;
+    color: @filch;
+    font-size: 16px;
+    padding: 9px;
+    cursor: pointer;
+    margin: 1px 0;
+    &:hover, &.current{
+      background: @patronus;
+      color: @white;
+      span.tag{
+        color: @white;
+      }
+    }
+    span.tag{
+      color: #5D8CAE;
+      margin: 0 8px;
+      font-size: 23px;
+    }
+  }
+}
+
+.details{
+  border-top: 1px solid @akcio;
+  border-bottom: 1px solid @akcio;
+}
+
+.details-column{
+  margin: 1%;
+  input[type=text], select, textarea{
+    width: 100%;
+    &.time{
+      width: 50px;
+      text-align:center;
+    }
+    &.attempts{
+      width: 130px;
+      text-align: center;
+    }
+  }
+}
+
+.details-row.float-buttons{
+  height: 60px;
+  button{
+    float:right;
+    margin: 0 1% 0 0;
+  }
+}
+.details-row.variants{
+  input{
+    width: 93%;
+    height: 40px;
+  }
+  button{
+    float: right;
+  }
+}
+
+.details.discipline{
+  .profile{
+    width: 98%;
+  }
+  .themes-table{
+    width: 100%;
+    padding: 15px 0;
+    border-collapse: collapse;
+    margin: 10px 0;
+    th{
+      padding: 10px;
+    }
+    tbody tr{
+      &:nth-child(odd){
+        background: @patronus-shade;
+      }
+      &:nth-child(even){
+        background: @silver;
+      }
+    }
+    td{
+      padding: 5px;
+      width: 80%;
+      &:first-child{
+        width: 5%;
+        text-align: center;
+      }
+      &:last-child{
+        width: 11%;
+        text-align: right;
+      }
+    }
+    td[colspan]{
+      text-align: center;
+      font-size: 19px;
+      padding: 12px;
+      @color: @filch;
+      &:hover{
+        cursor: pointer;
+        background: @patronus-shade;
+        color: @filch;
+      }
+    }
+    button.remove{
+      background: @crimson-red;
+    }
+    a{
+      color: @black;
+      text-decoration: none;
+      border-bottom: 1px dashed @filch;
+      &:hover{
+        color: @patronus;
+        border-bottom: 1px dashed @patronus;
+      }
+    }
+  }
+}
+.details.test{
+
+}
+
 
 //@patronus-shade: #D2D7D3;
-@patronus-shade: #eeeeee;
+//@patronus-shade: #eeeeee;
 
 #compile-modal{
   max-height: 450px;
@@ -37,48 +196,48 @@
 .width100{
   width: 100%;
 }
-input[type=checkbox]{
-  vertical-align: top;
-  width: 17px;
-  height: 17px;
-  margin: 0 3px 0 0;
-  & + label {
-    cursor: pointer;
-    font-size: 17px;
-    line-height: 30px;
-  }
-  &:not(checked) {
-    position: absolute;
-    opacity: 0;
-    & + label {
-      position: relative;
-      padding: 0 0 0 35px;
-      &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 22px;
-        height: 22px;
-        border: 1px solid #CDD1DA;
-        background: #FFF;
-      }
-      &:after {
-        font-family: 'FontAwesome';
-        font-size: 17px;
-        content: '\f00c';
-        color: @mainTheme;
-        position: absolute;
-        left: 4px;
-        opacity: 0;
-        transition: all .2s;
-      }
-    }
-  }
-  &:checked + label:after {
-    opacity: 1;
-  }
-}
+//input[type=checkbox]{
+//  vertical-align: top;
+//  width: 17px;
+//  height: 17px;
+//  margin: 0 3px 0 0;
+//  & + label {
+//    cursor: pointer;
+//    font-size: 17px;
+//    line-height: 30px;
+//  }
+//  &:not(checked) {
+//    position: absolute;
+//    opacity: 0;
+//    & + label {
+//      position: relative;
+//      padding: 0 0 0 35px;
+//      &:before {
+//        content: '';
+//        position: absolute;
+//        top: 0;
+//        left: 0;
+//        width: 22px;
+//        height: 22px;
+//        border: 1px solid #CDD1DA;
+//        background: #FFF;
+//      }
+//      &:after {
+//        font-family: 'FontAwesome';
+//        font-size: 17px;
+//        content: '\f00c';
+//        color: @mainTheme;
+//        position: absolute;
+//        left: 4px;
+//        opacity: 0;
+//        transition: all .2s;
+//      }
+//    }
+//  }
+//  &:checked + label:after {
+//    opacity: 1;
+//  }
+//}
 span{
   &.ok{
     color: @mainTheme;
@@ -237,31 +396,31 @@ span{
   }
 }
 
-.filter{
-  height: 100px;
-  border-bottom: 20px solid @white;
-  padding: 20px 20px 0;
-  div{
-    display: inline-block;
-    margin: 10px 0 0 10px;
-    width: 48%;
-  }
-  label{
-    .label();
-  }
-  input{
-    padding: 6px;
-    min-width: 200px;
-    width: 95%;
-  }
-  select{
-    font-size: 15px;
-    height: 33px;
-    margin: 0;
-    min-width: 200px;
-    width: 100%;
-  }
-}
+//.filter{
+//  height: 100px;
+//  border-bottom: 20px solid @white;
+//  padding: 20px 20px 0;
+//  div{
+//    display: inline-block;
+//    margin: 10px 0 0 10px;
+//    width: 48%;
+//  }
+//  label{
+//    .label();
+//  }
+//  input{
+//    padding: 6px;
+//    min-width: 200px;
+//    width: 95%;
+//  }
+//  select{
+//    font-size: 15px;
+//    height: 33px;
+//    margin: 0;
+//    min-width: 200px;
+//    width: 100%;
+//  }
+//}
 
 .menu{
   top: 0;
@@ -353,54 +512,54 @@ span{
 }
 
 table{
-  &.theme{
-    width: 97%;
-    padding: 15px 0;
-    border-collapse: collapse;
-    border-top: 1px solid @light-grey;
-    cellpadding: 10px;
-    text-align:center;
-    th{
-      padding: 10px;
-    }
-    tbody tr{
-      &:nth-child(odd){
-        background: @light-grey;
-      }
-      &:nth-child(even){
-        background: @normal-grey;
-      }
-    }
-    td{
-      padding: 5px;
-      width: 7%;
-      &:nth-child(2){
-        width: 80%;
-        text-align: left;
-      }
-    }
-    button{
-      width: 35px;
-      height: 30px;
-    }
-    a{
-      border-bottom: 0;
-      &:hover{
-        color: @buttonGreen;
-      }
-    }
-    &s {
-      .width100();
-      td{
-        &:first-child{
-          width: 50%;
-        }
-        &:nth-child(2), &:nth-child(3){
-          width: 13%;
-        }
-      }
-    }
-  }
+  //&.theme{
+  //  width: 97%;
+  //  padding: 15px 0;
+  //  border-collapse: collapse;
+  //  border-top: 1px solid @light-grey;
+  //  cellpadding: 10px;
+  //  text-align:center;
+  //  th{
+  //    padding: 10px;
+  //  }
+  //  tbody tr{
+  //    &:nth-child(odd){
+  //      background: @light-grey;
+  //    }
+  //    &:nth-child(even){
+  //      background: @normal-grey;
+  //    }
+  //  }
+  //  td{
+  //    padding: 5px;
+  //    width: 7%;
+  //    &:nth-child(2){
+  //      width: 80%;
+  //      text-align: left;
+  //    }
+  //  }
+  //  button{
+  //    width: 35px;
+  //    height: 30px;
+  //  }
+  //  a{
+  //    border-bottom: 0;
+  //    &:hover{
+  //      color: @buttonGreen;
+  //    }
+  //  }
+  //  &s {
+  //    .width100();
+  //    td{
+  //      &:first-child{
+  //        width: 50%;
+  //      }
+  //      &:nth-child(2), &:nth-child(3){
+  //        width: 13%;
+  //      }
+  //    }
+  //  }
+  //}
   &.students-table{
     width: 100%;
     padding: 15px 0;

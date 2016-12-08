@@ -1,6 +1,7 @@
 /**
  * Created by nyanjii on 19.10.16.
  */
+
 $(document).ready(function(){
 
     var themeViewModel = function(){
@@ -9,16 +10,7 @@ $(document).ready(function(){
 
             self.theme = ko.observable({});
 
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+            self.errors = errors();
 
             self.current = {
                 result: ko.observable(),

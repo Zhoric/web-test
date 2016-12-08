@@ -11,11 +11,8 @@ $(document).ready(function(){
 
             self.current = {
                 user: ko.observable(),
-                disciplineId: ko.observable(0),
                 disciplines: ko.observableArray([]),
-                tests: ko.observableArray([]),
-                rows: ko.observableArray([]),
-                rowId: ko.observable(0)
+                rows: ko.observableArray([])
             };
 
             self.filter = {
@@ -27,7 +24,7 @@ $(document).ready(function(){
 
             self.actions = {
                 details: function(data){
-                    window.location.href = '/discipline/' + data.id();
+                    window.location.href = '/discipline/' + data.discipline.id();
                 },
                 splitDisciplinesByRows: function(){
                     var row = [];
@@ -60,7 +57,6 @@ $(document).ready(function(){
                     $.get(url, function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()){
-                            console.log(result);
                             self.current.disciplines(result.Data());
                             self.actions.splitDisciplinesByRows();
                             return;

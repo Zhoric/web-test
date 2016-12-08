@@ -8,13 +8,39 @@
 
 @section('content')
 <div class="content">
+    <div class="items disciplines">
+        <div class="items-head">
+            <h1>Администрирование дисциплин</h1>
+            <label class="adder" data-bind="click: $root.csed.startAdd">Добавить</label>
+        </div>
+        <!-- ko if: $root.mode() === 'add'-->
+        <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
+        <!-- /ko -->
+        <div class="items-body">
+            <!-- ko foreach: disciplines -->
+            <div class="item" >
+                <div class="inline width-85p" data-bind="click: $root.csed.show">
+                    <span data-bind="text: name"></span>
+                </div>
+                <div class="inline tags width-10p">
+                    <span class="fa tag" data-bind="click: $root.moveTo.tests" title="Перейти к тестам">&#xf022;</span>
+                    <span class="fa tag" data-bind="click: $root.csed.showSections" title="Общие разделы">&#xf0f6;</span>
+                </div>
+            </div>
+            <!-- ko if: $root.mode() !== 'none' && $data.id() === $root.current.discipline().id()-->
+            <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
+            <!-- /ko -->
+            <!-- /ko -->
+        </div>
+        @include('admin.shared.pagination')
+    </div>
     <div class="filter">
-        <div>
-            <label>Название дисциплины</label></br>
+        <div class="filter-block">
+            <label class="title">Название дисциплины</label>
             <input type="text" data-bind="value: $root.filter.discipline, valueUpdate: 'keyup'">
         </div>
-        <div>
-            <label>Направление</label></br>
+        <div class="filter-block">
+            <label class="title">Направление</label>
             <select data-bind="options: $root.multiselect.data,
                        optionsText: 'fullname',
                        value: $root.filter.profile,
@@ -22,20 +48,9 @@
         </div>
     </div>
     <div class="org-accordion">
-        <div data-bind="click: $root.csed.startAdd" class="org-item">
-            <span class="fa">&#xf067;</span>
-        </div>
-        <!-- ko if: $root.mode() === 'add'-->
-            <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
-        <!-- /ko -->
-        <!-- ko foreach: disciplines -->
-            <div class="org-item" data-bind="text: name, click: $root.csed.show"></div>
-            <!-- ko if: $root.mode() !== 'none' && $data.id() === $root.current.discipline().id()-->
-                <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
-            <!-- /ko -->
-        <!-- /ko -->
+
     </div>
-    @include('admin.shared.pagination')
+
 </div>
 
 <div class="g-hidden">
@@ -77,85 +92,96 @@
 </div>
 
 <script type="text/html" id="show-details">
-    <div class="org-info">
+    <div class="">
         <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' || $root.mode() === 'section' -->
-        <div class="width100" data-bind="template: {name: 'info-mode', data: $data}"></div>
+        <div data-bind="template: {name: 'info-mode', data: $data}"></div>
         <!-- /ko -->
         <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
-        <div class="width100" data-bind="template: {name: 'edit-mode', data: $data}"></div>
+        <div data-bind="template: {name: 'edit-mode', data: $data}"></div>
         <!-- /ko -->
         <!-- ko if: $root.mode() !== 'add' -->
-        <div class="width100">
-            <table class="theme">
-                <thead>
-                <tr><th>#</th><th>Темы</th><th>Действия</th></tr>
-                </thead>
-                <tbody>
-                <!-- ko foreach: $root.current.themes-->
-                <tr>
-                    <td data-bind="text: $index()+1"></td>
-                    <td><a data-bind="text: name, click: $root.moveTo.theme"></a></td>
-                    <td><button data-bind="click: $root.csed.theme.showSections" class="fa success">&#xf0f6;</button>
-                        <button data-bind="click: $root.csed.theme.startRemove" class="fa danger">&#xf014;</button>
-                    </td>
-                </tr>
-                <!-- /ko -->
+        <div class="details discipline">
+            <div class="details-row">
+                <table class="theme themes-table">
+                    <thead>
+                    <tr><th>№</th><th>Темы</th><th>Действия</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="3" data-bind="click: $root.csed.theme.startAdd">
+                            <span class="fa">&#xf067;</span>&nbsp;Добавить тему
+                        </td>
+                    </tr>
+                    <!-- ko foreach: $root.current.themes-->
+                    <tr>
+                        <td data-bind="text: $index()+1"></td>
+                        <td><a data-bind="text: name, click: $root.moveTo.theme"></a></td>
+                        <td>
+                            <button data-bind="click: $root.csed.theme.showSections" class="fa approve mini">&#xf0f6;</button>
+                            <button data-bind="click: $root.csed.theme.startRemove" class="fa remove mini">&#xf014;</button>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <!-- /ko -->
     </div>
 </script>
 <script type="text/html" id="info-mode">
-    <div class="org-info-details width100 discipline-info">
-        <div>
-            <label>Аббревиатура</label></br>
-            <span data-bind="text: abbreviation"></span>
+    <div class="details discipline">
+        <div class="details-row">
+            <div class="details-column width-20p">
+                <label class="title">Аббревиатура</label>
+                <span class="info" data-bind="text: abbreviation"></span>
+            </div>
+            <div class="details-column width-75p">
+                <label class="title">Полное название дисциплины</label>
+                <span class="info" data-bind="text: name"></span>
+            </div>
         </div>
-        <div>
-            <label>Полное название дисциплины</label></br>
-            <span data-bind="text: name"></span>
-        </div>
-        <div>
-        <i>
-            <button class="move" data-bind="click: $root.csed.theme.startAdd"><span class="fa">&#xf067;</span>&nbsp;Добавить тему</button>
-            <button class="move" data-bind="click: $root.moveTo.tests"><span class="fa">&#xf044;</span>&nbsp;Тесты</button>
-            <button class="move move-section" data-bind="click: $root.csed.showSections"><span class="fa">&#xf0f6;</span>&nbsp;Общие разделы</button>
-        </i>
-        <i>
-            <button data-bind="click: $root.csed.startUpdate" class="fa">&#xf040;</button>
-            <button data-bind="click: $root.csed.startRemove" class="fa danger">&#xf014;</button>
-        </i>
+        <div class="details-row float-buttons">
+            <div class="details-column width-100p">
+                <button data-bind="click: $root.csed.startRemove" class="remove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
+                <button data-bind="click: $root.csed.startUpdate" class="approve"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
+            </div>
         </div>
     </div>
 </script>
 <script type="text/html" id="edit-mode">
-    <div class="org-info-edit width100 discipline-edit">
-        <div>
-            <label>Аббревиатура</label></br>
-            <input type="text" data-bind="value: abbreviation">
-        </div>
-        <div>
-            <label>Полное название дисциплины</label></br>
-            <input type="text" data-bind="value: name">
-        </div>
-        <div>
-            <label>Профили</label></br>
-            <div class="multiselect-wrap">
-                <!-- ko if: $root.multiselect.tags().length -->
-                <div class="multiselect">
-                    <ul data-bind="foreach: $root.multiselect.tags">
-                        <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: fullname"></span></li>
-                    </ul>
-                </div>
-                <!-- /ko -->
-                <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+    <div class="details discipline">
+        <div class="details-row">
+            <div class="details-column width-20p">
+                <label class="title">Аббревиатура</label>
+                <input type="text" data-bind="value: abbreviation">
+            </div>
+            <div class="details-column width-75p">
+                <label class="title">Полное название дисциплины</label>
+                <input type="text" data-bind="value: name">
             </div>
         </div>
-        <div class="float-btn-group">
-            <button data-bind="click: $root.csed.update" class="fa">&#xf00c;</button>
-            <button data-bind="click: $root.csed.cancel" class="fa danger">&#xf00d;</button>
+        <div class="details-row">
+            <div class="details-column profile">
+                <label class="title">Профили</label>
+                <div class="multiselect-wrap">
+                    <!-- ko if: $root.multiselect.tags().length -->
+                    <div class="multiselect">
+                        <ul data-bind="foreach: $root.multiselect.tags">
+                            <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: fullname"></span></li>
+                        </ul>
+                    </div>
+                    <!-- /ko -->
+                    <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+                </div>
+            </div>
+        </div>
+        <div class="details-row float-buttons">
+            <div class="details-column width-100p">
+                <button data-bind="click: $root.csed.cancel" class="cancel">Отмена</button>
+                <button data-bind="click: $root.csed.update" class="approve">Сохранить</button>
+            </div>
         </div>
     </div>
 </script>

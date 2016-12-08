@@ -20,10 +20,10 @@
             </div>
             <div class="tests">
                 <!-- ko foreach: current.tests -->
-                <div class="test">
+                <div class="test" data-bind="click: $root.actions.start">
                     <span data-bind="text: test.subject"></span>
                     <span class="attempts" data-bind="text: attemptsMade() +'/' + attemptsLeft() + ' попыток'"></span>
-                    <span class="start" data-bind="click: $root.actions.start">Пройти тест</span>
+                    <span class="start">Пройти тест</span>
                 </div>
                 <!-- /ko -->
             </div>

@@ -65,16 +65,7 @@ $(document).ready(function(){
                 },
                 clear: function(){}
             };
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    commonHelper.modal.open('#errors-modal');
-                },
-                accept: function(){
-                    commonHelper.modal.close('#errors-modal');
-                }
-            };
+            self.errors = errors();
 
             self.showResult = function(data){
                 window.location.href = '/admin/result/' + data.id();

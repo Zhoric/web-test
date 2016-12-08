@@ -20,118 +20,128 @@
         <!-- /ko -->
     </div>
 <div class="content themes">
-    <div class="org-info">
-        <div class="main-info width100">
-            <div>
-                <label>Дисциплина</label></br>
+    <div class="layer">
+        <div class="details-row">
+            <div class="details-column">
+                <label class="title">Дисциплина</label>
                 <span data-bind="text: $root.current.discipline().name"></span>
-            </div></br>
-            <div>
-                <label>Тема</label></br>
+            </div>
+            <div class="details-column">
+                <label class="title">Тема</label>
                 <!-- ko ifnot: $root.mode() === 'theme.edit' -->
                 <span><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></span>
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
                 <input type="text" tooltip-mark="theme-name_tooltip" data-bind="value: $root.current.theme().name, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
                 <span>
-                    <button data-bind="click: $root.csed.theme.update" class="fa sq-small">&#xf00c;</button>
-                    <button data-bind="click: $root.csed.theme.cancel" class="fa danger sq-small">&#xf00d;</button>
-                </span>
+                <button data-bind="click: $root.csed.theme.update" class="fa sq-small">&#xf00c;</button>
+                <button data-bind="click: $root.csed.theme.cancel" class="fa danger sq-small">&#xf00d;</button>
+            </span>
                 <!-- /ko -->
-            </div></br>
+            </div>
             <div>
                 <button class="width200" data-bind="click: $root.csed.question.toggleAdd">Добавить вопрос</button>
             </div>
         </div>
     </div>
-    <span ></span>
+
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
-    <div class="themes-add org-info">
-        <div class="time">
-            <label>Время на ответ <span>*</span></label></br>
-            <input tooltip-mark="minutes_tooltip" type="text" data-bind=", value: $root.current.question().minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
-            <span>&nbsp;:&nbsp;</span>
-            <input tooltip-mark="seconds_tooltip" type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
+    <div class="layer">
+        <div class="details-rows">
+            <div class="details-column width-15p">
+                <label class="title">Время на ответ <span class="required">*</span></label>
+                <input class="time" tooltip-mark="minutes_tooltip" type="text" data-bind=", value: $root.current.question().minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
+                <span>&nbsp;:&nbsp;</span>
+                <input class="time" tooltip-mark="seconds_tooltip" type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
+            </div>
+            <div class="details-column width-39p">
+                <label class="title">Тип вопроса <span class="required">*</span></label>
+                <select data-bind="options: $root.filter.types,
+                   optionsText: 'name',
+                   value: $root.current.question().type,
+                   optionsCaption: 'Выберите тип'"></select>
+            </div>
+            <div class="details-column width-39p">
+                <label class="title">Сложность вопроса <span class="required">*</span></label>
+                <select data-bind="options: $root.filter.complexityTypes,
+                   optionsText: 'name',
+                   value: $root.current.question().complexity,
+                   optionsCaption: 'Выберите сложность'"></select>
+            </div>
         </div>
-        <div class="upload-image">
-            <label>Изображение</label></br>
-            <!-- ko if: !$root.current.question().showImage() -->
-            <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
-                <div class="row">
-                    <div class="img-preview">
-                        <img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
-                        <div data-bind="ifnot: $root.current.fileData().dataURL">
-                            <label class="drag-label">Перетащите файл изображения</label>
+        <div class="details-row">
+            <div class="details-column width-98p">
+                <label class="title">Изображение</label>
+                <!-- ko if: !$root.current.question().showImage() -->
+                <div class="image-uploader" data-bind="fileDrag: $root.current.fileData">
+                    <div class="row">
+                        <div class="img-preview">
+                            <img class="img-rounded  thumb" data-bind="attr: { src: $root.current.fileData().dataURL }, visible: $root.current.fileData().dataURL">
+                            <div data-bind="ifnot: $root.current.fileData().dataURL">
+                                <label class="drag-label">Перетащите файл изображения</label>
+                            </div>
+                        </div>
+                        <div class="file-input">
+                            <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
+                        buttonClass: 'upload-btn', fileNameClass: 'disabled',
+                        buttonText: 'Выберите файл', changeButtonText: 'Изменить',
+                        clearButtonText: 'Очистить', clearButtonClass: 'clean-btn', noFileText: 'Файл не выбран'}" accept="image/*">
                         </div>
                     </div>
-                    <div class="file-input">
-                        <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
-                            buttonClass: 'upload-btn', fileNameClass: 'disabled',
-                            buttonText: 'Выберите файл', changeButtonText: 'Изменить',
-                            clearButtonText: 'Очистить', clearButtonClass: 'clean-btn', noFileText: 'Файл не выбран'}" accept="image/*">
-                    </div>
+                    <div class="clear"></div>
                 </div>
-                <div class="clear"></div>
+                <!-- /ko -->
+                <!-- ko if: $root.current.question().showImage() -->
+                <div class="image-holder">
+                    <div class="fa remove" data-bind="click: $root.csed.image.remove">&#xf00d;</div>
+                    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
+                </div>
+                <!-- /ko -->
             </div>
-            <!-- /ko -->
-            <!-- ko if: $root.current.question().showImage() -->
-            <div class="image-holder">
-                <div class="fa remove" data-bind="click: $root.csed.image.remove">&#xf00d;</div>
-                <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
+        </div>
+        <div class="details-row">
+            <div class="details-column width-98p">
+                <label class="title">Текст вопроса <span class="required">*</span></label>
+                <textarea tooltip-mark="question_tooltip" type="text" data-bind="value: $root.current.question().text, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}"></textarea>
             </div>
-            <!-- /ko -->
-        </div>
-        <div class="select-theme">
-            <label>Тип вопроса <span>*</span></label></br>
-            <select data-bind="options: $root.filter.types,
-                       optionsText: 'name',
-                       value: $root.current.question().type,
-                       optionsCaption: 'Выберите тип'"></select>
-        </div>
-        <div class="select-complexity">
-            <label>Сложность вопроса <span>*</span></label></br>
-            <select data-bind="options: $root.filter.complexityTypes,
-                       optionsText: 'name',
-                       value: $root.current.question().complexity,
-                       optionsCaption: 'Выберите сложность'"></select>
-        </div>
-        <div class="question-text">
-            <label>Текст вопроса <span>*</span></label></br>
-            <textarea tooltip-mark="question_tooltip" type="text" data-bind="value: $root.current.question().text, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}"></textarea>
         </div>
         <!-- ko if: $root.current.question().isCode() && $root.current.question().type() -->
-        <div class="code">
-            <label>Параметрические пары <span>*</span></label></br>
-
-            <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
-            <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea></br>
-            <span class="radio radio-neutral compile-code" data-bind="click: $root.code.open">Отладка программы</span>
-            <span class="radio radio-positive save-params" data-bind="click: $root.code.params.add">Добавить набор параметров</span>
-
-            <table>
-                <tbody data-bind="foreach: $root.code.params.set">
-                <tr>
-                    <td data-bind="text: input" class="input"></td>
-                    <td data-bind="text: expectedOutput" class="output"></td>
-                    <td>
-                        <button class="fa sq-small danger" data-bind="click: $root.code.params.remove">&#xf014;</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="details-row">
+            <div class="details-column width-35p">
+                <label class="title">Входные параметры<span class="required"></span></label>
+                <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
+            </div>
+            <div class="details-column width-35p">
+                <label class="title">Выходные параметры<span class="required"></span></label>
+                <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea>
+            </div>
         </div>
-
+        <div class="details-row float-buttons">
+            <div class="details-column width-99p">
+                <button data-bind="click: $root.code.params.add" class="approve"><span class="fa">&#xf067;</span>&nbsp;Добавить набор параметров</button>
+            </div>
+        </div>
+        <div class="details-row">
+            {{--<div class="details-column add-code">--}}
+            {{--<span><span class="fa">&#xf121;</span>Отладка программы</span>--}}
+            {{--<button data-bind="click: $root.code.open" class="approve"><span class="fa">&#xf121;</span>&nbsp;Отладка программы</button>--}}
+            {{--<span class="" data-bind="click: $root.code.open">Отладка программы</span>--}}
+            {{--</div>--}}
+        </div>
         <!-- /ko -->
         <!-- ko if: !$root.current.question().isOpenMultiLine() && !$root.current.question().isCode() && $root.current.question().type() -->
-        <div class="answers-input">
-            <label>Варианты ответов <span>*</span></label></br>
-            <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup'"/>
-            <button data-bind="click: $root.csed.answer.add" class="fa sq-small">&#xf067;</button>
+        <div class="details-row variants">
+            <div class="details-column width-98p">
+                <label class="title">Варианты ответов<span class="required"></span></label>
+                <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup'"/>
+                <button data-bind="click: $root.csed.answer.add" class="fa mini approve">&#xf067;</button>
+            </div>
         </div>
         <!-- ko if: $root.current.answers().length -->
-        <div class="answers-table">
-            <table>
-                <tbody data-bind="foreach: $root.current.answers">
+        <div class="details-row">
+            <div class="details-column">
+                <table>
+                    <tbody data-bind="foreach: $root.current.answers">
                     <tr>
                         <td data-bind="text: $index()+1"></td>
                         <td data-bind="text: text"></td>
@@ -144,40 +154,22 @@
                             <button class="fa sq-small danger" data-bind="click: $root.csed.answer.remove">&#xf014;</button>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <!-- /ko -->
         <!-- /ko -->
-        <div class="btn-larger-group">
-            <button class="danger" data-bind="click: $root.csed.question.cancel">Отмена</button>
-            <button class="approve-btn" data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
+        <div class="details-row float-buttons">
+            <div class="details-column width-99p">
+                <button class="cancel" data-bind="click: $root.csed.question.cancel">Отмена</button>
+                <button class="approve" data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
+            </div>
         </div>
     </div>
     <!-- /ko -->
 
-    <div class="filter">
-        <div>
-            <label>Вопрос</label></br>
-            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
-        </div>
-        <div>
-            <label>Тип вопроса</label></br>
-            <select data-bind="options: $root.filter.types,
-                       optionsText: 'name',
-                       value: $root.filter.type,
-                       optionsCaption: 'Выберите тип'"></select>
-        </div>
-        <div>
-            <label>Сложность вопроса</label></br>
-            <select data-bind="options: $root.filter.complexityTypes,
-                       optionsText: 'name',
-                       value: $root.filter.complexity,
-                       optionsCaption: 'Выберите сложность'"></select>
-        </div>
-    </div>
-
-    <div class="width100">
+    <div class="items">
         <table class="theme themes">
             <thead>
                 <tr>
@@ -201,9 +193,30 @@
             <!-- /ko -->
             </tbody>
         </table>
+        @include('admin.shared.pagination')
     </div>
 
-    @include('admin.shared.pagination')
+    <div class="filter">
+        <div class="filter-block">
+            <label class="title">Вопрос</label>
+            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
+        </div>
+        <div class="filter-block">
+            <label class="title">Тип вопроса</label>
+            <select data-bind="options: $root.filter.types,
+                       optionsText: 'name',
+                       value: $root.filter.type,
+                       optionsCaption: 'Выберите тип'"></select>
+        </div>
+        <div class="filter-block">
+            <label class="title">Сложность вопроса</label>
+            <select data-bind="options: $root.filter.complexityTypes,
+                       optionsText: 'name',
+                       value: $root.filter.complexity,
+                       optionsCaption: 'Выберите сложность'"></select>
+        </div>
+    </div>
+
 </div>
     @include('admin.shared.error-modal')
 @endsection

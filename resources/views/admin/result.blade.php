@@ -60,7 +60,7 @@
         <div class="answer" data-bind="click: $root.actions.answer.show, css: {'current': $root.current.answer().id() === id()}">
             <span data-bind="text: $root.actions.answer.fit.question($data)"></span>
             <!-- ko if: rightPercentage() === null -->
-            <span class="tagged-label fa">&#xf123;</span>
+            <span title="Требуется проверка" class="tagged-label fa">&#xf123;</span>
             <!-- /ko -->
         </div>
         <!-- ko if: $root.current.answer().id() === id() -->

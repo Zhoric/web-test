@@ -17,11 +17,11 @@
             <!-- ko foreach: $root.current.rows -->
             <div class="row" data-bind="foreach: disciplines">
                 <div class="discipline">
-                    <div class="discipline-head" data-bind="click: $root.actions.details, css: {'current': $root.current.disciplineId() === id()},">
-                        <span data-bind="text: abbreviation"></span>
+                    <div class="discipline-head" data-bind="click: $root.actions.details">
+                        <span data-bind="text: discipline.abbreviation"></span>
                     </div>
                     <div class="discipline-body">
-                        <span>5/10</span>
+                        <span data-bind="text: testsPassed() + '/' + testsCount()"></span>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 <input class="custom-radio" type="text" placeholder="Название/аббревиатура"/>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="all-discipines"/><label for="all-discipines">Все</label>
+                <input class="custom-radio" type="radio" id="all-disciplines"/><label for="all-disciplines">Все</label>
             </div>
             <div class="filter-block">
                 <input class="custom-radio" type="radio" id="has-tests"/><label for="has-tests">Имеются не пройденные тесты</label>
