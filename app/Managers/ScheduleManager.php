@@ -17,6 +17,8 @@ class ScheduleManager
 {
     private $_unitOfWork;
 
+    private $semestersCount = 2;
+
     public function __construct(UnitOfWork $unitOfWork)
     {
         $this->_unitOfWork = $unitOfWork;
@@ -36,7 +38,7 @@ class ScheduleManager
         $currentYearSemester = ($currentMounthNumber >= GlobalTestSettings::secondSemesterMounth
             && $currentMounthNumber < GlobalTestSettings::firstSemesterMounth) ? 2 : 1;
 
-        return ($groupStudyYear - 1) * 2 + $currentYearSemester;
+        return ($groupStudyYear - 1) * $this->semestersCount + $currentYearSemester;
     }
 
     public function getCurrentSemesterForUser($userId){

@@ -121,6 +121,15 @@ class DisciplineManager
         return $discplinesVms;
     }
 
+    /*
+    * Получение списка дисциплин, по которым у студента уже имеются результаты прохождения тестов.
+    */
+    public function getDisciplinesWhereTestsPassed($userId){
+        return $this->_unitOfWork
+            ->disciplines()
+            ->getDisciplinesWhereTestsPassed($userId);
+    }
+
     /**
      * Подсчёт общего количества тестов по дисциплине.
      * @param Discipline $discipline

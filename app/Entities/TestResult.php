@@ -227,6 +227,7 @@ class TestResult extends BaseEntity implements JsonSerializable
             'userId' => $this->getUser()->getId(),
             'user' => $this->getUser(),
             'testId' => $this->getTest()->getId(),
+            'testName' => $this->getTest()->getSubject(),
             'attempt' => $this->getAttempt(),
             'dateTime' => $this->getDateTime());
     }

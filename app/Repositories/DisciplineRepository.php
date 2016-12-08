@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use PaginationResult;
 use ProfileDiscipline;
 use Test;
+use TestResult;
 use TestTheme;
 use Theme;
 
@@ -107,6 +108,17 @@ class DisciplineRepository extends BaseRepository
         $query = $qb->join(ProfileDiscipline::class, 'pd', Join::WITH, 'pd.discipline = d.id')
             ->where('pd.profile = :profile')
             ->setParameter('profile', $profileId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
+    function getDisciplinesWhereTestsPassed($userId){
+        $qb = $this->repo->createQueryBuilder('d');
+        $query = $qb->join(Test::class, 't', Join::WITH, 't.discipline = d.id')
+            ->join(TestResult::class, 'tr', Join::WITH, 'tr.test = t.id AND tr.user = :user')
+            ->setParameter('user', $userId)
+            ->distinct()
             ->getQuery();
 
         return $query->execute();

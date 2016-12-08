@@ -6,6 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 use JsonResult;
 
 class Controller extends BaseController
@@ -18,5 +19,23 @@ class Controller extends BaseController
 
     protected function faultJSONResponse($message = null){
         return json_encode(new JsonResult(false, null, $message));
+    }
+
+    /**
+     * Попытка получения данных о текущем пользователе.
+     * В случае неудачи будет выброшено соответствующее исключение.
+     * @return string
+     */
+    protected function tryGetCurrentUser(){
+        $currentUser = Auth::user();
+        if (isset($currentUser)){
+            return $currentUser;
+        } else {
+            throw new Exception('Для данного действия необходима авторизация!');
+        }
+    }
+
+    protected function tryGetCurrentUserId(){
+        return $this->tryGetCurrentUser()->getId();
     }
 }

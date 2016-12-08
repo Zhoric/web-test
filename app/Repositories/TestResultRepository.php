@@ -7,6 +7,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use League\Flysystem\Exception;
 use PaginationResult;
+use Test;
 use TestResult;
 use User;
 
@@ -45,6 +46,27 @@ class TestResultRepository extends BaseRepository
         $query = $qb->join(\StudentGroup::class, 'sg', Join::WITH, 'sg.group = :groupId')
             ->setParameter('groupId', $groupId)
             ->join(User::class, 'u', Join::WITH, 'tr.user = u.id AND sg.student = u.id')
+            ->where($qb->expr()->in('tr.dateTime', '?1'))
+            ->setParameter(1,$maxDateTimes)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
+    public function getByUserAndDiscipline($userId, $disciplineId){
+        $maxQb = $this->repo->createQueryBuilder('tr');
+        $maxQuery = $maxQb->select('MAX(tr.dateTime)')
+            ->join(Test::class, 't', Join::WITH, 't.discipline = :discipline')
+            ->where('tr.user = :userId')
+            ->setParameter('discipline', $disciplineId)
+            ->setParameter('userId', $userId)
+            ->groupBy('tr.user, tr.test')
+            ->getQuery();
+
+        $maxDateTimes = $maxQuery->execute();
+        $qb = $this->repo->createQueryBuilder('tr');
+        $query = $qb->join(Test::class, 't', Join::WITH, "t.discipline = $disciplineId")
+            ->where("tr.user = $userId")
             ->where($qb->expr()->in('tr.dateTime', '?1'))
             ->setParameter(1,$maxDateTimes)
             ->getQuery();

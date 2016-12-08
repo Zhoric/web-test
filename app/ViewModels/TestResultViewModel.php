@@ -26,7 +26,7 @@ class TestResultViewModel implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return TestResult
      */
     public function getTestResult()
     {

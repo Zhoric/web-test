@@ -177,22 +177,34 @@ class DisciplineController extends Controller
      * Сортируются дисциплины по семестру, т.о. наверху списка всегда будут наиболее актуальные.
      * Номер семестра для текущего пользователя считается исходя из курса группы, в которой он находится.
      */
-    public function getActualDisciplinesForStudent(){
-        try{
-            $currentUser = Auth::user();
-            if (isset($currentUser)){
-                $userId = $currentUser->getId();
-                $currentSemester = $this->_scheduleManager->getCurrentSemesterForUser($userId);
-                if (!isset($currentSemester) || $currentSemester == 0){
+    public function getActualDisciplinesForStudent()
+    {
+        try {
+            $userId = $this->tryGetCurrentUserId();
+            $currentSemester = $this->_scheduleManager->getCurrentSemesterForUser($userId);
+            if (!isset($currentSemester) || $currentSemester == 0) {
 
-                    throw new Exception('Невозможно определить текущий семестр для пользователя');
-                }
-                $disciplines = $this->_disciplineManager->getActualDisciplinesForStudent($userId, $currentSemester);
-
-                return $this->successJSONResponse($disciplines);
-            } else {
-                throw new Exception('Для данного действия необходимо авторизоваться!');
+                throw new Exception('Невозможно определить текущий семестр для пользователя');
             }
+            $disciplines = $this->_disciplineManager->getActualDisciplinesForStudent($userId, $currentSemester);
+
+            return $this->successJSONResponse($disciplines);
+
+        } catch (Exception $exception) {
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    /*
+     * Получение списка дисциплин, по которым у студента уже имеются результаты прохождения тестов.
+     */
+    public function getDisciplinesWhereTestsPassed(){
+        try{
+            $userId = $this->tryGetCurrentUserId();
+
+            $disciplines = $this->_disciplineManager->getDisciplinesWhereTestsPassed($userId);
+
+            return $this->successJSONResponse($disciplines);
 
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

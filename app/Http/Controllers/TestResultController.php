@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Managers\TestResultManager;
 use TestEngine\TestResultCalculator;
+use TestResultViewModel;
 
 class TestResultController extends Controller
 {
@@ -33,14 +34,40 @@ class TestResultController extends Controller
         }
     }
 
+    public function getByDiscipline($disciplineId){
+        try{
+            $userId = $this->tryGetCurrentUserId();
+
+            $results = $this->_testResultManager->getByUserAndDiscipline($userId, $disciplineId);
+            return $this->successJSONResponse($results);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     /**
-     * Получение результата теста вместе с ответами на вопросы по id
+     * Получение результата теста вместе с ответами на вопросы по id.
      * @param $id
      * @return \TestResultViewModel
      */
     public function getById($id){
         try{
             $result = $this->_testResultManager->getByIdWithAnswers($id);
+            return $this->successJSONResponse($result);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    /**
+     * Получение результата теста вместе с ответами на вопросы по id (для студента).
+     * @param $id
+     * @return TestResultViewModel
+     */
+    public function getByIdForStudent($id){
+        try{
+            $studentId = $this->tryGetCurrentUserId();
+            $result = $this->_testResultManager->getByIdWithAnswers($id, $studentId);
             return $this->successJSONResponse($result);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

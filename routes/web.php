@@ -220,6 +220,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('delete/{id}', 'DisciplineController@delete');
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
         Route::get('actual', 'DisciplineController@getActualDisciplinesForStudent');
+        Route::get('testresults', 'DisciplineController@getDisciplinesWhereTestsPassed');
         Route::get('{id}/profiles', 'DisciplineController@getDisciplineProfilesIds');
         Route::get('{id}/tests', 'DisciplineController@getTestsByDiscipline');
         Route::get('{id}', 'DisciplineController@getDiscipline');
@@ -311,6 +312,8 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'TestResultController@getByGroupAndTest');
         Route::post('setMark', 'TestResultController@setAnswerMark');
         Route::get('/getByUserAndTest', 'TestResultController@getByUserAndTest');
+        Route::get('/discipline/{id}', 'TestResultController@getByDiscipline');
+        Route::get('/show/{id}', 'TestResultController@getByIdForStudent');
         Route::get('{id}', 'TestResultController@getById');
     });
 

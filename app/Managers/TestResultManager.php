@@ -6,8 +6,11 @@ use DateTime;
 use ExtraAttempt;
 use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
+use Test;
 use TestResult;
 use TestResultViewModel;
+use TestType;
+use UserRole;
 
 class TestResultManager
 {
@@ -76,12 +79,30 @@ class TestResultManager
     }
 
     /**
+     * Получение последних результатов по заданным дисциплине и студенту.
+     * @param $userId
+     * @param $disciplineId
+     * @return array
+     */
+    public function getByUserAndDiscipline($userId, $disciplineId){
+        return $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
+    }
+
+    /**
      * Получение результата теста со всеми ответами по id.
      * @param $testResultId
+     * @param null $studentId - Id пользователя. Заполняется, если результат запрашивается
+     * пользователем с ролью "Студент". В этом случае необходима дополнительная логика отображения
+     * развёрнутой информации о прохождении теста.
      * @return TestResultViewModel
+     * @throws \Exception
      */
-    public function getByIdWithAnswers($testResultId){
+    public function getByIdWithAnswers($testResultId, $studentId = null){
         $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+        if (!isset($testResult)){
+            throw new \Exception('Запрошенный результат не найден!');
+        }
+
         $test = $testResult->getTest();
         $testId = $test->getId();
         $userId = $testResult->getUser()->getId();
@@ -93,7 +114,13 @@ class TestResultManager
 
         $totalAttemptsAllowed = $attemptsAllowedByDefault + $extraAttemptsCount;
 
-        return new TestResultViewModel($testResult, $answers, $test, $totalAttemptsAllowed);
+        $testResultViewModel = new TestResultViewModel($testResult, $answers, $test, $totalAttemptsAllowed);
+
+        if (isset($studentId)){
+            $testResultViewModel = $this->prepareForStudentResultRequest($test, $testResultViewModel, $studentId);
+        }
+
+        return $testResultViewModel;
     }
 
     /**
@@ -145,6 +172,32 @@ class TestResultManager
             ->getByUserAndTest($userId, $testId);
 
         return $testResults;
+    }
+
+    /**
+     * Обработка данных о результате прохождения теста перед отправкой студенту.
+     * Результат прохождения теста будет показан студенту в развёрнутой форме только если тип теста - обучающий.
+     * В противном случае студент получит лишь общий результат.
+     * Также выполняется проверка на то, что пользователь запрашивает свой результат.
+     * @param Test $test
+     * @param TestResultViewModel $resultViewModel
+     * @param $studentId
+     * @return TestResultViewModel
+     * @throws Exception
+     */
+    private function prepareForStudentResultRequest(Test $test, TestResultViewModel $resultViewModel, $studentId){
+
+        $requestedTestResultStudentId = $resultViewModel->getTestResult()->getUser()->getId();
+
+        if ($requestedTestResultStudentId != $studentId){
+            throw new Exception('Ошибка! Доступ к результатам других студентов запрещён!');
+        }
+
+        if ($test->getType() === TestType::Control){
+            $resultViewModel->setAnswers(null);
+        }
+
+        return $resultViewModel;
     }
 
 }
