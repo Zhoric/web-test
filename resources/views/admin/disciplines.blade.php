@@ -47,10 +47,6 @@
                        optionsCaption: 'Выберите профиль'"></select>
         </div>
     </div>
-    <div class="org-accordion">
-
-    </div>
-
 </div>
 
 <div class="g-hidden">
@@ -102,7 +98,7 @@
         <!-- ko if: $root.mode() !== 'add' -->
         <div class="details discipline">
             <div class="details-row">
-                <table class="theme themes-table">
+                <table class="stripe-table themes">
                     <thead>
                     <tr><th>№</th><th>Темы</th><th>Действия</th></tr>
                     </thead>

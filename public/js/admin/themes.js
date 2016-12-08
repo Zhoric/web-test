@@ -386,7 +386,7 @@ $(document).ready(function(){
                 },
                 image: {
                     expand: function(){
-                        $('.expanded-image').show();
+                        $('.image-expander').show();
                     },
                     remove: function(){
                         self.current.question().showImage(null);

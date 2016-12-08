@@ -14,39 +14,42 @@
 @endsection
 
 @section('content')
-    <div class="expanded-image" data-bind="click: function(){$('.expanded-image').hide();}">
-        <!-- ko if: $root.current.question().showImage() -->
-        <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
-        <!-- /ko -->
-    </div>
-<div class="content themes">
+<div class="image-expander" data-bind="click: function(){$('.image-expander').hide();}">
+    <!-- ko if: $root.current.question().showImage() -->
+    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
+    <!-- /ko -->
+</div>
+<div class="content">
     <div class="layer">
-        <div class="details-row">
-            <div class="details-column">
-                <label class="title">Дисциплина</label>
-                <span data-bind="text: $root.current.discipline().name"></span>
-            </div>
-            <div class="details-column">
-                <label class="title">Тема</label>
+        <div class="details-row theme">
+            <div class="details-column width-100p">
                 <!-- ko ifnot: $root.mode() === 'theme.edit' -->
-                <span><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></span>
+                <h2><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></h2>
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
                 <input type="text" tooltip-mark="theme-name_tooltip" data-bind="value: $root.current.theme().name, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
                 <span>
-                <button data-bind="click: $root.csed.theme.update" class="fa sq-small">&#xf00c;</button>
-                <button data-bind="click: $root.csed.theme.cancel" class="fa danger sq-small">&#xf00d;</button>
+                <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
+                <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
             </span>
                 <!-- /ko -->
             </div>
-            <div>
-                <button class="width200" data-bind="click: $root.csed.question.toggleAdd">Добавить вопрос</button>
+
+        </div>
+        <div class="details-row theme-head">
+            <div class="details-column width-100p">
+                <label class="title">Дисциплина</label>
+                <span data-bind="text: $root.current.discipline().name"></span>
+            </div>
+
+            <div class="details-column width-100p">
+                <button class="action-button" data-bind="click: $root.csed.question.toggleAdd">Добавить вопрос</button>
             </div>
         </div>
     </div>
 
     <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
-    <div class="layer">
+    <div class="layer theme">
         <div class="details-rows">
             <div class="details-column width-15p">
                 <label class="title">Время на ответ <span class="required">*</span></label>
@@ -106,12 +109,13 @@
             </div>
         </div>
         <!-- ko if: $root.current.question().isCode() && $root.current.question().type() -->
+
         <div class="details-row">
-            <div class="details-column width-35p">
+            <div class="details-column width-45p">
                 <label class="title">Входные параметры<span class="required"></span></label>
                 <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
             </div>
-            <div class="details-column width-35p">
+            <div class="details-column width-45p float-right">
                 <label class="title">Выходные параметры<span class="required"></span></label>
                 <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea>
             </div>
@@ -121,12 +125,26 @@
                 <button data-bind="click: $root.code.params.add" class="approve"><span class="fa">&#xf067;</span>&nbsp;Добавить набор параметров</button>
             </div>
         </div>
+        <!-- ko if: $root.code.params.set().length -->
         <div class="details-row">
-            {{--<div class="details-column add-code">--}}
-            {{--<span><span class="fa">&#xf121;</span>Отладка программы</span>--}}
-            {{--<button data-bind="click: $root.code.open" class="approve"><span class="fa">&#xf121;</span>&nbsp;Отладка программы</button>--}}
-            {{--<span class="" data-bind="click: $root.code.open">Отладка программы</span>--}}
-            {{--</div>--}}
+            <div class="details-column width-98p">
+                <table class="stripe-table paramset">
+                    <tbody data-bind="foreach: $root.code.params.set">
+                    <tr>
+                        <td data-bind="text: $index()+1"></td>
+                        <td data-bind="text: input"></td>
+                        <td data-bind="text: expectedOutput"></td>
+                        <td><button class="remove mini fa" data-bind="click: $root.code.params.remove">&#xf014;</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /ko -->
+        <div class="details-row">
+            <div class="details-column width-100p">
+                <button data-bind="click: $root.code.open" class="action-button"><span class="fa">&#xf121;</span>&nbsp;Отладка программы</button>
+            </div>
         </div>
         <!-- /ko -->
         <!-- ko if: !$root.current.question().isOpenMultiLine() && !$root.current.question().isCode() && $root.current.question().type() -->
@@ -139,8 +157,8 @@
         </div>
         <!-- ko if: $root.current.answers().length -->
         <div class="details-row">
-            <div class="details-column">
-                <table>
+            <div class="details-column width-98p">
+                <table class="stripe-table variants">
                     <tbody data-bind="foreach: $root.current.answers">
                     <tr>
                         <td data-bind="text: $index()+1"></td>
@@ -151,7 +169,7 @@
                             <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.alter.set.answerCorrectness" >Неправильный</span>
                         </td>
                         <td>
-                            <button class="fa sq-small danger" data-bind="click: $root.csed.answer.remove">&#xf014;</button>
+                            <button class="fa mini remove" data-bind="click: $root.csed.answer.remove">&#xf014;</button>
                         </td>
                     </tr>
                     </tbody>
@@ -170,7 +188,7 @@
     <!-- /ko -->
 
     <div class="items">
-        <table class="theme themes">
+        <table class="stripe-table questions">
             <thead>
                 <tr>
                     <th>Вопрос</th>
@@ -182,12 +200,12 @@
             <tbody>
             <!-- ko foreach: $root.current.questions-->
                 <tr>
-                    <td data-bind="text: text"></td>
+                    <td data-bind="text: text" class="width-10p"></td>
                     <td data-bind="text: $root.alter.set.type($data)"></td>
                     <td data-bind="text: $root.alter.set.complexity($data)"></td>
                     <td>
-                        <button data-bind="click: $root.csed.question.edit" class="fa">&#xf040;</button>
-                        <button data-bind="click: $root.csed.question.startDelete" class="fa danger">&#xf014;</button>
+                        <button data-bind="click: $root.csed.question.edit" class="fa approve mini">&#xf040;</button>
+                        <button data-bind="click: $root.csed.question.startDelete" class="fa remove mini">&#xf014;</button>
                     </td>
                 </tr>
             <!-- /ko -->
@@ -196,7 +214,7 @@
         @include('admin.shared.pagination')
     </div>
 
-    <div class="filter">
+    <div class="filter theme">
         <div class="filter-block">
             <label class="title">Вопрос</label>
             <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">

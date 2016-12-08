@@ -16,6 +16,8 @@
 
 //@patronus: #5D8CAE;
 
+
+
 input{
   background: @white;
   padding:0;
@@ -112,71 +114,223 @@ input{
     float: right;
   }
 }
+.details-row.theme{
+  input{
+    width: 85%;
+    height: 40px;
+  }
+  span{
+    min-width:100px;
+    width:15%;
+  }
+}
 
 .details.discipline{
   .profile{
     width: 98%;
   }
-  .themes-table{
-    width: 100%;
-    padding: 15px 0;
-    border-collapse: collapse;
-    margin: 10px 0;
-    th{
-      padding: 10px;
+}
+.stripe-table{
+  width: 100%;
+  padding: 15px 0;
+  border-collapse: collapse;
+  margin: 10px 0;
+  th{
+    padding: 10px;
+  }
+  tbody tr{
+    &:nth-child(odd){
+      background: @patronus-shade;
     }
-    tbody tr{
-      &:nth-child(odd){
-        background: @patronus-shade;
-      }
-      &:nth-child(even){
-        background: @silver;
-      }
+    &:nth-child(even){
+      background: @silver;
     }
-    td{
-      padding: 5px;
-      width: 80%;
-      &:first-child{
-        width: 5%;
-        text-align: center;
-      }
-      &:last-child{
-        width: 11%;
-        text-align: right;
-      }
-    }
-    td[colspan]{
+  }
+  td{
+    padding: 5px;
+  }
+  button.remove{
+    background: @crimson-red;
+  }
+}
+table.paramset{
+  button.remove{
+    margin-right: 10px;
+  }
+  td{
+    width: 40%;
+    white-space: pre-wrap;
+    &:first-child{
+      width: 5%;
       text-align: center;
-      font-size: 19px;
-      padding: 12px;
-      @color: @filch;
-      &:hover{
-        cursor: pointer;
-        background: @patronus-shade;
-        color: @filch;
-      }
     }
-    button.remove{
-      background: @crimson-red;
-    }
-    a{
-      color: @black;
-      text-decoration: none;
-      border-bottom: 1px dashed @filch;
-      &:hover{
-        color: @patronus;
-        border-bottom: 1px dashed @patronus;
-      }
+    &:last-child{
+      width: 11%;
+      text-align: right;
     }
   }
 }
-.details.test{
+table.themes{
+  td{
+    width: 80%;
+    &:first-child{
+      width: 5%;
+      text-align: center;
+    }
+    &:last-child{
+      width: 11%;
+      text-align: right;
+    }
+  }
+  td[colspan]{
+    text-align: center;
+    font-size: 19px;
+    padding: 12px;
+    @color: @filch;
+    &:hover{
+      cursor: pointer;
+      background: @patronus-shade;
+      color: @filch;
+    }
+  }
+}
+table.variants{
+  button.remove{
+    margin-right: 10px;
+  }
+  td{
+    width: 60%;
+    text-align: center;
+    &:first-child{
+      width: 5%;
+      text-align: center;
+    }
+    &:nth-child(2){
+      text-align: left;
+      white-space: pre-wrap;
+    }
+    &:last-child{
+      width: 11%;
+      text-align: right;
+    }
+  }
+}
+table.questions{
+  th:last-child{text-align: right}
+  td{
+    width: 1%;
+    white-space: pre-wrap;
+    &:first-child{
+      width: 40%;
+    }
+    &:nth-child(2){
+      width: 20%;
+    }
+    &:last-child{
+      width: 11%;
+      text-align: right;
+    }
+  }
+}
 
+.action-button{
+  width: 100%;
+  background: @patronus-shade;
+  color: @filch;
+  cursor: pointer;
+  &:hover{
+    color: @white;
+    background: @patronus;
+  }
+}
+.layer.theme{
+
+}
+.filter.theme{
+  position: absolute;
 }
 
 
-//@patronus-shade: #D2D7D3;
-//@patronus-shade: #eeeeee;
+.image-uploader{
+  margin:0 !important;
+  .row{
+    margin-bottom: 15px;
+    margin-right: -15px;
+    margin-left: -15px;
+    &:after{
+      clear: both;
+    }
+    .img-preview{
+      width: 25%;
+      float:right;
+    }
+    .file-input{
+      width: 70%;
+      left: 10px;
+      float: left;
+      position: relative;
+      z-index: 2;
+      input{
+        width: 70% !important;
+        height: 35px;
+        padding: 5px;
+      }
+    }
+  }
+  .upload-btn{
+    padding: 7px;
+    top: 0px;
+    color: @white;
+    padding: 8px;
+    background: @patronus;
+    &:hover{
+      background: @patronus;
+    }
+  }
+  .clean-btn{
+    background: @akcio;
+    color: @white;
+    padding: 8px;
+    border-radius: 0px 3px 3px 0;
+    &:hover{
+      background: @crimson-red;
+    }
+  }
+  img{
+    max-width: 70px;
+    max-height: 70px;
+    width: auto;
+    height: auto;
+  }
+}
+.image-holder{
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  .remove{
+    background: @black;
+    opacity: 0.5;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    color: @white;
+    float: right;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  img{
+    max-width: 100px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
+    position: relative;
+    cursor: pointer;
+  }
+}
+
+
 
 #compile-modal{
   max-height: 450px;
@@ -746,31 +900,7 @@ button{
         display: block;
         margin: 0;
       }
-      .image-holder{
-        width: 70px;
-        height: 70px;
-        .remove{
-          background: @black;
-          opacity: 0.5;
-          width: 15px;
-          height: 15px;
-          text-align: center;
-          position: relative;
-          z-index: 2;
-          color: @white;
-          float: right;
-          font-size: 15px;
-          cursor: pointer;
-        }
-        img{
-          max-width: 70px;
-          max-height: 70px;
-          width: auto;
-          height: auto;
-          position: absolute;
-          cursor: pointer;
-        }
-      }
+
     }
     .code{
       width: 97%;
@@ -976,52 +1106,7 @@ button.sq-small{
   margin-left: 5px;
 }
 
-.image-uploader{
-  .row{
-    margin-bottom: 15px;
-    margin-right: -15px;
-    margin-left: -15px;
-    &:after{
-      clear: both;
-    }
-    .img-preview{
-      width: 25%;
-      float:right;
-    }
-    .file-input{
-      width: 70%;
-      left: 10px;
-      float: left;
-      position: relative;
-      z-index: 2;
-    }
-  }
-  .upload-btn{
-    padding: 7.5px;
-    top: 0px;
-    color: @white;
-    padding: 7.5px;
-    background: @buttonGreen;
-    &:hover{
-      background: @buttonHover;
-    }
-  }
-  .clean-btn{
-    background: #bfbfbf;
-    color: @white;
-    padding: 7px;
-    border-radius: 0px 3px 3px 0;
-    &:hover{
-      background: @crimson-red;
-    }
-  }
-  img{
-    max-width: 70px;
-    max-height: 70px;
-    width: auto;
-    height: auto;
-  }
-}
+
 
 .tooltip_templates {
   display: none;
