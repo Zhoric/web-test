@@ -49,6 +49,15 @@ class UserController extends Controller
         }
     }
 
+    public function getStudentInfo($id){
+        try{
+            $studentInfo = $this->userManager->getStudentInfo($id);
+            return $this->successJSONResponse($studentInfo);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     public function setUserPassword(Request $request){
         try{
             $userId = $request->json('userId');
@@ -62,5 +71,32 @@ class UserController extends Controller
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
+
+    public function deleteUser($id){
+        try{
+            $this->userManager->deleteUser($id);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    public function getByNameAndGroupPaginated(Request $request){
+        try{
+            $pageNum =  $request->query('page');
+            $pageSize = $request->query('pageSize');
+            $name = $request->query('name');
+            $groupName = $request->query('groupName');
+            $isActive = $request->query("isActive");
+
+            $paginationResult = $this->userManager
+                ->getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupName, $isActive);
+
+            return $this->successJSONResponse($paginationResult);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
 
 }

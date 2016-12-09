@@ -3,11 +3,13 @@
 namespace Repositories;
 
 use Doctrine\ORM\EntityManager;
+use Group;
 use Illuminate\Support\Str;
 use PaginationResult;
 use Repositories\Interfaces\IUserRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use RoleUser;
+use StudentGroup;
 use User;
 use UserRole;
 
@@ -59,20 +61,25 @@ class UserRepository extends BaseRepository implements IUserRepository
             ));
     }
 
-    public function getByNameAndRolePaginated($pageSize, $pageNum, $roleId, $name = null){
+    public function getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupName, $isActive){
         $qb = $this->repo->createQueryBuilder('u');
         $query = $qb;
 
-        $query = $query->join(RoleUser::class, 'ru', Join::WITH,
-            'ru.user = u.id AND ru.role = :roleId')
-            ->setParameter('roleId', $roleId);
+        if (isset($groupName)){
+            $query = $query->join(StudentGroup::class, 'sg', Join::WITH, 'sg.student = u.id')
+                ->join(Group::class, 'g', Join::WITH, 'g.id = sg.group AND g.name LIKE :groupName')
+                ->setParameter('groupName', "%$groupName%");
+        }
 
-
-        if ($name != null && $name != ''){
+        if (isset($name)){
             $query = $query->where('u.firstname LIKE :name')
                 ->orWhere('u.lastname LIKE :name')
                 ->orWhere('u.patronymic LIKE :name')
-                ->setParameter('name', '%'.$name.'%');
+                ->setParameter('name', "%$name%");
+        }
+
+        if (isset($isActive)){
+            $query = $query->andWhere("u.active = $isActive");
         }
 
         $countQuery = clone $query;
@@ -86,4 +93,7 @@ class UserRepository extends BaseRepository implements IUserRepository
 
         return new PaginationResult($data, $count);
     }
+
+
+
 }

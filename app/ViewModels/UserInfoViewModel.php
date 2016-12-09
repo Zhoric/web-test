@@ -17,6 +17,8 @@ class UserInfoViewModel implements JsonSerializable
 
     private $role;
 
+    private $group;
+
     /**
      * @param User $user
      */
@@ -33,6 +35,11 @@ class UserInfoViewModel implements JsonSerializable
         $this->role = $role;
     }
 
+    public function setGroup($group)
+    {
+        $this->group = $group;
+    }
+
     function jsonSerialize()
     {
         return [
@@ -42,7 +49,8 @@ class UserInfoViewModel implements JsonSerializable
             'lastName' => $this->lastName,
             'active' => $this->active,
             'email' => $this->email,
-            'role' => $this->role
+            'role' => $this->role,
+            'group' => $this->group
         ];
     }
 }

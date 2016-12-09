@@ -126,8 +126,11 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'user'], function () {
 
         Route::get('role', 'UserController@getRoleByUser');
+        Route::get('show', 'UserController@getByNameAndGroupPaginated');
         Route::get('current', 'UserController@getCurrentUserInfo');
         Route::post('setPassword', 'UserController@setUserPassword');
+        Route::post('delete/{id}', 'UserController@deleteUser');
+        Route::get('getStudent/{id}', 'UserController@getStudentInfo');
     });
 
     /*--------------------------------------------------------------------------------
@@ -201,7 +204,6 @@ Route::group(['prefix' => 'api'], function() {
         *                      Работа со студентами группы                       */
 
         Route::group(['prefix' => 'student'], function () {
-
             Route::post('create', 'GroupController@createStudent');
             Route::post('update', 'GroupController@updateStudent');
             Route::post('delete/{id}', 'GroupController@deleteStudent');
