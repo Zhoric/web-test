@@ -25,7 +25,7 @@
                 </div>
                 <div class="details-row">
                     <div class="details-column width-100p">
-                        <label class="title">Номер попытки &nbsp;<span class="clickable" data-bind="if: attempt() > 1, click: $root.actions.results.view">(Все попытки)</span></label>
+                        <label class="title">Номер попытки &nbsp;<span class="clickable" data-bind="click: $root.actions.results.view">(Все попытки)</span></label>
                         <span class="info" data-bind="text: attempt"></span>
                         <span class="info">/</span>
                         <span class="info" data-bind="text: $root.current.attempts()"></span>
