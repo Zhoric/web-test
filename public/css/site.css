@@ -303,10 +303,20 @@ span.radio-neutral {
 span.radio-neutral:hover {
   color: #5D8CAE;
 }
-span.clickable {
-  color: #5D8CAE;
+span.clickable,
+span .correct,
+span .incorrect {
   cursor: pointer;
   font-weight: bold;
+}
+span .clickable {
+  color: #5D8CAE;
+}
+span .correct {
+  color: #16a085;
+}
+span .incorrect {
+  color: #D24D57;
 }
 .image-expander {
   width: 100%;

@@ -84,7 +84,7 @@
             <!-- ko if: $root.current.answer().id() === id() -->
             <div class="details-row special-item-details" data-bind="with: $root.current.answer">
                 <div class="details-column float-right">
-                    <div>
+                    <div class="result-setter">
                         <label class="title">Правильность ответа</label>
                         <!-- ko if: rightPercentage() !== null && !$root.current.mark.isInput() -->
                         <span class="radio-important" data-bind="text: rightPercentage, click: $root.actions.mark.edit"></span>

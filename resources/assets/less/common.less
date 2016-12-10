@@ -337,10 +337,20 @@ span.radio{
     }
   }
 }
-span.clickable{
-  color: @patronus;
-  cursor: pointer;
-  font-weight: bold;
+span{
+  &.clickable, .correct, .incorrect{
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .clickable{
+    color: @patronus;
+  }
+  .correct{
+    color: @greensea;
+  }
+  .incorrect{
+    color: @crimson-red;
+  }
 }
 
 

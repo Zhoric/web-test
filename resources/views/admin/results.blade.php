@@ -23,20 +23,18 @@
             <div class="result">
                 <a class="result" data-bind="attr: {href: '/admin/result/' + id()}">
                     <div class="details-row">
-                        <div class="details-column width-50p">
+                        <div class="details-column width-45p">
                             <label class="title">ФИО студента</label>
                             <span data-bind="text: user.lastName() + ' ' +
                                                    user.firstName() + ' ' +
                                                    user.patronymic()"></span>
-                            {{--<span data-bind="text: user.firstName"></span>--}}
-                            {{--<span data-bind="text: user.patronymic"></span>--}}
                         </div>
-                        <div class="details-column width-20p">
+                        <div class="details-column width-25p">
                             <label class="title">Оценка</label>
-                            <!-- ko if: mark() === null -->
-                            <span class="ok" data-bind="text: mark"></span><span class="ok">/100</span>
+                            <!-- ko if: mark() !== null -->
+                            <span class="radio-important" data-bind="text: mark() +'/100'"></span>
                             <!-- /ko -->
-                            <span class="not-ok" data-bind="if: mark() !== null">Требуется проверка</span>
+                            <span class="radio-negative" data-bind="if: mark() === null">Требуется проверка</span>
                         </div>
                         <div class="details-column width-20p">
                             <label class="title">Номер попытки</label>
@@ -48,7 +46,6 @@
                     </div>
                 </a>
             </div>
-
             <!-- /ko -->
         </div>
         <!-- /ko -->
@@ -84,49 +81,6 @@
                        optionsCaption: 'Выберите тест'"></select>
         </div>
     </div>
-
-
-    {{--<div>--}}
-        {{--<!-- ko foreach: current.results-->--}}
-        {{--<a class="result" data-bind="attr: {href: '/admin/result/' + id()}">--}}
-            {{--<div class="org-info">--}}
-                {{--<div class="row">--}}
-                    {{--<div class="name">--}}
-                        {{--<label>ФИО студента</label></br>--}}
-                        {{--<span data-bind="text: user.lastName"></span>--}}
-                        {{--<span data-bind="text: user.firstName"></span>--}}
-                        {{--<span data-bind="text: user.patronymic"></span>--}}
-                    {{--</div>--}}
-                    {{--<div class="mark">--}}
-                        {{--<label>Оценка</label></br>--}}
-                        {{--<!-- ko if: mark() -->--}}
-                        {{--<span class="ok" data-bind="text: mark"></span><span class="ok">/100</span>--}}
-                        {{--<!-- /ko -->--}}
-                        {{--<span class="not-ok" data-bind="if: !mark()">Требуется проверка</span>--}}
-                    {{--</div>--}}
-                    {{--<div class="attempt">--}}
-                        {{--<label>Номер попытки</label></br>--}}
-                        {{--<span data-bind="text: attempt"></span>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<label class="date" data-bind="text: dateTime.date"></label>--}}
-            {{--</div>--}}
-        {{--</a>--}}
-        {{--<!-- /ko -->--}}
-    {{--</div>--}}
+    @include('admin.shared.error-modal')
 </div>
 @endsection
-<div class="g-hidden">
-    <div class="box-modal" id="errors-modal">
-        <div>
-            <div>
-                <span class="fa">&#xf071;</span>
-                <h3>Произошла ошибка</h3>
-                <h4 data-bind="text: $root.errors.message"></h4>
-            </div>
-            <div class="button-holder">
-                <button data-bind="click: $root.errors.accept">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
