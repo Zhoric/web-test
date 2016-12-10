@@ -139,90 +139,6 @@ input[type=checkbox].custom-checkbox:not(checked) + label:after {
 input[type=checkbox].custom-checkbox:checked + label:after {
   opacity: 1;
 }
-.width-zero {
-  width: 0;
-}
-.width-5p {
-  width: 5%;
-}
-.width-10p {
-  width: 10%;
-}
-.width-13p {
-  width: 13%;
-}
-.width-15p {
-  width: 15%;
-}
-.width-19p {
-  width: 19%;
-}
-.width-20p {
-  width: 20%;
-}
-.width-25p {
-  width: 25%;
-}
-.width-27p {
-  width: 27%;
-}
-.width-30p {
-  width: 30%;
-}
-.width-35p {
-  width: 35%;
-}
-.width-39p {
-  width: 39%;
-}
-.width-40p {
-  width: 40%;
-}
-.width-45p {
-  width: 45%;
-}
-.width-48p {
-  width: 48%;
-}
-.width-50p {
-  width: 50%;
-}
-.width-55p {
-  width: 55%;
-}
-.width-60p {
-  width: 60%;
-}
-.width-65p {
-  width: 65%;
-}
-.width-70p {
-  width: 70%;
-}
-.width-75p {
-  width: 75%;
-}
-.width-80p {
-  width: 80%;
-}
-.width-85p {
-  width: 85%;
-}
-.width-90p {
-  width: 90%;
-}
-.width-95p {
-  width: 95%;
-}
-.width-98p {
-  width: 98%;
-}
-.width-99p {
-  width: 99%;
-}
-.width-100p {
-  width: 100%;
-}
 .float-right {
   float: right;
 }
@@ -370,6 +286,7 @@ span.radio-positive,
 span.radio-negative,
 span.radio-neutral {
   font-size: 18px;
+  cursor: pointer;
 }
 span.radio-important {
   color: #5D8CAE;
@@ -385,6 +302,11 @@ span.radio-neutral {
 }
 span.radio-neutral:hover {
   color: #5D8CAE;
+}
+span.clickable {
+  color: #5D8CAE;
+  cursor: pointer;
+  font-weight: bold;
 }
 .image-expander {
   width: 100%;
@@ -404,6 +326,93 @@ span.radio-neutral:hover {
   width: auto;
   height: auto;
   display: table;
+}
+.width-zero {
+  width: 0;
+}
+.width-5p {
+  width: 5%;
+}
+.width-10p {
+  width: 10%;
+}
+.width-13p {
+  width: 13%;
+}
+.width-15p {
+  width: 15%;
+}
+.width-19p {
+  width: 19%;
+}
+.width-20p {
+  width: 20%;
+}
+.width-25p {
+  width: 25%;
+}
+.width-27p {
+  width: 27%;
+}
+.width-30p {
+  width: 30%;
+}
+.width-35p {
+  width: 35%;
+}
+.width-38p {
+  width: 38%;
+}
+.width-39p {
+  width: 39%;
+}
+.width-40p {
+  width: 40%;
+}
+.width-45p {
+  width: 45%;
+}
+.width-48p {
+  width: 48%;
+}
+.width-50p {
+  width: 50%;
+}
+.width-55p {
+  width: 55%;
+}
+.width-60p {
+  width: 60%;
+}
+.width-65p {
+  width: 65%;
+}
+.width-70p {
+  width: 70%;
+}
+.width-75p {
+  width: 75%;
+}
+.width-80p {
+  width: 80%;
+}
+.width-85p {
+  width: 85%;
+}
+.width-90p {
+  width: 90%;
+}
+.width-95p {
+  width: 95%;
+}
+.width-98p {
+  width: 98%;
+}
+.width-99p {
+  width: 99%;
+}
+.width-100p {
+  width: 100%;
 }
 .clear {
   clear: both;

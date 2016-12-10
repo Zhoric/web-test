@@ -179,36 +179,7 @@ input[type=checkbox].custom-checkbox{
     opacity: 1;
   }
 }
-.width{
-  &-zero{width:0}
-  &-5p{width:5%}
-  &-10p{width:10%}
-  &-13p{width:13%}
-  &-15p{width:15%}
-  &-19p{width:19%}
-  &-20p{width:20%}
-  &-25p{width:25%}
-  &-27p{width:27%}
-  &-30p{width:30%}
-  &-35p{width:35%}
-  &-39p{width:39%}
-  &-40p{width:40%}
-  &-45p{width:45%}
-  &-48p{width:48%}
-  &-50p{width:50%}
-  &-55p{width:55%}
-  &-60p{width:60%}
-  &-65p{width:65%}
-  &-70p{width:70%}
-  &-75p{width:75%}
-  &-80p{width:80%}
-  &-85p{width:85%}
-  &-90p{width:90%}
-  &-95p{width:95%}
-  &-98p{width:98%}
-  &-99p{width:99%}
-  &-100p{width:100%}
-}
+
 .float-right{float:right}
 .float-left{float:left}
 .clear{clear:both}
@@ -348,6 +319,7 @@ span.radio{
   cursor: pointer;
   &-important, &-positive, &-negative, &-neutral{
     font-size: 18px;
+    cursor: pointer;
   }
   &-important{
     color: @patronus;
@@ -365,6 +337,12 @@ span.radio{
     }
   }
 }
+span.clickable{
+  color: @patronus;
+  cursor: pointer;
+  font-weight: bold;
+}
+
 
 
 .image-expander{
@@ -390,7 +368,37 @@ span.radio{
 
 
 
-
+.width{
+  &-zero{width:0}
+  &-5p{width:5%}
+  &-10p{width:10%}
+  &-13p{width:13%}
+  &-15p{width:15%}
+  &-19p{width:19%}
+  &-20p{width:20%}
+  &-25p{width:25%}
+  &-27p{width:27%}
+  &-30p{width:30%}
+  &-35p{width:35%}
+  &-38p{width:38%}
+  &-39p{width:39%}
+  &-40p{width:40%}
+  &-45p{width:45%}
+  &-48p{width:48%}
+  &-50p{width:50%}
+  &-55p{width:55%}
+  &-60p{width:60%}
+  &-65p{width:65%}
+  &-70p{width:70%}
+  &-75p{width:75%}
+  &-80p{width:80%}
+  &-85p{width:85%}
+  &-90p{width:90%}
+  &-95p{width:95%}
+  &-98p{width:98%}
+  &-99p{width:99%}
+  &-100p{width:100%}
+}
 
 
 
