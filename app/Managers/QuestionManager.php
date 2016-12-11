@@ -36,13 +36,21 @@ class QuestionManager
         $this->_unitOfWork->questions()->create($question);
         $this->_unitOfWork->commit();
 
-        foreach ($answers as $answer){
-            $newAnswer = new Answer();
-            $newAnswer->setText($answer['text']);
-            $newAnswer->setIsRight($answer['isRight']);
-            $newAnswer->setQuestion($question);
+        if (isset($answers)){
+            foreach ($answers as $answer){
 
-            $this->_unitOfWork->answers()->create($newAnswer);
+                if (is_array($answer)){
+                    $newAnswer = new Answer();
+
+                    $newAnswer->setText($answer['text']);
+                    $newAnswer->setIsRight($answer['isRight']);
+                } else {
+                    $newAnswer = $answer;
+                }
+
+                $newAnswer->setQuestion($question);
+                $this->_unitOfWork->answers()->create($newAnswer);
+            }
         }
 
         $this->_unitOfWork->commit();
@@ -183,4 +191,11 @@ class QuestionManager
         $this->_unitOfWork->commit();
     }
 
+    public function getByTheme($themeId){
+        return $this->_unitOfWork->questions()->getByTheme($themeId);
+    }
+
+    public function getQuestionAnswers($questionId){
+        return $this->_unitOfWork->answers()->getByQuestion($questionId);
+    }
 }

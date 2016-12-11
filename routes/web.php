@@ -338,4 +338,15 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('set', 'UISettingsController@setSettings');
     });
 
+    /*-----------------------------------------------------------------------------
+    *                             ИМПОРТ/ЭКСПОРТ
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'import'], function () {
+        Route::get('questions/{themeId}', 'ImportExportController@importQuestions');
+    });
+    Route::group(['prefix' => 'export'], function () {
+        Route::get('questions/{themeId}', 'ImportExportController@exportQuestions');
+    });
+
 });

@@ -69,4 +69,8 @@ class QuestionRepository extends BaseRepository
 
         return $query->getScalarResult();
     }
+
+    public function getByTheme($themeId){
+        return $this->repo->findBy(['theme' => $themeId]);
+    }
 }
