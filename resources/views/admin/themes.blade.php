@@ -22,27 +22,27 @@
 <div class="content">
     <div class="layer">
         <div class="details-row theme">
-            <div class="details-column width-100p">
+            <div class="details-column width-98p">
                 <!-- ko ifnot: $root.mode() === 'theme.edit' -->
                 <h2><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></h2>
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
                 <input type="text" tooltip-mark="theme-name_tooltip" data-bind="value: $root.current.theme().name, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
                 <span>
-                <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
-                <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
-            </span>
+                    <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
+                    <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
+                </span>
                 <!-- /ko -->
             </div>
 
         </div>
         <div class="details-row theme-head">
-            <div class="details-column width-100p">
+            <div class="details-column width-98p">
                 <label class="title">Дисциплина</label>
                 <span data-bind="text: $root.current.discipline().name"></span>
             </div>
 
-            <div class="details-column width-100p">
+            <div class="details-column width-98p">
                 <button class="action-button" data-bind="click: $root.csed.question.toggleAdd">Добавить вопрос</button>
             </div>
         </div>
@@ -151,7 +151,7 @@
         <div class="details-row variants">
             <div class="details-column width-98p">
                 <label class="title">Варианты ответов<span class="required"></span></label>
-                <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup'"/>
+                <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup', event: {keyup: $root.events.answers}"/>
                 <button data-bind="click: $root.csed.answer.add" class="fa mini approve">&#xf067;</button>
             </div>
         </div>
@@ -181,7 +181,7 @@
         <div class="details-row float-buttons">
             <div class="details-column width-99p">
                 <button class="cancel" data-bind="click: $root.csed.question.cancel">Отмена</button>
-                <button class="approve" data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
+                <button class="approve approve-btn" data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
             </div>
         </div>
     </div>

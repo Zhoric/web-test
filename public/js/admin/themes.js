@@ -79,7 +79,8 @@ $(document).ready(function(){
                     isRight: ko.observable(false)
                 }),
                 answers: ko.observableArray([]),
-                code: ko.observable()
+                code: ko.observable(),
+                answerIdCounter: ko.observable(0)
             };
             self.filter = {
                 name: ko.observable(''),
@@ -135,6 +136,7 @@ $(document).ready(function(){
                         });
                         var minutes = Math.floor(data.time()/60);
                         var seconds = data.time()%60;
+
                         self.current.question()
                             .id(data.id())
                             .text(data.text())
@@ -146,6 +148,7 @@ $(document).ready(function(){
                             .image(data.image())
                             .showImage(data.image());
                         self.current.answers(answers());
+                        self.current.answerIdCounter(0);
                     }
                 },
                 empty: {
@@ -154,13 +157,14 @@ $(document).ready(function(){
                             .id(0)
                             .text('')
                             .time(0)
-                            .complexity(0)
-                            .type(0)
+                            .complexity(null)
+                            .type(null)
                             .minutes('')
                             .seconds('')
                             .image(null)
                             .showImage(null);
                         self.current.answers([]);
+                        self.current.answerIdCounter(0);
                         self.alter.empty.file();
                         self.code.empty();
                     },
@@ -369,13 +373,14 @@ $(document).ready(function(){
                         var text = self.current.answer().text();
                         if (!text) return;
                         var isRight = self.current.answer().isRight();
-                        var id = self.current.answers().length ? self.current.answers().length + 1 : 1;
+                        var id = self.current.answerIdCounter();
 
                         self.current.answers.push({
                             id: ko.observable(id),
                             text: ko.observable(text),
                             isRight: ko.observable(isRight)
                         });
+                        self.current.answerIdCounter(++id);
                         self.alter.empty.answer();
                     },
                     remove: function(data){
@@ -467,6 +472,8 @@ $(document).ready(function(){
                 },
                 empty: function(){
                     self.code.params.set([]);
+                    self.code.params.input('');
+                    self.code.params.output('');
                     self.code.program(null);
                     self.code.text('');
                 },
@@ -622,6 +629,11 @@ $(document).ready(function(){
                 focusin: function(data, e){
                     if (!$(e.target).hasClass('tooltipstered')) return;
                     $(e.target).tooltipster('close');
+                },
+                answers: function(data, e){
+                    if (e.which === 13) {
+                        self.csed.answer.add();
+                    }
                 }
             };
 
