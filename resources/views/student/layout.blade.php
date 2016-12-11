@@ -13,6 +13,8 @@
     <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
 
     @yield('javascript')
 </head>

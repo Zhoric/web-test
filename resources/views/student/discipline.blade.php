@@ -1,5 +1,5 @@
 @extends('student.layout')
-@section('title', 'Главная')
+@section('title', 'Тесты')
 @section('style')
     <link rel="stylesheet" href="{{ URL::asset('css/site.css')}}" />
 @endsection

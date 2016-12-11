@@ -55,6 +55,7 @@ Route::get('welcome',function (){
 
 Route::get('/test/{id}', function(){return View('student.test');});
 Route::get('/home', function(){return View('student.home');});
+Route::get('/results', function(){return View('student.results');});
 Route::get('/discipline/{id}', function(){return View('student.discipline');});
 Route::get('/section/{id}', function(){return View('student.section');});
 

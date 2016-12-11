@@ -102,11 +102,6 @@ input{
   }
 }
 
-.details{
-  border-top: 1px solid @akcio;
-  border-bottom: 1px solid @akcio;
-}
-
 .details-column{
   margin: 1%;
   input[type=text], select, textarea{
@@ -194,7 +189,7 @@ input{
     text-align: justify;
   }
   .result-setter input{
-    max-width: 84px;
+    max-width: 83px;
   }
 }
 
@@ -1354,144 +1349,144 @@ button.sq-small{
 }
 
 
-.results{
-  .filter{
-    height: 170px;
-    div{
-      width: 48%;
-    }
-  }
-  .org-info{
-    border: 1px solid @grey;
-    .border-radius(2px);
-    background: @white;
-    cursor:pointer;
-    &:hover{
-      border: 1px solid @mainTheme;
-    }
-    span{
-      font-size: 16px;
-    }
-    .row{
-      width: 97%;
-    }
-    .date{
-      float:right;
-      top: -25px;
-      right: 10px;
-      position: relative;
-    }
-    .mark{
-      width: 20%;
-    }
-    .attempt{
-      width: 10%;
-    }
-    .name{
-      width: 40%;
-    }
-  }
-  a.result{
-    &:hover{
-      color: @black;
-    }
-  }
-}
-
-.result-details{
-  .org-info{
-    border-bottom: 20px solid @white;
-    span{
-      font-size: 16px;
-    }
-    label{
-      span.clickable{
-        .label();
-        color: @patronus;
-        cursor: pointer;
-      }
-    }
-  }
-  .answers{
-    background: @white;
-    cursor: pointer;
-    .answer{
-      padding: 10px;
-      border-bottom: 1px solid @grey;
-      &:first-child{
-        border-top: 1px solid @grey;
-      }
-      span{
-        font-size: 15px;
-        padding: 0 3px;
-      }
-      span.tagged-label{
-        color: @patronus;
-        font-size: 15px;
-        float: right;
-        position: relative;
-      }
-      &.current{
-        background: @patronus;
-        border-color: @patronus;
-        color: @white;
-        span.tagged-label{
-          background: @patronus;
-          color: @white;
-        }
-      }
-      &:hover{
-        background: @patronus;
-        color: @white;
-        span.tagged-label{
-          background: @patronus;
-          color: @white;
-        }
-      }
-    }
-    .answer-details{
-      padding: 15px;
-      background: @patronus-shade;
-      display:flex;
-      div{
-        display: inline-block;
-      }
-      .icon{
-        font-size: 21px;
-        margin: 0 15px;
-        float: left;
-      }
-      .question, .answer-text{
-        width: 40%;
-      }
-      span.text{
-        display: table;
-        text-align: justify;
-        font-size: 12px;
-      }
-      .mark{
-        position: relative;
-        padding: 0 20px;
-        top: -5px;
-        label{
-          .label();
-        }
-        span{
-          font-size: 17px;
-          color: @patronus;
-        }
-        span.fa{
-          padding: 0 5px;
-          font-size: 20px;
-        }
-        input{
-          width: 55px;
-          padding: 3px;
-          font-size: 12px;
-        }
-      }
-    }
-  }
-}
+//.results{
+//  .filter{
+//    height: 170px;
+//    div{
+//      width: 48%;
+//    }
+//  }
+//  .org-info{
+//    border: 1px solid @grey;
+//    .border-radius(2px);
+//    background: @white;
+//    cursor:pointer;
+//    &:hover{
+//      border: 1px solid @mainTheme;
+//    }
+//    span{
+//      font-size: 16px;
+//    }
+//    .row{
+//      width: 97%;
+//    }
+//    .date{
+//      float:right;
+//      top: -25px;
+//      right: 10px;
+//      position: relative;
+//    }
+//    .mark{
+//      width: 20%;
+//    }
+//    .attempt{
+//      width: 10%;
+//    }
+//    .name{
+//      width: 40%;
+//    }
+//  }
+//  a.result{
+//    &:hover{
+//      color: @black;
+//    }
+//  }
+//}
+//
+//.result-details{
+//  .org-info{
+//    border-bottom: 20px solid @white;
+//    span{
+//      font-size: 16px;
+//    }
+//    label{
+//      span.clickable{
+//        .label();
+//        color: @patronus;
+//        cursor: pointer;
+//      }
+//    }
+//  }
+//  .answers{
+//    background: @white;
+//    cursor: pointer;
+//    .answer{
+//      padding: 10px;
+//      border-bottom: 1px solid @grey;
+//      &:first-child{
+//        border-top: 1px solid @grey;
+//      }
+//      span{
+//        font-size: 15px;
+//        padding: 0 3px;
+//      }
+//      span.tagged-label{
+//        color: @patronus;
+//        font-size: 15px;
+//        float: right;
+//        position: relative;
+//      }
+//      &.current{
+//        background: @patronus;
+//        border-color: @patronus;
+//        color: @white;
+//        span.tagged-label{
+//          background: @patronus;
+//          color: @white;
+//        }
+//      }
+//      &:hover{
+//        background: @patronus;
+//        color: @white;
+//        span.tagged-label{
+//          background: @patronus;
+//          color: @white;
+//        }
+//      }
+//    }
+//    .answer-details{
+//      padding: 15px;
+//      background: @patronus-shade;
+//      display:flex;
+//      div{
+//        display: inline-block;
+//      }
+//      .icon{
+//        font-size: 21px;
+//        margin: 0 15px;
+//        float: left;
+//      }
+//      .question, .answer-text{
+//        width: 40%;
+//      }
+//      span.text{
+//        display: table;
+//        text-align: justify;
+//        font-size: 12px;
+//      }
+//      .mark{
+//        position: relative;
+//        padding: 0 20px;
+//        top: -5px;
+//        label{
+//          .label();
+//        }
+//        span{
+//          font-size: 17px;
+//          color: @patronus;
+//        }
+//        span.fa{
+//          padding: 0 5px;
+//          font-size: 20px;
+//        }
+//        input{
+//          width: 55px;
+//          padding: 3px;
+//          font-size: 12px;
+//        }
+//      }
+//    }
+//  }
+//}
 
 

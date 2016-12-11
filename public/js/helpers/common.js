@@ -29,5 +29,10 @@ var commonHelper = {
         close: function(selector){
             $(selector).arcticmodal('close');
         }
+    },
+    parseAnswers: function(answers){
+        return answers
+            .replace(/<\/answer>/g, '\n\n')
+            .slice(0, answers.lastIndexOf('\n\n'));
     }
 };
