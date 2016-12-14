@@ -11,8 +11,10 @@
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-pager.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
     @yield('javascript')
 </head>
 <body>

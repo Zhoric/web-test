@@ -36,8 +36,8 @@ $(document).ready(function(){
                     })
                 }),
                 discipline: ko.observable({
-                    id: ko.observable(0),
-                    name: ko.observable('')
+                    // id: ko.observable(0),
+                    // name: ko.observable('')
                 }),
                 questions: ko.observableArray([]),
                 question: ko.validatedObservable({
@@ -481,131 +481,78 @@ $(document).ready(function(){
 
             self.get = {
                 discipline: function(){
-                    $.get('/api/disciplines/' + self.theme().discipline(), function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.current.discipline()
-                                .id(result.Data.id())
-                                .name(result.Data.name());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    var url = '/api/disciplines/' + self.theme().discipline();
+                    $get(url, function(data){
+                        self.current.discipline(data);
+                    })();
                 },
                 questions: function(){
-                    var theme = 'theme=' + self.theme().id();
-                    var page = '&page=' + self.pagination.currentPage();
-                    var pageSize = '&pageSize=' + self.pagination.pageSize();
-                    var name = '&name=' + self.filter.name();
-                    var type = '&type=' + (self.filter.type() ? self.filter.type().id() : '');
-                    var complexity = '&complexity=' + (self.filter.complexity() ? self.filter.complexity().id() : '');
-
-                    var url = '/api/questions/show?' + theme +
-                        page + pageSize +
-                        name + type + complexity;
-
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.current.questions(result.Data.data());
-                            self.pagination.itemsCount(result.Data.count());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    var url = '/api/questions/show?' +
+                        'theme=' + self.theme().id() +
+                        '&page=' + self.pagination.currentPage() +
+                        '&pageSize=' + self.pagination.pageSize() +
+                        '&name=' + self.filter.name() +
+                        '&type=' + (self.filter.type() ? self.filter.type().id() : '') +
+                        '&complexity=' + (self.filter.complexity() ? self.filter.complexity().id(): '');
+                    $get(url, function(data){
+                        self.current.questions(data.data());
+                        self.pagination.itemsCount(data.count());
+                    })();
                 },
                 theme: function(){
                     var url = window.location.href;
                     var themeId = +url.substr(url.lastIndexOf('/')+1);
-
-                    $.get('/api/disciplines/themes/' + themeId, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.theme(result.Data);
-                            self.get.discipline();
-                            self.get.questions();
-                            self.alter.fill.theme(self.theme());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    url = '/api/disciplines/themes/' + themeId;
+                    $get(url, function(data){
+                        self.theme(data);
+                        self.get.discipline();
+                        self.get.questions();
+                        self.alter.fill.theme(self.theme());
+                    })();
                 },
                 questionWithAnswers: function(id){
                     var url = '/api/questions/' + id;
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.alter.fill.question(result.Data.question, result.Data.answers);
-                            if (result.Data.question.type() === 5){
-                                self.get.code();
-                            }
-                            return;
+                    $get(url, function(data){
+                        self.alter.fill.question(data.question, data.answers);
+                        if (data.question.type() === 5){
+                            self.get.code();
                         }
-                        self.errors.show(result.Message());
-                    });
+                    })();
                 },
                 code: function(){
-                    var id = self.current.question().id();
-                    var url = '/api/program/byQuestion/' + id;
-                    $.get(url , function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            console.log(result);
-                            self.code.fill(result.Data);
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
-                },
+                    var url = '/api/program/byQuestion/' + self.current.question().id();
+                    $get(url, function(data){
+                        self.code.fill(data);
+                    })();
+                }
             };
             self.post = {
                 theme: function(){
                     var url = '/api/disciplines/themes/update';
                     var json = self.alter.stringify.theme();
-
-                    $.post(url, json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (!result.Success()) {
-                            self.errors.show(result.Message());
-                        }
-                    });
+                    $post(url, json)();
                 },
                 question: function(action){
                     var url = '/api/questions/' + action;
                     var json = self.alter.stringify.question();
-                    $.post(url, json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.alter.empty.question();
-                            self.mode('none');
-                            self.get.questions();
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    $post(url, json, function(){
+                        self.alter.empty.question();
+                        self.mode('none');
+                        self.get.questions();
+                    })();
                 },
                 removedQuestion: function(){
                     var url = '/api/questions/delete/' + self.current.question().id();
-                    $.post(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.mode('none');
-                            self.alter.empty.question();
-                            self.get.questions();
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    })
+                    $post(url, '', function(){
+                        self.mode('none');
+                        self.alter.empty.question();
+                        self.get.questions();
+                    })();
                 },
                 program: function(json){
-                    $.post('/api/program/run', json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.code.result.show(result.Data());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    $post('/api/program/run', json, function(data){
+                        self.code.result.show(data());
+                    })();
                 }
             };
 

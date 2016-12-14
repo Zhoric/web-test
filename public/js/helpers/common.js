@@ -1,6 +1,32 @@
 /**
  * Created by nyanjii on 26.11.16.
  */
+var state = {
+    edit: 'edit',
+    remove: 'remove',
+    add: 'add',
+    info: 'info'
+};
+
+var testType = {
+    control: 1,
+    study: 2
+};
+
+var questionType = {
+    closedSingle: 1,
+    closedMultiple: 2,
+    openSingleLine: 3,
+    openMultiLine: 4,
+    code: 5
+};
+
+var complexity = {
+    easy: 1,
+    medium: 2,
+    hard: 3
+};
+
 var commonHelper = {
     parseDate: function(date){
         date = new Date(date);
@@ -36,3 +62,5 @@ var commonHelper = {
             .slice(0, answers.lastIndexOf('\n\n'));
     }
 };
+
+
