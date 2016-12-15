@@ -1,7 +1,7 @@
 /**
  * Created by nyanjii on 14.12.16.
  */
-$get = function(url, successCallback, data){
+$get = function(url, successCallback, errors, data){
     if (typeof data === 'undefined'){
         return function(){
             $.get(url, function(response){
@@ -10,7 +10,7 @@ $get = function(url, successCallback, data){
                     successCallback(result.Data);
                     return;
                 }
-                self.errors.show(result.Message());
+                errors.show(result.Message());
             });
         }
     }
@@ -25,7 +25,7 @@ $get = function(url, successCallback, data){
         });
     }
 };
-$post = function(url, data, successCallback){
+$post = function(url, data, errors, successCallback){
     return function(){
         $.post(url, data, function(response){
             var result = ko.mapping.fromJSON(response);
@@ -33,7 +33,7 @@ $post = function(url, data, successCallback){
                 if (typeof successCallback !== 'undefined') successCallback();
                 return;
             }
-            self.errors.show(result.Message());
+            errors.show(result.Message());
         });
     };
 };

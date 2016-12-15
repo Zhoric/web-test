@@ -35,10 +35,7 @@ $(document).ready(function(){
                         }
                     })
                 }),
-                discipline: ko.observable({
-                    // id: ko.observable(0),
-                    // name: ko.observable('')
-                }),
+                discipline: ko.observable({}),
                 questions: ko.observableArray([]),
                 question: ko.validatedObservable({
                     id: ko.observable(0),
@@ -484,7 +481,7 @@ $(document).ready(function(){
                     var url = '/api/disciplines/' + self.theme().discipline();
                     $get(url, function(data){
                         self.current.discipline(data);
-                    })();
+                    }, self.errors)();
                 },
                 questions: function(){
                     var url = '/api/questions/show?' +
@@ -497,7 +494,7 @@ $(document).ready(function(){
                     $get(url, function(data){
                         self.current.questions(data.data());
                         self.pagination.itemsCount(data.count());
-                    })();
+                    }, self.errors)();
                 },
                 theme: function(){
                     var url = window.location.href;
@@ -508,7 +505,7 @@ $(document).ready(function(){
                         self.get.discipline();
                         self.get.questions();
                         self.alter.fill.theme(self.theme());
-                    })();
+                    }, self.errors)();
                 },
                 questionWithAnswers: function(id){
                     var url = '/api/questions/' + id;
@@ -517,25 +514,25 @@ $(document).ready(function(){
                         if (data.question.type() === 5){
                             self.get.code();
                         }
-                    })();
+                    }, self.errors)();
                 },
                 code: function(){
                     var url = '/api/program/byQuestion/' + self.current.question().id();
                     $get(url, function(data){
                         self.code.fill(data);
-                    })();
+                    }, self.errors)();
                 }
             };
             self.post = {
                 theme: function(){
                     var url = '/api/disciplines/themes/update';
                     var json = self.alter.stringify.theme();
-                    $post(url, json)();
+                    $post(url, json, self.errors)();
                 },
                 question: function(action){
                     var url = '/api/questions/' + action;
                     var json = self.alter.stringify.question();
-                    $post(url, json, function(){
+                    $post(url, json, self.errors, function(){
                         self.alter.empty.question();
                         self.mode('none');
                         self.get.questions();
@@ -543,14 +540,14 @@ $(document).ready(function(){
                 },
                 removedQuestion: function(){
                     var url = '/api/questions/delete/' + self.current.question().id();
-                    $post(url, '', function(){
+                    $post(url, '', self.errors, function(){
                         self.mode('none');
                         self.alter.empty.question();
                         self.get.questions();
                     })();
                 },
                 program: function(json){
-                    $post('/api/program/run', json, function(data){
+                    $post('/api/program/run', json, self.errors, function(data){
                         self.code.result.show(data());
                     })();
                 }

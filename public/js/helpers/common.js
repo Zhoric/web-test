@@ -2,9 +2,10 @@
  * Created by nyanjii on 26.11.16.
  */
 var state = {
-    edit: 'edit',
+    none: 'none',
+    update: 'update',
     remove: 'remove',
-    add: 'add',
+    create: 'create',
     info: 'info'
 };
 

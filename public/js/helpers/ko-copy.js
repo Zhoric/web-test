@@ -1,6 +1,6 @@
 /**
  * Created by nyanjii on 14.12.16.
  */
-ko.observable.fn.copy = function(){
-    return ko.observable(ko.mapping.fromJS(ko.mapping.toJS(this)));
+ko.observable.fn.copy = function(data){
+    this(ko.mapping.fromJS(ko.mapping.toJS(data)));
 };
