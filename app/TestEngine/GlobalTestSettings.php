@@ -51,4 +51,15 @@ abstract class GlobalTestSettings
      */
     const secondSemesterMounthKey = 'secondSemesterMounthKey';
     const secondSemesterMounth = 1;
+
+    /**
+     * Формат сериализации даты.
+     */
+    const dateSerializationFormat = 'Y-m-d H:i:s';
+
+    /**
+     * Часовой пояс.
+     */
+    const dateTimeZone = 'Europe/Moscow';
+
 }

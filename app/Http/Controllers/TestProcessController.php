@@ -14,6 +14,13 @@ use TestEngine\TestProcessManager;
 
 class TestProcessController extends Controller
 {
+    private $_testProcessManager;
+
+    public function __construct(TestProcessManager $testProcessManager)
+    {
+        $this->_testProcessManager = $testProcessManager;
+    }
+
     /*
      * Инициализация процесса тестирования.
      * Простановка в переменных сессии браузера идентификатора сессии тестирования.
@@ -25,7 +32,7 @@ class TestProcessController extends Controller
             $currentUser = Auth::user();
             if (isset($currentUser)){
                 $userId = $currentUser->getId();
-                $result = TestProcessManager::initTest($userId, $testId);
+                $result = $this->_testProcessManager->initTest($userId, $testId);
                 $request->session()->set('sessionId', $result);
                 return $this->successJSONResponse();
             } else {
@@ -44,7 +51,7 @@ class TestProcessController extends Controller
     public function getNextQuestion(Request $request){
         try{
             $sessionId = $request->session()->get('sessionId');
-            $nextQuestionRequestResult = TestProcessManager::getNextQuestion($sessionId);
+            $nextQuestionRequestResult = $this->_testProcessManager->getNextQuestion($sessionId);
 
             return $this->successJSONResponse($nextQuestionRequestResult);
         } catch (Exception $exception){
@@ -69,7 +76,7 @@ class TestProcessController extends Controller
             $questionAnswer->setAnswerIds($answersIds);
             $questionAnswer->setAnswerText($answerText);
 
-            $result = TestProcessManager::processAnswer($sessionId, $questionAnswer);
+            $result = $this->_testProcessManager->processAnswer($sessionId, $questionAnswer);
 
             return $this->successJSONResponse($result);
         } catch (Exception $exception){

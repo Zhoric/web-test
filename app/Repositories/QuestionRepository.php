@@ -70,6 +70,17 @@ class QuestionRepository extends BaseRepository
         return $query->getScalarResult();
     }
 
+    public function getByTest($testId){
+        $qb = $this->repo->createQueryBuilder('q');
+        $query = $qb->join(Theme::class, 't', Join::WITH, 'q.theme = t.id')
+            ->join(TestTheme::class, 'tt', Join::WITH,
+                't.id = tt.theme AND tt.test = :test')
+            ->setParameter('test', $testId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
     public function getByTheme($themeId){
         return $this->repo->findBy(['theme' => $themeId]);
     }

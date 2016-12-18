@@ -69,8 +69,12 @@ class CodeFileManager
     }
 
     public function getStudentResult($dirPath){
-        $result = file_get_contents("$dirPath/result.txt");
-        return $result;
+        try{
+            $result = file_get_contents("$dirPath/result.txt");
+            return $result;
+        } catch (Exception $exception){
+            return 0;
+        }
     }
 
     /**

@@ -4,17 +4,21 @@ namespace Helpers;
 
 use DateTime;
 use DateTimeZone;
+use TestEngine\GlobalTestSettings;
 
 class DateHelper
 {
-    private static $dateFormat = 'Y-m-d H:i:s';
-
     public static function getCurrentDateTimeString(){
-
-        $now = new DateTime();
-        $now->setTimezone(new DateTimeZone('Europe/Moscow'));
-        $nowString = $now->format(self::$dateFormat);
+        $now = self::getCurrentDateTime();
+        $nowString = $now->format(GlobalTestSettings::dateSerializationFormat);
 
         return $nowString;
+    }
+
+    public static function getCurrentDateTime(){
+        $now = new DateTime();
+        $now->setTimezone(new DateTimeZone(GlobalTestSettings::dateTimeZone));
+
+        return $now;
     }
 }

@@ -182,7 +182,7 @@ return [
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         trupedia\LaravelBladeHaml\LaravelBladeHamlServiceProvider::class,
         JeroenNoten\LaravelCkEditor\ServiceProvider::class,
-        Barryvdh\Elfinder\ElfinderServiceProvider::class
+        Barryvdh\Elfinder\ElfinderServiceProvider::class,
 
     ],
 

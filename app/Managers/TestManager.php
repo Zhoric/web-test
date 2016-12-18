@@ -66,6 +66,10 @@ class TestManager
             ->getNotAnsweredQuestionsByTest($testId, $answeredIds, $timeLeft);
     }
 
+    public function getQuestionsByTest($testId){
+        return $this->_unitOfWork->questions()->getByTest($testId);
+    }
+
     /**
      * @param $questionId
      * @param bool $showWhichRight - показывать ли правильность ответов.

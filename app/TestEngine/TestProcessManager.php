@@ -5,6 +5,7 @@ use DateTimeZone;
 use Exception;
 use DateTime;
 use GivenAnswer;
+use Helpers\DateHelper;
 use Illuminate\Session\SessionManager;
 use Managers\QuestionManager;
 use Managers\SettingsManager;
@@ -20,119 +21,91 @@ use TestResult;
  */
 class TestProcessManager
 {
-    const dateFormat = 'Y-m-d H:i:s';
-
     /**
      * @var TestManager
      */
-    private static $_testManager;
+    private $_testManager;
 
     /**
      * @var TestResultManager
      */
-    private static $_testResultManager;
+    private $_testResultManager;
 
     /**
      * @var QuestionManager
      */
-    private static $_questionManager;
+    private $_questionManager;
 
     /**
      * @var SettingsManager
      */
-    private static $_settingsManager;
+    private $_settingsManager;
+
+    /**
+     * @var TestSessionFactory
+     */
+    private $_sessionFactory;
 
     /**
      * @var TestSession
      */
-    private static $_session;
+    private $_testSession;
 
     /**
      * @var TestResult
      */
-    private static $_testResult;
+    private $_testResult;
 
-    /**
-     * @return QuestionManager
-     */
-    private static function getQuestionManager(){
-        if (self::$_questionManager == null){
-            self::$_questionManager = app()->make(QuestionManager::class);
-        }
-
-        return self::$_questionManager;
-    }
-
-    /**
-     * @return TestManager
-     */
-    private static function getTestManager(){
-        if (self::$_testManager == null){
-            self::$_testManager = app()->make(TestManager::class);
-        }
-
-        return self::$_testManager;
-    }
-
-    /**
-     * @return TestResultManager
-     */
-    private static function getTestResultManager(){
-        if (self::$_testResultManager == null){
-            self::$_testResultManager = app()->make(TestResultManager::class);
-        }
-
-        return self::$_testResultManager;
-    }
-
-    /**
-     * @return SettingsManager
-     */
-    private static function getSettingsManager(){
-        if (self::$_settingsManager == null){
-            self::$_settingsManager = app()->make(SettingsManager::class);
-        }
-        return self::$_settingsManager;
+    public function __construct(TestManager $testManager,
+                                TestResultManager $testResultManager,
+                                QuestionManager $questionManager,
+                                SettingsManager $settingsManager,
+                                TestSessionFactory $testSessionFactory)
+    {
+        $this->_testManager = $testManager;
+        $this->_testResultManager = $testResultManager;
+        $this->_questionManager = $questionManager;
+        $this->_settingsManager = $settingsManager;
+        $this->_sessionFactory = $testSessionFactory;
     }
 
     /**
      * Инициализация процесса тестирования.
      */
-    public static function initTest($userId, $testId)
+    public function initTest($userId, $testId)
     {
-        self::validateAttemptNumber($userId, $testId);
-
-        $sessionId = TestSessionHandler::createTestSession($testId, $userId);
-        return $sessionId;
+        $this->validateAttemptNumber($userId, $testId);
+        $session = $this->_sessionFactory->getInitialized($userId, $testId);
+        return $session->getSessionId();
     }
 
     /**
      * Получение следующего вопроса на основании настроек теста
      * и списка вопросов, на которые уже были даны ответы.
      */
-    public static function getNextQuestion($sessionId){
-            self::$_testManager = TestSessionHandler::getTestManager();
-            self::$_session = TestSessionHandler::getSession($sessionId);
+    public function getNextQuestion($sessionId)
+    {
+        $testSession = $this->_sessionFactory->getBySessionId($sessionId);
+        $this->_testSession = $testSession;
+        $this->validateTestSession();
 
-            self::validateTestSession();
+        $this->checkIfNotAnsweredQuestionsExists();
+        if ($this->_testResult != null) {
+            return $this->_testResult;
+        }
 
-            $suitableQuestions = self::getSuitableQuestionsIds();
-            self::validateSuitableQuestions($suitableQuestions);
+        $nextQuestionId = $this->getRandomQuestion($testSession);
+        $question = $this->_testManager->getQuestionWithAnswers($nextQuestionId, false);
 
-            if (self::$_testResult != null){
-                return self::$_testResult;
-            }
+        $questionDuration = $question->getQuestion()->getTime();
 
-            $nextQuestionId = self::getRandomQuestion($suitableQuestions);
-            $question = self::getQuestionManager()->getById($nextQuestionId);
+        $questionEndTime = $date = new DateTime('+' . $questionDuration . ' seconds');
+        $questionEndTime = $questionEndTime->format(GlobalTestSettings::dateSerializationFormat);
 
-            TestSessionHandler::setSessionQuestionEndTime(
-                self::$_session->getSessionId(),
-                $question->getTime());
+        $testSession->setQuestionEndTime($questionEndTime);
+        $testSession->addAnsweredQuestionId($question->getQuestion()->getId());
 
-            self::updateTestSession($nextQuestionId);
-
-        return self::$_testManager->getQuestionWithAnswers($nextQuestionId, false);
+        return $question;
     }
 
     /**
@@ -142,28 +115,28 @@ class TestProcessManager
      * @return array
      * @throws Exception
      */
-    public static function processAnswer($sessionId, QuestionAnswer $questionAnswer){
+    public function processAnswer($sessionId, QuestionAnswer $questionAnswer){
         try{
-            $session = TestSessionHandler::getSession($sessionId);
-            self::$_session = $session;
+            $session = $this->_sessionFactory->getBySessionId($sessionId);
+            $this->_testSession = $session;
 
             $questionId = $questionAnswer->getQuestionId();
 
-            self::validateTestSession($questionId);
-            self::validateQuestionToAnswer($questionId);
+            $this->validateTestSession($questionId);
+            $this->validateQuestionToAnswer($questionId);
 
-            $question = self::getQuestionManager()->getWithAnswers($questionId);
+            $question = $this->_questionManager->getWithAnswers($questionId);
 
-            $answerRightPercentage = self::checkAnswers($question, $questionAnswer);
-            $answerText = self::getAnswerText($question, $questionAnswer);
+            $answerRightPercentage = $this->checkAnswers($question, $questionAnswer);
+            $answerText = $this->getAnswerText($question, $questionAnswer);
 
-            self::saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
+            $this->saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
 
         } catch (Exception $exception){
             $questionId = $questionAnswer->getQuestionId();
-            $question = self::getQuestionManager()->getWithAnswers($questionId);
-            $text = self::getAnswerText($question, $questionAnswer);
-            self::saveQuestionAnswer(self::$_session, $questionId, 0, $text);
+            $question = $this->_questionManager->getWithAnswers($questionId);
+            $text = $this->getAnswerText($question, $questionAnswer);
+            $this->saveQuestionAnswer($this->_testSession, $questionId, 0, $text);
 
             throw $exception;
         }
@@ -172,58 +145,32 @@ class TestProcessManager
     /**
      * Обработка окончания теста. Подсчёт и сохранение результатов.
      */
-    public static function processTestEnd(){
-        $testResultId = self::$_session->getTestResultId();
-        self::calculateAndSaveResult($testResultId);
+    public function processTestEnd(){
+        $testResultId = $this->_testSession->getTestResultId();
+        $this->calculateAndSaveResult($testResultId);
     }
 
     /**
      * Подсчёт и сохранение оценки за тест.
      * @param $testResultId
      */
-    public static function calculateAndSaveResult($testResultId){
+    public function calculateAndSaveResult($testResultId){
 
         $testResultMark = TestResultCalculator::calculate($testResultId);
-        $now = new DateTime();
-        $now->setTimezone(new DateTimeZone('Europe/Moscow'));
 
-        $testResult = self::getTestResultManager()->getById($testResultId);
+        $testResult = $this->_testResultManager->getById($testResultId);
         $testResult->setMark($testResultMark);
-        $testResult->setDateTime($now);
 
-
-        self::$_testResult = $testResult;
-        self::getTestResultManager()->update($testResult);
-        self::$_testResult->setDateTime($now->format(self::dateFormat));
-    }
-
-    /**
-     * Получение идентификаторов вопросов, подходящих под условия,
-     * настройки и текущее состояние процесса тестирования.
-     */
-    private static function getSuitableQuestionsIds(){
-        $testManager = self::$_testManager;
-        $session = self::$_session;
-
-        $testId = $session->getTestId();
-        $test = $testManager->getById($testId);
-        $answeredQuestionsIds = $session->getAnsweredQuestionsIds();
-
-        $timeLeft = self::getTimeLeftBeforeTestEnd();
-        $suitableQuestionsIds = $testManager->getNotAnsweredQuestionsByTest(
-            $testId,
-            $answeredQuestionsIds,
-            $timeLeft);
-
-        return $suitableQuestionsIds;
+        $this->_testResult = $testResult;
+        $this->_testResultManager->update($testResult);
     }
 
     /**
      * Подсчёт количества секунд, оставшихся до конца тестирования.
      */
-    private static function getTimeLeftBeforeTestEnd(){
-        $now = date(self::dateFormat);
-        $testTimeLeft = self::$_session->getTestEndDateTime()->format(self::dateFormat);
+    private function getTimeLeftBeforeTestEnd(){
+        $now = date(GlobalTestSettings::dateSerializationFormat);
+        $testTimeLeft = $this->_testSession->getTestEndDateTime();
 
         $secondsLeft = strtotime($testTimeLeft) - strtotime($now);
         return $secondsLeft;
@@ -232,9 +179,9 @@ class TestProcessManager
     /**
      * Подсчёт количества секунд, оставшихся на ответ на текущий вопрос.
      */
-    private static function getTimeLeftBeforeQuestionEnd(){
-        $now = date(self::dateFormat);
-        $questionTimeLeft = self::$_session->getQuestionEndTime()->format(self::dateFormat);
+    private function getTimeLeftBeforeQuestionEnd(){
+        $now = date(GlobalTestSettings::dateSerializationFormat);
+        $questionTimeLeft = $this->_testSession->getQuestionEndTime();
 
         $secondsLeft = strtotime($questionTimeLeft) - strtotime($now);
         return $secondsLeft;
@@ -243,24 +190,17 @@ class TestProcessManager
     /**
      * Выбор случайного вопроса из списка подходящих.
      */
-    private static function getRandomQuestion($suitableQuestions){
-        array_flatten($suitableQuestions);
-        $nextQuestionIndex = array_rand($suitableQuestions);
-        $nextQuestionId = $suitableQuestions[$nextQuestionIndex]['id'];
+    private function getRandomQuestion(TestSession $testSession){
+        $answeredQuestions = $testSession->getAnsweredQuestionsIds();
+        $allQuestions = $testSession->getAllQuestionsIds();
+
+        $notAnsweredQuestions = array_diff($allQuestions, $answeredQuestions);
+
+        array_flatten($notAnsweredQuestions);
+        $nextQuestionIndex = array_rand($notAnsweredQuestions);
+        $nextQuestionId = $notAnsweredQuestions[$nextQuestionIndex];
 
         return $nextQuestionId;
-    }
-
-    /**
-     * Обновление состояния сессии тестирования.
-     * @param $answeredQuestionId - id вопроса, на который был дан ответ.
-     */
-    private static function updateTestSession($answeredQuestionId){
-        $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
-        array_push($answeredQuestionsIds, $answeredQuestionId);
-        $sessionId = self::$_session->getSessionId();
-
-        TestSessionHandler::setSessionAnsweredQuestions($sessionId, $answeredQuestionsIds);
     }
 
     /**
@@ -269,36 +209,26 @@ class TestProcessManager
      * @param null $questionId
      * @throws Exception
      */
-    private static function validateTestSession($questionId = null){
-        $endTime = self::$_session->getTestEndDateTime();
+    private function validateTestSession($questionId = null){
+        $endTime = $this->_testSession->getTestEndDateTime();
         if ($endTime == null || $endTime == ''){
             throw new Exception('Не найдена сессия тестирования!');
         }
 
-        $timeLeftToEnd = self::getTimeLeftBeforeTestEnd();
-        $testEndTolerance = self::getSettingsManager()->get(GlobalTestSettings::testEndToleranceKey);
-        $questionEndTolerance = self::getSettingsManager()->get(GlobalTestSettings::questionEndToleranceKey);
+        $timeLeftToEnd = $this->getTimeLeftBeforeTestEnd();
+        $testEndTolerance = $this->_settingsManager->get(GlobalTestSettings::testEndToleranceKey);
+        $questionEndTolerance = $this->_settingsManager->get(GlobalTestSettings::questionEndToleranceKey);
 
         if ($testEndTolerance + $timeLeftToEnd <= 0){
+            $this->processTestEnd();
             throw new Exception('Время, отведённое на тест истекло!');
         }
         if ($questionId != null){
-            $timeLeftToQuestion = self::getTimeLeftBeforeQuestionEnd();
+            $timeLeftToQuestion = $this->getTimeLeftBeforeQuestionEnd();
             if ($questionEndTolerance + $timeLeftToQuestion <= 0){
-                self::saveQuestionAnswer(self::$_session, $questionId, 0);
+                $this->saveQuestionAnswer($this->_testSession, $questionId, 0);
                 throw new Exception('Время, отведённое на данный вопрос истекло. Ответ не будет засчитан!');
             }
-        }
-    }
-
-    /**
-     * Валидация списка подходящих вопросов.
-     * В случае отсутствия подходящих вопросов, тест завершается.
-     */
-    private static function validateSuitableQuestions($suitableQuestionsIds){
-
-        if ($suitableQuestionsIds == null || empty($suitableQuestionsIds)){
-            self::processTestEnd();
         }
     }
 
@@ -307,8 +237,8 @@ class TestProcessManager
      * @param $questionId - id вопроса, на который даётся ответ.
      * @throws Exception
      */
-    private static function validateQuestionToAnswer($questionId){
-        $answeredQuestionsIds = self::$_session->getAnsweredQuestionsIds();
+    private function validateQuestionToAnswer($questionId){
+        $answeredQuestionsIds = $this->_testSession->getAnsweredQuestionsIds();
 
         if (in_array($questionId, $answeredQuestionsIds) &&
                 $questionId != $answeredQuestionsIds[count($answeredQuestionsIds) - 1]){
@@ -322,13 +252,13 @@ class TestProcessManager
      * @param $testId
      * @throws Exception
      */
-    private static function validateAttemptNumber($userId, $testId){
-        $test = self::getTestManager()->getById($testId);
+    private function validateAttemptNumber($userId, $testId){
+        $test = $this->_testManager->getById($testId);
 
         $attemptsAllowed = $test->getAttempts();
 
-        $extraAttempts = self::getTestResultManager()->getExtraAttemptsCount($userId, $testId);
-        $lastAttempt = self::getTestManager()->getTestAttemptsUsedCount($userId, $testId);
+        $extraAttempts = $this->_testResultManager->getExtraAttemptsCount($userId, $testId);
+        $lastAttempt = $this->_testManager->getTestAttemptsUsedCount($testId, $userId);
 
         if ($attemptsAllowed != 0 && $lastAttempt >= $attemptsAllowed + $extraAttempts){
             throw new Exception('Количество попыток прохождения теста исчерпано!');
@@ -342,7 +272,7 @@ class TestProcessManager
      * @return int - оценка за ответ, %
      * @throws Exception
      */
-    private static function checkAnswers($questionInfo, $questionAnswer){
+    private function checkAnswers($questionInfo, $questionAnswer){
         $answerResultPoints = null;
 
         $question = $questionInfo->getQuestion();
@@ -380,10 +310,10 @@ class TestProcessManager
      * @param string $answerText - текст ответа.
      * @throws \Exception
      */
-    private static function saveQuestionAnswer($session, $questionId, $rightPercentage, $answerText = ''){
+    private function saveQuestionAnswer($session, $questionId, $rightPercentage, $answerText = ''){
         $testResultId = $session->getTestResultId();
-        $testResult = TestSessionHandler::getTestResultManager()->getById($testResultId);
-        $question = self::getQuestionManager()->getById($questionId);
+        $testResult = $this->_testResultManager->getById($testResultId);
+        $question = $this->_questionManager->getById($questionId);
 
         if ($testResultId == null || $question == null){
             throw new Exception('Не удалось сохранить ответ!');
@@ -395,7 +325,7 @@ class TestProcessManager
         $givenAnswer->setRightPercentage($rightPercentage);
         $givenAnswer->setAnswer($answerText);
 
-        self::getQuestionManager()->createQuestionAnswer($givenAnswer);
+        $this->_questionManager->createQuestionAnswer($givenAnswer);
     }
 
     /**
@@ -407,7 +337,7 @@ class TestProcessManager
      * @return string
      * @internal param Question $question
      */
-    private static function getAnswerText($questionAnswer, $studentAnswer){
+    private function getAnswerText($questionAnswer, $studentAnswer){
         $openAnswerText = $studentAnswer->getAnswerText();
         if ($openAnswerText != null && $openAnswerText != ""){
             return $openAnswerText;
@@ -432,6 +362,19 @@ class TestProcessManager
             }
         }
         return $answerText;
+    }
+
+    /**
+     * Проверка наличия неотвеченных вопросов теста.
+     * При отсутствии таковых, тест будет завершен.
+     */
+    private function checkIfNotAnsweredQuestionsExists(){
+        $answered = $this->_testSession->getAnsweredQuestionsIds();
+        $all = $this->_testSession->getAllQuestionsIds();
+
+        if (count($answered) === count($all)){
+            $this->processTestEnd();
+        }
     }
 
 }

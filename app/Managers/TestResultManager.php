@@ -4,6 +4,7 @@ namespace Managers;
 
 use DateTime;
 use ExtraAttempt;
+use Helpers\DateHelper;
 use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
 use Test;
@@ -31,11 +32,10 @@ class TestResultManager
         $testResult = new TestResult();
         $user = $this->_unitOfWork->users()->find($userId);
         $test = $this->_unitOfWork->tests()->find($testId);
-        $now = new DateTime();
         $lastAttemptNumber = $this->_unitOfWork
             ->testResults()
             ->getLastAttemptNumber($testId,$userId);
-
+        $now = DateHelper::getCurrentDateTime();
         if ($user == null){
             throw new Exception('Не удаётся начать тест. Указанного пользователя не существует!');
         }
@@ -178,7 +178,7 @@ class TestResultManager
      * Обработка данных о результате прохождения теста перед отправкой студенту.
      * Результат прохождения теста будет показан студенту в развёрнутой форме только если тип теста - обучающий.
      * В противном случае студент получит лишь общий результат.
-     * Также выполняется проверка на то, что пользователь запрашивает свой результат.
+     * Также выполняется проверка на то, что пользователь запрашивает свой результат, а не чей-либо ещё.
      * @param Test $test
      * @param TestResultViewModel $resultViewModel
      * @param $studentId
