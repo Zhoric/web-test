@@ -200,4 +200,13 @@ class TestResultManager
         return $resultViewModel;
     }
 
+    public function delete($testResultId){
+        $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+        if (!isset($testResult)){
+            throw new Exception('Ошибка! Указанный результат теста не найден!');
+        }
+        $this->_unitOfWork->testResults()->delete($testResult);
+        $this->_unitOfWork->commit();
+    }
+
 }
