@@ -8,6 +8,7 @@ use Helpers\DateHelper;
 use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
 use Test;
+use TestEngine\GlobalTestSettings;
 use TestResult;
 use TestResultViewModel;
 use TestType;
@@ -95,18 +96,19 @@ class TestResultManager
      * пользователем с ролью "Студент". В этом случае необходима дополнительная логика отображения
      * развёрнутой информации о прохождении теста.
      * @return TestResultViewModel
-     * @throws \Exception
+     * @throws Exception
      */
     public function getByIdWithAnswers($testResultId, $studentId = null){
         $testResult = $this->_unitOfWork->testResults()->find($testResultId);
         if (!isset($testResult)){
-            throw new \Exception('Запрошенный результат не найден!');
+            throw new Exception('Запрошенный результат не найден!');
         }
 
         $test = $testResult->getTest();
         $testId = $test->getId();
         $userId = $testResult->getUser()->getId();
-        $answers =  $this->_unitOfWork->givenAnswers()->getByTestResult($testResultId);
+
+        $answers = $this->getTestResultAnswers($studentId, $testResultId);
 
         $extraAttempts = $this->_unitOfWork->extraAttempts()->findByTestAndUser($testId, $userId);
         $extraAttemptsCount = $extraAttempts != null ? $extraAttempts->getCount() : 0;
@@ -195,6 +197,12 @@ class TestResultManager
 
         if ($test->getType() === TestType::Control){
             $resultViewModel->setAnswers(null);
+        } else {
+            $answers = $resultViewModel->getAnswers();
+            foreach ($answers as $answer){
+                $answer->setRightPercentage(null);
+            }
+            $resultViewModel->setAnswers($answers);
         }
 
         return $resultViewModel;
@@ -207,6 +215,26 @@ class TestResultManager
         }
         $this->_unitOfWork->testResults()->delete($testResult);
         $this->_unitOfWork->commit();
+    }
+
+    /**
+     * Получение ответов, которые дал студент в ходе тестирования.
+     * В зависимости от того, кто запрашивает ответы, они будут представлены
+     * полностью или частично (только те ответы, на которые студент ответил неудовлетворительно)
+     * @param $studentId - Студент, запрашивающий результаты [Если запрашивает не преподаватель]
+     * @param $testResultId - Результат теста.
+     * @return array|mixed
+     */
+    private function getTestResultAnswers($studentId, $testResultId){
+        if (isset($studentId)){
+            return $this->_unitOfWork
+                ->givenAnswers()
+                ->getBadAnswersForTestResult($testResultId,
+                    GlobalTestSettings::minAutoCheckGoodMark,
+                    GlobalTestSettings::minManualCheckGoodMark);
+        } else {
+            return $this->_unitOfWork->givenAnswers()->getByTestResult($testResultId);
+        }
     }
 
 }
