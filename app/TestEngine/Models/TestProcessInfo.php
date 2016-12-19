@@ -11,9 +11,15 @@ class TestProcessInfo implements JsonSerializable
 
     private $testName;
 
+    private $testId;
+
     private $groupName;
 
+    private $groupId;
+
     private $disciplineName;
+
+    private $disciplineId;
 
     private $allQuestions;
 
@@ -27,103 +33,100 @@ class TestProcessInfo implements JsonSerializable
             'disciplineName' => $this->disciplineName,
             'groupName' => $this->groupName,
             'allQuestions' => $this->allQuestions,
-            'answeredQuestions' => $this->answeredQuestions
+            'answeredQuestions' => $this->answeredQuestions,
+            'groupId' => $this->groupId,
+            'disciplineId' => $this->disciplineId,
+            'testId' => $this->testId
         );
     }
 
-    /**
-     * @return mixed
-     */
     public function getStudentName()
     {
         return $this->studentName;
     }
 
-    /**
-     * @param mixed $studentName
-     */
     public function setStudentName($studentName)
     {
         $this->studentName = $studentName;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTestName()
     {
         return $this->testName;
     }
 
-    /**
-     * @param mixed $testName
-     */
     public function setTestName($testName)
     {
         $this->testName = $testName;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAllQuestions()
     {
         return $this->allQuestions;
     }
 
-    /**
-     * @param mixed $allQuestions
-     */
     public function setAllQuestions($allQuestions)
     {
         $this->allQuestions = $allQuestions;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAnsweredQuestions()
     {
         return $this->answeredQuestions;
     }
 
-    /**
-     * @param mixed $answeredQuestions
-     */
     public function setAnsweredQuestions($answeredQuestions)
     {
         $this->answeredQuestions = $answeredQuestions;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDisciplineName()
     {
         return $this->disciplineName;
     }
 
-    /**
-     * @param mixed $disciplineName
-     */
     public function setDisciplineName($disciplineName)
     {
         $this->disciplineName = $disciplineName;
     }
 
-    /**
-     * @return mixed
-     */
     public function getGroupName()
     {
         return $this->groupName;
     }
 
-    /**
-     * @param mixed $groupName
-     */
     public function setGroupName($groupName)
     {
         $this->groupName = $groupName;
+    }
+
+    public function getTestId()
+    {
+        return $this->testId;
+    }
+
+    public function setTestId($testId)
+    {
+        $this->testId = $testId;
+    }
+
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    public function setGroupId($groupId)
+    {
+        $this->groupId = $groupId;
+    }
+
+    public function getDisciplineId()
+    {
+        return $this->disciplineId;
+    }
+
+    public function setDisciplineId($disciplineId)
+    {
+        $this->disciplineId = $disciplineId;
     }
 }

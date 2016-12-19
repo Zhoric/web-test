@@ -81,15 +81,17 @@ class TestSessionTracker
             $test = $this->testManager->getById($session->getTestId());
             $studentFullName = NameHelper::concatFullName($studentInfo->getFirstName(),
                 $studentInfo->getMiddleName(), $studentInfo->getLastName());
-            $disciplineName = $test->getDiscipline()->getName();
 
             $testProcessInfo = new TestProcessInfo();
             $testProcessInfo->setAllQuestions($session->getAllQuestionsIds());
             $testProcessInfo->setAnsweredQuestions($session->getAnsweredQuestionsIds());
+            $testProcessInfo->setGroupId($studentInfo->getGroup()->getId());
             $testProcessInfo->setGroupName($studentInfo->getGroup()->getName());
             $testProcessInfo->setStudentName($studentFullName);
+            $testProcessInfo->setTestId($test->getId());
             $testProcessInfo->setTestName($test->getSubject());
-            $testProcessInfo->setDisciplineName($disciplineName);
+            $testProcessInfo->setDisciplineId($test->getDiscipline()->getId());
+            $testProcessInfo->setDisciplineName($test->getDiscipline()->getName());
 
             array_push($currentSessionsInfo, $testProcessInfo);
         }

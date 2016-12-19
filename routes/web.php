@@ -286,6 +286,8 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('start', 'TestProcessController@startTest');
         Route::post('answer', 'TestProcessController@answer');
         Route::get('nextQuestion', 'TestProcessController@getNextQuestion');
+
+        Route::get('sessions', 'TestTrackingController@showSessions');
     });
 
     /*-----------------------------------------------------------------------------
