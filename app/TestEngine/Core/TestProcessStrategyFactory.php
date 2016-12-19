@@ -3,6 +3,7 @@
 namespace TestEngine;
 
 use Exception;
+use ITestProcessStrategy;
 use Managers\QuestionManager;
 use Managers\SettingsManager;
 use Managers\TestManager;
@@ -41,23 +42,30 @@ class TestProcessStrategyFactory
      */
     protected $_sessionFactory;
 
+    /**
+     * @var TestSessionTracker;
+     */
+    protected $_sessionTracker;
+
     public function __construct(TestManager $testManager,
                                 TestResultManager $testResultManager,
                                 QuestionManager $questionManager,
                                 SettingsManager $settingsManager,
-                                TestSessionFactory $testSessionFactory)
+                                TestSessionFactory $testSessionFactory,
+                                TestSessionTracker $testSessionTracker)
     {
         $this->_testManager = $testManager;
         $this->_testResultManager = $testResultManager;
         $this->_questionManager = $questionManager;
         $this->_settingsManager = $settingsManager;
         $this->_sessionFactory = $testSessionFactory;
+        $this->_sessionTracker = $testSessionTracker;
     }
 
     /**
      * Метод возвращает стратегию процесса тестирования в соответствии с типом теста.
      * @param $testId
-     * @return TestProcessControlStrategy
+     * @return ITestProcessStrategy
      * @throws Exception
      */
     public function getStrategy($testId){
@@ -70,10 +78,17 @@ class TestProcessStrategyFactory
                     $this->_testResultManager,
                     $this->_questionManager,
                     $this->_settingsManager,
-                    $this->_sessionFactory);
+                    $this->_sessionFactory,
+                    $this->_sessionTracker);
             }
             case TestType::Teaching: {
-
+                return new TestProcessTeachingStrategy(
+                    $this->_testManager,
+                    $this->_testResultManager,
+                    $this->_questionManager,
+                    $this->_settingsManager,
+                    $this->_sessionFactory,
+                    $this->_sessionTracker);
             }
             default:{
                 throw new Exception('Данный тип тестов не поддерживается!');

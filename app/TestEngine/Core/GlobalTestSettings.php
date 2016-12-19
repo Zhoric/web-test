@@ -76,4 +76,11 @@ abstract class GlobalTestSettings
      */
     const minManualCheckGoodMark = 80;
 
+
+    /**
+     * Время хранения записей о сессиях тестирования в Redis Cache.
+     */
+    const testSessionCacheExpirationKey = 'cacheExpiration';
+    const testSessionCacheExpiration = '+ 1 day';
+
 }

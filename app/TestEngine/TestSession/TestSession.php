@@ -23,8 +23,6 @@ class TestSession implements JsonSerializable
     const allQuestionsIdsPrefix = 'q';
     const questionEndTimePrefix = 'qend';
 
-    const cacheExpiration = '+ 1 day';
-
     /**
      * @var Database
      * Клиент хранилища Redis Cache.
@@ -170,7 +168,7 @@ class TestSession implements JsonSerializable
     private function setWithDefaultExpiration($prefix, $value){
         $fullKey = $prefix.$this->sessionId;
         $this->_redisClient->set($fullKey, $value);
-        $this->_redisClient->expireat($fullKey, strtotime(self::cacheExpiration));
+        $this->_redisClient->expireat($fullKey, strtotime(GlobalTestSettings::testSessionCacheExpiration));
     }
 
     /**
@@ -191,7 +189,7 @@ class TestSession implements JsonSerializable
             'userId' => $this->getUserId(),
             'testResultId' => $this->getTestResultId(),
             'answeredIds' => $this->getAnsweredQuestionsIds(),
-            'notAnsweredIds' => $this->getNotAnsweredQuestionsIds(),
+            'notAnsweredIds' => $this->getAllQuestionsIds(),
             'quality' => $this->getAnswersQuality(),
             'testEnd' => $this->getTestEndDateTime(),
             'questionEnd' => $this->getQuestionEndTime()

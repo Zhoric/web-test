@@ -16,19 +16,25 @@ class TestProcessTeachingStrategy extends BaseTestProcessStrategy implements ITe
                                 TestResultManager $testResultManager,
                                 QuestionManager $questionManager,
                                 SettingsManager $settingsManager,
-                                TestSessionFactory $testSessionFactory)
+                                TestSessionFactory $testSessionFactory,
+                                TestSessionTracker $testSessionTracker)
     {
         $this->_testManager = $testManager;
         $this->_testResultManager = $testResultManager;
         $this->_questionManager = $questionManager;
         $this->_settingsManager = $settingsManager;
         $this->_sessionFactory = $testSessionFactory;
+        $this->_testSessionTracker = $testSessionTracker;
     }
 
     public function init($userId, $testId)
     {
-        $this->validateAttemptNumber($userId, $testId);
+        //TODO[NZ]: Расскомментировать после отладки.
+        //$this->validateAttemptNumber($userId, $testId);
         $session = $this->_sessionFactory->getInitialized($userId, $testId);
+        $sessionId = $session->getSessionId();
+        $this->_testSessionTracker->trackSession($sessionId);
+
         return $session->getSessionId();
     }
 

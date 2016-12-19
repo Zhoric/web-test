@@ -1,18 +1,7 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of the routes that are handled
-| by your application. Just tell Laravel the URIs it should respond
-| to using a Closure or controller method. Build something great!
-|
-*/
 
-
-use Repositories\TestSettingRepository;
+use TestEngine\TestSessionTracker;
 
 Route::get('/','HomeController@index');
 Route::get('editor','DemoController@editor');
@@ -108,8 +97,10 @@ Route::get('/getGroupSemester', function (\Illuminate\Http\Request $request){
     dd($result);
 });
 
-Route::post('/setSettings', 'DemoController@setSettings');
-Route::post('/getSettings', 'DemoController@getSettings');
+Route::get('/redisTest', function (){
+    $tracker = app()->make(TestSessionTracker::class);
+    dd($tracker->getCurrentSessions());
+});
 
 
 

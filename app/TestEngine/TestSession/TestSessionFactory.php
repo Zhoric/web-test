@@ -10,10 +10,13 @@ use Managers\TestManager;
 use Managers\TestResultManager;
 use Test;
 
+/**
+ * Фабрика сессий тестирования. Отвечает за инициализацию и получение сессий.
+ * Class TestSessionFactory
+ * @package TestEngine
+ */
 class TestSessionFactory
 {
-    const dateSerializationFormat = 'Y-m-d H:i:s';
-
     /**
      * @var Database
      */
@@ -42,8 +45,6 @@ class TestSessionFactory
         $this->redisClient = $redisClient;
         $this->testManager = $testManager;
         $this->testResultManager = $testResultManager;
-        //TODO[NZ]: Убрать костыльное инстанцирование.
-        $this->redisClient = app()->make('redis');
     }
 
     /**
@@ -71,24 +72,23 @@ class TestSessionFactory
     public function getInitialized($userId, $testId){
         $sessionId = $userId.$testId;
 
-        $testResultId = $this->testResultManager->createEmptyTestResult($userId, $testId);
         $test = $this->testManager->getById($testId);
         if (!isset($test)){
             throw new Exception('Невозможно начать тестирование! Указанный тест не найден!');
         }
         $testEndTime = $date = new DateTime('+'.$test->getTimeTotal().' seconds');
 
-        $testEndTime = $testEndTime->format(self::dateSerializationFormat);
+        $testEndTime = $testEndTime->format(GlobalTestSettings::dateSerializationFormat);
 
         $session = new TestSession($sessionId, $this->redisClient);
         $session->setUserId($userId);
         $session->setTestId($testId);
-        $session->setTestResultId($testResultId);
         $session->setAnswersQuality(0);
         $session->setAnsweredQuestionsIds([]);
         $session->setTestEndDateTime($testEndTime);
-
         $session->setAllQuestionsIds($this->getQuestionsForTestProcess($test));
+        $testResultId = $this->testResultManager->createEmptyTestResult($userId, $testId);
+        $session->setTestResultId($testResultId);
 
         return $session;
     }

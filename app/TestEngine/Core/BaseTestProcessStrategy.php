@@ -45,6 +45,11 @@ class BaseTestProcessStrategy
     protected $_sessionFactory;
 
     /**
+     * @var TestSessionTracker
+     */
+    protected $_testSessionTracker;
+
+    /**
      * @var TestSession
      */
     protected $_testSession;
@@ -67,11 +72,14 @@ class BaseTestProcessStrategy
         $answeredQuestions = $this->_testSession->getAnsweredQuestionsIds();
 
         //Если не был дан ответ ни на один из вопросов, попытка не будет учтена.
-        if (isset($answeredQuestions) && count ($answeredQuestions) !== 0){
+        if (isset($answeredQuestions) && count ($answeredQuestions) != 0){
             $this->calculateAndSaveResult($testResultId);
         } else {
             $this->_testResultManager->delete($testResultId);
         }
+
+        $sessionId = $this->_testSession->getSessionId();
+        $this->_testSessionTracker->finalizeSession($sessionId);
     }
 
     /**
