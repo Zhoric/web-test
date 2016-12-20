@@ -132,9 +132,9 @@
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
             <label class="title">Статус учётной записи</label>
-            <span class="radio radio-important">Подтвердить</span>
+            <span class="radio" data-bind="click: $root.actions.switch.on, css: {'radio-important': active()}">Подтвердить</span>
             <span>|</span>
-            <span class="radio">Отклонить</span>
+            <span class="radio" data-bind="click: $root.actions.switch.off, css: {'radio-negative': !active()}">Отклонить</span>
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
             <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
@@ -174,7 +174,21 @@
         <div class="popup-delete">
             <div><h3 class="text-center">Удалить выбранную заявку?</h3></div>
             <div>
-                <button class="remove" data-bind="click: $root.actions.end.remove">Удалить</button>
+                <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
+                <button class="cancel arcticmodal-close">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="cancel-request-modal">
+        <div class="popup-delete">
+            <div>
+                <h3 class="text-center">Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>
+            </div>
+            <div>
+                <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
                 <button class="cancel arcticmodal-close">Отмена</button>
             </div>
         </div>

@@ -7,6 +7,8 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            var confirm = false;
+
             self.errors = errors();
             self.pagination = pagination();
             self.mode = ko.observable(state.none);
@@ -19,7 +21,7 @@ $(document).ready(function(){
                     patronymic: ko.observable(''),
                     group: ko.observable(null),
                     email: ko.observable(''),
-                    active: ko.observable(false)
+                    active: ko.observable(true)
                 },
                 groups: ko.observableArray([])
             };
@@ -59,20 +61,23 @@ $(document).ready(function(){
                         commonHelper.modal.open('#remove-request-modal');
                     }
                 },
+                end: {
+                    update: function(){
+                        if (!self.current.student().active()){
+                            commonHelper.modal.open('#cancel-request-modal');
+                            return;
+                        }
+                        self.post.student();
+                    },
+                    remove: function(){
+                        self.post.request();
+                    }
+                },
                 cancel: function(){
                     self.mode(state.none);
                     self.current.student(self.initial.student);
                     self.current.group(null);
                     self.current.password(null);
-                },
-                end: {
-                    update: function(){
-                        self.post.student();
-                    },
-                    remove: function(){
-                        commonHelper.modal.close('#remove-request-modal');
-                        self.post.request();
-                    }
                 },
 
                 password: {
@@ -85,6 +90,14 @@ $(document).ready(function(){
                     },
                     approve: function(){
                         self.post.password();
+                    }
+                },
+                switch: {
+                    on: function(data){
+                        data.active(true);
+                    },
+                    off: function(data){
+                        data.active(false);
                     }
                 }
             };
