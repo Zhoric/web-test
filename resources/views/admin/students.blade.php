@@ -107,7 +107,7 @@
         </div>
         <div class="details-column width-20p">
             <label class="title">Пароль</label>
-            <span class="radio-important">Изменить пароль</span>
+            <span class="radio-important" data-bind="click: $root.actions.password.change">Изменить пароль</span>
         </div>
     </div>
     <div class="details-row">
@@ -125,3 +125,43 @@
         </div>
     </div>
 </script>
+
+<div class="g-hidden">
+    <div class="box-modal" id="change-password-modal">
+        <div class="popup-delete">
+            <div>
+                <label class="title">Новый пароль</label>
+                <input type="text" data-bind="value: $root.current.password" />
+            </div>
+            <div>
+                <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>
+                <button data-bind="click: $root.actions.password.cancel" class="cancel arcticmodal-close">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="change-success-modal">
+        <div class="popup-delete">
+            <div>
+                <h3>Пароль успешно изменён</h3>
+            </div>
+            <div>
+                <button class="approve arcticmodal-close">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="remove-request-modal">
+        <div class="popup-delete">
+            <div><h3 class="text-center">Удалить выбранную заявку?</h3></div>
+            <div>
+                <button class="remove" data-bind="click: $root.actions.end.remove">Удалить</button>
+                <button class="cancel arcticmodal-close">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>

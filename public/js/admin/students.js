@@ -59,9 +59,8 @@ $(document).ready(function(){
                         self.mode(state.update);
                         self.current.student.copy(data);
                     },
-                    remove: function(data){
-                        self.mode(state.remove);
-                        self.student(data.copy());
+                    remove: function(){
+                        commonHelper.modal.open('#remove-request-modal');
                     }
                 },
                 cancel: function(){
@@ -75,17 +74,18 @@ $(document).ready(function(){
                         self.actions.cancel();
                     },
                     remove: function(){
-                        self.actions.cancel();
+                        commonHelper.modal.close('#remove-request-modal');
+                        self.post.request();
                     }
                 },
 
                 password: {
                     change: function(){
-                        commonHelper.modal.open('#change-password');
+                        commonHelper.modal.open('#change-password-modal');
                     },
                     cancel: function(){
                         self.current.password(null);
-                        commonHelper.modal.close('#change-password');
+                        commonHelper.modal.close('#change-password-modal');
                     },
                     approve: function(){
                         self.post.password();
@@ -108,8 +108,6 @@ $(document).ready(function(){
                         self.current.student().group = null;
                         var student = ko.mapping.toJS(self.current.student);
 
-                        console.log(student);
-
                         return JSON.stringify({
                             student: student,
                             groupId: self.current.group().id()
@@ -117,7 +115,7 @@ $(document).ready(function(){
                     },
                     password: function(){
                         return JSON.stringify({
-                            userId: self.current.student.id(),
+                            userId: self.current.student().id(),
                             password: self.current.password()
                         });
                     }
@@ -155,10 +153,18 @@ $(document).ready(function(){
             };
             self.get.groups();
             self.post = {
+                request: function(){
+                    var url = '/api/user/delete/' + self.current.student().id();
+                    var json = '';
+                    $post(url, json, self.errors, function(){
+                        self.actions.cancel();
+                        self.get.students();
+                    })();
+                },
                 student: function(){
                     var json = self.alter.stringify.student();
                     var url = '/api/groups/student/' + self.mode();
-                    console.log(json);
+
                     $post(url, json, self.errors, function(){
                         self.actions.cancel();
                         self.get.students();
@@ -166,8 +172,9 @@ $(document).ready(function(){
                 },
                 password: function(){
                     var json = self.alter.stringify.password();
-                    $post('/api/user/setPassword', json, self.errors, function(data){
+                    $post('/api/user/setPassword', json, self.errors, function(){
                         self.actions.password.cancel();
+                        commonHelper.modal.open('#change-success-modal');
                     })();
                 }
             };
