@@ -120,10 +120,11 @@ class GroupController extends Controller
     public function updateStudent(Request $request){
         try{
             $studentData = $request->json('student');
+            $groupId = $request->json('groupId');
 
             $student = new User();
             $student->fillFromJson($studentData);
-            $this->_groupManager->updateStudent($student);
+            $this->_groupManager->updateStudent($student, $groupId);
 
             return $this->successJSONResponse();
         } catch (Exception $exception){

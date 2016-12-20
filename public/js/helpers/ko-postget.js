@@ -21,7 +21,7 @@ $get = function(url, successCallback, errors, data){
                 successCallback();
                 return;
             }
-            self.errors.show(result.Message());
+            errors.show(result.Message());
         });
     }
 };

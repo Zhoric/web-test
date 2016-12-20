@@ -44,9 +44,9 @@ class UserInfoViewModel implements JsonSerializable
     {
         return [
             'id' => $this->id,
-            'firstName' => $this->firstName,
-            'middleName' => $this->middleName,
-            'lastName' => $this->lastName,
+            'firstname' => $this->firstName,
+            'patronymic' => $this->middleName,
+            'lastname' => $this->lastName,
             'active' => $this->active,
             'email' => $this->email,
             'role' => $this->role,

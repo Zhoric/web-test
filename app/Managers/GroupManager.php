@@ -64,7 +64,7 @@ class GroupManager
 
     public function setStudentGroup($groupId, $studentId){
         $existingUserGroupId = $this->_unitOfWork->studentGroups()->getUserGroup($studentId);
-        
+        dd($existingUserGroupId);
         if(isset($existingUserGroupId)) {
             $this->_unitOfWork->groups()->
             setStudentsGroup($studentId, $groupId);
@@ -88,6 +88,8 @@ class GroupManager
 
 
     public function addStudent(User $student, $groupId){
+        $student->setPassword(bcrypt($student->getPassword()));
+
         $this->_unitOfWork->users()->create($student);
         $this->_unitOfWork->commit();
 
@@ -99,8 +101,22 @@ class GroupManager
         $this->_unitOfWork->commit();
     }
 
-    public function updateStudent(User $student){
-        $this->_unitOfWork->users()->update($student);
+    public function updateStudent(User $student, $groupId){
+        /** @var User $oldUser */
+        $oldUser = $this->_unitOfWork->users()->find($student->getId());
+        if (!isset($oldUser)){
+            throw new \Exception('Невозможно обновить данные студента! Учётная запись не найдена!');
+        }
+        $oldUser->setActive($student->getActive());
+        $oldUser->setEmail($student->getEmail());
+        $oldUser->setFirstname($student->getFirstname());
+        $oldUser->setPatronymic($student->getPatronymic());
+        $oldUser->setLastname($student->getLastname());
+
+        $studentId = $student->getId();
+
+        $this->_unitOfWork->groups()
+            ->setStudentsGroup($studentId, $groupId);
         $this->_unitOfWork->commit();
     }
 

@@ -14,10 +14,10 @@ $(document).ready(function(){
             self.initial = {
                 student: {
                     id: ko.observable(''),
-                    firstName: ko.observable(''),
-                    lastName: ko.observable(''),
-                    middleName: ko.observable(''),
-                    group: {},
+                    firstname: ko.observable(''),
+                    lastname: ko.observable(''),
+                    patronymic: ko.observable(''),
+                    group: ko.observable(null),
                     email: ko.observable(''),
                     active: ko.observable(false)
                 },
@@ -25,7 +25,9 @@ $(document).ready(function(){
             };
             self.current = {
                 students: ko.observableArray([]),
-                student: ko.observable(self.initial.student)
+                student: ko.observable(self.initial.student),
+                group: ko.observable(null),
+                password: ko.observable(null)
             };
 
             self.filter = {
@@ -35,7 +37,7 @@ $(document).ready(function(){
             };
             self.actions = {
                 show: function(data){
-                    if (self.mode() === state.none){
+                    if (self.mode() === state.none || self.current.student().id() !== data.id()){
                         self.get.student(data.id());
                         return;
                     }
@@ -65,12 +67,9 @@ $(document).ready(function(){
                 cancel: function(){
                     self.mode(state.none);
                     self.current.student(self.initial.student);
+                    self.current.group(null);
                 },
                 end: {
-                    create: function(){
-                        self.post.student();
-                        self.actions.cancel();
-                    },
                     update: function(){
                         self.post.student();
                         self.actions.cancel();
@@ -78,15 +77,51 @@ $(document).ready(function(){
                     remove: function(){
                         self.actions.cancel();
                     }
+                },
+
+                password: {
+                    change: function(){
+                        commonHelper.modal.open('#change-password');
+                    },
+                    cancel: function(){
+                        self.current.password(null);
+                        commonHelper.modal.close('#change-password');
+                    },
+                    approve: function(){
+                        self.post.password();
+                    }
                 }
             };
 
             self.alter = {
-                stringify: {
-                    student: function(){},
-                    password: function(){},
-                    group: function(){}
+                set: {
+                    group: function(){
+                        var id = self.current.student().group.id();
+                        var group = self.initial.groups().find(function(item){
+                            return item.id() === id;
+                        });
+                        self.current.group(group);
+                    }
                 },
+                stringify: {
+                    student: function(){
+                        self.current.student().group = null;
+                        var student = ko.mapping.toJS(self.current.student);
+
+                        console.log(student);
+
+                        return JSON.stringify({
+                            student: student,
+                            groupId: self.current.group().id()
+                        });
+                    },
+                    password: function(){
+                        return JSON.stringify({
+                            userId: self.current.student.id(),
+                            password: self.current.password()
+                        });
+                    }
+                }
             };
             self.get = {
                 students: function(){
@@ -107,6 +142,7 @@ $(document).ready(function(){
                     var url = '/api/user/getStudent/' + id;
                     $get(url, function(data){
                         self.current.student(data);
+                        self.alter.set.group();
                         self.mode(state.info);
                         console.log(self.current.student());
                     }, self.errors)();
@@ -119,22 +155,19 @@ $(document).ready(function(){
             };
             self.get.groups();
             self.post = {
-                group: function(){
-                    var json = '';
-                    $post('/api/student/setGroup', json, self.errors, function(data){
-
-                    })();
-                },
                 student: function(){
-                    var json = '';
-                    $post('/api/student/updateStudent', json, self.errors, function(data){
-
+                    var json = self.alter.stringify.student();
+                    var url = '/api/groups/student/' + self.mode();
+                    console.log(json);
+                    $post(url, json, self.errors, function(){
+                        self.actions.cancel();
+                        self.get.students();
                     })();
                 },
                 password: function(){
-                    var json = '';
+                    var json = self.alter.stringify.password();
                     $post('/api/user/setPassword', json, self.errors, function(data){
-
+                        self.actions.password.cancel();
                     })();
                 }
             };
@@ -149,9 +182,10 @@ $(document).ready(function(){
                     ));
                 }
             });
-            self.pagination.currentPage.subscribe(function(value){
+            self.pagination.currentPage.subscribe(function(){
                 self.get.students();
             });
+
             return {
                 initial: self.initial,
                 filter: self.filter,

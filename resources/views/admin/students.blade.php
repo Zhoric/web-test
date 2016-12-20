@@ -11,10 +11,13 @@
                 <h1>Администрирование учетных записей студентов</h1>
                 <label class="adder" data-bind="click: $root.actions.start.create">Добавить</label>
             </div>
+            <!-- ko if: $root.mode() === state.create -->
+            <div class="details" data-bind="template: {name: 'update-user-info', data: $root.current.student}"></div>
+            <!-- /ko -->
             <h3 class="text-center" data-bind="if: !filter.group()">Пожалуйста, выберите группу</h3>
             <div class="items-body" data-bind="if: current.students().length">
                 <!-- ko foreach: current.students -->
-                <div class="item" data-bind="click: $root.actions.show">
+                <div class="item" data-bind="click: $root.actions.show, css: {'current': id() === $root.current.student().id()}">
                     <span class="float-right" data-bind="if: active()">Подтверждена</span>
                     <span class="float-right" data-bind="if: !active()">Ожидает подтверждения</span>
                     <span data-bind="text: lastname() + ' ' + firstname() + ' ' + patronymic()"></span>
@@ -52,7 +55,7 @@
     <div class="details-row">
         <div class="details-column">
             <label class="title">ФИО</label>
-            <span class="info" data-bind="text: lastName() + ' ' + firstName() + ' ' + middleName()"></span>
+            <span class="info" data-bind="text: lastname() + ' ' + firstname() + ' ' + patronymic()"></span>
         </div>
         <div class="details-column">
             <label class="title">E-mail</label>
@@ -79,15 +82,15 @@
     <div class="details-row">
         <div class="details-column width-31p">
             <label class="title">Фамилия</label>
-            <input type="text" data-bind="value: lastName"/>
+            <input type="text" data-bind="value: lastname"/>
         </div>
         <div class="details-column width-31p">
             <label class="title">Имя</label>
-            <input type="text" data-bind="value: firstName"/>
+            <input type="text" data-bind="value: firstname"/>
         </div>
         <div class="details-column width-31p">
             <label class="title">Отчество</label>
-            <input type="text" data-bind="value: middleName"/>
+            <input type="text" data-bind="value: patronymic"/>
         </div>
     </div>
     <div class="details-row">
@@ -96,8 +99,11 @@
             <input type="text" data-bind="value: email"/>
         </div>
         <div class="details-column width-15p">
-            <label class="title">Группа<span>(Перевести)</span></label>
-            <span class="info" data-bind="text: group.name"></span>
+            <label class="title">Группа</label>
+            <select data-bind="options: $root.initial.groups,
+                       optionsText: 'name',
+                       value: $root.current.group,
+                       optionsCaption: 'Выберите группу'"></select>
         </div>
         <div class="details-column width-20p">
             <label class="title">Пароль</label>
@@ -114,8 +120,8 @@
     </div>
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
-            <button class="cancel">Отмена</button>
-            <button class="approve">Сохранить</button>
+            <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
+            <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
     </div>
 </script>

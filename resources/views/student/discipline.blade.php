@@ -22,12 +22,11 @@
                 <!-- ko foreach: current.tests -->
                 <div class="test" data-bind="click: $root.actions.start">
                     <span data-bind="text: test.subject"></span>
-                    <span class="attempts" data-bind="text: attemptsMade() +'/' + attemptsLeft() + ' попыток'"></span>
+                    <span class="attempts" data-bind="text: attemptsLeft() +'/' + (attemptsLeft() + attemptsMade()) + ' попыток'"></span>
                     <span class="start">Пройти тест</span>
                 </div>
                 <!-- /ko -->
             </div>
-
         </div>
         <div class="filter">
             <div class="filter-block">
