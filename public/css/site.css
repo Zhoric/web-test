@@ -460,7 +460,6 @@ a:hover {
 input {
   background: #fff;
   border: 1px solid #d3d3d3;
-  padding: 6px;
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
@@ -470,7 +469,7 @@ textarea {
 select {
   height: 30px;
   background: #fff;
-  margin: 5px 0;
+  margin: 0;
 }
 select[multiple='true'] {
   height: auto;

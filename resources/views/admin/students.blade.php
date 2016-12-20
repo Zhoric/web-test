@@ -80,46 +80,61 @@
 
 <script type="text/html" id="update-user-info">
     <div class="details-row">
-        <div class="details-column width-31p">
-            <label class="title">Фамилия</label>
-            <input type="text" data-bind="value: lastname"/>
+        <div class="details-column width-48p">
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">Фамилия</label>
+                    <input type="text" data-bind="value: lastname"/>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">Имя</label>
+                    <input type="text" data-bind="value: firstname"/>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">Отчество</label>
+                    <input type="text" data-bind="value: patronymic"/>
+                </div>
+            </div>
         </div>
-        <div class="details-column width-31p">
-            <label class="title">Имя</label>
-            <input type="text" data-bind="value: firstname"/>
-        </div>
-        <div class="details-column width-31p">
-            <label class="title">Отчество</label>
-            <input type="text" data-bind="value: patronymic"/>
-        </div>
-    </div>
-    <div class="details-row">
-        <div class="details-column width-55p">
-            <label class="title">E-mail</label>
-            <input type="text" data-bind="value: email"/>
-        </div>
-        <div class="details-column width-15p">
-            <label class="title">Группа</label>
-            <select data-bind="options: $root.initial.groups,
+        <div class="details-column width-48p float-right">
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">Группа</label>
+                    <select data-bind="options: $root.initial.groups,
                        optionsText: 'name',
                        value: $root.current.group,
                        optionsCaption: 'Выберите группу'"></select>
-        </div>
-        <div class="details-column width-20p">
-            <label class="title">Пароль</label>
-            <span class="radio-important" data-bind="click: $root.actions.password.change">Изменить пароль</span>
-        </div>
-    </div>
-    <div class="details-row">
-        <div class="details-column width-98p">
-            <label class="title">Статус учётной записи</label>
-            <span class="radio radio-important">Подтвердить</span>
-            <span>|</span>
-            <span class="radio">Отклонить</span>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">E-mail</label>
+                    <input type="text" data-bind="value: email"/>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">Пароль</label>
+                    <!-- ko if: $root.mode() === state.update -->
+                    <span class="radio-important" data-bind="click: $root.actions.password.change">Изменить пароль</span>
+                    <!-- /ko -->
+                    <!-- ko if: $root.mode() === state.create -->
+                    <input type="password" data-bind="value: $root.current.password"/>
+                    <!-- /ko -->
+                </div>
+            </div>
         </div>
     </div>
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
+            <label class="title">Статус учётной записи</label>
+            <span class="radio radio-important">Подтвердить</span>
+            <span>|</span>
+            <span class="radio">Отклонить</span>
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
             <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
@@ -131,7 +146,7 @@
         <div class="popup-delete">
             <div>
                 <label class="title">Новый пароль</label>
-                <input type="text" data-bind="value: $root.current.password" />
+                <input type="password" data-bind="value: $root.current.password" />
             </div>
             <div>
                 <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>

@@ -52,10 +52,6 @@ $(document).ready(function(){
                         self.current.student(self.initial.student);
                     },
                     update: function(data){
-                        if (self.mode() === state.update){
-                            self.actions.cancel();
-                            return;
-                        }
                         self.mode(state.update);
                         self.current.student.copy(data);
                     },
@@ -67,11 +63,11 @@ $(document).ready(function(){
                     self.mode(state.none);
                     self.current.student(self.initial.student);
                     self.current.group(null);
+                    self.current.password(null);
                 },
                 end: {
                     update: function(){
                         self.post.student();
-                        self.actions.cancel();
                     },
                     remove: function(){
                         commonHelper.modal.close('#remove-request-modal');
@@ -105,8 +101,13 @@ $(document).ready(function(){
                 },
                 stringify: {
                     student: function(){
-                        self.current.student().group = null;
                         var student = ko.mapping.toJS(self.current.student);
+                        delete student.group;
+
+                        if (self.mode() === state.create){
+                            student.password = self.current.password();
+                            delete student.id;
+                        }
 
                         return JSON.stringify({
                             student: student,

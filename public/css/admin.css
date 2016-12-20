@@ -460,7 +460,6 @@ a:hover {
 input {
   background: #fff;
   border: 1px solid #d3d3d3;
-  padding: 6px;
   font-size: 15px;
   font-family: 'Roboto Regular';
 }
@@ -470,7 +469,7 @@ textarea {
 select {
   height: 30px;
   background: #fff;
-  margin: 5px 0;
+  margin: 0;
 }
 select[multiple='true'] {
   height: auto;
@@ -520,7 +519,7 @@ h3 {
 }
 input {
   background: #fff;
-  padding: 0;
+  padding: 0 5px;
   height: 30px;
   font-size: 15px;
   border: 1px solid #d3d3d3;
@@ -591,24 +590,27 @@ input {
   margin: 1%;
 }
 .details-column input[type=text],
+.details-column input[type=password],
 .details-column select,
 .details-column textarea {
   width: 100%;
 }
 .details-column input[type=text].time,
+.details-column input[type=password].time,
 .details-column select.time,
 .details-column textarea.time {
   width: 50px;
   text-align: center;
 }
 .details-column input[type=text].attempts,
+.details-column input[type=password].attempts,
 .details-column select.attempts,
 .details-column textarea.attempts {
   width: 130px;
   text-align: center;
 }
 .details-row.float-buttons {
-  height: 60px;
+  min-height: 60px;
 }
 .details-row.float-buttons button {
   float: right;
