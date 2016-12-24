@@ -4,6 +4,7 @@ namespace Repositories;
 
 use Doctrine\ORM\EntityManager;
 use Group;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PaginationResult;
 use Repositories\Interfaces\IUserRepository;

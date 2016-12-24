@@ -3,8 +3,10 @@
 namespace Managers;
 
 use DateTime;
+use Exception;
 use Group;
 use Repositories\UnitOfWork;
+use StudentGroup;
 use TestEngine\GlobalTestSettings;
 use User;
 use UserRole;
@@ -94,10 +96,21 @@ class GroupManager
         $this->_unitOfWork->commit();
 
         $studentId = $student->getId();
-        $this->_unitOfWork->users()->setUserRole($studentId, UserRole::Student);
+        $role = $this->_unitOfWork->roles()->getBySlug(UserRole::Student);
+        if (!isset($role)){
+            throw new Exception('Невозможно найти роль пользователя');
+        }
+        $this->_unitOfWork->users()->setUserRole($studentId, $role->getId());
 
-        $this->_unitOfWork->groups()
-            ->setStudentsGroup($studentId, $groupId);
+        $group = $this->_unitOfWork->groups()->find($groupId);
+        if (!isset($group)){
+            throw new Exception('Указанная группа не найдена!');
+        }
+        $userGroupLink = new StudentGroup();
+        $userGroupLink->setGroup($group);
+        $userGroupLink->setStudent($student);
+        $this->_unitOfWork->studentGroups()->create($userGroupLink);
+
         $this->_unitOfWork->commit();
     }
 
@@ -105,7 +118,7 @@ class GroupManager
         /** @var User $oldUser */
         $oldUser = $this->_unitOfWork->users()->find($student->getId());
         if (!isset($oldUser)){
-            throw new \Exception('Невозможно обновить данные студента! Учётная запись не найдена!');
+            throw new Exception('Невозможно обновить данные студента! Учётная запись не найдена!');
         }
         $oldUser->setActive($student->getActive());
         $oldUser->setEmail($student->getEmail());

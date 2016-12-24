@@ -131,10 +131,12 @@
     </div>
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
+            <!-- ko if: $root.mode() === state.update -->
             <label class="title">Статус учётной записи</label>
             <span class="radio" data-bind="click: $root.actions.switch.on, css: {'radio-important': active()}">Подтвердить</span>
             <span>|</span>
             <span class="radio" data-bind="click: $root.actions.switch.off, css: {'radio-negative': !active()}">Отклонить</span>
+            <!-- /ko -->
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
             <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>

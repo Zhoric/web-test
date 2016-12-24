@@ -137,9 +137,10 @@ $(document).ready(function(){
             };
             self.get = {
                 students: function(){
+                    var group = self.filter.group() ? self.filter.group().name() : '';
                     var url = '/api/user/show?' +
                         'name=' + self.filter.name() +
-                        '&groupName=' + self.filter.group().name() +
+                        '&groupName=' + group +
                         '&isActive=' + self.filter.isActive() +
                         '&pageSize=' + self.pagination.pageSize() +
                         '&page=' + self.pagination.currentPage();
@@ -195,6 +196,10 @@ $(document).ready(function(){
 
             self.filter.group.subscribe(function(value){
                 if (value) self.get.students();
+                else {
+                    self.current.students([]);
+                    self.pagination.itemsCount(0);
+                }
             });
             self.pagination.itemsCount.subscribe(function(value){
                 if (value){
