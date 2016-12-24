@@ -5,38 +5,31 @@ namespace TestEngine;
 
 use JsonSerializable;
 
+/**
+ * Модель для представления информации о состоянии теста в реальном времени.
+ * Class TestProcessInfo
+ * @package TestEngine
+ */
 class TestProcessInfo implements JsonSerializable
 {
     private $studentName;
 
     private $testName;
 
-    private $testId;
-
-    private $groupName;
-
-    private $groupId;
-
-    private $disciplineName;
-
-    private $disciplineId;
-
     private $allQuestions;
 
     private $answeredQuestions;
+
+    private $mark;
 
     function jsonSerialize()
     {
         return array(
             'studentName' => $this->studentName,
             'testName' => $this->testName,
-            'disciplineName' => $this->disciplineName,
-            'groupName' => $this->groupName,
             'allQuestions' => $this->allQuestions,
             'answeredQuestions' => $this->answeredQuestions,
-            'groupId' => $this->groupId,
-            'disciplineId' => $this->disciplineId,
-            'testId' => $this->testId
+            'mark' => $this->mark
         );
     }
 
@@ -80,53 +73,13 @@ class TestProcessInfo implements JsonSerializable
         $this->answeredQuestions = $answeredQuestions;
     }
 
-    public function getDisciplineName()
+    public function getMark()
     {
-        return $this->disciplineName;
+        return $this->mark;
     }
 
-    public function setDisciplineName($disciplineName)
+    public function setMark($mark)
     {
-        $this->disciplineName = $disciplineName;
-    }
-
-    public function getGroupName()
-    {
-        return $this->groupName;
-    }
-
-    public function setGroupName($groupName)
-    {
-        $this->groupName = $groupName;
-    }
-
-    public function getTestId()
-    {
-        return $this->testId;
-    }
-
-    public function setTestId($testId)
-    {
-        $this->testId = $testId;
-    }
-
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    public function setGroupId($groupId)
-    {
-        $this->groupId = $groupId;
-    }
-
-    public function getDisciplineId()
-    {
-        return $this->disciplineId;
-    }
-
-    public function setDisciplineId($disciplineId)
-    {
-        $this->disciplineId = $disciplineId;
+        $this->mark = $mark;
     }
 }

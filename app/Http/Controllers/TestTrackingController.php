@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use TestEngine\TestSessionTracker;
+use Illuminate\Http\Request;
 
 class TestTrackingController extends Controller
 {
@@ -17,9 +18,14 @@ class TestTrackingController extends Controller
         $this->_testSessionTracker = $testSessionTracker;
     }
 
-    public function showSessions(){
+    public function showSessions(Request $request){
         try{
-            $sessions = $this->_testSessionTracker->getCurrentSessions();
+            $testId = $request->query('testId');
+            $state = $request->query('state');
+            $groupId = $request->query('groupId');
+
+            $sessions = $this->_testSessionTracker->getCurrentSessions($testId, $groupId, $state);
+
             return $this->successJSONResponse($sessions);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

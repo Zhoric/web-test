@@ -83,4 +83,12 @@ abstract class GlobalTestSettings
     const testSessionCacheExpirationKey = 'cacheExpiration';
     const testSessionCacheExpiration = '+ 1 day';
 
+    /**
+     * Время хранения записей о существовании сессий тестирования на текущий момент времени.
+     * Используется для отслеживания процесса прохождения тестов в реальном времени.
+     * Желательно, чтобы значение параметра было меньше, чем время хранения самой тестовой сессии.
+     * Иначе информация о существовании сессии будет храниться дольше, чем сама сессия, что приведёт к конфликтам.
+     */
+    const testSessionTrackingCacheExpiration = '+ 5 hours';
+
 }

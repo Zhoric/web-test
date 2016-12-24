@@ -141,4 +141,39 @@ class TestResultCalculator
         return $answer;
     }
 
+    /**
+     * Расчёт промежуточной оценки за тест по текущим ответам студента.
+     * [!] При расчёте будут проигнорированы вопросы, ответы на которых должны проверяться вручную.
+     * @param $testResultId
+     * @return float|int|null
+     */
+    public static function calculateIntermediateResult($testResultId){
+        $maxMark = 0;
+        $studentMark = 0;
+        $answers = self::getUnitOfWork()->givenAnswers()->getByTestResult($testResultId);
+
+        foreach ($answers as $answer) {
+            $answer = self::processNullPointsAnswer($answer);
+            //Если за ответ на вопрос не проставлены баллы
+            if ($answer->getRightPercentage() === null) {
+                //Если это ответ на открытый многострочный вопрос
+                if ($answer->getQuestion()->getType() == QuestionType::OpenManyStrings){
+                    //Игнорируем вопрос при подсчёте.
+                    continue;
+                } else {
+                    //Иначе оцениваем ответ в 0 баллов.
+                    $answer->setRightPercentage(0);
+                }
+            }
+
+            $question = $answer->getQuestion();
+            $complexity = $question->getComplexity();
+            $complexity = ($complexity != null) ? $complexity : GlobalTestSettings::defaultComplexity;
+
+            $maxMark += $complexity * GlobalTestSettings::complexityDifferenceCoef;
+            $studentMark += $complexity * $answer->getRightPercentage() * GlobalTestSettings::complexityDifferenceCoef;
+        }
+        return $maxMark != 0 ? ceil($studentMark/$maxMark) : 0;
+    }
+
 }

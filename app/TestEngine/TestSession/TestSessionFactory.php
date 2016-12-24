@@ -70,7 +70,9 @@ class TestSessionFactory
      * @throws Exception
      */
     public function getInitialized($userId, $testId){
-        $sessionId = $userId.$testId;
+        //Идентификатор сессии состоит из идентификатора пользователя и теста.
+        //Например, для 5 теста и 138 пользователя идентификатор сессии будет "5-138"
+        $sessionId = "$testId-$userId";
 
         $test = $this->testManager->getById($testId);
         if (!isset($test)){

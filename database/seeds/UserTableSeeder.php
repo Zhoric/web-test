@@ -14,21 +14,24 @@ class UserTableSeeder extends Seeder
             'lastname' => 'Админов',
             'patronymic' => 'Админович',
             'email' => 'ivan@gmail.com',
-            'password' => bcrypt('123456')));
+            'password' => bcrypt('123456'),
+            'active' => true));
 
         DB::table('user')->insert(array(
             'firstname' => 'Никита',
             'lastname' => 'Жихарев',
             'patronymic' => 'Евгеньевич',
             'email' => 'test@gmail.com',
-            'password' => bcrypt('123456')));
+            'password' => bcrypt('123456'),
+            'active' => true));
 
         DB::table('user')->insert(array(
             'firstname' => 'Преподов',
             'lastname' => 'Препод',
             'patronymic' => 'Преподович',
             'email' => 'test2@gmail.com',
-            'password' => bcrypt('123456')));
+            'password' => bcrypt('123456'),
+            'active' => true));
 
         $faker = Faker::create('ru_RU');
         foreach (range(1,70) as $index) {
@@ -38,6 +41,7 @@ class UserTableSeeder extends Seeder
                 'patronymic' => $faker->middleNameMale,
                 'email' => $faker->email,
                 'password' => bcrypt('123456'),
+                'active' => true
             ]);
         }
     }
