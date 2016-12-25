@@ -126,6 +126,7 @@ class GroupManager
         $oldUser->setPatronymic($student->getPatronymic());
         $oldUser->setLastname($student->getLastname());
 
+        $this->_unitOfWork->users()->update($oldUser);
         $studentId = $student->getId();
 
         $this->_unitOfWork->groups()

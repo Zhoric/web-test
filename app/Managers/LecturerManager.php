@@ -55,7 +55,19 @@ class LecturerManager
     }
 
     public function updateLecturer(User $lecturer, $disciplinesIds){
-        $this->_unitOfWork->users()->update($lecturer);
+
+        /** @var User $oldUser */
+        $oldUser = $this->_unitOfWork->users()->find($lecturer->getId());
+        if (!isset($oldUser)){
+            throw new Exception('Невозможно обновить данные преподавателя! Учётная запись не найдена!');
+        }
+        $oldUser->setActive($lecturer->getActive());
+        $oldUser->setEmail($lecturer->getEmail());
+        $oldUser->setFirstname($lecturer->getFirstname());
+        $oldUser->setPatronymic($lecturer->getPatronymic());
+        $oldUser->setLastname($lecturer->getLastname());
+
+        $this->_unitOfWork->users()->update($oldUser);
         $this->_unitOfWork->commit();
 
         $lecturerId = $lecturer->getId();
