@@ -87,7 +87,6 @@ class TestSessionTracker
                 continue;
             }
 
-            $test = $this->testManager->getById($session->getTestId());
             $studentFullName = NameHelper::concatFullName($studentInfo->getFirstName(),
                 $studentInfo->getMiddleName(), $studentInfo->getLastName());
 
@@ -95,7 +94,6 @@ class TestSessionTracker
             $testProcessInfo->setAllQuestions($session->getAllQuestionsIds());
             $testProcessInfo->setAnsweredQuestions($session->getAnsweredQuestionsIds());
             $testProcessInfo->setStudentName($studentFullName);
-            $testProcessInfo->setTestName($test->getSubject());
             $testProcessInfo->setMark(TestResultCalculator::calculateIntermediateResult($session->getTestResultId()));
 
             array_push($currentSessionsInfo, $testProcessInfo);

@@ -14,8 +14,6 @@ class TestProcessInfo implements JsonSerializable
 {
     private $studentName;
 
-    private $testName;
-
     private $allQuestions;
 
     private $answeredQuestions;
@@ -26,7 +24,6 @@ class TestProcessInfo implements JsonSerializable
     {
         return array(
             'studentName' => $this->studentName,
-            'testName' => $this->testName,
             'allQuestions' => $this->allQuestions,
             'answeredQuestions' => $this->answeredQuestions,
             'mark' => $this->mark
@@ -41,16 +38,6 @@ class TestProcessInfo implements JsonSerializable
     public function setStudentName($studentName)
     {
         $this->studentName = $studentName;
-    }
-
-    public function getTestName()
-    {
-        return $this->testName;
-    }
-
-    public function setTestName($testName)
-    {
-        $this->testName = $testName;
     }
 
     public function getAllQuestions()
