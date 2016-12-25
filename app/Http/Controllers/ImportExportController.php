@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Helpers\FileHelper;
 use Managers\ImportExportManager;
-use Managers\UISettingsCacheManager;
+use Illuminate\Http\Request;
+
 
 
 class ImportExportController extends Controller{
@@ -27,9 +27,20 @@ class ImportExportController extends Controller{
         }
     }
 
-    public function importQuestions($themeId){
+    public function importQuestions(Request $request){
         try{
-            $result = $this->_importExportManager->importQuestions($themeId, null);
+            $file = $request->json('file');
+            $fileType = $request->json('fileType');
+            $themeId = $request->json('themeId');
+
+            if (strpos($fileType, ImportExportManager::$importFileType) === false){
+                throw new Exception('Некорректный формат файла! Допустимым является только расширение .'
+                    .ImportExportManager::$importFileType);
+            }
+            $importFilePath = ImportExportManager::$importPath.ImportExportManager::$importFileName;
+            FileHelper::delete($importFilePath);
+
+            $result = $this->_importExportManager->importQuestions($themeId, $file);
             return $this->successJSONResponse($result);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

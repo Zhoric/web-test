@@ -22,7 +22,7 @@ class ImportResultViewModel implements JsonSerializable
     {
         return array(
             'totalRows' => $this->totalRows,
-            'exported' => $this->imported,
+            'imported' => $this->imported,
             'failed' => $this->failed,
             'errors' => $this->errors
         );

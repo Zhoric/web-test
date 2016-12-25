@@ -6,6 +6,7 @@ use Answer;
 use Exception;
 use ExportResultViewModel;
 use Helpers\DateHelper;
+use Helpers\FileHelper;
 use ImportResultViewModel;
 use Question;
 use QuestionComplexity;
@@ -25,7 +26,30 @@ class ImportExportManager
      * /public/import
      * @var string
      */
-    private static $importPath = 'import/';
+    public static $importPath = 'import/';
+
+    /**
+     * Имя временного файла, хранящего данные для импорта вопросов.
+     * Временного, так как процесс импорта состоит из следующих шагов:
+     * 1. Загрузка временного файла через интерфейс пользователя.
+     * 2. Обработка файла и сохранение вопросов в базу.
+     * 3. Удаление временного файла.
+     * @var string
+     */
+    public static $importFileName = 'import.txt';
+
+    /**
+     * Имя временного файла, хранящего данные экспортированных вопросов.
+     * $questionType
+     * @var string
+     */
+    private static $exportFileName = 'export.txt';
+
+    /**
+     * Тип файлов для импорта вопросов.
+     * @var string
+     */
+    public static $importFileType = 'txt';
 
     private $_questionManager;
 
@@ -36,7 +60,10 @@ class ImportExportManager
 
     public function importQuestions($themeId, $file)
     {
-        $fileContent = file_get_contents(self::$importPath . "test.txt");
+        $importFilePath = self::$importPath.self::$importFileName;
+        FileHelper::save($file, self::$importFileType, $importFilePath);
+
+        $fileContent = file_get_contents($importFilePath);
         $importResult = new ImportResultViewModel();
 
         $questions = $this->getTextBetweenTags($fileContent, 'question');
@@ -49,6 +76,8 @@ class ImportExportManager
             $this->tryParseAndSaveQuestion($question, $importResult, $themeId);
         }
 
+        FileHelper::delete($importFilePath);
+
         return $importResult;
     }
 
@@ -59,7 +88,8 @@ class ImportExportManager
      */
     public function exportQuestions($themeId)
     {
-        $filePath = self::$importPath . $this->getFileName($themeId);
+        $filePath = self::$importPath . self::$exportFileName;
+        FileHelper::delete($filePath);
         $exportFile = fopen($filePath, 'w');
         $exportResult = new ExportResultViewModel();
         $exportContent = "";
@@ -75,14 +105,6 @@ class ImportExportManager
         fwrite($exportFile, $exportContent);
         fclose($exportFile);
         return $exportResult;
-    }
-
-    private function getFileName($themeId)
-    {
-        $currentDate = DateHelper::getCurrentDateTimeString();
-        $fileName = "Theme$themeId" . '_' . "$currentDate.txt";
-
-        return $fileName;
     }
 
     /**
@@ -149,6 +171,13 @@ class ImportExportManager
             : $text;
     }
 
+    /**
+     * Получение текста, находящегося между двумя указанными тегами (независимо от наличия переносов строки).
+     * @param $string - строка, в которой предполагается нахождение теста с заданными тегами.
+     * @param $tagname - Сам тег. Например, <question>. Указывается без скобок.
+     * @param bool $takeFirst - Признак того, что из всех совпадений стоит вернуть лишь первое.
+     * @return null
+     */
     function getTextBetweenTags($string, $tagname, $takeFirst = false)
     {
         $pattern = '/<' . $tagname . '>(.*?)<\/' . $tagname . '>/ism';
@@ -163,8 +192,8 @@ class ImportExportManager
 
     /**
      * Парсинг и сохранение вопроса в БД.
-     * @param $questionData
-     * @param $importResult
+     * @param $questionData - Данные о вопросе теста, прочитанные из файла.
+     * @param $importResult - Результат импорта. Передаётся в метод для агрегации ошибок импорта.
      */
     function tryParseAndSaveQuestion($questionData, ImportResultViewModel $importResult, $themeId)
     {
@@ -196,6 +225,13 @@ class ImportExportManager
         }
     }
 
+    /**
+     * Парсинг ответов на вопрос теста.
+     * @param $questionData - Данные вопроса в виде текста, прочитанного из файла.
+     * @param $questionText - Текст самого вопроса. Используется чтобы хоть как-то идентифицировать вопрос,
+     * в ответах котрого будет обнаружена ошибка, т.к. до импорта у вопросов ещё нет идентификаторов.
+     * @return array|null - Возвращает массив ответов.
+     */
     private function parseQuestionAnswers($questionData, $questionText){
         $answers = [];
         $answersData = $this->getTextBetweenTags($questionData, 'answer');
@@ -233,7 +269,7 @@ class ImportExportManager
             case QuestionType::OpenOneString:
             case QuestionType::OpenManyStrings: break;
 
-            default: $this->throwWrongValueException('Тип вопроса', $questionText);
+            default: $this->throwWrongValueException('Тип вопроса', $questionText, $questionType);
         }
     }
 
@@ -244,7 +280,7 @@ class ImportExportManager
             case QuestionComplexity::Medium:
             case QuestionComplexity::High: break;
 
-            default: $this->throwWrongValueException('Сложность вопроса', $questionText);
+            default: $this->throwWrongValueException('Сложность вопроса', $questionText, $questionComplexity);
         }
     }
 
@@ -253,7 +289,7 @@ class ImportExportManager
         $time = (int)$questionTime;
 
         if (!isset($time) || $time <= 0 || $time > 3600){
-            $this->throwWrongValueException('Время на ответ', $questionText);
+            $this->throwWrongValueException('Время на ответ', $questionText, $questionTime);
         }
     }
 
@@ -263,7 +299,7 @@ class ImportExportManager
 
     private function validateAnswerRight($answerRight, $questionText){
         if ($answerRight != 0 && $answerRight != 1){
-            $this->throwWrongValueException('Правильность ответа', $questionText);
+            $this->throwWrongValueException('Правильность ответа', $questionText, $answerRight);
         }
     }
 
@@ -273,8 +309,13 @@ class ImportExportManager
         }
     }
 
-    private function throwWrongValueException($fieldName, $questionText){
-        throw new Exception('В вопросе "'.$this->cutQuestionText($questionText)
-            .'" указано некорректное значение для поля ['.$fieldName.']');
+    private function throwWrongValueException($fieldName, $questionText, $value = null){
+        $message = 'В вопросе "'.$this->cutQuestionText($questionText)
+            .'" указано некорректное значение для поля ['.$fieldName.']';
+        if (isset($value)){
+            $message .= ": $value.";
+        }
+
+        throw new Exception($message);
     }
 }

@@ -18,21 +18,24 @@ class FileHelper
     private static $fileNameLength = 15;
 
     /**
-     * Сохранение файла с присвоением ему уникального имени.
+     * Сохранение файла. Если имя не указано, оно будет сгенерировано.
      * @param $fileContent
      * @param $fileType
+     * @param null $filePath
      * @return string
+     * @internal param null $savePath
      */
-    public static function save($fileContent, $fileType){
-        $extension = self::getFileExtension($fileType);
+    public static function save($fileContent, $fileType, $filePath = null){
 
-        do {
-            $fileName = self::getRandomString(self::$fileNameLength);
-            $filePath = self::$savePath.$fileName.$extension;
-        } while (file_exists($filePath));
+        if (!isset($filePath)){
+            do {
+                $extension = self::tryGetFileExtension($fileType);
+                $fileName = self::getRandomString(self::$fileNameLength);
+                $filePath = self::$savePath.$fileName.$extension;
+            } while (file_exists($filePath));
+        }
 
         $file = fopen($filePath, "a");
-
         fwrite($file, base64_decode($fileContent));
         fclose($file);
 
@@ -45,7 +48,7 @@ class FileHelper
         }
     }
 
-    private static function getFileExtension($fileTypeString){
+    private static function tryGetFileExtension($fileTypeString){
         if (strpos($fileTypeString, 'jpg') !== false || (strpos($fileTypeString, 'jpeg') !== false)){
             return '.jpg';
         } else if (strpos($fileTypeString, 'png') !== false){

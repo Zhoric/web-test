@@ -336,7 +336,7 @@ Route::group(['prefix' => 'api'], function() {
     *------------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'import'], function () {
-        Route::get('questions/{themeId}', 'ImportExportController@importQuestions');
+        Route::post('questions', 'ImportExportController@importQuestions');
     });
     Route::group(['prefix' => 'export'], function () {
         Route::get('questions/{themeId}', 'ImportExportController@exportQuestions');
