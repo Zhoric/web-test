@@ -78,7 +78,8 @@ class TestSessionTracker
         $sessionIds = $this->getCurrentSessionsIds($testId, $requestedState);
 
         foreach ($sessionIds as $sessionId){
-            $session = $this->testSessionFactory->getBySessionId($sessionId);
+            // Берём $sessionId[0], т.к. на самом деле $sessionId - это массив вида [sessionId, sessionState].
+            $session = $this->testSessionFactory->getBySessionId($sessionId[0]);
             $studentInfo = $this->userManager->getStudentInfo($session->getUserId());
             $studentGroupId = $studentInfo->getGroup()->getId();
 
@@ -91,9 +92,10 @@ class TestSessionTracker
                 $studentInfo->getMiddleName(), $studentInfo->getLastName());
 
             $testProcessInfo = new TestProcessInfo();
-            $testProcessInfo->setAllQuestions($session->getAllQuestionsIds());
-            $testProcessInfo->setAnsweredQuestions($session->getAnsweredQuestionsIds());
+            $testProcessInfo->setAllQuestions(count($session->getAllQuestionsIds()));
+            $testProcessInfo->setAnsweredQuestions(count($session->getAnsweredQuestionsIds()));
             $testProcessInfo->setStudentName($studentFullName);
+            $testProcessInfo->setState($sessionId[1]);
             $testProcessInfo->setMark(TestResultCalculator::calculateIntermediateResult($session->getTestResultId()));
 
             array_push($currentSessionsInfo, $testProcessInfo);
@@ -118,7 +120,7 @@ class TestSessionTracker
      * TS_3_33
      * @param $testId - Идентификатор теста.
      * @param null $requestedState
-     * @return array
+     * @return array - Возвращает массив кортежей вида [идентификатор_сессии, состояние_сессии].
      */
     private function getCurrentSessionsIds($testId, $requestedState = null){
         $sessionKeys = $this->redisClient->keys(self::sessionTrackingPrefix.$testId.'-*');
@@ -126,14 +128,15 @@ class TestSessionTracker
 
         foreach ($sessionKeys as $sessionKey){
             $sessionId = $this->extractSessionId($sessionKey);
+            $sessionState = $this->redisClient->get($sessionKey);
+
             if (isset($requestedState)){
-                $sessionState = $this->redisClient->get($sessionKey);
 
                 if ($sessionState == $requestedState){
                     array_push($sessionIds, $sessionId);
                 }
             } else {
-                array_push($sessionIds, $sessionId);
+                array_push($sessionIds, [$sessionId, $sessionState]);
             }
         }
 

@@ -20,13 +20,16 @@ class TestProcessInfo implements JsonSerializable
 
     private $mark;
 
+    private $state;
+
     function jsonSerialize()
     {
         return array(
             'studentName' => $this->studentName,
             'allQuestions' => $this->allQuestions,
             'answeredQuestions' => $this->answeredQuestions,
-            'mark' => $this->mark
+            'mark' => $this->mark,
+            'state' => $this->state
         );
     }
 
@@ -68,5 +71,15 @@ class TestProcessInfo implements JsonSerializable
     public function setMark($mark)
     {
         $this->mark = $mark;
+    }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
     }
 }
