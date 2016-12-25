@@ -3,6 +3,9 @@
 namespace Managers;
 
 use Discipline;
+use Exception;
+use LecturerInfoViewModel;
+use PaginationResult;
 use User;
 use Repositories\UnitOfWork;
 use UserRole;
@@ -17,16 +20,33 @@ class LecturerManager
     }
 
     public function getByNamePaginated($pageNum, $pageSize, $name){
-        return $this->_unitOfWork->users()
-            ->getByNameAndRolePaginated($pageSize, $pageNum, UserRole::Lecturer, $name);
+        $lecturersVms = [];
+        $lecturers =  $this->_unitOfWork->users()
+            ->getLecturersByNamePaginated($pageSize, $pageNum, $name);
+
+        $lecturersData = $lecturers->getData();
+
+        foreach ($lecturersData as $lecturer){
+            $discplines = $this->_unitOfWork->disciplines()->getByLecturer($lecturer['id']);
+            $lecturerVm = new LecturerInfoViewModel($lecturer, $discplines);
+            array_push($lecturersVms, $lecturerVm);
+        }
+
+        return new PaginationResult($lecturersVms,$lecturers->getCount());
     }
 
     public function addLecturer(User $lecturer, $disciplinesIds){
+        $lecturer->setPassword(bcrypt($lecturer->getPassword()));
+
         $this->_unitOfWork->users()->create($lecturer);
         $this->_unitOfWork->commit();
 
         $lecturerId = $lecturer->getId();
-        $this->_unitOfWork->users()->setUserRole($lecturerId, UserRole::Lecturer);
+        $role = $this->_unitOfWork->roles()->getBySlug(UserRole::Lecturer);
+        if (!isset($role)){
+            throw new Exception('Невозможно найти роль пользователя '.UserRole::Lecturer);
+        }
+        $this->_unitOfWork->users()->setUserRole($lecturerId, $role->getId());
 
         $this->_unitOfWork->disciplines()
             ->setLecturerDisciplines($lecturerId, $disciplinesIds);

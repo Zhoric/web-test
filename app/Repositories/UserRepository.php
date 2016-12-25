@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use PaginationResult;
 use Repositories\Interfaces\IUserRepository;
 use Doctrine\ORM\Query\Expr\Join;
+use Role;
 use RoleUser;
 use StudentGroup;
 use User;
@@ -89,6 +90,29 @@ class UserRepository extends BaseRepository implements IUserRepository
         $count = $countQuery->select(
             $qb->expr()
                 ->count('u.id'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return new PaginationResult($data, $count);
+    }
+
+    public function getLecturersByNamePaginated($pageSize, $pageNum, $name){
+        $qb = $this->repo->createQueryBuilder('u');
+        $query = $qb->join(RoleUser::class, 'ru', Join::WITH, 'ru.user = u.id')
+            ->join(Role::class, 'r', Join::WITH, 'ru.role = r.id AND r.slug = :lecturer')
+            ->setParameter(':lecturer', UserRole::Lecturer);
+
+        if (isset($name)){
+            $query = $query->where("u.lastname LIKE '%".$name."%'")
+                ->orWhere("u.firstname LIKE '%".$name."%'");
+        }
+
+        $countQuery = clone $query;
+        $data =  $this->paginate($pageSize, $pageNum, $query, 'u.lastname');
+
+        $count = $countQuery->select(
+            $qb->expr()
+                ->count('u.lastname'))
             ->getQuery()
             ->getSingleScalarResult();
 

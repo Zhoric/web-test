@@ -15,4 +15,14 @@ class StudentGroupRepository extends BaseRepository
     public function getUserGroup($userId){
         return $this->repo->findOneBy(['student' => $userId]);
     }
+
+    public function clearUserGroup($userId){
+        $qb = $this->repo->createQueryBuilder('sg');
+        $deleteQuery = $qb->delete()
+            ->where('sg.student = :student')
+            ->setParameter('student', $userId)
+            ->getQuery();
+
+        return $deleteQuery->execute();
+    }
 }

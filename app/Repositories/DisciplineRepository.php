@@ -124,4 +124,14 @@ class DisciplineRepository extends BaseRepository
         return $query->execute();
     }
 
+    function getByLecturer($lecturerId){
+        $qb = $this->repo->createQueryBuilder('d');
+        $query = $qb
+            ->join(DisciplineLecturer::class, 'dl', Join::WITH, 'dl.discipline = d.id AND dl.lecturer = :lecturer')
+            ->setParameter('lecturer', $lecturerId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
 }

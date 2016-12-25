@@ -98,7 +98,7 @@ class GroupManager
         $studentId = $student->getId();
         $role = $this->_unitOfWork->roles()->getBySlug(UserRole::Student);
         if (!isset($role)){
-            throw new Exception('Невозможно найти роль пользователя');
+            throw new Exception('Невозможно найти роль пользователя '.UserRole::Student);
         }
         $this->_unitOfWork->users()->setUserRole($studentId, $role->getId());
 

@@ -18,17 +18,15 @@ class LecturerController extends Controller
         $this->_lecturerManager = $lecturerManager;
     }
 
-    //TODO: получать преподавателя со всеми id дисциплин
     public function getByNamePaginated(Request $request){
         try{
             $pageNum =  $request->query('page');
             $pageSize = $request->query('pageSize');
             $name = $request->query('name');
 
-            $paginationResult = $this->_lecturerManager
-                ->getByNamePaginated($pageNum, $pageSize, $name);
+            $lecturers = $this->_lecturerManager->getByNamePaginated($pageNum, $pageSize, $name);
 
-            return $this->successJSONResponse($paginationResult);
+            return $this->successJSONResponse($lecturers);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
@@ -63,5 +61,6 @@ class LecturerController extends Controller
     }
 
     public function delete($id){
+        return $this->_lecturerManager->deleteLecturer($id);
     }
 }
