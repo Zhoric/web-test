@@ -50,7 +50,23 @@ class DisciplineRepository extends BaseRepository
         return new PaginationResult($data, $count);
     }
 
-    function setDisciplineProfiles($disciplineId, array $profileIds){
+    public function getByName($name){
+        $qb = $this->repo->createQueryBuilder('d');
+        $query = $qb;
+
+        if ($name != null && $name != ''){
+            $query = $query->where('d.name LIKE :name')
+                ->orWhere('d.abbreviation LIKE :name')
+                ->setParameter('name', '%'.$name.'%')
+                ->getQuery();
+        } else {
+            return null;
+        }
+
+        return $query->execute();
+    }
+
+    public function setDisciplineProfiles($disciplineId, array $profileIds){
         $qb = $this->em->getRepository(ProfileDiscipline::class)->createQueryBuilder('pd');
         $deleteQuery = $qb->delete()
             ->where('pd.discipline = :discipline')

@@ -49,6 +49,16 @@ class DisciplineController extends Controller
         }
     }
 
+    public function getByName($name){
+        try{
+            $disciplines = $this->_disciplineManager->getByName($name);
+
+            return $this->successJSONResponse($disciplines);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     public function create(Request $request){
         try{
             $disciplineData = $request->json('discipline');

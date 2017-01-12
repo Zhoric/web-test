@@ -215,6 +215,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
         Route::get('actual', 'DisciplineController@getActualDisciplinesForStudent');
         Route::get('testresults', 'DisciplineController@getDisciplinesWhereTestsPassed');
+        Route::get('name/{name}','DisciplineController@getByName');
         Route::get('{id}/profiles', 'DisciplineController@getDisciplineProfilesIds');
         Route::get('{id}/tests', 'DisciplineController@getTestsByDiscipline');
         Route::get('{id}', 'DisciplineController@getDiscipline');

@@ -25,6 +25,9 @@ class DisciplineManager
             ->getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name);
     }
 
+    public function getByName($name){
+        return $this->_unitOfWork->disciplines()->getByName($name);
+    }
 
     public function addDiscipline(Discipline $discipline, array $profileIds){
         $this->_unitOfWork->disciplines()->create($discipline);
