@@ -64,9 +64,13 @@ class AuthManager
     }
 
 
+
     public function checkIfUserActive($email){
 
         $user = $this->unitOfWork->users()->findByEmail($email);
+        if($user == null){
+            return false;
+        }
         if($user->getActive()){
             return true;
         }

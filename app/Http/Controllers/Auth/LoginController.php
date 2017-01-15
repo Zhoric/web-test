@@ -64,6 +64,10 @@ class LoginController extends Controller
             }
             $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
 
+            if(!$this->_authManager->checkIfEmailExists($request->json('email'))){
+                throw new Exception('Такого пользователя не существует!');
+            }
+
             if(!$this->_authManager->checkIfUserActive($request->json('email'))){
                 throw new Exception('Ваш аккаунт ещё не подтвержден администратором!');
             }
