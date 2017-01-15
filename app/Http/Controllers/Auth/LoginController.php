@@ -63,13 +63,11 @@ class LoginController extends Controller
                 return $this->sendLockoutResponse($request);
             }
             $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
-            //TODO:: DEBUG HARDCODE Вернуть проверку на активность
-            /*
-            if(!$this->_authManager->checkIfUserActive($request->json('email'))){
 
-                return json_encode(['message' => 'Неудачная попытка логина!', 'success' => false]);
+            if(!$this->_authManager->checkIfUserActive($request->json('email'))){
+                throw new Exception('Ваш аккаунт ещё не подтвержден администратором!');
             }
-            */
+
             if ($this->guard()->attempt($credentials, $request->has('remember'))) {
                 try {
                         $userRole = $this->_userManager->getCurrentUserInfo()->getRole();
