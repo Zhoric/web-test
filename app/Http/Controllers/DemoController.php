@@ -48,6 +48,8 @@ class DemoController extends BaseController
 
     }
 
+    
+
 
     public function editor(){
         return view('editor');
