@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Managers\AuthManager;
 use Exception;
 use UserRole;
+use Auth;
+use Managers\UserManager;
 
 class LoginController extends Controller
 {
@@ -30,7 +32,8 @@ class LoginController extends Controller
      * @var string
      */
    // protected $redirectTo = '/auth';
-    protected $authManager;
+    protected $_authManager;
+    protected $_userManager;
 
 
     /**
@@ -38,10 +41,10 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct(AuthManager $authManager)
+    public function __construct(AuthManager $authManager, UserManager $userManager)
     {
-        $this->authManager = $authManager;
-
+        $this->_authManager = $authManager;
+        $this->_userManager = $userManager;
         $this->middleware('guest', ['except' => 'logout']);
 
     }
@@ -50,7 +53,6 @@ class LoginController extends Controller
     {
 
         try {
-
             // If the class is using the ThrottlesLogins trait, we can automatically throttle
             // the login attempts for this application. We'll key this by the username and
             // the IP address of the client making these requests into this application.
@@ -63,16 +65,21 @@ class LoginController extends Controller
             $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
             //TODO:: DEBUG HARDCODE Вернуть проверку на активность
             /*
-            if(!$this->authManager->checkIfUserActive($request->json('email'))){
+            if(!$this->_authManager->checkIfUserActive($request->json('email'))){
 
                 return json_encode(['message' => 'Неудачная попытка логина!', 'success' => false]);
             }
             */
             if ($this->guard()->attempt($credentials, $request->has('remember'))) {
-
-                return $this->successJSONResponse(null,'Успешный логин!');
-
+                try {
+                        $userRole = $this->_userManager->getCurrentUserInfo()->getRole();
+                        return $this->successJSONResponse($userRole,'Успешная попытка логина!');
+                }
+                catch(Exception $exception){
+                    return $this->faultJSONResponse($exception->getMessage());
+                }
             }
+
             // If the login attempt was unsuccessful we will increment the number of attempts
             // to login and redirect the user back to the login form. Of course, when this
             // user surpasses their maximum number of attempts they will get locked out.
@@ -87,6 +94,9 @@ class LoginController extends Controller
 
 
     }
+
+
+
 
 
 
