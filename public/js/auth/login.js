@@ -37,7 +37,6 @@ $(document).ready(function(){
                 $.post(url, json, function(response){
                     var result = ko.mapping.fromJSON(response);
                     if (result.Success()){
-                        window.location.href = '/home';
                         return;
                     }
                     self.errors.show(result.Message());
