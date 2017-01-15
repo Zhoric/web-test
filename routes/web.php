@@ -36,7 +36,8 @@ Route::get('/section/{id}', function(){return View('student.section');})
     ->middleware('checkRole:'.UserRole::Student);
 
 
-Route::group(['prefix' => 'admin'], function(){
+Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
+    function(){
     Route::get('/', function(){return View('admin.main');});
     Route::get('main', function(){return View('admin.main');});
     Route::get('students', function(){return View('admin.students');});
@@ -55,7 +56,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('manualSections', function(){return View('admin.manualSections');});
     Route::get('results', function(){return View('admin.results');});
     Route::get('result/{id}', function(){return View('admin.result');});
-})->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+});
 
 
 
@@ -107,8 +108,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('role', 'UserController@getRoleByUser');
         Route::get('show', 'UserController@getByNameAndGroupPaginated');
         Route::get('current', 'UserController@getCurrentUserInfo');
-        Route::post('setPassword', 'UserController@setUserPassword');
-        Route::post('delete/{id}', 'UserController@deleteUser');
+        Route::post('setPassword', 'UserController@setUserPassword')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::post('delete/{id}', 'UserController@deleteUser')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('getStudent/{id}', 'UserController@getStudentInfo');
     });
 
@@ -121,7 +124,9 @@ Route::group(['prefix' => 'api'], function() {
     Route::get('profiles', 'OrgStructureController@getAllProfiles');
 
 
-    Route::group(['prefix' => 'profile'], function () {
+    Route::group(['prefix' => 'profile',
+        'middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
+        function () {
         Route::get('{id}/groups', 'OrgStructureController@getProfileGroups');
         Route::get('{id}/plans', 'OrgStructureController@getProfilePlans');
         Route::get('{id}/disciplines', 'OrgStructureController@getProfileDisciplines');
@@ -136,33 +141,35 @@ Route::group(['prefix' => 'api'], function() {
      *                       УЧЕБНЫЕ ПЛАНЫ
      * -----------------------------------------------------------------------------
      */
-    Route::group(['prefix' => 'plan'], function () {
-        Route::get('{id}', 'StudyPlanController@getPlan');
-        Route::get('profile/{id}', 'StudyPlanController@getPlansByProfile');
-        Route::get('{id}/disciplines', 'StudyPlanController@getPlanDisciplines');
-        Route::post('create', 'StudyPlanController@create');
-        Route::post('update', 'StudyPlanController@update');
-        Route::post('delete/{id}', 'StudyPlanController@delete');
+    Route::group(['prefix' => 'plan',
+        'middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
+        function () {
+            Route::get('{id}', 'StudyPlanController@getPlan');
+            Route::get('profile/{id}', 'StudyPlanController@getPlansByProfile');
+            Route::get('{id}/disciplines', 'StudyPlanController@getPlanDisciplines');
+            Route::post('create', 'StudyPlanController@create');
+            Route::post('update', 'StudyPlanController@update');
+            Route::post('delete/{id}', 'StudyPlanController@delete');
 
-        /*------------------------------------------------------------------------
-        *                      Работа с дисциплинами планов                      */
+            /*------------------------------------------------------------------------
+            *                      Работа с дисциплинами планов                      */
 
-        Route::group(['prefix' => 'discipline'], function () {
-            Route::get('{id}/marks', 'StudyPlanController@getDisciplinePlanMarkTypes');
-            Route::post('show', 'StudyPlanController@getPlansDisciplinesByStudyplanAndNamePaginated');
-            Route::post('create', 'StudyPlanController@addDisciplinePlan');
-            Route::post('update', 'StudyPlanController@updateDisciplinePlan');
-            Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
-        });
+            Route::group(['prefix' => 'discipline'], function () {
+                Route::get('{id}/marks', 'StudyPlanController@getDisciplinePlanMarkTypes');
+                Route::post('show', 'StudyPlanController@getPlansDisciplinesByStudyplanAndNamePaginated');
+                Route::post('create', 'StudyPlanController@addDisciplinePlan');
+                Route::post('update', 'StudyPlanController@updateDisciplinePlan');
+                Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
+            });
 
-        /*------------------------------------------------------------------------
-        *                      Работа с оценками по дисциплинам планов           */
+            /*------------------------------------------------------------------------
+            *                      Работа с оценками по дисциплинам планов           */
 
-        Route::group(['prefix' => 'mark'], function () {
-            Route::post('create', 'StudyPlanController@addDisciplinePlan');
-            Route::post('update', 'StudyPlanController@updateDisciplinePlan');
-            Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
-            Route::post('linkTest', 'StudyPlanController@linkMarkToTest');
+            Route::group(['prefix' => 'mark'], function () {
+                Route::post('create', 'StudyPlanController@addDisciplinePlan');
+                Route::post('update', 'StudyPlanController@updateDisciplinePlan');
+                Route::post('delete/{id}', 'StudyPlanController@deleteDisciplinePlan');
+                Route::post('linkTest', 'StudyPlanController@linkMarkToTest');
         });
     });
 
@@ -170,23 +177,25 @@ Route::group(['prefix' => 'api'], function() {
      *                           ГРУППЫ
      *-----------------------------------------------------------------------------
      */
-    Route::group(['prefix' => 'groups'], function () {
-        Route::get('show', 'GroupController@getProfileGroupsByNamePaginated');
-        Route::get('{id}', 'GroupController@getGroup');
-        Route::post('create', 'GroupController@create');
-        Route::post('update', 'GroupController@update');
-        Route::post('delete/{id}', 'GroupController@delete');
-        Route::get('/', 'GroupController@getAll');
-        Route::get('{id}/students', 'GroupController@getGroupStudents');
+    Route::group(['prefix' => 'groups',
+        'middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
+        function () {
+            Route::get('show', 'GroupController@getProfileGroupsByNamePaginated');
+            Route::get('{id}', 'GroupController@getGroup');
+            Route::post('create', 'GroupController@create');
+            Route::post('update', 'GroupController@update');
+            Route::post('delete/{id}', 'GroupController@delete');
+            Route::get('/', 'GroupController@getAll');
+            Route::get('{id}/students', 'GroupController@getGroupStudents');
 
-        /*------------------------------------------------------------------------
-        *                      Работа со студентами группы                       */
+            /*------------------------------------------------------------------------
+            *                      Работа со студентами группы                       */
 
-        Route::group(['prefix' => 'student'], function () {
-            Route::post('create', 'GroupController@createStudent');
-            Route::post('update', 'GroupController@updateStudent');
-            Route::post('delete/{id}', 'GroupController@deleteStudent');
-            Route::post('setGroup', 'GroupController@setStudentGroup');
+            Route::group(['prefix' => 'student'], function () {
+                Route::post('create', 'GroupController@createStudent');
+                Route::post('update', 'GroupController@updateStudent');
+                Route::post('delete/{id}', 'GroupController@deleteStudent');
+                Route::post('setGroup', 'GroupController@setStudentGroup');
         });
     });
 
@@ -196,9 +205,12 @@ Route::group(['prefix' => 'api'], function() {
      */
     Route::group(['prefix' => 'disciplines'], function () {
         Route::get('/', 'DisciplineController@getAll');
-        Route::post('create', 'DisciplineController@create');
-        Route::post('update', 'DisciplineController@update');
-        Route::post('delete/{id}', 'DisciplineController@delete');
+        Route::post('create', 'DisciplineController@create')
+            ->middleware('checkRole:'.UserRole::Admin);
+        Route::post('update', 'DisciplineController@update')
+            ->middleware('checkRole:'.UserRole::Admin);
+        Route::post('delete/{id}', 'DisciplineController@delete')
+            ->middleware('checkRole:'.UserRole::Admin);
         Route::get('show', 'DisciplineController@getByNameAndProfilePaginated');
         Route::get('actual', 'DisciplineController@getActualDisciplinesForStudent');
         Route::get('testresults', 'DisciplineController@getDisciplinesWhereTestsPassed');
@@ -210,14 +222,16 @@ Route::group(['prefix' => 'api'], function() {
         /*------------------------------------------------------------------------
         *                   Работа со темами дисциплин                          */
 
-        Route::get('{id}/themes', 'DisciplineController@getThemes');
+        Route::get('{id}/themes', 'DisciplineController@getThemes')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
 
-        Route::group(['prefix' => 'themes'], function () {
+        Route::group(['prefix' => 'themes',
+            'middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
+            function () {
             Route::post('create', 'DisciplineController@createTheme');
             Route::post('update', 'DisciplineController@updateTheme');
             Route::post('delete/{id}', 'DisciplineController@deleteTheme');
             Route::get('{id}', 'DisciplineController@getTheme');
-
         });
     });
 
@@ -226,7 +240,8 @@ Route::group(['prefix' => 'api'], function() {
      *                           ПРЕПОДАВАТЕЛИ
      *-----------------------------------------------------------------------------
     */
-    Route::group(['prefix' => 'lecturers'], function () {
+    Route::group(['prefix' => 'lecturers',
+        'middleware' => 'checkRole:'.UserRole::Admin], function () {
         Route::post('create', 'LecturerController@create');
         Route::post('update', 'LecturerController@update');
         Route::post('delete/{id}', 'LecturerController@delete');
@@ -251,7 +266,9 @@ Route::group(['prefix' => 'api'], function() {
      *                              ВОПРОСЫ
      *-----------------------------------------------------------------------------
     */
-    Route::group(['prefix' => 'questions'], function () {
+    Route::group(['prefix' => 'questions',
+        'middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
+        function () {
         Route::post('create', 'QuestionController@create');
         Route::post('update', 'QuestionController@update');
         Route::post('delete/{id}', 'QuestionController@delete');
@@ -264,9 +281,12 @@ Route::group(['prefix' => 'api'], function() {
     *------------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'tests'], function () {
-        Route::post('create', 'TestController@create');
-        Route::post('update', 'TestController@update');
-        Route::post('delete/{id}', 'TestController@delete');
+        Route::post('create', 'TestController@create')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::post('update', 'TestController@update')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::post('delete/{id}', 'TestController@delete')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('show', 'TestController@getByNameAndDisciplinePaginated');
         Route::get('{id}/themes', 'TestController@getThemesOfTest');
 
@@ -275,7 +295,8 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('answer', 'TestProcessController@answer');
         Route::get('nextQuestion', 'TestProcessController@getNextQuestion');
 
-        Route::get('sessions', 'TestTrackingController@showSessions');
+        Route::get('sessions', 'TestTrackingController@showSessions')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
 
     /*-----------------------------------------------------------------------------
@@ -286,17 +307,22 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'attempts'], function () {
 
         Route::get('get', 'TestResultController@getExtraAttemptsCount');
-        Route::post('set', 'TestResultController@setExtraAttempts');
+        Route::post('set', 'TestResultController@setExtraAttempts')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
     /*-----------------------------------------------------------------------------
     *                           РЕЗУЛЬТАТЫ ТЕСТОВ
     *------------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'results'], function () {
-        Route::get('show', 'TestResultController@getByGroupAndTest');
-        Route::post('setMark', 'TestResultController@setAnswerMark');
-        Route::get('/getByUserAndTest', 'TestResultController@getByUserAndTest');
-        Route::get('/discipline/{id}', 'TestResultController@getByDiscipline');
+        Route::get('show', 'TestResultController@getByGroupAndTest')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::post('setMark', 'TestResultController@setAnswerMark')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::get('/getByUserAndTest', 'TestResultController@getByUserAndTest')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::get('/discipline/{id}', 'TestResultController@getByDiscipline')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('/show/{id}', 'TestResultController@getByIdForStudent');
         Route::get('{id}', 'TestResultController@getById');
     });
@@ -324,10 +350,12 @@ Route::group(['prefix' => 'api'], function() {
     *------------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'import'], function () {
-        Route::post('questions', 'ImportExportController@importQuestions');
+        Route::post('questions', 'ImportExportController@importQuestions')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
     Route::group(['prefix' => 'export'], function () {
-        Route::get('questions/{themeId}', 'ImportExportController@exportQuestions');
+        Route::get('questions/{themeId}', 'ImportExportController@exportQuestions')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
 
 });
