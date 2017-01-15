@@ -35,6 +35,10 @@ class UserInfoViewModel implements JsonSerializable
         $this->role = $role;
     }
 
+    public function getRole(){
+        return $this->role;
+    }
+
     public function setGroup($group)
     {
         $this->group = $group;

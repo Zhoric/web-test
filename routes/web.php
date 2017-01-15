@@ -17,23 +17,6 @@ Route::get('role','UserController@getRoleByUser');
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
-/*
-// Authentication Routes...
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-
-// Registration Routes...
-Route::get('register', 'Auth\RegisterController@showRegistrationForm');
-Route::post('register', 'Auth\RegisterController@register');
-
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-*/
-
 
 
 Route::get('/', 'HomeController@index');
@@ -43,10 +26,14 @@ Route::get('welcome',function (){
 });
 
 Route::get('/test/{id}', function(){return View('student.test');});
-Route::get('/home', function(){return View('student.home');});
-Route::get('/results', function(){return View('student.results');});
-Route::get('/discipline/{id}', function(){return View('student.discipline');});
-Route::get('/section/{id}', function(){return View('student.section');});
+Route::get('/home', function(){return View('student.home');})
+    ->middleware('checkRole:'.UserRole::Student);
+Route::get('/results', function(){return View('student.results');})
+    ->middleware('checkRole:'.UserRole::Student);
+Route::get('/discipline/{id}', function(){return View('student.discipline');})
+    ->middleware('checkRole:'.UserRole::Student);
+Route::get('/section/{id}', function(){return View('student.section');})
+    ->middleware('checkRole:'.UserRole::Student);
 
 
 Route::group(['prefix' => 'admin'], function(){
@@ -68,7 +55,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('manualSections', function(){return View('admin.manualSections');});
     Route::get('results', function(){return View('admin.results');});
     Route::get('result/{id}', function(){return View('admin.result');});
-});
+})->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
 
 
 
