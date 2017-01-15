@@ -21,12 +21,5 @@
             <div class="clear"></div>
         </div>
     </div>
-    <div class="g-hidden">
-        <div class="box-modal" id="login-info">
-            <!-- ko if: loginResult()-->
-            <h3 data-bind="text: loginResult().message"></h3>
-            <button data-bind="click: acceptInformation">OK</button>
-            <!-- /ko -->
-        </div>
-    </div>
+    @include('shared.error-modal')
 @endsection

@@ -92,6 +92,21 @@ var types = {
     }
 };
 
+var role = {
+    student: {
+        name: 'student',
+        location: '/home'
+    },
+    lecturer: {
+        name: 'lecturer',
+        location: '/admin'
+    },
+    admin: {
+        name: 'admin',
+        location: '/admin'
+    }
+}
+
 
 
 var complexity = {

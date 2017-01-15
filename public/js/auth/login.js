@@ -7,53 +7,36 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+            self.errors = errors();
 
             self.user = {
                 email: ko.observable(''),
                 password: ko.observable('')
             };
-            self.loginResult = ko.observable();
 
-            self.stringify = function(){
-                var user = {
-                    email: self.user.email(),
-                    password: self.user.password()
-                };
-                return JSON.stringify(user);
-            };
             self.login = function(){
-                 var url = '/login';
-                 var json = self.stringify();
-                $.post(url, json, function(response){
-                    var result = ko.mapping.fromJSON(response);
-                    if (result.Success()){
-                        return;
+                var json = ko.mapping.toJSON(self.user);
+                $post('/login', json, self.errors, function(data){
+                    var location = '/login';
+                    switch (data()){
+                        case role.student.name:
+                            location = role.student.location;
+                            break;
+                        case role.admin.name:
+                            location = role.admin.location;
+                            break;
+                        case role.lecturer.name:
+                            location = role.lecturer.location;
+                            break;
                     }
-                    self.errors.show(result.Message());
-                });
-            };
-            self.acceptInformation = function(){
-                self.modal('#login-info', 'close');
-            };
-            self.modal = function(selector, action){
-                $(selector).arcticmodal(action);
+                    window.location.href = location;
+                })();
             };
 
             return {
                 user: self.user,
                 login: self.login,
-                loginResult: self.loginResult,
-                acceptInformation: self.acceptInformation
+                errors: self.errors
             };
         };
     };
