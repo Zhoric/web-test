@@ -41,9 +41,18 @@
                        value: group,
                        optionsCaption: 'Выберите группу'"></select>
             </div>
-            <div class="filter-block"></div>
-            <div class="filter-block"></div>
-            <div class="filter-block"></div>
+            <div class="filter-block">
+                <input id="all-students" data-bind="checked: request" value="all" type="radio" group="filter" class="custom-radio"/>
+                <label for="all-students">Все</label>
+            </div>
+            <div class="filter-block">
+                <input id="active-students" data-bind="checked: request" value="active" type="radio" group="filter" class="custom-radio"/>
+                <label for="active-students">Активные</label>
+            </div>
+            <div class="filter-block">
+                <input id="non-active-students" data-bind="checked: request" value="inactive" type="radio" group="filter" class="custom-radio"/>
+                <label for="non-active-students">Не активные</label>
+            </div>
             <div class="filter-block"></div>
         </div>
     </div>

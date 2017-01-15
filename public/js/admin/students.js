@@ -7,10 +7,9 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            var confirm = false;
-
             self.errors = errors();
             self.pagination = pagination();
+            self.pagination.pageSize(15);
             self.mode = ko.observable(state.none);
 
             self.initial = {
@@ -35,7 +34,7 @@ $(document).ready(function(){
             self.filter = {
                 name: ko.observable(''),
                 group: ko.observable(),
-                isActive: ko.observable(false)
+                request: ko.observable(filters.active.all)
             };
             self.actions = {
                 show: function(data){
@@ -138,17 +137,20 @@ $(document).ready(function(){
             self.get = {
                 students: function(){
                     var group = self.filter.group() ? self.filter.group().name() : '';
+
+                    var active = self.filter.request() === filters.active.active ? true : '';
+                    active = self.filter.request() === filters.active.inactive ? false : active;
+
                     var url = '/api/user/show?' +
                         'name=' + self.filter.name() +
                         '&groupName=' + group +
-                        '&isActive=' + self.filter.isActive() +
+                        '&isActive=' + active +
                         '&pageSize=' + self.pagination.pageSize() +
                         '&page=' + self.pagination.currentPage();
 
                     $get(url, function(data){
                         self.current.students(data.data());
                         self.pagination.itemsCount(data.count());
-                        console.log(data);
                     }, self.errors)();
                 },
                 student: function(id){
@@ -200,6 +202,9 @@ $(document).ready(function(){
                     self.current.students([]);
                     self.pagination.itemsCount(0);
                 }
+            });
+            self.filter.request.subscribe(function(value){
+                self.get.students();
             });
             self.pagination.itemsCount.subscribe(function(value){
                 if (value){

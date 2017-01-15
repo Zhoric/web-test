@@ -9,6 +9,14 @@ var state = {
     info: 'info'
 };
 
+var filters = {
+    active: {
+        all: 'all',
+        active: 'active',
+        inactive: 'inactive'
+    }
+};
+
 var testType = {
     control: 1,
     study: 2

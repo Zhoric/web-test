@@ -73,19 +73,17 @@ class UserRepository extends BaseRepository implements IUserRepository
                 ->setParameter('groupName', "%$groupName%");
         }
 
-        if (isset($name)){
+        if (isset($name) && !empty($name)){
             $query = $query->where("u.firstname LIKE %$name%")
                 ->orWhere("u.lastname LIKE %$name%")
                 ->orWhere("u.patronymic LIKE %$name%");
         }
-        if (isset($isActive) && $isActive === true){
-            $query = $query->where("u.active = true");
-        } else {
-            $query = $query->where("u.active IS NULL OR u.active = false");
+        if (isset($isActive) && !empty($isActive)){
+            $query = $query->where("u.active = $isActive");
         }
 
         $countQuery = clone $query;
-        $data =  $this->paginate($pageSize, $pageNum, $query, 'u.lastname');
+        $data =  $this->paginate($pageSize, $pageNum, $query, 'u.active');
 
         $count = $countQuery->select(
             $qb->expr()
