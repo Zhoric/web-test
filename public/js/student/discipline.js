@@ -23,7 +23,9 @@ $(document).ready(function(){
 
             self.actions = {
                 start: function(data){
-                    window.location.href = '/test/' + data.test.id();
+                    window.location.href = '/test/'
+                        + types.test.name(data.test.type()) + '/'
+                        + data.test.id();
                 }
             };
 

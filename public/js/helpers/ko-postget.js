@@ -18,7 +18,7 @@ $get = function(url, successCallback, errors, data){
         $.get(url, data, function(response){
             var result = ko.mapping.fromJSON(response);
             if (result.Success()){
-                successCallback();
+                successCallback(result.Data);
                 return;
             }
             errors.show(result.Message());
@@ -30,7 +30,7 @@ $post = function(url, data, errors, successCallback){
         $.post(url, data, function(response){
             var result = ko.mapping.fromJSON(response);
             if (result.Success()){
-                if (typeof successCallback !== 'undefined') successCallback();
+                if (typeof successCallback !== 'undefined') successCallback(data);
                 return;
             }
             errors.show(result.Message());

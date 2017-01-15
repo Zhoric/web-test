@@ -15,7 +15,9 @@
         <!-- ko if: current.question() -->
         <div class="question-head">
             <h3 data-bind="text: current.question().text"></h3>
+            <!-- ko if: $root.timer() -->
             <h1 data-bind="text: current.timeLeft"></h1>
+            <!-- /ko -->
             <!-- ko if: current.question().image() -->
             <img data-bind="attr: {src: '/' + current.question().image()}, click: $root.actions.image.expand"/>
             <!-- /ko -->

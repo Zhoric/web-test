@@ -13,7 +13,7 @@ $(document).ready(function(){
                 task: ko.observable(''),
                 text: ko.observable(''),
                 write: function(){
-                    self.toggleModal('#code-editor-modal', '');
+                    commonHelper.modal.open('#code-editor-modal');
                 },
                 clear: function(){
                     editor.setValue('');
@@ -31,24 +31,16 @@ $(document).ready(function(){
                     self.code.text(editor.getValue());
                 }
             };
+            self.allowTimer = ko.observable(null);
             self.current = {
-                question: ko.observable(),
+                question: ko.observable(null),
                 answers: ko.observableArray([]),
                 answerText: ko.observable(''),
                 singleAnswer: ko.observable(0),
                 timeLeft : ko.observable(-1),
                 testResult: ko.observable()
             };
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+            self.errors = errors();
             self.actions = {
                 answer: function(){
                     self.post.answers();
@@ -106,87 +98,61 @@ $(document).ready(function(){
 
             self.get = {
                 question: function(){
-                    $.get('/api/tests/nextQuestion', function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            if (result.Data.hasOwnProperty('question')){
-                                self.current.question(result.Data.question);
-                                if (self.current.question().type() === 5){
-                                    self.get.code();
-                                };
-                                self.current.timeLeft(result.Data.question.time());
-                                if (result.Data.answers() == null) {
-                                    self.current.answers([]);
-                                }
-                                else{
-                                    self.current.answers(result.Data.answers());
-                                }
-                            }
-                            else{
-                                self.current.testResult(result.Data);
-                                self.code.empty();
-                            }
-                            return;
+                    $get('/api/tests/nextQuestion', function(data){
+                        if (data.hasOwnProperty('question')){
+                            self.current.question(data.question);
+                            self.current.timeLeft(data.question.time());
+
+                            data.question.type() === questionType.code
+                                ? self.get.code()
+                                : self.code.empty();self.code.empty();
+
+                            data.answers()
+                                ? self.current.answers(data.answers())
+                                : self.current.answers([]);
                         }
-                        self.errors.show(result.Message());
-                        self.code.empty();
-                    });
+                    }, self.errors)();
                 },
                 code: function(){
                     var id = self.current.question().id();
                     var url = '/api/program/byQuestion/' + id;
-                    $.get(url , function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.code.fill(result.Data);
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
-                },
+
+                    $get(url, function(data){
+                        self.code.fill(data);
+                    }, self.errors)();
+                }
             };
             self.post = {
                 answers: function(){
                     var json = self.toggleCurrent.stringify.answer();
                     console.log(json);
-                    $.post('/api/tests/answer', json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.toggleCurrent.clear();
-                            self.get.question();
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    $post('/api/tests/answer', json, self.errors, function(){
+                        self.toggleCurrent.clear();
+                        self.get.question();
+                    })();
                 },
                 startTest: function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
 
-                    $.post('/api/tests/start', JSON.stringify({testId: id}), function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.get.question();
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
+                    $post('/api/tests/start', JSON.stringify({testId: id}), self.errors, function(){
+                        var test = url.substring(url.indexOf('test/') + 5, url.lastIndexOf('/'));
+                        self.allowTimer(test === types.test.control.name);
+                        self.get.question();
+                    })();
                 }
             };
 
             self.post.startTest();
 
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
-
             // TIMER
-
-            setInterval(function(){
-                var time = self.current.timeLeft() - 1;
-                self.current.timeLeft(time);
-            }, 1000);
-
+            self.allowTimer.subscribe(function(value){
+                if (!value) return;
+                setInterval(function(){
+                    var time = self.current.timeLeft() - 1;
+                    self.current.timeLeft(time);
+                }, 1000);
+            });
             self.current.timeLeft.subscribe(function(value){
                 if (!value){
                     if(self.current.question()){
@@ -200,7 +166,8 @@ $(document).ready(function(){
                 current: self.current,
                 actions: self.actions,
                 code: self.code,
-                errors: self.errors
+                errors: self.errors,
+                timer: self.allowTimer
             };
         };
     };

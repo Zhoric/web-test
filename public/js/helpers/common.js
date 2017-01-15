@@ -30,6 +30,70 @@ var questionType = {
     code: 5
 };
 
+var types = {
+    question: {
+        singleAnswer: {
+            id: 1,
+            rusname: 'Закрытый с одним правильным ответом'
+        },
+        multiAnswer: {
+            id: 2,
+            rusname: 'Закрытый с несколькими правильными ответами'
+        },
+        singleLine: {
+            id: 3,
+            rusname: 'Открытый однострочный'
+        },
+        multiLine: {
+            id: 4,
+            rusname: 'открытый многострочный'
+        },
+        code: {
+            id: 5,
+            rusname: 'Программный код'
+        }
+    },
+    test: {
+        control: {
+            id: 1,
+            name: 'control',
+            rusname: 'Контроль знаний'
+        },
+        study: {
+            id: 2,
+            name: 'study',
+            rusname: 'Обучающий'
+        },
+        name: function(type){
+            var test = types.test;
+            switch(type){
+                case test.control.id:
+                    return test.control.name;
+                    break;
+                case test.study.id:
+                    return test.study.name;
+                    break;
+            }
+        }
+    },
+    complexity: {
+        easy: {
+            id: 1,
+            rusname: 'Лёгкий'
+        },
+        medium: {
+            id: 1,
+            rusname: 'Средний'
+        },
+        hard: {
+            id: 1,
+            rusname: 'Сложный'
+        }
+    }
+};
+
+
+
 var complexity = {
     easy: 1,
     medium: 2,
