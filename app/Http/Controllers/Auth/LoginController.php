@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-   // protected $redirectTo = '/auth';
+    // protected $redirectTo = '/auth';
     protected $_authManager;
     protected $_userManager;
 
@@ -62,26 +62,22 @@ class LoginController extends Controller
 
                 return $this->sendLockoutResponse($request);
             }
-            $credentials = [ 'email' => $request->json('email'), 'password' => $request->json('password')];
+            $credentials = ['email' => $request->json('email'), 'password' => $request->json('password')];
 
-            if(!$this->_authManager->checkIfEmailExists($request->json('email'))){
+            if (!$this->_authManager->checkIfEmailExists($request->json('email'))) {
                 throw new Exception('Такого пользователя не существует!');
             }
-
-            if(!$this->_authManager->checkIfUserActive($request->json('email'))){
+            if (!$this->_authManager->checkIfUserActive($request->json('email'))) {
                 throw new Exception('Ваш аккаунт ещё не подтвержден администратором!');
             }
-
             if ($this->guard()->attempt($credentials, $request->has('remember'))) {
                 try {
-                        $userRole = $this->_userManager->getCurrentUserInfo()->getRole();
-                        return $this->successJSONResponse($userRole,'Успешная попытка логина!');
-                }
-                catch(Exception $exception){
+                    $userRole = $this->_userManager->getCurrentUserInfo()->getRole();
+                    return $this->successJSONResponse($userRole, 'Успешная попытка логина!');
+                } catch (Exception $exception) {
                     return $this->faultJSONResponse($exception->getMessage());
                 }
             }
-
             // If the login attempt was unsuccessful we will increment the number of attempts
             // to login and redirect the user back to the login form. Of course, when this
             // user surpasses their maximum number of attempts they will get locked out.
@@ -89,20 +85,12 @@ class LoginController extends Controller
 
             throw new Exception('Неудачная попытка логина!');
 
-        }
-        catch (Exception $exception){
+        } catch (Exception $exception) {
             return $this->faultJSONResponse($exception->getMessage());
         }
 
 
     }
-
-
-
-
-
-
-
 
 
 }
