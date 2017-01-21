@@ -47,11 +47,11 @@
             </div>
             <div class="filter-block">
                 <input id="active-students" data-bind="checked: request" value="active" type="radio" group="filter" class="custom-radio"/>
-                <label for="active-students">Активные</label>
+                <label for="active-students">Подтвержденные</label>
             </div>
             <div class="filter-block">
                 <input id="non-active-students" data-bind="checked: request" value="inactive" type="radio" group="filter" class="custom-radio"/>
-                <label for="non-active-students">Не активные</label>
+                <label for="non-active-students">Не подтвержденные</label>
             </div>
             <div class="filter-block"></div>
         </div>
