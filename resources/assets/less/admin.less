@@ -38,25 +38,45 @@ input{
 .inline{
   display: inline-block;
 }
+.block{
+  display: block;
+}
 
-.items{
-  &-head{
-    margin: 15px 0;
-    label.adder{
-      float: right;
-      line-height: 22px;
-    }
-    h1{
-      display: inline;
-    }
-    h3{
-      color: @filch;
-    }
+.items-head, .layer-head{
+  margin: 15px 0;
+  label.adder{
+    float: right;
+    line-height: 22px;
   }
-  &-body{
-    margin: 20px 0;
+  h1{
+    display: inline;
+  }
+  h3{
+    color: @filch;
   }
 }
+.items-body, .layer-body{
+  margin: 20px 0;
+}
+//.items{
+//  &-head{
+//    margin: 15px 0;
+//    label.adder{
+//      float: right;
+//      line-height: 22px;
+//    }
+//    h1{
+//      display: inline;
+//    }
+//    h3{
+//      color: @filch;
+//    }
+//  }
+//  &-body{
+//    margin: 20px 0;
+//  }
+//}
+
 
 .items{
   &.disciplines{
@@ -66,25 +86,25 @@ input{
       min-width: 80px;
     }
   }
-  .item{
-    background: @patronus-shade;
-    color: @filch;
-    font-size: 16px;
-    padding: 9px;
-    cursor: pointer;
-    margin: 1px 0;
-    &:hover, &.current{
-      background: @patronus;
-      color: @white;
-      span.tag{
-        color: @white;
-      }
-    }
+}
+.item{
+  background: @patronus-shade;
+  color: @filch;
+  font-size: 16px;
+  padding: 9px;
+  cursor: pointer;
+  margin: 1px 0;
+  &:hover, &.current{
+    background: @patronus;
+    color: @white;
     span.tag{
-      color: #5D8CAE;
-      margin: 0 8px;
-      font-size: 23px;
+      color: @white;
     }
+  }
+  span.tag{
+    color: #5D8CAE;
+    margin: 0 8px;
+    font-size: 23px;
   }
 }
 
@@ -98,6 +118,25 @@ input{
       &:hover{
         border: 1px solid @patronus;
       }
+    }
+  }
+}
+
+.details-column.tile-boredom{
+  background: @patronus-shade;
+  width: 150px;
+  height: 100px;
+  padding: 5px 15px;
+  span{
+    display: block;
+    font-size: 15px;
+    color: @akcio;
+    line-height: 15px;
+    margin: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover{
+      color: @filch;
     }
   }
 }
@@ -671,11 +710,11 @@ span{
   }
 }
 
-.content{
-  width: 85%;
-  margin: 100px auto;
-  background: @neutral;
-}
+//.content{
+//  width: 85%;
+//  margin: 100px auto;
+//  background: @neutral;
+//}
 
 .org-accordion{
   width: 100%;

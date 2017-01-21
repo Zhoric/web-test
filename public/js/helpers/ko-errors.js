@@ -4,7 +4,7 @@
 function errors(){
     var self = this;
 
-    self.message = ko.observable();
+    self.message = ko.observable('');
     self.show = function(message){
         self.message(message);
         commonHelper.modal.open('#errors-modal');

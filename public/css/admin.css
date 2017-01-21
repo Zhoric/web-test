@@ -339,6 +339,9 @@ span .incorrect {
   height: auto;
   display: table;
 }
+.width-auto {
+  width: auto;
+}
 .width-zero {
   width: 0;
 }
@@ -428,6 +431,9 @@ span .incorrect {
 }
 .width-100p {
   width: 100%;
+}
+.zero-margin {
+  margin: 0 !important;
 }
 .clear {
   clear: both;
@@ -527,20 +533,28 @@ input {
 .inline {
   display: inline-block;
 }
-.items-head {
+.block {
+  display: block;
+}
+.items-head,
+.layer-head {
   margin: 15px 0;
 }
-.items-head label.adder {
+.items-head label.adder,
+.layer-head label.adder {
   float: right;
   line-height: 22px;
 }
-.items-head h1 {
+.items-head h1,
+.layer-head h1 {
   display: inline;
 }
-.items-head h3 {
+.items-head h3,
+.layer-head h3 {
   color: #6C7A89;
 }
-.items-body {
+.items-body,
+.layer-body {
   margin: 20px 0;
 }
 .items.disciplines .item .tags {
@@ -548,7 +562,7 @@ input {
   float: right;
   min-width: 80px;
 }
-.items .item {
+.item {
   background: #EDEEF0;
   color: #6C7A89;
   font-size: 16px;
@@ -556,16 +570,16 @@ input {
   cursor: pointer;
   margin: 1px 0;
 }
-.items .item:hover,
-.items .item.current {
+.item:hover,
+.item.current {
   background: #5D8CAE;
   color: #fff;
 }
-.items .item:hover span.tag,
-.items .item.current span.tag {
+.item:hover span.tag,
+.item.current span.tag {
   color: #fff;
 }
-.items .item span.tag {
+.item span.tag {
   color: #5D8CAE;
   margin: 0 8px;
   font-size: 23px;
@@ -585,6 +599,24 @@ input {
 }
 .items .result a:hover {
   border: 1px solid #5D8CAE;
+}
+.details-column.tile-boredom {
+  background: #EDEEF0;
+  width: 150px;
+  height: 100px;
+  padding: 5px 15px;
+}
+.details-column.tile-boredom span {
+  display: block;
+  font-size: 15px;
+  color: #BFBFBF;
+  line-height: 15px;
+  margin: 7px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.details-column.tile-boredom span:hover {
+  color: #6C7A89;
 }
 .details-column {
   margin: 1%;
@@ -1046,11 +1078,6 @@ span.not-ok {
 }
 .menu li a:hover {
   color: #fff;
-}
-.content {
-  width: 85%;
-  margin: 100px auto;
-  background: #ecf0f1;
 }
 .org-accordion {
   width: 100%;

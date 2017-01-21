@@ -1,89 +1,85 @@
-/**
- * Created by nyanjii on 11.10.16.
- */
 $(document).ready(function(){
     var institutesViewModel = function(){
         return new function(){
             var self = this;
+            self.errors = new errors();
 
-            self.institutes = ko.observableArray([]);
-            self.currentProfiles = ko.observableArray([]);
-            self.currentProfile = ko.observable();
-            self.currentPlans = ko.observableArray([]);
-            self.currentInstitute = ko.observable(0);
-
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
+            self.initial = {
+                institutes: ko.observableArray([]),
+                institute: {
+                    id: ko.observable(0),
+                    name: ko.observable(''),
+                    description: ko.observable('')
+                }
+            };
+            self.current = {
+                institute: ko.observable(self.initial.institute),
+                profiles: ko.observableArray([]),
+                plans: ko.observableArray([])
+            };
+            self.actions = {
+                show: {
+                    institute: function(data){
+                        var isCurrent =  data.id() === self.current.institute().id();
+                        if (isCurrent) {
+                            self.current.institute(self.initial.institute);
+                            return;
+                        }
+                        self.current.institute.copy(data);
+                        self.get.profiles();
+                    },
+                    plans: function(data){
+                        self.get.plans(data.id());
+                        commonHelper.modal.open('#show-plans-modal');
+                    }
                 },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
+                moveTo: {
+                    group: function(data){
+                        var url = '/admin/groups/' + data.id();
+                        window.location.href = url;
+                    },
+                    plan: function(){}
+                }
+            };
+            self.get = {
+                institutes: function(){
+                    var requestOptions = {
+                        url: '/api/institutes',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.initial.institutes(data());
+                        }
+                    };
+                    $ajaxget(requestOptions);
+                },
+                profiles: function(){
+                    var requestOptions = {
+                        url: '/api/institute/'+ self.current.institute().id() + '/profiles',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.profiles(data());
+                        }
+                    };
+                    $ajaxget(requestOptions);
+                },
+                plans: function(id){
+                    var requestOptions = {
+                        url: '/api/profile/'+ id + '/plans',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.plans(data());
+                        }
+                    };
+                    $ajaxget(requestOptions);
                 }
             };
 
-            self.getInstitutes = function(){
-
-                $.get('/api/institutes', function(response){
-                    var result = ko.mapping.fromJSON(response);
-                    if (result.Success()){
-                        self.institutes(result.Data());
-                        return
-                    }
-                    self.errors.show(result.Message());
-                });
-            };
-            self.getInstitutes();
-
-            self.getProfiles = function(data){
-                if (self.currentInstitute() === data.id()){
-                    self.currentInstitute(0);
-                    return;
-                }
-                self.currentInstitute(data.id());
-                $.get('/api/institute/'+ data.id() + '/profiles', function(response){
-                    var result = ko.mapping.fromJSON(response);
-                    if (result.Success()){
-                        self.currentProfiles(result.Data());
-                        return
-                    }
-                    self.errors.show(result.Message());
-                });
-            };
-            self.getPlans = function(data){
-                $.get('/api/profile/'+ data.id() + '/plans', function(response){
-                    var result = ko.mapping.fromJSON(response);
-                    if (result.Success()){
-                        self.currentPlans(result.Data());
-                        return
-                    }
-                    self.errors.show(result.Message());
-                });
-            };
-
-            self.moveToGroup = function(data){
-                var url = '/admin/groups/' + data.id();
-                window.location.href = url;
-            };
-            self.moveToPlan = function(data){
-
-            };
-            self.showPlans = function(data){
-                self.getPlans(data);
-                $('#plans-modal').arcticmodal();
-            };
+            self.get.institutes();
 
             return {
-                institutes: self.institutes,
-                currentProfiles: self.currentProfiles,
-                currentInstitute: self.currentInstitute,
-                currentPlans: self.currentPlans,
-
-                getProfiles: self.getProfiles,
-                moveToGroup: self.moveToGroup,
-                showPlans: self.showPlans,
-                moveToPlan: self.moveToPlan,
+                current: self.current,
+                initial: self.initial,
+                actions: self.actions,
                 errors: self.errors
             };
         };

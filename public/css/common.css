@@ -339,6 +339,9 @@ span .incorrect {
   height: auto;
   display: table;
 }
+.width-auto {
+  width: auto;
+}
 .width-zero {
   width: 0;
 }
@@ -428,6 +431,9 @@ span .incorrect {
 }
 .width-100p {
   width: 100%;
+}
+.zero-margin {
+  margin: 0 !important;
 }
 .clear {
   clear: both;

@@ -6,61 +6,44 @@
 
 @section('content')
     <div class="content">
-
-        <div class="institutes">
-            <!-- ko foreach: institutes-->
-            <div class="institute" data-bind="click: $root.getProfiles, css: {'institute-current': $root.currentInstitute() === id() }">
-                <span data-bind="text: name"></span>
-            </div>
-            <!-- ko if: $root.currentInstitute() === id() -->
-            <div class="profiles">
-                <!-- ko foreach: $root.currentProfiles-->
-                <div class="profile">
-                    <span data-bind="text: name"></span></br>
-                    <button data-bind="click: $root.showPlans" class="tyle-btn">Учебные планы</button>
-                    <button data-bind="click: $root.moveToGroup" class="tyle-btn tyle-btn-negative">Перейти к группам</button>
+        <div class="content">
+            <div class="layer">
+                <div class="layer-head">
+                    <h1 class="block">Администрирование институтов</h1>
                 </div>
-                <!-- /ko -->
-                <div class="profile" data-bind="">
-                    <span>+</span>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <!-- /ko -->
-            <!-- /ko -->
-            <div class="institute" data-bind="">
-                <span>+</span>
-            </div>
-        </div>
-
-        <div class="g-hidden">
-            <div class="box-modal" id="plans-modal">
-                <div class="box-modal_close arcticmodal-close">закрыть</div>
-                <div class="institutes">
-                    <h3>Учебные планы</h3> <h3 data-bind=""></h3>
-                    <div class="institute">+</div>
-                    <!-- ko foreach: $root.currentPlans -->
-                    <div class="institute" data-bind="click: $root.moveToPlan">
+                <div class="layer-body" data-bind="foreach: $root.initial.institutes">
+                    <div class="item" data-bind="click: $root.actions.show.institute, css: {'current': id() === $root.current.institute().id()}">
                         <span data-bind="text: name"></span>
+                    </div>
+                    <!-- ko if: id() === $root.current.institute().id() -->
+                    <div class="details">
+                        <div class="details-row" data-bind="foreach: $root.current.profiles">
+                            <div class="details-column tile-boredom text-center">
+                                <h3 data-bind="text: name, attr: {title: code() + ' ' + fullname()}"></h3>
+                                <span data-bind="click: $root.actions.moveTo.group">Перейти к группам</span>
+                                <span data-bind="click: $root.actions.show.plans">Учебные планы</span>
+                            </div>
+                        </div>
                     </div>
                     <!-- /ko -->
                 </div>
             </div>
         </div>
-
     </div>
-@endsection
-<div class="g-hidden">
-    <div class="box-modal" id="errors-modal">
-        <div>
-            <div>
-                <span class="fa">&#xf071;</span>
-                <h3>Произошла ошибка</h3>
-                <h4 data-bind="text: $root.errors.message"></h4>
-            </div>
-            <div class="button-holder">
-                <button data-bind="click: $root.errors.accept">OK</button>
+
+    <div class="g-hidden">
+        <div class="box-modal" id="show-plans-modal">
+            <div class="box-modal_close arcticmodal-close">закрыть</div>
+            <div class="layer zero-margin width-auto">
+                <h3>Учебные планы</h3>
+                <!-- ko foreach: $root.current.plans -->
+                <div class="item">
+                    <span data-bind="text: name"></span>
+                </div>
+                <!-- /ko -->
             </div>
         </div>
     </div>
-</div>
+
+    @include('shared.error-modal')
+@endsection
