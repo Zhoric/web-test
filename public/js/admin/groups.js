@@ -49,7 +49,22 @@ $(document).ready(function(){
                 name: ko.observable('')
             };
             self.alter = {
+                stringify: {
+                    group: function(){
+                        var result = {};
 
+                        var group = ko.mapping.toJS(self.current.group);
+                        if (self.mode() === state.create) delete group.id;
+
+                        result.group = group;
+                        if (self.current.groupPlan()){
+                            result.studyPlanId = self.current.groupPlan().id();
+                        }
+                        console.log(result);
+
+                        return JSON.stringify(result);
+                    }
+                }
             };
             self.actions = {
                 start: {
@@ -63,22 +78,26 @@ $(document).ready(function(){
                     update: function(data){
                         console.log(data);
                         self.current.group.copy(data);
+                        self.current.mode(state.update);
                     },
                     remove: function(data){
                         self.current.group.copy(data);
+                        self.mode(state.remove);
                         commonHelper.modal.open('#remove-group-modal');
                     }
                 },
                 end: {
-                    create: function(){},
                     update: function(){
-                        // self.current.group(self.initial.group);
-                        //self.mode(state.none);
+                        self.post.group();
                     },
-                    remove: {}
+                    remove: {
+
+                    }
                 },
                 cancel: function(){
                     self.current.group(self.initial.group);
+                    self.current.groupPlan(null);
+                    self.mode(state.none);
                 },
                 generate: function(){
 
@@ -104,7 +123,6 @@ $(document).ready(function(){
                     },
                     end: function(){
                         self.current.groupPlan.copy(self.current.plan);
-                        console.log(self.current.groupPlan());
                         self.actions.selectPlan.cancel();
                     }
                 }
@@ -161,7 +179,24 @@ $(document).ready(function(){
                     $ajaxget(requestOptions);
                 }
             };
-            self.post = {};
+            self.post = {
+                group: function(){
+                    var url = self.mode() === state.create
+                        ? '/api/groups/create'
+                        : '/api/groups/update';
+                    var json = self.alter.stringify.group();
+                    var requestOptions = {
+                        url: url,
+                        errors: self.errors,
+                        data: json,
+                        successCallback: function(){
+                            self.get.groups();
+                            self.actions.cancel();
+                        }
+                    };
+                    $ajaxpost(requestOptions);
+                }
+            };
 
             self.current.institute.subscribe(function(value){
                 if (value){
