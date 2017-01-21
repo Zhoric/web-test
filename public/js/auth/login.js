@@ -7,30 +7,37 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.errors = errors();
+            self.errors = new errors();
 
             self.user = {
                 email: ko.observable(''),
                 password: ko.observable('')
             };
-
             self.login = function(){
                 var json = ko.mapping.toJSON(self.user);
-                $post('/login', json, self.errors, function(data){
-                    var location = '/login';
-                    switch (data()){
-                        case role.student.name:
-                            location = role.student.location;
-                            break;
-                        case role.admin.name:
-                            location = role.admin.location;
-                            break;
-                        case role.lecturer.name:
-                            location = role.lecturer.location;
-                            break;
+
+                var requestParams = {
+                    url: '/login',
+                    data: json,
+                    errors: self.errors,
+                    successCallback: function(data){
+                        var location = '/login';
+                        switch (data()){
+                            case role.student.name:
+                                location = role.student.location;
+                                break;
+                            case role.admin.name:
+                                location = role.admin.location;
+                                break;
+                            case role.lecturer.name:
+                                location = role.lecturer.location;
+                                break;
+                        }
+                        window.location.href = location;
                     }
-                    window.location.href = location;
-                })();
+                };
+
+                $ajaxpost(requestParams);
             };
 
             return {
