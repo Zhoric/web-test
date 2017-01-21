@@ -83,7 +83,7 @@ class UserRepository extends BaseRepository implements IUserRepository
         }
 
         $countQuery = clone $query;
-        $data =  $this->paginate($pageSize, $pageNum, $query, 'u.active');
+        $data =  $this->paginate($pageSize, $pageNum, $query, 'u.lastname');
 
         $count = $countQuery->select(
             $qb->expr()

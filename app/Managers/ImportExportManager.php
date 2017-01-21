@@ -60,25 +60,27 @@ class ImportExportManager
 
     public function importQuestions($themeId, $file)
     {
-        $importFilePath = self::$importPath.self::$importFileName;
-        FileHelper::save($file, self::$importFileType, $importFilePath);
+        try{
+            $importFilePath = self::$importPath.self::$importFileName;
+            FileHelper::save($file, self::$importFileType, $importFilePath);
 
-        $fileContent = file_get_contents($importFilePath);
-        $importResult = new ImportResultViewModel();
+            $fileContent = file_get_contents($importFilePath);
+            $importResult = new ImportResultViewModel();
 
-        $questions = $this->getTextBetweenTags($fileContent, 'question');
-        if (!isset($questions) || count($questions) == 0) {
-            throw new Exception('Ошибка импорта! Не удаётся найти вопросы теста в указанном файле!');
+            $questions = $this->getTextBetweenTags($fileContent, 'question');
+            if (!isset($questions) || count($questions) == 0) {
+                throw new Exception('Ошибка импорта! Не удаётся найти вопросы теста в указанном файле!');
+            }
+
+            $importResult->totalRows = count($questions);
+            foreach ($questions as $question) {
+                $this->tryParseAndSaveQuestion($question, $importResult, $themeId);
+            }
+            return $importResult;
         }
-
-        $importResult->totalRows = count($questions);
-        foreach ($questions as $question) {
-            $this->tryParseAndSaveQuestion($question, $importResult, $themeId);
+        finally {
+            FileHelper::delete($importFilePath);
         }
-
-        FileHelper::delete($importFilePath);
-
-        return $importResult;
     }
 
     /**
@@ -88,23 +90,27 @@ class ImportExportManager
      */
     public function exportQuestions($themeId)
     {
-        $filePath = self::$importPath . self::$exportFileName;
-        FileHelper::delete($filePath);
-        $exportFile = fopen($filePath, 'w');
-        $exportResult = new ExportResultViewModel();
-        $exportContent = "";
+        try{
+            $filePath = self::$importPath . self::$exportFileName;
+            FileHelper::delete($filePath);
+            $exportFile = fopen($filePath, 'w');
+            $exportResult = new ExportResultViewModel();
+            $exportContent = "";
 
-        $questions = $this->_questionManager->getByTheme($themeId);
-        $exportResult->totalRows = count($questions);
+            $questions = $this->_questionManager->getByTheme($themeId);
+            $exportResult->totalRows = count($questions);
 
-        foreach ($questions as $question) {
-            $questionData = $this->getQuestionDataString($question, $exportResult);
-            $exportContent .= $questionData;
+            foreach ($questions as $question) {
+                $questionData = $this->getQuestionDataString($question, $exportResult);
+                $exportContent .= $questionData;
+            }
+
+            fwrite($exportFile, $exportContent);
+            return $exportResult;
+        } finally {
+            fclose($exportFile);
         }
 
-        fwrite($exportFile, $exportContent);
-        fclose($exportFile);
-        return $exportResult;
     }
 
     /**

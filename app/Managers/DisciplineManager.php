@@ -4,8 +4,11 @@ namespace Managers;
 
 use Discipline;
 use DisciplineInfoViewModel;
+use Illuminate\Support\Facades\Auth;
 use Repositories\UnitOfWork;
 use Theme;
+use Helpers\AuthHelper;
+use UserRole;
 
 class DisciplineManager
 {
@@ -16,13 +19,33 @@ class DisciplineManager
         $this->_unitOfWork = $unitOfWork;
     }
 
+    /**
+     * Получение списка всех дисциплин для администратора/преподавателя.
+     * Если текущий пользователь - преподаватель, будут возвращены только назначенные ему дисциплины.
+     * @return array|mixed
+     */
     public function getAll(){
-        return $this->_unitOfWork->disciplines()->all();
+        $lecturerId = null;
+        $isLecturer = AuthHelper::isCurrentUserInRole($this->_unitOfWork, UserRole::Lecturer);
+
+        if ($isLecturer) {
+            $lecturerId = Auth::user()->getId();
+            return $this->_unitOfWork->disciplines()->getForLecturer($lecturerId);
+        } else {
+            return $this->_unitOfWork->disciplines()->all();
+        }
     }
 
     public function getByNameAndProfilePaginated($pageNum, $pageSize, $name, $profileId){
+
+        $lecturerId = null;
+        $isLecturer = AuthHelper::isCurrentUserInRole($this->_unitOfWork, UserRole::Lecturer);
+
+        if ($isLecturer) {
+            $lecturerId = Auth::user()->getId();
+        }
         return $this->_unitOfWork->disciplines()
-            ->getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name);
+            ->getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name, $lecturerId);
     }
 
     public function getByName($name){

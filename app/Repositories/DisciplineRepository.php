@@ -22,7 +22,16 @@ class DisciplineRepository extends BaseRepository
         parent::__construct($em, Discipline::class);
     }
 
-    public function getByNameAndProfilePaginated($pageSize, $pageNum, $profileId = null, $name = null){
+    public function getForLecturer($lecturerId){
+        $qb = $this->repo->createQueryBuilder('d');
+        return $qb->join(DisciplineLecturer::class, 'dl', Join::WITH,
+            'dl.discipline = d.id AND dl.lecturer = :lecturerId')
+            ->setParameter('lecturerId', $lecturerId)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getByNameAndProfilePaginated($pageSize, $pageNum, $profileId, $name, $lecturerId){
         $qb = $this->repo->createQueryBuilder('d');
         $query = $qb;
 
@@ -30,6 +39,12 @@ class DisciplineRepository extends BaseRepository
             $query = $query->join(ProfileDiscipline::class, 'pd', Join::WITH,
                 'pd.discipline = d.id AND pd.profile = :profileId')
                 ->setParameter('profileId', $profileId);
+        }
+
+        if ($lecturerId != null){
+            $query = $query->join(DisciplineLecturer::class, 'dl', Join::WITH,
+                'dl.discipline = d.id AND dl.lecturer = :lecturerId')
+                ->setParameter('lecturerId', $lecturerId);
         }
 
         if ($name != null && $name != ''){
@@ -119,9 +134,16 @@ class DisciplineRepository extends BaseRepository
         return $query->execute();
     }
 
-    function getByProfile($profileId){
-        $qb = $this->repo->createQueryBuilder('d');
-        $query = $qb->join(ProfileDiscipline::class, 'pd', Join::WITH, 'pd.discipline = d.id')
+    function getByProfile($profileId, $lecturerId){
+        $query = $this->repo->createQueryBuilder('d');
+
+        if ($lecturerId != null){
+            $query = $query->join(DisciplineLecturer::class, 'dl', Join::WITH,
+                'dl.discipline = d.id AND dl.lecturer = :lecturerId')
+                ->setParameter('lecturerId', $lecturerId);
+        }
+
+        $query = $query->join(ProfileDiscipline::class, 'pd', Join::WITH, 'pd.discipline = d.id')
             ->where('pd.profile = :profile')
             ->setParameter('profile', $profileId)
             ->getQuery();

@@ -14,14 +14,14 @@ class TestSession implements JsonSerializable
 {
     /** ===== Префиксы ключей для хранения в кэше полей сессии тестирования ===== **/
 
-    const userIdPrefix = 'uid';
-    const testIdPrefix = 'tid';
-    const testResultPrefix = 'tr';
-    const testEndTimePrefix = 'end';
-    const answersQualityPrefix = 'qu';
-    const answeredQuestionsIdsPrefix = 'aq';
-    const allQuestionsIdsPrefix = 'q';
-    const questionEndTimePrefix = 'qend';
+    const userIdPrefix = 'uid';                 //   - ИДЕНТИФИКАТОР ПОЛЬЗОВАТЕЛЯ
+    const testIdPrefix = 'tid';                 //   - ИДЕНТИФИКАТОР ТЕСТА
+    const testResultPrefix = 'tr';              //   - ИДЕНТИФИКАТОР РЕЗУЛЬТАТА ТЕСТА
+    const testEndTimePrefix = 'end';            //   - ВРЕМЯ ОКОНЧАНИЯ ТЕСТА
+    const answersQualityPrefix = 'qu';          //   - СРЕДНЕЕ КАЧЕСТВО ОТВЕТОВ СТУДЕНТА [не используется]
+    const answeredQuestionsIdsPrefix = 'aq';    //   - ИДЕНТИФИКАТОРЫ ВОПРОСОВ, НА КОТОРЫЕ УЖЕ ДАН ОТВЕТ
+    const allQuestionsIdsPrefix = 'q';          //   - ИДЕНТИФИКАТОРЫ ВСЕХ ВОПРОСОВ ТЕСТА
+    const questionEndTimePrefix = 'qend';       //   - ВРЕМЯ ОКОНЧАНИЯ ТЕКУЩЕГО ВОПРОСА ТЕСТА
 
     /**
      * @var Database

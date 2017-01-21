@@ -2,9 +2,12 @@
 
 namespace Managers;
 
+use Illuminate\Support\Facades\Auth;
 use Institute;
 use Profile;
 use Repositories\UnitOfWork;
+use Helpers\AuthHelper;
+use UserRole;
 /*
  * Огранизационная структура ВУЗа (институты, профили)
  */
@@ -39,9 +42,17 @@ class OrgStructureManager
     }
 
     public function getProfileDisciplines($profileId){
+
+        $lecturerId = null;
+        $isLecturer = AuthHelper::isCurrentUserInRole($this->_unitOfWork, UserRole::Lecturer);
+
+        if ($isLecturer) {
+            $lecturerId = Auth::user()->getId();
+        }
+
         return $this->_unitOfWork
             ->disciplines()
-            ->getByProfile($profileId);
+            ->getByProfile($profileId, $lecturerId);
     }
 
     public function addInstitute(Institute $institute){

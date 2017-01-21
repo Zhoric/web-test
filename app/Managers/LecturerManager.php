@@ -4,6 +4,7 @@ namespace Managers;
 
 use Discipline;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use LecturerInfoViewModel;
 use PaginationResult;
 use User;
@@ -38,6 +39,7 @@ class LecturerManager
     public function addLecturer(User $lecturer, $disciplinesIds){
         $lecturer->setPassword(bcrypt($lecturer->getPassword()));
 
+        $lecturer->setActive(true);
         $this->_unitOfWork->users()->create($lecturer);
         $this->_unitOfWork->commit();
 
@@ -61,7 +63,7 @@ class LecturerManager
         if (!isset($oldUser)){
             throw new Exception('Невозможно обновить данные преподавателя! Учётная запись не найдена!');
         }
-        $oldUser->setActive($lecturer->getActive());
+        $oldUser->setActive(true);
         $oldUser->setEmail($lecturer->getEmail());
         $oldUser->setFirstname($lecturer->getFirstname());
         $oldUser->setPatronymic($lecturer->getPatronymic());
@@ -85,6 +87,8 @@ class LecturerManager
             $this->_unitOfWork->commit();
         }
     }
+
+
 
 
 
