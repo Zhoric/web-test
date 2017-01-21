@@ -185,7 +185,6 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('create', 'GroupController@create');
             Route::post('update', 'GroupController@update');
             Route::post('delete/{id}', 'GroupController@delete');
-            Route::get('/', 'GroupController@getAll');
             Route::get('{id}/students', 'GroupController@getGroupStudents');
 
             /*------------------------------------------------------------------------
@@ -198,6 +197,9 @@ Route::group(['prefix' => 'api'], function() {
                 Route::post('setGroup', 'GroupController@setStudentGroup');
         });
     });
+
+    Route::get('groups/', 'GroupController@getAll');
+
 
     /*-----------------------------------------------------------------------------
      *                           ДИСЦИПЛИНЫ

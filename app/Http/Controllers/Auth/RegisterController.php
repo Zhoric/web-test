@@ -109,9 +109,6 @@ class RegisterController extends Controller
                 throw new Exception('Ошибка при регистрации');
             }
             event(new Registered($user));
-            //TODO:: после регистрации не залогинивать юзера. Это заявка на регистрацию
-            $this->guard()->login($user);
-
 
             $message = 'Ваша заявка на регистрацию принята! Ждите';
             return $this->successJSONResponse($message);

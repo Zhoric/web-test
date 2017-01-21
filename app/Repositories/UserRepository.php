@@ -74,9 +74,10 @@ class UserRepository extends BaseRepository implements IUserRepository
         }
 
         if (isset($name) && !empty($name)){
-            $query = $query->where("u.firstname LIKE %$name%")
-                ->orWhere("u.lastname LIKE %$name%")
-                ->orWhere("u.patronymic LIKE %$name%");
+            $query = $query->where("u.firstname LIKE :name")
+                ->orWhere("u.lastname LIKE :name")
+                ->orWhere("u.patronymic LIKE :name")
+                ->setParameter('name', "%$name%");
         }
         if (isset($isActive) && !empty($isActive)){
             $query = $query->where("u.active = $isActive");

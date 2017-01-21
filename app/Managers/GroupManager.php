@@ -66,7 +66,6 @@ class GroupManager
 
     public function setStudentGroup($groupId, $studentId){
         $existingUserGroupId = $this->_unitOfWork->studentGroups()->getUserGroup($studentId);
-        dd($existingUserGroupId);
         if(isset($existingUserGroupId)) {
             $this->_unitOfWork->groups()->
             setStudentsGroup($studentId, $groupId);
