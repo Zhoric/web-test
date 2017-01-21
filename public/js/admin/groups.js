@@ -8,10 +8,10 @@ $(document).ready(function(){
             self.errors = new errors();
             self.pagination = pagination();
             self.pagination.pageSize(10);
+            self.mode = ko.observable(state.none);
 
             self.initial = {
                 profileId: ko.observable(null),
-                institutes: ko.observableArray([]),
                 group: {
                     id: ko.observable(0),
                     name: ko.observable(''),
@@ -34,13 +34,16 @@ $(document).ready(function(){
                 groups: ko.observableArray([]),
                 group: ko.observable(self.initial.group),
 
+                institutes: ko.observableArray([]),
                 institute: ko.observable(null),
 
                 profiles: ko.observableArray([]),
                 profile: ko.observable(null),
 
                 plans: ko.observableArray([]),
-                plan: ko.observable(null)
+                plan: ko.observable(null),
+
+                groupPlan: ko.observable(null)
             };
             self.filter = {
                 name: ko.observable('')
@@ -50,6 +53,13 @@ $(document).ready(function(){
             };
             self.actions = {
                 start: {
+                    create: function(){
+                        self.mode() === state.create
+                            ? self.mode(state.none)
+                            : self.mode(state.create);
+                        self.current.group(self.initial.group);
+                        self.current.groupPlan(null);
+                    },
                     update: function(data){
                         console.log(data);
                         self.current.group.copy(data);
@@ -60,6 +70,7 @@ $(document).ready(function(){
                     }
                 },
                 end: {
+                    create: function(){},
                     update: function(){
                         // self.current.group(self.initial.group);
                         //self.mode(state.none);
@@ -81,6 +92,20 @@ $(document).ready(function(){
                     },
                     night: function(){
                         self.current.group().isFulltime(false);
+                    }
+                },
+                selectPlan: {
+                    start: function(){
+                        commonHelper.modal.open('#select-plan-modal');
+                    },
+                    cancel: function(){
+                        self.current.institute(null);
+                        commonHelper.modal.close('#select-plan-modal');
+                    },
+                    end: function(){
+                        self.current.groupPlan.copy(self.current.plan);
+                        console.log(self.current.groupPlan());
+                        self.actions.selectPlan.cancel();
                     }
                 }
             };
@@ -110,7 +135,7 @@ $(document).ready(function(){
                         url: '/api/institutes',
                         errors: self.errors,
                         successCallback: function(data){
-                            self.initial.institutes(data());
+                            self.current.institutes(data());
                         }
                     };
                     $ajaxget(requestOptions);
@@ -127,16 +152,51 @@ $(document).ready(function(){
                 },
                 plans: function(){
                     var requestOptions = {
-                        url: '/api/profile/' + self.current.profile.id() + '/plans',
+                        url: '/api/profile/' + self.current.profile().id() + '/plans',
                         errors: self.errors,
                         successCallback: function(data){
-                            self.plans(data());
+                            self.current.plans(data());
                         }
                     };
                     $ajaxget(requestOptions);
                 }
             };
             self.post = {};
+
+            self.current.institute.subscribe(function(value){
+                if (value){
+                    self.get.profiles();
+                    return;
+                }
+                self.current.profiles([]);
+                self.current.plans([]);
+                self.current.profile(null);
+                self.current.plan(null);
+            });
+            self.current.profile.subscribe(function(value){
+                if (value){
+                    self.get.plans();
+                    return;
+                }
+                self.current.plans([]);
+                self.current.plan(null);
+            });
+            self.pagination.itemsCount.subscribe(function(value){
+                if (value){
+                    self.pagination.totalPages(Math.ceil(
+                        value/self.pagination.pageSize()
+                    ));
+                }
+            });
+            self.pagination.currentPage.subscribe(function(){
+                self.get.groups();
+            });
+            self.filter.name.subscribe(function(){
+                self.get.groups();
+            });
+
+            self.initial.unUrlProfileId();
+            self.get.institutes();
 
 
 
@@ -621,21 +681,16 @@ $(document).ready(function(){
             // };
 
 
-            self.pagination.itemsCount.subscribe(function(value){
-                if (value){
-                    self.pagination.totalPages(Math.ceil(
-                        value/self.pagination.pageSize()
-                    ));
-                }
-            });
 
-            self.initial.unUrlProfileId();
+
+
             return {
                 current: self.current,
                 actions: self.actions,
                 filter: self.filter,
                 errors: self.errors,
-                pagination: self.pagination
+                pagination: self.pagination,
+                mode: self.mode
                 // groups: self.groups,
                 // current: self.current,
                 // mode: self.mode,

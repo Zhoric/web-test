@@ -9,8 +9,11 @@
     <div class="items">
         <div class="items-head">
             <h1>Администрирование групп</h1>
-            <label class="adder">Добавить</label>
+            <label class="adder" data-bind="click: $root.actions.start.create">Добавить</label>
         </div>
+        <!-- ko if: $root.mode() === state.create -->
+        <div class="details" data-bind="template: {name: 'show-group-info', data: $root.current.group}"></div>
+        <!-- /ko -->
         <div class="items-body" data-bind="foreach: $root.current.groups">
             <div class="item">
                 <span data-bind="text: name"></span>
@@ -74,8 +77,10 @@
             <div class="details-row">
                 <div class="details-column width-98p">
                     <label class="title">Учебный план</label>
-                    <span class="form-heights">Изменить</span>
-
+                    <!-- ko if: $root.current.groupPlan() -->
+                    <span data-bind="text: $root.current.groupPlan().name, click: $root.actions.selectPlan.start"></span>
+                    <!-- /ko -->
+                    <span class="form-heights" data-bind="if: !$root.current.groupPlan(), click: $root.actions.selectPlan.start">Изменить</span>
                 </div>
             </div>
         </div>
@@ -154,34 +159,42 @@
     </div>
 </div>
 
-{{--<div class="g-hidden">--}}
-    {{--<div class="box-modal" id="select-plan-modal">--}}
-        {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
-        {{--<div>--}}
-            {{--<h3>Учебный план</h3>--}}
-            {{--<div>--}}
-                {{--<select data-bind="options: $root.institutes,--}}
-                       {{--optionsText: 'name',--}}
-                       {{--value: $root.studyplanSelect().institute,--}}
-                       {{--optionsCaption: 'Институт'"></select>--}}
-                {{--<select data-bind="options: $root.profiles,--}}
-                       {{--optionsText: 'name',--}}
-                       {{--value: $root.studyplanSelect().profile,--}}
-                       {{--optionsCaption: 'Направление подготовки',--}}
-                       {{--enable: $root.studyplanSelect().institute()"></select>--}}
-                {{--<select data-bind="options: $root.studyplans,--}}
-                       {{--optionsText: 'name',--}}
-                       {{--value: $root.studyplanSelect().studyplan,--}}
-                       {{--optionsCaption: 'Учебный план',--}}
-                       {{--enable: $root.studyplanSelect().institute() && $root.studyplanSelect().profile()"></select>--}}
-            {{--</div>--}}
-            {{--<div>--}}
-                {{--<button data-bind="click: $root.approveStudyPlan, enable: $root.studyplanSelect().studyplan()" class="fa">&#xf00c;</button>--}}
-                {{--<button class="fa arcticmodal-close danger">&#xf00d;</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}
+<div class="g-hidden">
+    <div class="box-modal" id="select-plan-modal">
+        <div class="box-modal_close arcticmodal-close">закрыть</div>
+        <div class="layer zero-margin width-auto">
+            <h3>Учебный план</h3>
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <select data-bind="options: $root.current.institutes,
+                       optionsText: 'name',
+                       value: $root.current.institute,
+                       optionsCaption: 'Институт'"></select>
+                </div>
+                <div class="details-column width-98p">
+                    <select data-bind="options: $root.current.profiles,
+                       optionsText: 'name',
+                       value: $root.current.profile,
+                       optionsCaption: 'Направление подготовки',
+                       enable: $root.current.institute()"></select>
+                </div>
+                <div class="details-column width-98p">
+                    <select data-bind="options: $root.current.plans,
+                       optionsText: 'name',
+                       value: $root.current.plan,
+                       optionsCaption: 'Учебный план',
+                       enable: $root.current.institute() && $root.current.profile()"></select>
+                </div>
+            </div>
+            <div class="details-row float-buttons">
+                <div class="details-column width-99p">
+                    <button data-bind="click: $root.actions.selectPlan.cancel" class="cancel">Отмена</button>
+                    <button data-bind="click: $root.actions.selectPlan.end" class="approve">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/html" id="group-info">
     <div class="info-group">
 
