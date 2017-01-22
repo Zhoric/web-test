@@ -53,6 +53,15 @@ class GroupController extends Controller
         }
     }
 
+    public function getGroupStudyPlan($id){
+        try{
+            $group = $this->_groupManager->getGroupStudyPlan($id);
+            return $this->successJSONResponse($group);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     public function create(Request $request){
         try{
             $groupData = $request->json('group');

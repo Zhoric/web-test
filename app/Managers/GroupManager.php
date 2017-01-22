@@ -33,6 +33,10 @@ class GroupManager
         return $this->_unitOfWork->groups()->find($id);
     }
 
+    public function getGroupStudyPlan($id){
+        return $this->_unitOfWork->groups()->find($id)->getStudyplan();
+    }
+
     public function addGroup(Group $group, $studyPlanId){
         $studyplan = $this->_unitOfWork->studyPlans()->find($studyPlanId);
         $group->setStudyplan($studyplan);

@@ -186,6 +186,7 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('update', 'GroupController@update');
             Route::post('delete/{id}', 'GroupController@delete');
             Route::get('{id}/students', 'GroupController@getGroupStudents');
+            Route::get('{id}/studyplan', 'GroupController@getGroupStudyPlan');
 
             /*------------------------------------------------------------------------
             *                      Работа со студентами группы                       */
