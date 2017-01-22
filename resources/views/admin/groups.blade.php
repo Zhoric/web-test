@@ -17,11 +17,11 @@
         <div class="items-body" data-bind="foreach: $root.current.groups">
             <div class="item">
                 <span data-bind="text: name"></span>
-                <span class="fa tag float-right" title="Удалить группу">&#xf1f8;</span>
+                <span class="fa tag float-right" data-bind="click: $root.actions.start.remove" title="Удалить группу">&#xf1f8;</span>
                 <span class="fa tag float-right" data-bind="click: $root.actions.start.update" title="Редактировать">&#xf040;</span>
-                <span class="fa tag float-right" title="Перейти к учетным записям студентов">&#xf007;</span>
+                <span class="fa tag float-right" data-bind="click: $root.actions.moveTo.students" title="Перейти к учетным записям студентов">&#xf007;</span>
             </div>
-            <!-- ko if: id() === $root.current.group().id() -->
+            <!-- ko if: id() === $root.current.group().id() && $root.mode() === state.update -->
             <div class="details" data-bind="template: {name: 'show-group-info', data: $root.current.group}"></div>
             <!-- /ko -->
         </div>
@@ -33,122 +33,9 @@
             <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
         </div>
     </div>
-
-<script type="text/html" id="show-group-info">
-    <div class="details-row">
-        <div class="details-column width-45p">
-            <div class="details-row">
-                <div class="details-column width-50p">
-                    <label class="title">Префикс</label>
-                    <input type="text" data-bind="value: prefix"/>
-                </div>
-            </div>
-            <div class="details-row">
-                <div class="details-column width-50p">
-                    <label class="title">Курс</label>
-                    <input type="text" data-bind="value: course"/>
-                </div>
-            </div>
-            <div class="details-row">
-                <div class="details-column width-50p">
-                    <label class="title">Номер группы</label>
-                    <input type="text" data-bind="value: number"/>
-                </div>
-            </div>
-        </div>
-        <div class="details-column width-48p">
-            <div class="details-row">
-                <div class="details-column">
-                    <label class="title">Форма обучения</label>
-                    <span class="radio form-heights" data-bind="click: $root.actions.switchForm.day, css: {'radio-important' : isFulltime()}">Очная</span>
-                    <span>|</span>
-                    <span class="radio form-heights" data-bind="click: $root.actions.switchForm.night, css: {'radio-important' : !isFulltime()}">Заочная</span>
-                </div>
-            </div>
-            <div class="details-row">
-                <div class="details-column width-70p">
-                    <label class="title">
-                        Полное наименование группы
-                        <span>(Сгенерировать)</span>
-                    </label>
-                    <input type="text" data-bind="value: name"/>
-                </div>
-            </div>
-            <div class="details-row">
-                <div class="details-column width-98p">
-                    <label class="title">Учебный план</label>
-                    <!-- ko if: $root.current.groupPlan() -->
-                    <span data-bind="text: $root.current.groupPlan().name, click: $root.actions.selectPlan.start"></span>
-                    <!-- /ko -->
-                    <span class="form-heights" data-bind="if: !$root.current.groupPlan(), click: $root.actions.selectPlan.start">Изменить</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="details-row float-buttons">
-        <div class="details-column width-100p">
-            <button data-bind="click: $root.actions.cancel" class="cancel">Отмена</button>
-            <button data-bind="click: $root.actions.end.update" class="approve">Сохранить</button>
-        </div>
-    </div>
-</script>
-    {{--<div class="institutes">--}}
-        {{--<div class="institute" data-bind="click: $root.addGroup">--}}
-            {{--<span class="fa">&#xf067;</span>--}}
-        {{--</div>--}}
-        {{--<!-- ko if: $root.mode() === 'add' -->--}}
-        {{--<div class="info-group" data-bind="template: {name: 'edit-mode', data: $root.current().group}"></div>--}}
-        {{--<!-- /ko -->--}}
-        {{--<!-- ko foreach: groups -->--}}
-        {{--<div class="institute font-settings" data-bind="click: $root.showGroup, css: {'institute-current': $root.current().group().id === id}">--}}
-            {{--<span data-bind="text: name"></span>--}}
-        {{--</div>--}}
-        {{--<!-- ko if: $root.current().group().id() === id() && ($root.mode() === 'info' || $root.mode() === 'edit' || $root.mode() === 'edit-student')-->--}}
-        {{--<div data-bind="template: {name: 'group-info', data: $root.current().group}"></div>--}}
-        {{--<div>--}}
-            {{--<!-- ko if: $root.mode() === 'info' || $root.mode() === 'edit-student' || $root.mode() === 'edit' -->--}}
-            {{--<table class="students-table">--}}
-                {{--<thead>--}}
-                {{--<tr>--}}
-                    {{--<th>№</th>--}}
-                    {{--<th>ФИО студента</th>--}}
-                    {{--<th>Действия</th>--}}
-                {{--</tr>--}}
-                {{--</thead>--}}
-                {{--<tbody>--}}
-                {{--<!-- ko foreach: $root.current().groupStudents-->--}}
-                    {{--<!-- ko if: $root.current().student().id() === id() && $root.mode() === 'edit-student'-->--}}
-                    {{--<tr data-bind="template: {name: 'edit-student-mode', data: $root.current().student()}"></tr>--}}
-                    {{--<!-- /ko -->--}}
-                    {{--<!-- ko if: ($root.current().student().id()!= id() && $root.mode() === 'edit-student') || ($root.mode() === 'info') || ($root.mode() === 'edit')-->--}}
-                    {{--<tr>--}}
-                        {{--<td data-bind="text: ($index() + 1)"></td>--}}
-                        {{--<td>--}}
-                            {{--<span data-bind="text: lastName"></span>&nbsp;--}}
-                            {{--<span data-bind="text: firstName"></span>&nbsp;--}}
-                            {{--<span data-bind="text: patronymic"></span>&nbsp;--}}
-                        {{--</td>--}}
-                        {{--<td>--}}
-                            {{--<button class="fa" data-bind="click: $root.startTransfer">&#xf0ec;</button>--}}
-                            {{--<button class="fa" data-bind="click: $root.student().edit">&#xf040;</button>--}}
-                            {{--<button class="fa danger" data-bind="click: $root.startRemove">&#xf014;</button>--}}
-                        {{--</td>--}}
-                    {{--</tr>--}}
-                    {{--<!-- /ko -->--}}
-                {{--<!-- /ko -->--}}
-                {{--</tbody>--}}
-            {{--</table>--}}
-            {{--<!-- /ko -->--}}
-        {{--</div>--}}
-        {{--<!-- /ko -->--}}
-        {{--<!-- /ko -->--}}
-    {{--</div>--}}
-
 </div>
-
 <div class="g-hidden">
-    <div class="box-modal" id="delete-group-modal">
-        {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
+    <div class="box-modal" id="remove-group-modal">
         <div class="popup-delete">
             <div><h3>Вы действительно хотите удалить выбранную группу?</h3></div>
             <div>
@@ -158,6 +45,18 @@
         </div>
     </div>
 </div>
+{{--<div class="g-hidden">--}}
+    {{--<div class="box-modal" id="delete-group-modal">--}}
+        {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
+        {{--<div class="popup-delete">--}}
+            {{--<div><h3>Вы действительно хотите удалить выбранную группу?</h3></div>--}}
+            {{--<div>--}}
+                {{--<button class="remove" data-bind="click: $root.actions.end.remove">Удалить</button>--}}
+                {{--<button class="cancel arcticmodal-close" data-bind="click: $root.actions.cancel">Отмена</button>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--</div>--}}
 
 <div class="g-hidden">
     <div class="box-modal" id="select-plan-modal">
@@ -198,3 +97,62 @@
 
     @include('shared.error-modal')
 @endsection
+
+<script type="text/html" id="show-group-info">
+    <div class="details-row">
+        <div class="details-column width-45p">
+            <div class="details-row">
+                <div class="details-column width-50p">
+                    <label class="title">Префикс</label>
+                    <input type="text" data-bind="value: prefix"/>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-50p">
+                    <label class="title">Курс</label>
+                    <input type="text" data-bind="value: course"/>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-50p">
+                    <label class="title">Номер группы</label>
+                    <input type="text" data-bind="value: number"/>
+                </div>
+            </div>
+        </div>
+        <div class="details-column width-48p">
+            <div class="details-row">
+                <div class="details-column">
+                    <label class="title">Форма обучения</label>
+                    <span class="radio form-heights" data-bind="click: $root.actions.switchForm.day, css: {'radio-important' : isFulltime()}">Очная</span>
+                    <span>|</span>
+                    <span class="radio form-heights" data-bind="click: $root.actions.switchForm.night, css: {'radio-important' : !isFulltime()}">Заочная</span>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-70p">
+                    <label class="title">
+                        Полное наименование группы
+                        <span class="coloredin-patronus bold" data-bind="click: $root.actions.generate">(Сгенерировать)</span>
+                    </label>
+                    <input type="text" data-bind="value: name, enable: $root.current.isGenerated"/>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <label class="title">Учебный план</label>
+                    <!-- ko if: $root.current.groupPlan() -->
+                    <span class="form-heights info coloredin-patronus" data-bind="text: $root.current.groupPlan().name, click: $root.actions.selectPlan.start"></span>
+                    <!-- /ko -->
+                    <span class="form-heights info coloredin-patronus" data-bind="if: !$root.current.groupPlan(), click: $root.actions.selectPlan.start">Изменить</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="details-row float-buttons">
+        <div class="details-column width-100p">
+            <button data-bind="click: $root.actions.cancel" class="cancel">Отмена</button>
+            <button data-bind="click: $root.actions.end.update" class="approve">Сохранить</button>
+        </div>
+    </div>
+</script>

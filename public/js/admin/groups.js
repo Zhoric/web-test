@@ -43,7 +43,8 @@ $(document).ready(function(){
                 plans: ko.observableArray([]),
                 plan: ko.observable(null),
 
-                groupPlan: ko.observable(null)
+                groupPlan: ko.observable(null),
+                isGenerated: ko.observable(false)
             };
             self.filter = {
                 name: ko.observable('')
@@ -78,7 +79,7 @@ $(document).ready(function(){
                     update: function(data){
                         console.log(data);
                         self.current.group.copy(data);
-                        self.current.mode(state.update);
+                        self.mode(state.update);
                     },
                     remove: function(data){
                         self.current.group.copy(data);
@@ -90,20 +91,29 @@ $(document).ready(function(){
                     update: function(){
                         self.post.group();
                     },
-                    remove: {
-
+                    remove: function(){
+                        self.post.removal();
+                        commonHelper.modal.close('#remove-group-modal');
                     }
                 },
                 cancel: function(){
                     self.current.group(self.initial.group);
                     self.current.groupPlan(null);
                     self.mode(state.none);
+                    self.current.isGenerated(false);
                 },
                 generate: function(){
-
+                    var g = self.current.group();
+                    var generated = g.prefix() + '-' + g.course() + g.number();
+                    generated += g.isFulltime() ? 'о' : 'з';
+                    g.name(generated);
+                    self.current.isGenerated(true);
                 },
                 moveTo: {
-                    students: function(){}
+                    students: function(data){
+                        var url = '/admin/students/' + data.id();
+                        window.location.href = url;
+                    }
                 },
                 switchForm: {
                     day: function(){
@@ -192,6 +202,18 @@ $(document).ready(function(){
                         successCallback: function(){
                             self.get.groups();
                             self.actions.cancel();
+                        }
+                    };
+                    $ajaxpost(requestOptions);
+                },
+                removal: function(){
+                    var requestOptions = {
+                        url: '/api/groups/delete/' + self.current.group().id(),
+                        errors: self.errors,
+                        data: null,
+                        successCallback: function(){
+                            self.actions.cancel();
+                            self.get.groups();
                         }
                     };
                     $ajaxpost(requestOptions);
