@@ -22,9 +22,9 @@ class CreateTestResultTable extends Migration
 
             $table->dateTime('date_time');
 
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('set null');
             $table->foreign('test_id')->references('id')->on('test')->onDelete('cascade');
-            $table->foreign('mark_type_id')->references('id')->on('mark_type')->onDelete('cascade');
+            $table->foreign('mark_type_id')->references('id')->on('mark_type')->onDelete('set null');
 
         });
 

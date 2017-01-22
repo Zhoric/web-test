@@ -21,7 +21,7 @@ class CreateThemeTable extends Migration
         });
 
         Schema::table('question', function (Blueprint $table) {
-            $table->foreign('theme_id')->references('id')->on('theme')->onDelete('cascade');
+            $table->foreign('theme_id')->references('id')->on('theme')->onDelete('restrict');
         });
 
         Schema::table('section', function (Blueprint $table) {

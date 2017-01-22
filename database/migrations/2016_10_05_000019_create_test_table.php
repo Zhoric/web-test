@@ -22,7 +22,7 @@ class CreateTestTable extends Migration
             $table->tinyInteger('is_active')->nullable()->default(NULL);
             $table->tinyInteger('is_random')->nullable()->default(NULL);
 
-            $table->foreign('discipline_id')->references('id')->on('discipline')->onDelete('cascade');
+            $table->foreign('discipline_id')->references('id')->on('discipline')->onDelete('restrict');
         });
 
         Schema::table('extra_attempt', function (Blueprint $table) {
