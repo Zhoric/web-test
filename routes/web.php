@@ -41,6 +41,8 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('/', function(){return View('admin.main');});
     Route::get('main', function(){return View('admin.main');});
     Route::get('students', function(){return View('admin.students');});
+    Route::get('students/{id}', function(){return View('admin.students');});
+    Route::get('lecturers', function(){return View('admin.lecturers');});
     Route::get('groups', function(){return View('admin.groups');});
     Route::get('disciplines', function(){return View('admin.disciplines');});
     Route::get('groups/{id}', function(){return View('admin.groups');});
