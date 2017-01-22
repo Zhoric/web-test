@@ -99,26 +99,24 @@ class DisciplineRepository extends BaseRepository
         }
     }
 
-    function setLecturerDisciplines($lecturerId, array $disciplineIds){
+    function setLecturerDisciplines($lecturerId, $disciplineIds){
 
-        if (empty($disciplineIds)){
-            return;
-        }
+        if (!empty($disciplineIds)){
+            $qb = $this->em->getRepository(DisciplineLecturer::class)->createQueryBuilder('dl');
+            $deleteQuery = $qb->delete()
+                ->where('dl.lecturer = :lecturer')
+                ->setParameter('lecturer', $lecturerId)
+                ->getQuery();
 
-        $qb = $this->em->getRepository(DisciplineLecturer::class)->createQueryBuilder('dl');
-        $deleteQuery = $qb->delete()
-            ->where('dl.lecturer = :lecturer')
-            ->setParameter('lecturer', $lecturerId)
-            ->getQuery();
+            $deleteQuery->execute();
 
-        $deleteQuery->execute();
-
-        foreach ($disciplineIds as $disciplineId){
-            DB::table('discipline_lecturer')
-                ->insert(  array(
-                    'discipline_id' => $disciplineId,
-                    'lecturer_id' => $lecturerId
-                ));
+            foreach ($disciplineIds as $disciplineId){
+                DB::table('discipline_lecturer')
+                    ->insert(  array(
+                        'discipline_id' => $disciplineId,
+                        'lecturer_id' => $lecturerId
+                    ));
+            }
         }
     }
 

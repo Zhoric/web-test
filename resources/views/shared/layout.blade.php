@@ -40,7 +40,7 @@
             <li><a href="/admin/disciplines">Дисциплины</a></li>
             <li><a href="/admin/tests">Тесты</a></li>
             <li><a href="/admin/results">Результаты</a></li>
-            <li>Выход</li>
+            <li><a href="/logout">Выход</a></li>
         </ul>
     </div>
     @yield('content')

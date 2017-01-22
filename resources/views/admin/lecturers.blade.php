@@ -14,14 +14,20 @@
             <!-- ko if: $root.mode() === state.create -->
             <div class="details" data-bind="template: {name: 'update-user-info', data: $root.current.lecturer}"></div>
             <!-- /ko -->
-            <div class="items-body" data-bind="if: current.lecturers().length">
-                <!-- ko foreach: current.lecturers -->
-                <div class="item" data-bind="click: $root.actions.show, css: {'current': id() === $root.current.lecturer().id()}">
-                    <span data-bind="text: lastname() + ' ' + firstname() + ' ' + patronymic()"></span>
+            <div class="items-body" data-bind="if: $root.current.lecturers().length">
+                <!-- ko foreach: $root.current.lecturers -->
+                <div class="item" data-bind="click: $root.actions.show, css: {'current': lecturer.id() === $root.current.lecturer().id()}">
+                    <span data-bind="text: lecturer.lastname() + ' ' + lecturer.firstname() + ' ' + lecturer.patronymic()"></span>
                 </div>
-                    <!-- ko if: $root.mode() !== state.none && $root.current.lecturer().id() === id()  -->
+                <!-- ko if: $root.current.lecturer().id() === lecturer.id()-->
+                    <!-- ko if: $root.mode() === state.info  -->
                     <div class="details" data-bind="template: {name: 'lecturer-info', data: $root.current.lecturer }"></div>
                     <!-- /ko -->
+                    <!-- ko if: $root.mode() === state.update  -->
+                    <div class="details" data-bind="template: {name: 'update-user-info', data: $root.current.lecturer }"></div>
+                    <!-- /ko -->
+                <!-- /ko -->
+
                 <!-- /ko -->
             </div>
             @include('shared.pagination')
@@ -44,7 +50,6 @@
 @endsection
 
 <script type="text/html" id="lecturer-info">
-    <!-- ko if: $root.mode() === state.info -->
     <div class="details-row">
         <div class="details-column">
             <label class="title">ФИО</label>
@@ -53,6 +58,12 @@
         <div class="details-column">
             <label class="title">E-mail</label>
             <span class="info" data-bind="text: email"></span>
+        </div>
+        <div class="details-column">
+            <label class="title">Дисциплины</label>
+            <!-- ko foreach: $root.current.disciplines -->
+            <span class="info" data-bind="text: $index()+1 < $root.current.disciplines().length ? abbreviation() + ',' : abbreviation()"></span>
+            <!-- /ko -->
         </div>
     </div>
     <div class="details-row float-buttons">
@@ -103,6 +114,7 @@
             </div>
         </div>
     </div>
+    <div class="details-row"></div>
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
@@ -142,7 +154,7 @@
 <div class="g-hidden">
     <div class="box-modal" id="remove-request-modal">
         <div class="popup-delete">
-            <div><h3 class="text-center">Удалить выбранную заявку?</h3></div>
+            <h3>Удалить выбранную заявку?</h3>
             <div>
                 <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
                 <button class="cancel arcticmodal-close">Отмена</button>

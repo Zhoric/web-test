@@ -1,7 +1,3 @@
-/**
- * Created by nyanjii on 02.10.16.
- */
-
 $(document).ready(function(){
     var studentsViewModel = function(){
         return new function(){
@@ -25,6 +21,7 @@ $(document).ready(function(){
             self.current = {
                 lecturers: ko.observableArray([]),
                 lecturer: ko.observable(self.initial.lecturer),
+                disciplines: ko.observableArray([]),
                 password: ko.observable(null)
             };
 
@@ -34,12 +31,13 @@ $(document).ready(function(){
             };
             self.actions = {
                 show: function(data){
-                    if (self.mode() === state.none || self.current.lecturer().id() !== data.id()){
+                    if (self.mode() === state.none || self.current.lecturer().id() !== data.lecturer.id()){
+                        self.current.lecturer.copy(data.lecturer);
+                        self.current.disciplines(data.disciplines());
                         self.mode(state.info);
                         return;
                     }
-                    self.mode(state.none);
-                    self.current.lecturer(self.initial.lecturer);
+                    self.actions.cancel();
                 },
                 start: {
                     create: function(){
@@ -47,10 +45,10 @@ $(document).ready(function(){
                             ? self.mode(state.none)
                             : self.mode(state.create);
                         self.current.lecturer(self.initial.lecturer);
+                        self.current.disciplines([]);
                     },
-                    update: function(data){
+                    update: function(){
                         self.mode(state.update);
-                        self.current.lecturer.copy(data);
                     },
                     remove: function(){
                         commonHelper.modal.open('#remove-request-modal');
@@ -66,7 +64,8 @@ $(document).ready(function(){
                 },
                 cancel: function(){
                     self.mode(state.none);
-                    self.current.lecturer(self.initial.student);
+                    self.current.lecturer(self.initial.lecturer);
+                    self.current.disciplines([]);
                     self.current.password(null);
                 },
 
@@ -85,20 +84,19 @@ $(document).ready(function(){
             };
 
             self.alter = {
-                set: {
-                    group: function(){
-                        var id = self.current.student().group.id();
-                        var group = self.initial.groups().find(function(item){
-                            return item.id() === id;
-                        });
-                        self.current.group(group);
-                    }
-                },
                 stringify: {
                     lecturer: function(){
+                        var lecturer = ko.mapping.toJS(self.current.lecturer);
+                        var disciplines = [];
+                        if (self.mode() === state.create) delete lecturer.id;
+
+                        self.current.disciplines().find(function(item){
+                            disciplines.push(item.id());
+                        });
 
                         return JSON.stringify({
-
+                            lecturer: lecturer,
+                            $disciplineIds: disciplines
                         });
                     },
                     password: function(){
@@ -110,8 +108,32 @@ $(document).ready(function(){
                 }
             };
             self.get = {
-                lecturers: function(){},
-                disciplines: function(){},
+                lecturers: function(){
+                    var name = self.filter.name() ? '&name=' + self.filter.name() : '';
+                    var url = '/api/lecturers/show' +
+                            '?page=' + self.pagination.currentPage() +
+                            '&pageSize=' + self.pagination.pageSize() + name;
+
+                    var requestOptions = {
+                        url: url,
+                        errors: self.errors,
+                        successCallback: function (data) {
+                            self.current.lecturers(data.data());
+                            self.pagination.itemsCount(data.count());
+                        }
+                    };
+                    $ajaxget(requestOptions);
+                },
+                disciplines: function(){
+                    var requestOptions = {
+                        url: '/api/disciplines/',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.initial.disciplines(data());
+                        }
+                    };
+                    $ajaxget(requestOptions);
+                }
             };
             self.post = {
                 password: function(){
@@ -121,8 +143,29 @@ $(document).ready(function(){
                         commonHelper.modal.open('#change-success-modal');
                     })();
                 },
-                removal: function(){},
-                lecturer: function(){}
+                removal: function(){
+                    var requestOptions = {
+                        url: '/api/lecturers/delete/' + self.current.lecturer().id(),
+                        data: null,
+                        errors: self.errors,
+                        successCallback: function(){
+                            self.get.lecturers();
+                        }
+                    };
+                    $ajaxpost(requestOptions);
+                },
+                lecturer: function(){
+                    var requestOptions = {
+                        url: self.mode() === state.create ? '/api/lecturers/create' : '/api/lecturers/update',
+                        errors: self.errors,
+                        data: self.alter.stringify.lecturer(),
+                        successCallback: function(){
+                            self.actions.cancel();
+                            self.get.lecturers();
+                        }
+                    };
+                    $ajaxpost(requestOptions);
+                }
             };
 
             self.filter.discipline.subscribe(function(){
@@ -141,6 +184,9 @@ $(document).ready(function(){
             self.pagination.currentPage.subscribe(function(){
                 self.get.lecturers();
             });
+
+            self.get.disciplines();
+            self.get.lecturers();
 
             return {
                 initial: self.initial,
