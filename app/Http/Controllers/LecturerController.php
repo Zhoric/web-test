@@ -61,6 +61,11 @@ class LecturerController extends Controller
     }
 
     public function delete($id){
-        return $this->_lecturerManager->deleteLecturer($id);
+        try{
+            $this->_lecturerManager->deleteLecturer($id);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
     }
 }
