@@ -100,6 +100,11 @@ class DisciplineRepository extends BaseRepository
     }
 
     function setLecturerDisciplines($lecturerId, array $disciplineIds){
+
+        if (empty($disciplineIds)){
+            return;
+        }
+
         $qb = $this->em->getRepository(DisciplineLecturer::class)->createQueryBuilder('dl');
         $deleteQuery = $qb->delete()
             ->where('dl.lecturer = :lecturer')
