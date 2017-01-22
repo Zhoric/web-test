@@ -130,9 +130,9 @@
                 <div class="details-column width-98p">
                     <label class="title">Учебный план</label>
                     <!-- ko if: $root.current.groupPlan() -->
-                    <span class="form-heights info coloredin-patronus" data-bind="text: $root.current.groupPlan().name, click: $root.actions.selectPlan.start"></span>
+                    <span class="form-heights info coloredin-patronus pointer" data-bind="text: $root.current.groupPlan().name, click: $root.actions.selectPlan.start"></span>
                     <!-- /ko -->
-                    <span class="form-heights info coloredin-patronus" data-bind="if: !$root.current.groupPlan(), click: $root.actions.selectPlan.start">Изменить</span>
+                    <span class="form-heights info coloredin-patronus pointer" data-bind="if: !$root.current.groupPlan(), click: $root.actions.selectPlan.start">Изменить</span>
                 </div>
             </div>
         </div>

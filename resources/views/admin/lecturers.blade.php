@@ -37,13 +37,6 @@
                 <label class="title">ФИО преподавателя</label>
                 <input type="text" data-bind="value: name"/>
             </div>
-            <div class="filter-block">
-                <label class="title">Дисциплина</label>
-                <select data-bind="options: $root.initial.disciplines,
-                       optionsText: 'name',
-                       value: discipline,
-                       optionsCaption: 'Выберите дисциплину'"></select>
-            </div>
         </div>
     </div>
     @include('shared.error-modal')

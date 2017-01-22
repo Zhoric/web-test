@@ -52,6 +52,9 @@ span.required {
   content: '*';
   color: #D24D57;
 }
+.pointer {
+  cursor: pointer;
+}
 input[type=radio].custom-radio {
   vertical-align: top;
   width: 15px;
