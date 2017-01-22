@@ -15,7 +15,12 @@ $(document).ready(function(){
             self.current = {
                 institute: ko.observable(self.initial.institute),
                 profiles: ko.observableArray([]),
-                plans: ko.observableArray([])
+                profileId: ko.observable(null),
+                plans: ko.observableArray([]),
+                plan: {
+                    name: ko.observable(''),
+                    mode: ko.observable(state.none)
+                }
             };
             self.actions = {
                 show: {
@@ -29,7 +34,8 @@ $(document).ready(function(){
                         self.get.profiles();
                     },
                     plans: function(data){
-                        self.get.plans(data.id());
+                        self.current.profileId(data.id());
+                        self.get.plans();
                         commonHelper.modal.open('#show-plans-modal');
                     }
                 },
@@ -38,7 +44,22 @@ $(document).ready(function(){
                         var url = '/admin/groups/' + data.id();
                         window.location.href = url;
                     },
-                    plan: function(){}
+                    plan: function(data){
+                        window.location.href = '/admin/studyplan/' + data.id();
+                    }
+                },
+                plan: {
+                    create: function(){
+                        self.actions.plan.cancel();
+                        self.current.plan.mode(state.create);
+                    },
+                    cancel: function(){
+                        self.current.plan.name('');
+                        self.current.plan.mode(state.none);
+                    },
+                    approve: function(){
+                        self.post.plan();
+                    }
                 }
             };
             self.get = {
@@ -62,15 +83,32 @@ $(document).ready(function(){
                     };
                     $ajaxget(requestOptions);
                 },
-                plans: function(id){
+                plans: function(){
                     var requestOptions = {
-                        url: '/api/profile/'+ id + '/plans',
+                        url: '/api/profile/'+ self.current.profileId() + '/plans',
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.plans(data());
                         }
                     };
                     $ajaxget(requestOptions);
+                }
+            };
+            self.post = {
+                plan: function(){
+                    var requestOptions = {
+                        url: '/api/plan/create',
+                        errors: self.errors,
+                        data: JSON.stringify({
+                            studyPlan: {name: self.current.plan.name()},
+                            profileId: self.current.profileId()
+                        }),
+                        successCallback: function(){
+                            self.actions.plan.cancel();
+                            self.get.plans()
+                        }
+                    };
+                    $ajaxpost(requestOptions);
                 }
             };
 

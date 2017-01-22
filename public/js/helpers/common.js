@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 26.11.16.
- */
 var state = {
     none: 'none',
     update: 'update',
@@ -105,9 +102,7 @@ var role = {
         name: 'admin',
         location: '/admin'
     }
-}
-
-
+};
 
 var complexity = {
     easy: 1,

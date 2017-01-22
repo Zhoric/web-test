@@ -9,7 +9,7 @@
         <div class="content">
             <div class="layer">
                 <div class="layer-head">
-                    <h1 class="block">Администрирование институтов</h1>
+                    <h1>Институты</h1>
                 </div>
                 <div class="layer-body" data-bind="foreach: $root.initial.institutes">
                     <div class="item" data-bind="click: $root.actions.show.institute, css: {'current': id() === $root.current.institute().id()}">
@@ -36,8 +36,20 @@
             <div class="box-modal_close arcticmodal-close">закрыть</div>
             <div class="layer zero-margin width-auto">
                 <h3>Учебные планы</h3>
+                <!-- ko if: $root.current.plan.mode() === state.none -->
+                <div class="item text-center" data-bind="click: $root.actions.plan.create">
+                    <span>Добавить новый учебный план</span>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: $root.current.plan.mode() === state.create -->
+                <div class="item no-hover plan">
+                    <input type="text" data-bind="value: $root.current.plan.name"/>
+                    <button class="approve" data-bind="click: $root.actions.plan.approve">Сохранить</button>
+                    <button class="cancel" data-bind="click: $root.actions.plan.cancel">Отмена</button>
+                </div>
+                <!-- /ko -->
                 <!-- ko foreach: $root.current.plans -->
-                <div class="item">
+                <div class="item" data-bind="click: $root.actions.moveTo.plan">
                     <span data-bind="text: name"></span>
                 </div>
                 <!-- /ko -->

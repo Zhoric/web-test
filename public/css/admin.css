@@ -322,6 +322,12 @@ span .correct {
 span .incorrect {
   color: #D24D57;
 }
+span.coloredin-patronus {
+  color: #5D8CAE !important;
+}
+.bold {
+  font-weight: bold;
+}
 .image-expander {
   width: 100%;
   height: 100%;
@@ -581,6 +587,10 @@ input {
 .item.current span.tag {
   color: #fff;
 }
+.item.no-hover:hover {
+  background: #EDEEF0;
+  color: #6C7A89;
+}
 .item span.tag {
   color: #EDEEF0;
   margin: 0 8px;
@@ -619,6 +629,10 @@ input {
 }
 .details-column.tile-boredom span:hover {
   color: #6C7A89;
+}
+.item.plan input {
+  width: 240px;
+  height: 38px;
 }
 .details-column {
   margin: 1%;
