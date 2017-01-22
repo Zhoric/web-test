@@ -45,18 +45,6 @@
         </div>
     </div>
 </div>
-{{--<div class="g-hidden">--}}
-    {{--<div class="box-modal" id="delete-group-modal">--}}
-        {{--<div class="box-modal_close arcticmodal-close">закрыть</div>--}}
-        {{--<div class="popup-delete">--}}
-            {{--<div><h3>Вы действительно хотите удалить выбранную группу?</h3></div>--}}
-            {{--<div>--}}
-                {{--<button class="remove" data-bind="click: $root.actions.end.remove">Удалить</button>--}}
-                {{--<button class="cancel arcticmodal-close" data-bind="click: $root.actions.cancel">Отмена</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}
 
 <div class="g-hidden">
     <div class="box-modal" id="select-plan-modal">

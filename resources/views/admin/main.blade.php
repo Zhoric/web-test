@@ -38,7 +38,7 @@
                 <h3>Учебные планы</h3>
                 <!-- ko if: $root.current.plan.mode() === state.none -->
                 <div class="item text-center" data-bind="click: $root.actions.plan.create">
-                    <span>Добавить новый учебный план</span>
+                    <span class="bold">Добавить новый учебный план</span>
                 </div>
                 <!-- /ko -->
                 <!-- ko if: $root.current.plan.mode() === state.create -->
