@@ -326,10 +326,13 @@ Route::group(['prefix' => 'api'], function() {
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('/getByUserAndTest', 'TestResultController@getByUserAndTest')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::post('deleteOld', 'TestResultController@deleteOldResults')
+            ->middleware('checkRole:'.UserRole::Admin);
         Route::get('/discipline/{id}', 'TestResultController@getByDiscipline')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('/show/{id}', 'TestResultController@getByIdForStudent');
         Route::get('{id}', 'TestResultController@getById');
+
     });
 
     /*-----------------------------------------------------------------------------

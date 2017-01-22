@@ -93,4 +93,14 @@ class TestResultRepository extends BaseRepository
     public function getByUserAndTest($userId, $testId){
         return $this->repo->findBy(['user' => $userId, 'test' => $testId]);
     }
+
+    public function deleteOlderThan($dateTime){
+        $qb = $this->repo->createQueryBuilder('tr');
+        $deleteQuery = $qb->delete()
+            ->where('tr.dateTime < :dateTime')
+            ->setParameter('dateTime', $dateTime)
+            ->getQuery();
+
+        return $deleteQuery->execute();
+    }
 }

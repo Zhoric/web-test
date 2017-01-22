@@ -137,4 +137,16 @@ class TestResultController extends Controller
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
+
+    public function deleteOldResults(Request $request){
+        try{
+            $dateTime = $request->json('dateTime');
+
+            $this->_testResultManager->deleteOlderThan($dateTime);
+
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
 }

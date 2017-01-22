@@ -29,25 +29,26 @@ class TestResultManager
      * Поле "оценка" будет заполнено по окончанию теста на основании правильности ответов.
      * Функция возвращает id созданного результата для сохранения его в сессии
      */
-    public function createEmptyTestResult($userId, $testId){
+    public function createEmptyTestResult($userId, $testId)
+    {
         $testResult = new TestResult();
         $user = $this->_unitOfWork->users()->find($userId);
         $test = $this->_unitOfWork->tests()->find($testId);
         $lastAttemptNumber = $this->_unitOfWork
             ->testResults()
-            ->getLastAttemptNumber($testId,$userId);
+            ->getLastAttemptNumber($testId, $userId);
         $now = DateHelper::getCurrentDateTime();
-        if ($user == null){
+        if ($user == null) {
             throw new Exception('Не удаётся начать тест. Указанного пользователя не существует!');
         }
-        if ($test == null){
+        if ($test == null) {
             throw new Exception('Не удаётся начать тест. Указанного теста не существует!');
         }
 
         $testResult->setUser($user);
         $testResult->setTest($test);
         $testResult->setDateTime($now);
-        $testResult->setAttempt($lastAttemptNumber+1);
+        $testResult->setAttempt($lastAttemptNumber + 1);
 
         $this->_unitOfWork->testResults()->create($testResult);
         $this->_unitOfWork->commit();
@@ -60,11 +61,13 @@ class TestResultManager
      * @param $id
      * @return TestResult
      */
-    public function getById($id){
+    public function getById($id)
+    {
         return $this->_unitOfWork->testResults()->find($id);
     }
 
-    public function update(TestResult $testResult){
+    public function update(TestResult $testResult)
+    {
         $this->_unitOfWork->testResults()->update($testResult);
         $this->_unitOfWork->commit();
     }
@@ -75,7 +78,8 @@ class TestResultManager
      * @param $groupId
      * @return array
      */
-    public function getByGroupAndTest($groupId, $testId){
+    public function getByGroupAndTest($groupId, $testId)
+    {
         return $this->_unitOfWork->testResults()->getByGroupAndTest($testId, $groupId);
     }
 
@@ -85,7 +89,8 @@ class TestResultManager
      * @param $disciplineId
      * @return array
      */
-    public function getByUserAndDiscipline($userId, $disciplineId){
+    public function getByUserAndDiscipline($userId, $disciplineId)
+    {
         return $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
     }
 
@@ -98,9 +103,10 @@ class TestResultManager
      * @return TestResultViewModel
      * @throws Exception
      */
-    public function getByIdWithAnswers($testResultId, $studentId = null){
+    public function getByIdWithAnswers($testResultId, $studentId = null)
+    {
         $testResult = $this->_unitOfWork->testResults()->find($testResultId);
-        if (!isset($testResult)){
+        if (!isset($testResult)) {
             throw new Exception('Запрошенный результат не найден!');
         }
 
@@ -118,7 +124,7 @@ class TestResultManager
 
         $testResultViewModel = new TestResultViewModel($testResult, $answers, $test, $totalAttemptsAllowed);
 
-        if (isset($studentId)){
+        if (isset($studentId)) {
             $testResultViewModel = $this->prepareForStudentResultRequest($test, $testResultViewModel, $studentId);
         }
 
@@ -131,7 +137,8 @@ class TestResultManager
      * @param $testId
      * @return int
      */
-    public function getExtraAttemptsCount($userId, $testId){
+    public function getExtraAttemptsCount($userId, $testId)
+    {
         $extraAttempts = $this->_unitOfWork
             ->extraAttempts()
             ->findByTestAndUser($userId, $testId);
@@ -145,14 +152,15 @@ class TestResultManager
      * @param $testId
      * @param $attemptsCount
      */
-    public function setExtraAttempts($userId, $testId, $attemptsCount){
+    public function setExtraAttempts($userId, $testId, $attemptsCount)
+    {
         $user = $this->_unitOfWork->users()->find($userId);
         $test = $this->_unitOfWork->tests()->find($testId);
 
         $existingExtraAttempts = $this->_unitOfWork
             ->extraAttempts()->findByTestAndUser($testId, $userId);
 
-        if ($existingExtraAttempts != null){
+        if ($existingExtraAttempts != null) {
             $existingExtraAttempts->setCount($attemptsCount);
             $this->_unitOfWork->extraAttempts()->update($existingExtraAttempts);
         } else {
@@ -167,7 +175,8 @@ class TestResultManager
         $this->_unitOfWork->commit();
     }
 
-    public function getResultsByUserAndTest($userId, $testId){
+    public function getResultsByUserAndTest($userId, $testId)
+    {
         $testResults = $this
             ->_unitOfWork
             ->testResults()
@@ -187,19 +196,20 @@ class TestResultManager
      * @return TestResultViewModel
      * @throws Exception
      */
-    private function prepareForStudentResultRequest(Test $test, TestResultViewModel $resultViewModel, $studentId){
+    private function prepareForStudentResultRequest(Test $test, TestResultViewModel $resultViewModel, $studentId)
+    {
 
         $requestedTestResultStudentId = $resultViewModel->getTestResult()->getUser()->getId();
 
-        if ($requestedTestResultStudentId != $studentId){
+        if ($requestedTestResultStudentId != $studentId) {
             throw new Exception('Ошибка! Доступ к результатам других студентов запрещён!');
         }
 
-        if ($test->getType() === TestType::Control){
+        if ($test->getType() === TestType::Control) {
             $resultViewModel->setAnswers(null);
         } else {
             $answers = $resultViewModel->getAnswers();
-            foreach ($answers as $answer){
+            foreach ($answers as $answer) {
                 $answer->setRightPercentage(null);
             }
             $resultViewModel->setAnswers($answers);
@@ -208,9 +218,10 @@ class TestResultManager
         return $resultViewModel;
     }
 
-    public function delete($testResultId){
+    public function delete($testResultId)
+    {
         $testResult = $this->_unitOfWork->testResults()->find($testResultId);
-        if (!isset($testResult)){
+        if (!isset($testResult)) {
             throw new Exception('Ошибка! Указанный результат теста не найден!');
         }
         $this->_unitOfWork->testResults()->delete($testResult);
@@ -225,8 +236,9 @@ class TestResultManager
      * @param $testResultId - Результат теста.
      * @return array|mixed
      */
-    private function getTestResultAnswers($studentId, $testResultId){
-        if (isset($studentId)){
+    private function getTestResultAnswers($studentId, $testResultId)
+    {
+        if (isset($studentId)) {
             return $this->_unitOfWork
                 ->givenAnswers()
                 ->getBadAnswersForTestResult($testResultId,
@@ -237,4 +249,9 @@ class TestResultManager
         }
     }
 
+    public function deleteOlderThan($dateTime)
+    {
+        $this->_unitOfWork->testResults()->deleteOlderThan($dateTime);
+        $this->_unitOfWork->commit();
+    }
 }
