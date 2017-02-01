@@ -28,7 +28,6 @@ var multiselect = function(init){
             return item[_value]() === data[_value]();
         });
         if (!item) self.tags.push(data);
-
     };
     self.remove = function(data){
         self.tags.remove(data);
@@ -66,8 +65,10 @@ var multiselect = function(init){
     };
 
     self.multipleSelect = function(){
+        self.empty();
         return _valuePrimitive ?  fill.light : fill.heavy;
     };
+
     var initialize = function(){
         _text = init.dataTextField;
         _value = init.dataValueField;
@@ -75,6 +76,7 @@ var multiselect = function(init){
 
         if (init.tagIds) fill.light(init.tagIds);
         if (init.tagObjects) fill.heavy(init.tagObjects);
+
         if (init.data) self.data(init.data);
     };
     initialize();

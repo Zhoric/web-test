@@ -1,6 +1,10 @@
 @extends('shared.layout')
 @section('title', 'Преподаватели')
 @section('javascript')
+    {{--<link rel="stylesheet" href="{{ URL::asset('css/knockout.autocomplete.css')}}"/>--}}
+
+    <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/admin/lecturers.js')}}"></script>
 @endsection
 
@@ -8,7 +12,7 @@
     <div class="content">
         <div class="items">
             <div class="items-head">
-                <h1>Администрирование учетных записей преподавателей</h1>
+                <h1>Учетные записи преподавателей</h1>
                 <label class="adder" data-bind="click: $root.actions.start.create">Добавить</label>
             </div>
             <!-- ko if: $root.mode() === state.create -->
@@ -27,7 +31,6 @@
                     <div class="details" data-bind="template: {name: 'update-user-info', data: $root.current.lecturer }"></div>
                     <!-- /ko -->
                 <!-- /ko -->
-
                 <!-- /ko -->
             </div>
             @include('shared.pagination')
@@ -54,6 +57,9 @@
         </div>
         <div class="details-column">
             <label class="title">Дисциплины</label>
+            <!-- ko if: !$root.current.disciplines().length -->
+            <span class="info">Нe указано</span>
+            <!-- /ko  -->
             <!-- ko foreach: $root.current.disciplines -->
             <span class="info" data-bind="text: $index()+1 < $root.current.disciplines().length ? abbreviation() + ',' : abbreviation()"></span>
             <!-- /ko -->
@@ -69,19 +75,19 @@
     <div class="details-row">
         <div class="details-column width-48p">
             <div class="details-row">
-                <div class="details-column width-98p">
+                <div class="details-column width-98p zero-margin">
                     <label class="title">Фамилия</label>
                     <input type="text" data-bind="value: lastname"/>
                 </div>
             </div>
             <div class="details-row">
-                <div class="details-column width-98p">
+                <div class="details-column width-98p zero-margin">
                     <label class="title">Имя</label>
                     <input type="text" data-bind="value: firstname"/>
                 </div>
             </div>
             <div class="details-row">
-                <div class="details-column width-98p">
+                <div class="details-column width-98p zero-margin">
                     <label class="title">Отчество</label>
                     <input type="text" data-bind="value: patronymic"/>
                 </div>
@@ -89,13 +95,13 @@
         </div>
         <div class="details-column width-48p float-right">
             <div class="details-row">
-                <div class="details-column width-98p">
+                <div class="details-column width-98p zero-margin">
                     <label class="title">E-mail</label>
                     <input type="text" data-bind="value: email"/>
                 </div>
             </div>
             <div class="details-row">
-                <div class="details-column width-98p">
+                <div class="details-column width-98p zero-margin">
                     <label class="title">Пароль</label>
                     <!-- ko if: $root.mode() === state.update -->
                     <span class="radio-important" data-bind="click: $root.actions.password.change">Изменить пароль</span>
@@ -107,9 +113,26 @@
             </div>
         </div>
     </div>
-    <div class="details-row"></div>
+    <div class="details-row">
+        <div class="details-column width-98p">
+            <label class="title">Дисциплины</label>
+            <div class="multiselect-wrap">
+                <!-- ko if: $root.multiselect.tags().length -->
+                <div class="multiselect">
+                    <ul data-bind="foreach: $root.multiselect.tags">
+                        <li>
+                            <span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span>
+                            <span data-bind="text: name"></span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /ko -->
+                <input placeholder="Начните вводить" data-bind="autocomplete: { data: $root.multiselect.source, format: $root.multiselect.text, onSelect: $root.multiselect.select}" value/>
+            </div>
+        </div>
+    </div>
     <div class="details-row float-buttons">
-        <div class="details-column width-100p">
+        <div class="details-column width-99p">
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
             <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
@@ -147,21 +170,7 @@
 <div class="g-hidden">
     <div class="box-modal" id="remove-request-modal">
         <div class="popup-delete">
-            <h3>Удалить выбранную заявку?</h3>
-            <div>
-                <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
-                <button class="cancel arcticmodal-close">Отмена</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="g-hidden">
-    <div class="box-modal" id="cancel-request-modal">
-        <div class="popup-delete">
-            <div>
-                <h3 class="text-center">Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>
-            </div>
+            <h3>Удалить выбранного преподавателя?</h3>
             <div>
                 <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
                 <button class="cancel arcticmodal-close">Отмена</button>

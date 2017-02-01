@@ -7,6 +7,11 @@ $(document).ready(function(){
             self.pagination = pagination();
             self.pagination.pageSize(15);
             self.mode = ko.observable(state.none);
+            self.multiselect = new multiselect({
+                dataTextField: 'name',
+                dataValueField: 'id',
+                valuePrimitive: false
+            });
 
             self.initial = {
                 lecturer: {
@@ -27,13 +32,18 @@ $(document).ready(function(){
 
             self.filter = {
                 name: ko.observable(''),
-                discipline: ko.observable()
+                discipline: ko.observable(),
+                empty: function(){
+                    self.filter.name('');
+                    self.filter.discipline(null);
+                }
             };
             self.actions = {
                 show: function(data){
                     if (self.mode() === state.none || self.current.lecturer().id() !== data.lecturer.id()){
                         self.current.lecturer.copy(data.lecturer);
                         self.current.disciplines(data.disciplines());
+                        self.multiselect.multipleSelect()(self.current.disciplines());
                         self.mode(state.info);
                         return;
                     }
@@ -66,6 +76,7 @@ $(document).ready(function(){
                     self.mode(state.none);
                     self.current.lecturer(self.initial.lecturer);
                     self.current.disciplines([]);
+                    self.multiselect.empty();
                     self.current.password(null);
                 },
 
@@ -90,13 +101,13 @@ $(document).ready(function(){
                         var disciplines = [];
                         if (self.mode() === state.create) delete lecturer.id;
 
-                        self.current.disciplines().find(function(item){
+                        self.multiselect.tags().find(function(item){
                             disciplines.push(item.id());
                         });
 
                         return JSON.stringify({
                             lecturer: lecturer,
-                            $disciplineIds: disciplines
+                            disciplineIds: disciplines
                         });
                     },
                     password: function(){
@@ -130,6 +141,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.initial.disciplines(data());
+                            self.multiselect.setDataSource(self.initial.disciplines());
                         }
                     };
                     $ajaxget(requestOptions);
@@ -188,6 +200,8 @@ $(document).ready(function(){
             self.get.disciplines();
             self.get.lecturers();
 
+
+
             return {
                 initial: self.initial,
                 filter: self.filter,
@@ -195,7 +209,8 @@ $(document).ready(function(){
                 actions: self.actions,
                 mode: self.mode,
                 pagination: self.pagination,
-                errors: self.errors
+                errors: self.errors,
+                multiselect: self.multiselect
             };
         };
     };
