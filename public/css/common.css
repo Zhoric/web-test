@@ -327,6 +327,9 @@ span .incorrect {
 span.coloredin-patronus {
   color: #5D8CAE !important;
 }
+span.date-string {
+  font-size: 12px;
+}
 .bold {
   font-weight: bold;
 }

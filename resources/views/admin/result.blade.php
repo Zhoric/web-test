@@ -25,7 +25,9 @@
                 </div>
                 <div class="details-row">
                     <div class="details-column width-100p">
-                        <label class="title">Номер попытки &nbsp;<span class="clickable" data-bind="click: $root.actions.results.view">(Все попытки)</span></label>
+                        <label class="title">Номер попытки &nbsp;
+                            <span class="coloredin-patronus bold" data-bind="visible: $root.current.results().length ,click: $root.actions.results.view">(Все попытки)</span>
+                        </label>
                         <span class="info" data-bind="text: attempt"></span>
                         <span class="info">/</span>
                         <span class="info" data-bind="text: $root.current.attempts()"></span>
@@ -123,18 +125,19 @@
 <div class="g-hidden">
     <div class="box-modal" id="attempts-modal">
         <div class="box-modal_close arcticmodal-close">закрыть</div>
-        <div data-bind="if: $root.current.results().length ">
-            <div data-bind="foreach: $root.current.results">
-                <div class="" data-bind="click: $root.actions.results.select">
-                    <span data-bind="text: attempt"></span>
-                    <span data-bind="if: mark() !== null">
+        <div class="layer zero-margin width-auto">
+            <h3>Все попытки</h3>
+            <!-- ko foreach: $root.current.results -->
+            <div class="item" data-bind="click: $root.actions.results.select">
+                <span data-bind="text: attempt() + ')'"></span>
+                <span data-bind="if: mark() !== null">
                         <span data-bind="text: mark"></span>
                         <span>/100</span>
                     </span>
-                    <span data-bind="if: mark() === null">Требуется проверка</span>
-                    <span data-bind="text: dateTime.date"></span>
-                </div>
+                <span data-bind="if: mark() === null">Требуется проверка</span>
+                <span class="float-right date-string" data-bind="text: dateTime.date.parseDate()"></span>
             </div>
+            <!-- /ko -->
         </div>
     </div>
 </div>

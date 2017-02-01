@@ -66,7 +66,7 @@ $(document).ready(function(){
                     cancel: function(){
                         self.current.mark.isInput(false);
                         self.current.mark.value('Оценить');
-                    },
+                    }
                 },
                 result:{
                     date: function(){
@@ -75,22 +75,18 @@ $(document).ready(function(){
                     },
                     fit: function(){
                         self.actions.result.date();
-                    },
-
+                    }
                 },
                 results: {
                     view: function(){
-                        if (!self.current.results.length){
-                            self.get.results();
-                        }
                         commonHelper.modal.open('#attempts-modal');
                     },
                     select: function(data){
                         commonHelper.modal.close('#attempts-modal');
                         window.location.href = '/admin/result/' + data.id();
                     }
-                },
-            },
+                }
+            };
 
             self.toggleCurrent = {
                 fill: {
@@ -101,7 +97,7 @@ $(document).ready(function(){
                             .question(d.question)
                             .rightPercentage(d.rightPercentage());
                     }
-                },
+                }
             };
             self.mode = ko.observable('none');
 
@@ -109,36 +105,32 @@ $(document).ready(function(){
                 result: function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
-                    url = '/api/results/' + id;
 
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.answers(result.Data.answers());
-                            self.current.result(result.Data.testResult);
-                            self.current.attempts(result.Data.attemptsAllowed);
-                            self.current.test(result.Data.test);
+                    $ajaxget({
+                        url: '/api/results/' + id,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.answers(data.answers());
+                            self.current.result(data.testResult);
+                            self.current.attempts(data.attemptsAllowed);
+                            self.current.test(data.test);
 
                             self.actions.result.fit();
-
-                            return;
+                            self.get.results();
                         }
-                        self.errors.show(result.Message());
-                    })
+                    });
                 },
                 results: function(){
                     var result = self.current.result();
                     var user = result.user.id();
                     var test = result.testId();
-                    var url = '/api/results/getByUserAndTest?userId='+ user + '&testId=' + test;
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.results(result.Data());
 
-                            return;
+                    $ajaxget({
+                        url: '/api/results/getByUserAndTest?userId='+ user + '&testId=' + test,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.results(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 }
             };
@@ -179,13 +171,6 @@ $(document).ready(function(){
                 }
             };
 
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
-
-            //SUBSCRIPTIONS
-
-
             return {
                 errors: self.errors,
                 actions: self.actions,
@@ -194,8 +179,7 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
-                events: self.events,
-                toggleModal: self.toggleModal
+                events: self.events
             };
         };
     };
