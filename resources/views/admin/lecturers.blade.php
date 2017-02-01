@@ -128,7 +128,13 @@
                     </ul>
                 </div>
                 <!-- /ko -->
-                <input placeholder="Начните вводить" data-bind="autocomplete: { data: $root.multiselect.source, format: $root.multiselect.text, onSelect: $root.multiselect.select}" value/>
+                <input placeholder="Начните вводить"
+                       data-bind="autocomplete: {
+                       data: $root.multiselect.source,
+                       format: $root.multiselect.text,
+                       onSelect: $root.multiselect.select},
+                       css: {'full': $root.multiselect.tags().length }"
+                       value/>
             </div>
         </div>
     </div>

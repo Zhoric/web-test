@@ -178,7 +178,7 @@ $(document).ready(function(){
                 }
             };
 
-            self.filter.name.subscribe(function(value){
+            self.filter.name.subscribe(function(){
                 self.get.lecturers();
             });
             self.pagination.itemsCount.subscribe(function(value){

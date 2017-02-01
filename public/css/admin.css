@@ -52,6 +52,9 @@ span.required {
   content: '*';
   color: #D24D57;
 }
+.pointer {
+  cursor: pointer;
+}
 input[type=radio].custom-radio {
   vertical-align: top;
   width: 15px;
@@ -520,6 +523,83 @@ button.move:hover {
 .text-center {
   text-align: center;
 }
+.multiselect-wrap {
+  margin: 0 !important;
+}
+.multiselect-wrap .multiselect {
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-bottom: none;
+  padding: 10px;
+  margin: 0;
+}
+.multiselect-wrap .multiselect ul {
+  padding: 0;
+}
+.multiselect-wrap .multiselect li {
+  list-style: none;
+  display: inline-block;
+  padding: 6px;
+  color: #fff;
+  margin: 2px 0;
+  background: #5D8CAE;
+  border-radius: 7px;
+}
+.multiselect-wrap .multiselect span.fa {
+  font-size: 13px;
+  margin-left: 5px;
+  position: relative;
+  float: right;
+  top: -3px;
+  cursor: pointer;
+}
+.multiselect-wrap input {
+  width: 100%;
+  margin: 0;
+  display: block;
+  top: -4px;
+  position: relative;
+  border: 1px solid #e3e3e3;
+}
+.multiselect-wrap input:focus {
+  outline: none;
+}
+.multiselect-wrap input.full {
+  border-top: none;
+}
+.knockout-autocomplete.menu {
+  background-color: #fff;
+  padding: 3px 0;
+  height: auto;
+  width: 44%;
+}
+.knockout-autocomplete.menu li {
+  text-transform: inherit;
+  font-family: 'Roboto Regular';
+  font-size: 15px;
+  line-height: 18px;
+  cursor: pointer;
+  list-style: none;
+  margin: 0px 0;
+  padding: 3px 12px;
+  display: block;
+  background: #fff;
+  color: #000;
+}
+.knockout-autocomplete.menu li.selected {
+  background: #5D8CAE;
+  color: #fff;
+}
+.knockout-autocomplete.floating-menu {
+  position: fixed;
+  border: thin #aaa solid;
+  margin: 0;
+  margin-top: 3px;
+  box-shadow: 1px 1px 4px rgba(50, 50, 50, 0.75);
+}
+.knockout-autocomplete.after-menu {
+  position: absolute;
+}
 .a-style-none a,
 .a-style-none a:hover {
   margin: 0;
@@ -929,82 +1009,6 @@ span.ok {
 }
 span.not-ok {
   color: #D24D57;
-}
-.multiselect-wrap {
-  margin: 0 !important;
-}
-.multiselect-wrap .multiselect {
-  background: #fff;
-  width: 50%;
-  border: 1px solid #e3e3e3;
-  border-bottom: none;
-  padding: 10px;
-  margin: 0;
-}
-.multiselect-wrap .multiselect ul {
-  padding: 0;
-}
-.multiselect-wrap .multiselect li {
-  list-style: none;
-  display: inline-block;
-  padding: 5px;
-  color: #fff;
-  margin: 2px 0;
-  background: #16a085;
-  border-radius: 5px;
-}
-.multiselect-wrap .multiselect span.fa {
-  font-size: 13px;
-  margin-left: 5px;
-  position: relative;
-  float: right;
-  top: -3px;
-  cursor: pointer;
-}
-.multiselect-wrap input {
-  width: 50.8%;
-  margin: 0;
-  display: block;
-  top: -4px;
-  position: relative;
-  border: 1px solid #e3e3e3;
-}
-.multiselect-wrap input:focus {
-  outline: none;
-}
-.multiselect-wrap input.full {
-  border-top: none;
-}
-.knockout-autocomplete.menu {
-  background-color: #fff;
-  padding: 3px 0;
-  height: auto;
-  width: 44%;
-}
-.knockout-autocomplete.menu li {
-  text-transform: inherit;
-  font-family: 'Roboto Regular';
-  cursor: pointer;
-  list-style: none;
-  margin: 0px 0;
-  padding: 3px 12px;
-  display: block;
-  background: #fff;
-  color: #000;
-}
-.knockout-autocomplete.menu li.selected {
-  background: #16a085;
-  color: #fff;
-}
-.knockout-autocomplete.floating-menu {
-  position: fixed;
-  border: thin #aaa solid;
-  margin: 0;
-  margin-top: 3px;
-  box-shadow: 1px 1px 4px rgba(50, 50, 50, 0.75);
-}
-.knockout-autocomplete.after-menu {
-  position: absolute;
 }
 #errors-modal {
   width: 300px;
