@@ -233,15 +233,14 @@ body {
   width: 100%;
   margin-bottom: 7px;
 }
-.filter .filter-block input[type=text] {
-  width: 99%;
-}
+.filter .filter-block input[type=text],
 .filter .filter-block select {
   width: 100%;
 }
 .filter span.clear {
   float: right;
   font-size: 15px;
+  margin-top: 10px;
   color: #7f8c8d;
   cursor: pointer;
 }

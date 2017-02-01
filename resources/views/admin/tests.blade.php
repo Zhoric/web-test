@@ -7,6 +7,7 @@
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
     <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
 @endsection
 
@@ -38,15 +39,18 @@
     </div>
     <div class="filter">
         <div class="filter-block">
-            <label class="title">Название теста</label>
-            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
+            <label class="title">Дициплина</label>
+            <select data-bind="options: current.disciplines,
+                       optionsText: 'name',
+                       value: filter.discipline,
+                       optionsCaption: 'Выберете дисциплину'"></select>
         </div>
         <div class="filter-block">
-            <label class="title">Дициплина</label>
-            <select data-bind="options: $root.current.disciplines,
-                       optionsText: 'name',
-                       value: $root.filter.discipline,
-                       optionsCaption: 'Выберете дисциплину'"></select>
+            <label class="title">Название теста</label>
+            <input type="text" data-bind="value: filter.name, valueUpdate: 'keyup'">
+        </div>
+        <div class="filter-block">
+            <span class="clear" data-bind="click: filter.clear">Очистить</span>
         </div>
     </div>
 </div>
@@ -101,7 +105,7 @@
                 <span>:</span>
                 <input class="time" type="text" tooltip-mark="seconds_tooltip" data-bind="value: seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout} " placeholder="00">
             </div>
-            <div class="details-column width-27p">
+            <div class="details-column width-40p">
                 <label class="title">Тип теста</label>
                 <span class="radio" data-bind="css: {'radio-important': type()}, click: $root.alter.set.type.asTrue">Контроль знаний</span>
                 <span>|</span>
@@ -119,18 +123,23 @@
             </div>
         </div>
         <div class="details-row">
-            <div class="details-column">
-                <div class="details-column width-100p">
-                    <label class="title">Темы</label>
-                    <div class="multiselect-wrap">
-                        <!-- ko if: $root.multiselect.tags().length -->
-                        <div class="multiselect">
-                            <ul data-bind="foreach: $root.multiselect.tags">
-                                <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: name"></span></li>
-                            </ul>
-                        </div>
-                        <!-- /ko -->
-                        <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>                    </div>
+            <div class="details-column width-98p">
+                <label class="title">Темы</label>
+                <div class="multiselect-wrap">
+                    <!-- ko if: $root.multiselect.tags().length -->
+                    <div class="multiselect">
+                        <ul data-bind="foreach: $root.multiselect.tags">
+                            <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: name"></span></li>
+                        </ul>
+                    </div>
+                    <!-- /ko -->
+                    <input placeholder="Начните вводить"
+                           data-bind="autocomplete: {
+                           data: $root.multiselect.source, 
+                           format: $root.multiselect.text,
+                           onSelect: $root.multiselect.select,
+                           after: true},
+                           css: {'full': $root.multiselect.tags().length}" value=""/>
                 </div>
             </div>
         </div>

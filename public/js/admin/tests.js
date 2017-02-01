@@ -58,6 +58,10 @@ $(document).ready(function(){
             self.filter = {
                 name: ko.observable(''),
                 discipline: ko.observable(),
+                clear: function(){
+                    self.filter.name('');
+                    self.filter.discipline(null);
+                }
             };
             self.validationTooltip = {
                 init: function(selector){
@@ -84,16 +88,12 @@ $(document).ready(function(){
                         var seconds = data.timeTotal()%60;
                         var type = data.type() === 1;
 
-                        self.current.test()
-                            .id(data.id())
-                            .subject(data.subject())
-                            .attempts(data.attempts())
-                            .timeTotal(data.timeTotal())
-                            .minutes(minutes ? minutes : '00')
-                            .seconds(seconds ? seconds : '00')
-                            .type(type)
-                            .isActive(data.isActive())
-                            .isRandom(data.isRandom());
+                        data.minutes = ko.observable(minutes ? minutes : '00');
+                        data.seconds = ko.observable(seconds);
+                        data.themes = ko.observableArray([]);
+                        data.type(type);
+
+                        self.current.test.copy(data);
                         self.get.testThemes(data.id());
                     }
                 },
@@ -194,37 +194,11 @@ $(document).ready(function(){
                 }
             };
             self.pagination = pagination();
-            self.multiselect = {
-                data: ko.observableArray([]),
-                tags: ko.observableArray([]),
-                show: function(data){
-                    return data.name();
-                },
-                select: function(data){
-                    var item = self.multiselect.tags().find(function(item){
-                        return item.id() === data.id();
-                    });
-                    if (!item) self.multiselect.tags.push(data);
-                    return '';
-                },
-                remove: function(data){
-                    self.multiselect.tags.remove(data);
-                },
-                empty: function(){
-                    self.multiselect.tags([]);
-                },
-                fill: function(){
-                    var testThemes = self.current.test().themes();
-                    self.multiselect.data().find(function(item){
-                        var id = item.id();
-                        testThemes.find(function(theme){
-                            if (theme.id() === id){
-                                self.multiselect.select(item);
-                            }
-                        });
-                    });
-                }
-            };
+            self.multiselect = new multiselect({
+                    dataTextField: 'name',
+                    dataValueField: 'id',
+                    valuePrimitive: false
+            });
             self.mode = ko.observable('none');
             self.csed = {
                 test: {
@@ -303,25 +277,22 @@ $(document).ready(function(){
                 },
                 themes: function(){
                     var url = '/api/disciplines/' + self.filter.discipline().id() + '/themes';
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.multiselect.data(result.Data());
-                            return;
+                    $ajaxget({
+                        url: url,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.multiselect.setDataSource(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 testThemes: function(id){
-                    var url = '/api/tests/' + id + '/themes';
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.current.test().themes(result.Data());
-                            self.multiselect.fill();
-                            return;
+                    $ajaxget({
+                        url: '/api/tests/' + id + '/themes',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.test().themes(data());
+                            self.multiselect.multipleSelect()(self.current.test().themes());
                         }
-                        self.errors.show(result.Message());
                     });
                 }
             };
