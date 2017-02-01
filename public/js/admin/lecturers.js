@@ -32,10 +32,8 @@ $(document).ready(function(){
 
             self.filter = {
                 name: ko.observable(''),
-                discipline: ko.observable(),
-                empty: function(){
+                clear: function(){
                     self.filter.name('');
-                    self.filter.discipline(null);
                 }
             };
             self.actions = {
@@ -180,10 +178,7 @@ $(document).ready(function(){
                 }
             };
 
-            self.filter.discipline.subscribe(function(){
-                self.get.lecturers();
-            });
-            self.filter.name.subscribe(function(){
+            self.filter.name.subscribe(function(value){
                 self.get.lecturers();
             });
             self.pagination.itemsCount.subscribe(function(value){

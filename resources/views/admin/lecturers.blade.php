@@ -1,8 +1,6 @@
 @extends('shared.layout')
 @section('title', 'Преподаватели')
 @section('javascript')
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/knockout.autocomplete.css')}}"/>--}}
-
     <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/admin/lecturers.js')}}"></script>
@@ -35,10 +33,13 @@
             </div>
             @include('shared.pagination')
         </div>
-        <div class="filter" data-bind="with: $root.filter">
+        <div class="filter">
             <div class="filter-block">
                 <label class="title">ФИО преподавателя</label>
-                <input type="text" data-bind="value: name"/>
+                <input type="text" data-bind="value: filter.name, valueUpdate: 'keyup'"/>
+            </div>
+            <div class="filter-block">
+                <span class="clear" data-bind="click: filter.clear">Очистить</span>
             </div>
         </div>
     </div>
