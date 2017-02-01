@@ -31,17 +31,15 @@
             loading.hide();
         });
     </script>
-    <div class="menu">
-        <ul>
-            <li><a href="/admin/main">Главная</a></li>
-            <li><a href="/admin/lecturers">Преподаватели</a></li>
-            <li><a href="/admin/groups">Группы</a></li>
-            <li><a href="/admin/students">Студенты</a></li>
-            <li><a href="/admin/disciplines">Дисциплины</a></li>
-            <li><a href="/admin/tests">Тесты</a></li>
-            <li><a href="/admin/results">Результаты</a></li>
-            <li><a href="/logout">Выход</a></li>
-        </ul>
+    <div class="admin-menu">
+        <a href="/admin/main">Главная</a>
+        <a href="/admin/lecturers">Преподаватели</a>
+        <a href="/admin/groups">Группы</a>
+        <a href="/admin/students">Студенты</a>
+        <a href="/admin/disciplines">Дисциплины</a>
+        <a href="/admin/tests">Тесты</a>
+        <a href="/admin/results">Результаты</a>
+        <a href="/logout" class="user">Выход</a>
     </div>
     @yield('content')
 

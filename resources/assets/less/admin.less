@@ -14,6 +14,34 @@
 @grey: @normal-grey;
 @warning: #E29C45;
 
+
+
+.admin-menu{
+  background: white;
+  a{
+    text-decoration: none;
+    border: none;
+    font-size: 18px;
+    line-height: 60px;
+    padding: 18px 15px;
+    color: @missnorris;
+    font-weight: 600;
+    margin: 0 -2px;
+    transition: background 0.5s ease 0s;
+    -webkit-transition: background 0.5s ease 0s;
+    -o-transition: background 0.5s ease 0s;
+    -moz-transition: background 0.5s ease 0s;
+    &.user{
+      float: right;
+      padding: 0 15px;
+    }
+    &:hover, &.current{
+      color: @white;
+      background: @patronus;
+    }
+  }
+}
+
 .multiselect-wrap{
   margin:0 !important;
   .multiselect{
@@ -140,25 +168,6 @@ input{
 .items-body, .layer-body{
   margin: 20px 0;
 }
-//.items{
-//  &-head{
-//    margin: 15px 0;
-//    label.adder{
-//      float: right;
-//      line-height: 22px;
-//    }
-//    h1{
-//      display: inline;
-//    }
-//    h3{
-//      color: @filch;
-//    }
-//  }
-//  &-body{
-//    margin: 20px 0;
-//  }
-//}
-
 
 .items{
   &.disciplines{
@@ -526,6 +535,13 @@ table.questions{
 
 
 
+
+
+
+
+
+
+
 #compile-modal{
   max-height: 450px;
   overflow: auto;
@@ -544,48 +560,6 @@ table.questions{
 .width100{
   width: 100%;
 }
-//input[type=checkbox]{
-//  vertical-align: top;
-//  width: 17px;
-//  height: 17px;
-//  margin: 0 3px 0 0;
-//  & + label {
-//    cursor: pointer;
-//    font-size: 17px;
-//    line-height: 30px;
-//  }
-//  &:not(checked) {
-//    position: absolute;
-//    opacity: 0;
-//    & + label {
-//      position: relative;
-//      padding: 0 0 0 35px;
-//      &:before {
-//        content: '';
-//        position: absolute;
-//        top: 0;
-//        left: 0;
-//        width: 22px;
-//        height: 22px;
-//        border: 1px solid #CDD1DA;
-//        background: #FFF;
-//      }
-//      &:after {
-//        font-family: 'FontAwesome';
-//        font-size: 17px;
-//        content: '\f00c';
-//        color: @mainTheme;
-//        position: absolute;
-//        left: 4px;
-//        opacity: 0;
-//        transition: all .2s;
-//      }
-//    }
-//  }
-//  &:checked + label:after {
-//    opacity: 1;
-//  }
-//}
 span{
   &.ok{
     color: @mainTheme;
@@ -609,86 +583,6 @@ span{
     width: @wpercent - 4;
   }
 }
-//.multiselect-wrap{
-//  margin:0 !important;
-//  .multiselect{
-//    background: @white;
-//    width: 50%;
-//    border: 1px solid #e3e3e3;
-//    border-bottom: none;
-//    padding: 10px;
-//    margin: 0;
-//    ul{
-//      padding:0;
-//    }
-//    li{
-//      list-style: none;
-//      display: inline-block;
-//      padding: 5px;
-//      color: @white;
-//      margin: 2px 0;
-//      background: #16a085;
-//      border-radius: 5px;
-//    }
-//    span.fa{
-//      font-size: 13px;
-//      margin-left: 5px;
-//      position: relative;
-//      float: right;
-//      top: -3px;
-//      cursor: pointer;
-//    }
-//  }
-//  input{
-//    width: 50.8%;
-//    margin: 0;
-//    display: block;
-//    top: -4px;
-//    position: relative;
-//    border: 1px solid #e3e3e3;
-//    &:focus{
-//      outline: none;
-//    }
-//    &.full{
-//      border-top: none;
-//    }
-//  }
-//}
-//.knockout-autocomplete{
-//  &.menu {
-//    background-color: @white;
-//    padding: 3px 0;
-//    height: auto;
-//    width: 44%;
-//    li {
-//      text-transform: inherit;
-//      font-family: 'Roboto Regular';
-//      cursor: pointer;
-//      list-style: none;
-//      margin: 0px 0;
-//      padding: 3px 12px;
-//      display: block;
-//      background: @white;
-//      color: @black;
-//      &.selected{
-//        background: @mainTheme;
-//        color: @white;
-//      }
-//    }
-//  }
-//  &.floating-menu {
-//    position: fixed;
-//    border: thin #aaa solid;
-//    margin: 0;
-//    margin-top: 3px;
-//    -webkit-box-shadow: 1px 1px 4px rgba(50, 50, 50, 0.75);
-//    -moz-box-shadow:    1px 1px 4px rgba(50, 50, 50, 0.75);
-//    box-shadow:         1px 1px 4px rgba(50, 50, 50, 0.75);
-//  }
-//  &.after-menu {
-//    position: absolute;
-//  }
-//}
 
 #errors-modal{
   width: 300px;
@@ -744,188 +638,40 @@ span{
   }
 }
 
-//.filter{
-//  height: 100px;
-//  border-bottom: 20px solid @white;
-//  padding: 20px 20px 0;
-//  div{
-//    display: inline-block;
-//    margin: 10px 0 0 10px;
-//    width: 48%;
+//.menu{
+//  top: 0;
+//  background: @white;
+//  height: 50px;
+//  width: 100%;
+//  margin: 0 auto;
+//  position: fixed;
+//  border-bottom: 1px solid @active;
+//  z-index: 10;
+//  ul{
+//    text-align: center;
 //  }
-//  label{
-//    .label();
-//  }
-//  input{
-//    padding: 6px;
-//    min-width: 200px;
-//    width: 95%;
-//  }
-//  select{
+//  li {
+//    color: @midnightblue;
+//    list-style: none;
+//    display: inline;
+//    padding: 20px 20px;
 //    font-size: 15px;
-//    height: 33px;
-//    margin: 0;
-//    min-width: 200px;
-//    width: 100%;
+//    text-transform: uppercase;
+//    vertical-align: sub;
+//    &:hover{
+//      color: @white;
+//      background: @midnightblue;
+//      cursor: pointer;
+//    }
+//    a{
+//      border:0;
+//      color:@black;
+//      &:hover{
+//        color:@white;
+//      };
+//    }
 //  }
 //}
-
-.menu{
-  top: 0;
-  background: @white;
-  height: 50px;
-  width: 100%;
-  margin: 0 auto;
-  position: fixed;
-  border-bottom: 1px solid @active;
-  z-index: 10;
-  ul{
-    text-align: center;
-  }
-  li {
-    color: @midnightblue;
-    list-style: none;
-    display: inline;
-    padding: 20px 20px;
-    font-size: 15px;
-    text-transform: uppercase;
-    vertical-align: sub;
-    &:hover{
-      color: @white;
-      background: @midnightblue;
-      cursor: pointer;
-    }
-    a{
-      border:0;
-      color:@black;
-      &:hover{
-        color:@white;
-      };
-    }
-  }
-}
-
-//.content{
-//  width: 85%;
-//  margin: 100px auto;
-//  background: @neutral;
-//}
-
-.org-accordion{
-  width: 100%;
-  height: 100%;
-  .org-item{
-    width: 100%;
-    line-height: 50px;
-    height: 50px;
-    background: @mainTheme;
-    color: @neutral;
-    text-align: center;
-    text-transform: uppercase;
-    border-bottom: 2px solid @neutral;
-    cursor: pointer;
-    &:hover{
-      background: @active;
-    }
-    &:active{
-      background: @active;
-    }
-    &-current{
-      background: @active;
-      &:hover{
-        background: @active;
-      }
-    }
-    &.text-alternative{
-      text-transform: none;
-      font-size: 17px;
-      font-weight: bold;
-    }
-  }
-}
-
-.org-info{
-  .width100();
-  div{
-    display: inline-block;
-    margin: 10px 15px;
-  }
-  label{
-    .label();
-  }
-  input{
-    padding: 6px;
-    width: 150px;
-  }
-}
-
-table{
-  //&.theme{
-  //  width: 97%;
-  //  padding: 15px 0;
-  //  border-collapse: collapse;
-  //  border-top: 1px solid @light-grey;
-  //  cellpadding: 10px;
-  //  text-align:center;
-  //  th{
-  //    padding: 10px;
-  //  }
-  //  tbody tr{
-  //    &:nth-child(odd){
-  //      background: @light-grey;
-  //    }
-  //    &:nth-child(even){
-  //      background: @normal-grey;
-  //    }
-  //  }
-  //  td{
-  //    padding: 5px;
-  //    width: 7%;
-  //    &:nth-child(2){
-  //      width: 80%;
-  //      text-align: left;
-  //    }
-  //  }
-  //  button{
-  //    width: 35px;
-  //    height: 30px;
-  //  }
-  //  a{
-  //    border-bottom: 0;
-  //    &:hover{
-  //      color: @buttonGreen;
-  //    }
-  //  }
-  //  &s {
-  //    .width100();
-  //    td{
-  //      &:first-child{
-  //        width: 50%;
-  //      }
-  //      &:nth-child(2), &:nth-child(3){
-  //        width: 13%;
-  //      }
-  //    }
-  //  }
-  //}
-  &.students-table{
-    width: 100%;
-    padding: 15px 0;
-    border-collapse: collapse;
-    border-top: 1px solid @light-grey;
-    tr > td{
-      &:first-child, &:last-child{
-        text-align: center;
-      }
-      &:first-child{
-        width: 100px;
-      }
-      &:last-child{
-        width: 250px;
-      }
-    }
-  }
-}
 
 a.active-link{
   font-size: 13px;
@@ -957,328 +703,6 @@ button{
   }
 }
 
-.discipline{
-  &-edit{
-    div{
-      &:first-child{
-        width: 20%;
-        input{
-          width: 100%;
-        }
-      }
-      &:nth-child(2){
-        width: 70%;
-        input{
-          width: 94%;
-        }
-      }
-      &:nth-child(3){
-        width: 93%;
-        .multiselect-width(97%);
-        //select{
-        //  width: 97%;
-        //}
-      }
-    }
-    .float-btn-group{
-      float: right;
-      margin-right: 8%;
-    }
-  }
-  &-info{
-    div{
-      &:last-child{
-        width: 100%;
-        i{
-          &:first-child{
-            float: left;
-          }
-          &:last-child{
-            float:right;
-            margin-right: 8%;
-          }
-        }
-      }
-    }
-  }
-}
-
-.themes{
-  .org-info{
-    border-bottom: 20px solid @white;
-    .main-info{
-      padding: 5px;
-      div{
-        width: 94%;
-      }
-      input{
-        min-width: 300px;
-        width: 88%;
-      }
-    }
-  }
-  .filter div{
-    width: 32%;
-  }
-  &-add{
-    border-bottom: 20px solid @white;
-    .sq-small{
-      width: 35px;
-      height: 34px;
-      margin-left: 10px;
-    }
-    .select-theme, .select-complexity{
-      width: 46%;
-      select{
-        width: 99%;
-        margin: 0;
-      }
-    }
-    .time{
-      width: 13%;
-      position: relative;
-      top: 20px;
-      input{
-        width: 45px;
-        font-size: 25px;
-        text-align: center;
-      }
-    }
-    .question-text{
-      width: 97%;
-      textarea{
-        width: 98%;
-        height: 100px;
-      }
-    }
-    .answers{
-      &-input{
-        width: 96%;
-        input{
-          width: 94%;
-        }
-      }
-      &-table{
-        width:96%;
-        table{
-          width: 100%;
-          border-top: 1px solid @unimportant;
-          border-bottom: 1px solid @unimportant;
-          padding:7px;
-          td{
-            width:65%;
-            &:first-child{
-              width: 5%;
-            }
-            &:last-child{
-              width: 20%;
-            }
-          }
-        }
-      }
-    }
-    .btn-larger-group{
-      width:100%;
-        button{
-          float: right;
-          width:200px;
-          margin-right: 45px;
-        }
-    }
-    .upload-image{
-      width: 80%;
-      position: relative;
-      top: -17px;
-      margin: 0;
-      div{
-        display: block;
-        margin: 0;
-      }
-
-    }
-    .code{
-      width: 97%;
-      textarea{
-        height: 50px;
-        width: 49%;
-      }
-      .save-params{
-        float:right;
-        margin-right: 15px;
-      }
-      table{
-        width: 98%;
-        td{
-          white-space: pre-wrap;
-          &.input, &.output{
-            width: 50%;
-          }
-          &:last-child{
-            text-align: center;
-          }
-        }
-      }
-    }
-  }
-}
-.test{
-  .org-info{
-    &-details{
-      width: 95%;
-      .name{
-        width: 45%;
-      }
-      .type{
-        width: 15%;
-      }
-      .time{
-        width: 7%;
-      }
-      .btn-group{
-        float: right;
-      }
-    }
-    &-edit{
-      width: 94%;
-      .name{
-        width: 68%;
-        input{
-          width: 97%;
-        }
-      }
-      .type{
-        width: 25%;
-        select{
-          width: 100%;
-          height: 32px;
-          margin: 0;
-          font-size: 15px;
-        }
-      }
-      .time, .tryouts{
-        width: 15%;
-        input{
-          width: 35px;
-          font-size: 15px;
-          text-align: center;
-        }
-      }
-      .tryouts{
-        width: 50%;
-      }
-      .random{
-        width: 20%;
-      }
-      .themes{
-        width: 97%;
-        .multiselect-width(99%);
-      }
-      .btn-group{
-        float: right;
-        &:after{
-          clear: both;
-        }
-      }
-    }
-  }
-}
-
-
-.institutes{
-  width: 100%;
-  height: 100%;
-  .institute{
-    width: 100%;
-    line-height: 50px;
-    height: 50px;
-    background: @mainTheme;
-    color: @neutral;
-    text-align: center;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-bottom: 1px solid @neutral;
-    &.font-settings{
-      text-transform: none;
-      font-size: 17px;
-      font-weight: bold;
-    }
-    &:hover{
-      background: @active;
-    }
-    &:active{
-      background: @active;
-    }
-    &-current{
-      background: @active;
-      &:hover{
-        background: @active;
-      }
-    }
-  }
-  .profiles{
-    width: 100%;
-    background: @light-grey;
-
-    .profile{
-      background: @mainTheme;
-      color: @neutral;
-      width: 250px;
-      height: 150px;
-      margin: 5px 10px 5px 0px;
-      line-height: 45px;
-      float: left;
-      text-align: center;
-      cursor: pointer;
-      font-weight: bold;
-      &:hover{
-        background: @buttonHover;
-      }
-      &:active{
-        background: @active;
-      }
-      button:hover{
-        background: @active;
-      }
-    }
-  }
-}
-
-.info-group{
-  .details-group{
-    div{
-      display: inline-block;
-      margin: 10px 15px;
-    }
-  }
-  div{
-    display: inline-block;
-    margin: 10px 15px;
-  }
-  label{
-    font-size: 12px;
-    color: @unimportant;
-  }
-  .study-form{
-    &-selected{
-      font-size: 18px;
-      color: @mainTheme;
-    }
-    font-size: 13px;
-    color: @unimportant;
-    line-height: 1.8;
-    cursor: pointer;
-  }
-  .group-name{
-    input{
-      width: 200px;
-    }
-
-  }
-  input{
-    padding: 6px;
-    width: 70px;
-  }
-}
 
 .tyle-btn{
   color: @neutral;
@@ -1481,146 +905,5 @@ button.sq-small{
   }
 
 }
-
-
-//.results{
-//  .filter{
-//    height: 170px;
-//    div{
-//      width: 48%;
-//    }
-//  }
-//  .org-info{
-//    border: 1px solid @grey;
-//    .border-radius(2px);
-//    background: @white;
-//    cursor:pointer;
-//    &:hover{
-//      border: 1px solid @mainTheme;
-//    }
-//    span{
-//      font-size: 16px;
-//    }
-//    .row{
-//      width: 97%;
-//    }
-//    .date{
-//      float:right;
-//      top: -25px;
-//      right: 10px;
-//      position: relative;
-//    }
-//    .mark{
-//      width: 20%;
-//    }
-//    .attempt{
-//      width: 10%;
-//    }
-//    .name{
-//      width: 40%;
-//    }
-//  }
-//  a.result{
-//    &:hover{
-//      color: @black;
-//    }
-//  }
-//}
-//
-//.result-details{
-//  .org-info{
-//    border-bottom: 20px solid @white;
-//    span{
-//      font-size: 16px;
-//    }
-//    label{
-//      span.clickable{
-//        .label();
-//        color: @patronus;
-//        cursor: pointer;
-//      }
-//    }
-//  }
-//  .answers{
-//    background: @white;
-//    cursor: pointer;
-//    .answer{
-//      padding: 10px;
-//      border-bottom: 1px solid @grey;
-//      &:first-child{
-//        border-top: 1px solid @grey;
-//      }
-//      span{
-//        font-size: 15px;
-//        padding: 0 3px;
-//      }
-//      span.tagged-label{
-//        color: @patronus;
-//        font-size: 15px;
-//        float: right;
-//        position: relative;
-//      }
-//      &.current{
-//        background: @patronus;
-//        border-color: @patronus;
-//        color: @white;
-//        span.tagged-label{
-//          background: @patronus;
-//          color: @white;
-//        }
-//      }
-//      &:hover{
-//        background: @patronus;
-//        color: @white;
-//        span.tagged-label{
-//          background: @patronus;
-//          color: @white;
-//        }
-//      }
-//    }
-//    .answer-details{
-//      padding: 15px;
-//      background: @patronus-shade;
-//      display:flex;
-//      div{
-//        display: inline-block;
-//      }
-//      .icon{
-//        font-size: 21px;
-//        margin: 0 15px;
-//        float: left;
-//      }
-//      .question, .answer-text{
-//        width: 40%;
-//      }
-//      span.text{
-//        display: table;
-//        text-align: justify;
-//        font-size: 12px;
-//      }
-//      .mark{
-//        position: relative;
-//        padding: 0 20px;
-//        top: -5px;
-//        label{
-//          .label();
-//        }
-//        span{
-//          font-size: 17px;
-//          color: @patronus;
-//        }
-//        span.fa{
-//          padding: 0 5px;
-//          font-size: 20px;
-//        }
-//        input{
-//          width: 55px;
-//          padding: 3px;
-//          font-size: 12px;
-//        }
-//      }
-//    }
-//  }
-//}
 
 
