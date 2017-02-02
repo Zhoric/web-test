@@ -2,6 +2,7 @@ $(document).ready(function(){
     var monitoringViewModel = function(){
         return new function(){
             var self = this;
+            self.page = ko.observable(menu.admin.results);
             self.percentage = ko.observable(20);
 
             self.initial = {
@@ -88,6 +89,22 @@ $(document).ready(function(){
                         });
                     }
                 },
+                get: {
+                  state: function(){
+                      console.log(self.filter.state());
+                      switch (self.filter.state()){
+                          case 'any':
+                              return 1;
+                              break;
+                          case 'process':
+                              return 2;
+                              break;
+                          case 'finished':
+                              return 3;
+                              break;
+                      }
+                  }
+                },
                 clear: function(){
                     self.filter.profile(null);
                     self.filter.state('any');
@@ -168,7 +185,20 @@ $(document).ready(function(){
                         }
                     });
                 },
-                results: function(){}
+                results: function(){
+                    var test = '?testId=' + self.filter.test().id();
+                    var group = '&group=' + self.filter.group().id();
+                    var state = '&state=' + self.filter.get.state();
+
+                    var url = '/api/tests/sessions' + test + group + state;
+                    $ajaxget({
+                        url:  '/api/tests/sessions' + test + group + state,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            console.log(data());
+                        }
+                    });
+                }
             };
 
             self.post = {
@@ -234,6 +264,7 @@ $(document).ready(function(){
 
 
             return {
+                page: self.page,
                 current: self.current,
                 filter: self.filter,
                 showResult: self.showResult,
