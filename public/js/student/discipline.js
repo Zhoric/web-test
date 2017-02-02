@@ -33,30 +33,28 @@ $(document).ready(function(){
                 discipline: function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
-                    url = '/api/disciplines/' + id;
-
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.discipline.id(result.Data.id());
-                            self.current.discipline.name(result.Data.name());
+                    
+                    var requestParams = {
+                        url : '/api/disciplines/' + id,
+                        successCallback: function(data){
+                            self.current.discipline.id(data.id());
+                            self.current.discipline.name(data.name());
                             self.get.tests();
-                            return;
                         }
-                        self.errors.show(result.Message());
-                    });
+                    };
+
+                    $ajaxget(requestParams);
                 },
                 tests: function(){
-                    var url = '/api/tests/showForStudent?discipline=' + self.current.discipline.id();
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            console.log(result);
-                            self.current.tests(result.Data());
-                            return;
+                    var requestParams = {
+                        url: '/api/tests/showForStudent?discipline=' + self.current.discipline.id(),
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.tests(data());
                         }
-                        self.errors.show(result.Message());
-                    });
+                    };
+
+                    $ajaxget(requestParams);
                 }
             };
             self.get.discipline();
