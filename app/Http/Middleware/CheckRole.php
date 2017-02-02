@@ -3,10 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Response;
 use Managers\UserManager;
 use Auth;
-use JsonResult;
+use UserRole;
+use Helpers\RoleHelper;
+use Exception;
 
 class CheckRole
 {
@@ -33,33 +34,38 @@ class CheckRole
      * @param $requiredRoles - строка, содержащия псевдонимы ролей через "|" i.e.(admin,student)
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
      */
-    public function handle($request, Closure $next,$requiredRoles)
+    public function handle($request, Closure $next, $requiredRoles)
     {
         try {
-
             $userRole = $this->_userManager->getCurrentUserInfo()->getRole();
-            $access = false;
+            $isAccess = $this->isAccessableRoute($requiredRoles, $userRole);
 
-            $requiredRoles = explode('|',$requiredRoles);
-
-            foreach ($requiredRoles as $requiredRole) {
-                if ($userRole === $requiredRole) {
-                    $access = true;
-                }
-            }
-            if($access) {
+            if ($isAccess) {
                 return $next($request);
-            }
-            else{
-                return new Response(view('errors.503'));
+            } else {
+
+                return redirect(RoleHelper::getDefaultRoleRoute($userRole));
             }
 
-        } catch (\Exception $exception) {
-
-            return new Response(view('errors.503'));
+        } catch (Exception $exception) {
+            return redirect(RoleHelper::getDefaultRoleRoute(UserRole::Guest));
         }
+    }
 
 
+    private function isAccessableRoute($requiredRoles, $userRole)
+    {
+
+        $access = false;
+
+        $requiredRoles = explode('|', $requiredRoles);
+
+        foreach ($requiredRoles as $requiredRole) {
+            if ($userRole === $requiredRole) {
+                $access = true;
+            }
+        }
+        return $access;
     }
 
 

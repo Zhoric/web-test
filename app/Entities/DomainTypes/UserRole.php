@@ -9,4 +9,5 @@ abstract class UserRole
     const Admin = "admin";
     const Lecturer = "lecturer";
     const Student = "student";
+    const Guest = "guest";
 }

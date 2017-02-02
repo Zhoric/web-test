@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Helpers\RoleHelper;
+use Managers\UserManager;
+use Exception;
+use UserRole;
 
 class HomeController extends Controller
 {
@@ -11,9 +14,12 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    private $_userManager;
+
+    public function __construct(UserManager $userManager)
     {
         $this->middleware('auth');
+        $this->_userManager = $userManager;
     }
 
     /**
@@ -23,6 +29,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        try {
+            $userRole = $this->_userManager->getCurrentUserInfo()->getRole();
+            return redirect(RoleHelper::getDefaultRoleRoute($userRole));
+        }
+        catch(Exception $e){
+            return redirect(RoleHelper::getDefaultRoleRoute(UserRole::Guest));
+        }
     }
 }
