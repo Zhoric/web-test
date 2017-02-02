@@ -2,7 +2,8 @@ $(document).ready(function(){
     var monitoringViewModel = function(){
         return new function(){
             var self = this;
-            
+            self.percentage = ko.observable(20);
+
             self.initial = {
                 settings: ko.observable(null)
             };
@@ -88,7 +89,9 @@ $(document).ready(function(){
                     }
                 },
                 clear: function(){
-
+                    self.filter.profile(null);
+                    self.filter.state('any');
+                    self.filter.interval(null);
                 }
             };
             self.errors = errors();
@@ -234,7 +237,8 @@ $(document).ready(function(){
                 current: self.current,
                 filter: self.filter,
                 showResult: self.showResult,
-                errors: self.errors
+                errors: self.errors,
+                percentage: self.percentage
             };
         };
     };

@@ -2,6 +2,7 @@
 @section('title', 'Мониторинг тестирования')
 @section('javascript')
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-progressbar.js')}}"></script>
     <script src="{{ URL::asset('js/admin/monitoring.js')}}"></script>
 @endsection
 
@@ -11,7 +12,9 @@
         <div class="items-head">
             <h1>Мониторинг тестирования</h1>
         </div>
-        <div class="items-body">  </div>
+        <div class="items-body">
+            <div data-bind="progressBar: { value : percentage }"></div>
+        </div>
     </div>
 
     <div class="filter">
@@ -58,6 +61,9 @@
                        optionsText: 'name',
                        value: $root.filter.interval,
                        optionsCaption: 'Выберите интервал обновления'"></select>
+        </div>
+        <div class="filter-block">
+            <span class="clear" data-bind="click: filter.clear">Очистить</span>
         </div>
     </div>
     @include('admin.shared.error-modal')
