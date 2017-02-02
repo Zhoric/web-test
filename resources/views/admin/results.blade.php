@@ -53,6 +53,9 @@
 
     <div class="filter">
         <div class="filter-block">
+            <a href="/admin/monitoring"><button class="action-button">Мониторинг тестирования</button></a>
+        </div>
+        <div class="filter-block">
             <label class="title">Направление</label>
             <select data-bind="options: $root.filter.profiles,
                        optionsText: 'name',

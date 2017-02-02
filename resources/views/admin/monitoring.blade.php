@@ -1,5 +1,5 @@
 @extends('shared.layout')
-@section('title', 'Результаты')
+@section('title', 'Мониторинг тестирования')
 @section('javascript')
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
 
