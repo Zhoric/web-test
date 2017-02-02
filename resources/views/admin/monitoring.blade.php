@@ -2,7 +2,7 @@
 @section('title', 'Мониторинг тестирования')
 @section('javascript')
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
-
+    <script src="{{ URL::asset('js/admin/monitoring.js')}}"></script>
 @endsection
 
 @section('content')
@@ -45,13 +45,19 @@
         </div>
         <div class="filter-block">
             <label class="title">Состояние</label>
-            <input type="radio" class="custom-radio" group="state"/>
-            <input type="radio" class="custom-radio" group="state"/>
-            <input type="radio" class="custom-radio" group="state"/>
+            <input type="radio" class="custom-radio" name="state" checked value="any" id="any-state" data-bind="checked: filter.state"/>
+            <label class="block" for="any-state">Любой</label>
+            <input type="radio" class="custom-radio" name="state" value="process" id="in-process-state" data-bind="checked: filter.state"/>
+            <label class="block" for="in-process-state">В процессе</label>
+            <input type="radio" class="custom-radio" name="state" value="finished" id="finished-state" data-bind="checked: filter.state"/>
+            <label class="block" for="finished-state">Завершен</label>
         </div>
         <div class="filter-block">
             <label class="title">Интервал обновления</label>
-            <select></select>
+            <select data-bind="options: $root.filter.intervals,
+                       optionsText: 'name',
+                       value: $root.filter.interval,
+                       optionsCaption: 'Выберите интервал обновления'"></select>
         </div>
     </div>
     @include('admin.shared.error-modal')
