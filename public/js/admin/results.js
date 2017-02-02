@@ -6,6 +6,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.page = ko.observable(menu.admin.results);
             self.theme = ko.observable({});
 
             self.settings = ko.observable(null);
@@ -43,8 +44,8 @@ $(document).ready(function(){
                             }
                         });
                     },
-                    group: function(){
-                        var id = self.settings().result_group;
+                    group: function(id){
+                        var id = id || self.settings().result_group;
                         if (!id) return;
                         self.filter.groups().find(function(item){
                             console.log(item.id() + ' ' + id());
@@ -236,6 +237,7 @@ $(document).ready(function(){
 
 
             return {
+                page: self.page,
                 current: self.current,
                 filter: self.filter,
                 showResult: self.showResult,

@@ -9,6 +9,7 @@ $(document).ready(function(){
     var testsViewModel = function(){
         return new function(){
             var self = this;
+            self.page = ko.observable(menu.admin.tests);
             self.errors = errors();
             self.current = {
                 test: ko.validatedObservable({
@@ -378,6 +379,7 @@ $(document).ready(function(){
             });
 
             return {
+                page: self.page,
                 current: self.current,
                 pagination: self.pagination,
                 multiselect: self.multiselect,

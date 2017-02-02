@@ -2,7 +2,7 @@ $(document).ready(function () {
     var studyplanViewModel = function () {
         return new function () {
             var self = this;
-
+            self.page = ko.observable(menu.admin.main);
             self.errors = new errors();
             self.mode = ko.observable(state.none);
             self.initial = {
@@ -185,6 +185,7 @@ $(document).ready(function () {
             });
 
             return {
+                page: self.page,
                 current: self.current,
                 initial: self.initial,
                 filter: self.filter,

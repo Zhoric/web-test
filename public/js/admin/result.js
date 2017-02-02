@@ -7,7 +7,8 @@ $(document).ready(function(){
     var themeViewModel = function(){
         return new function(){
             var self = this;
-
+            
+            self.page = ko.observable(menu.admin.results);
             self.theme = ko.observable({});
 
             self.errors = errors();
@@ -172,6 +173,7 @@ $(document).ready(function(){
             };
 
             return {
+                page: self.page,
                 errors: self.errors,
                 actions: self.actions,
                 toggleCurrent: self.toggleCurrent,

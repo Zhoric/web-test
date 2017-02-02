@@ -7,6 +7,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.page = ko.observable(menu.admin.students);
             self.errors = errors();
             self.pagination = pagination();
             self.pagination.pageSize(15);
@@ -221,6 +222,7 @@ $(document).ready(function(){
             });
 
             return {
+                page: self.page,
                 initial: self.initial,
                 filter: self.filter,
                 current: self.current,

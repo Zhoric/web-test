@@ -18,7 +18,7 @@
         <!-- /ko -->
         <div class="items-body">
             <!-- ko foreach: disciplines -->
-            <div class="item" >
+            <div class="item">
                 <div class="inline width-85p" data-bind="click: $root.csed.show">
                     <span data-bind="text: name"></span>
                 </div>
