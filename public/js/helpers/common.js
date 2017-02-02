@@ -43,7 +43,7 @@ var types = {
         },
         multiLine: {
             id: 4,
-            rusname: 'открытый многострочный'
+            rusname: 'Открытый многострочный'
         },
         code: {
             id: 5,
@@ -61,9 +61,9 @@ var types = {
             name: 'study',
             rusname: 'Обучающий'
         },
-        name: function(type){
+        name: function(type) {
             var test = types.test;
-            switch(type){
+            switch (type) {
                 case test.control.id:
                     return test.control.name;
                     break;
@@ -127,6 +127,7 @@ var commonHelper = {
 
         return date;
     },
+
     shortenText: function(text, length){
         var dots = (text.length > length) ? ' ...' : '';
         return text.substr(0, length) + dots;
@@ -143,6 +144,18 @@ var commonHelper = {
         return answers
             .replace(/<\/answer>/g, '\n\n')
             .slice(0, answers.lastIndexOf('\n\n'));
+    }
+};
+
+var menu = {
+    admin: {
+        main: 'institutes',
+        lecturers: 'lecturers',
+        groups: 'groups',
+        students: 'students',
+        disciplines: 'disciplines',
+        tests: 'tests',
+        results: 'results'
     }
 };
 

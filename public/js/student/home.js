@@ -16,10 +16,7 @@ $(document).ready(function(){
             };
 
             self.filter = {
-                name: ko.observable(),
-                clear: function(){
-
-                },
+                name: ko.observable()
             };
 
             self.actions = {

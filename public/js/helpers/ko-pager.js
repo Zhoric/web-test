@@ -18,12 +18,13 @@ function pagination() {
         var current = self.currentPage();
         if (total > 11 && index == total-1 && index > current + 2  ||total > 11 && index == current - 1 && index > 3)  {
             return true;
-        };
+        }
         return false;
     };
     self.pageNumberVisible = function(index){
         var total = self.totalPages();
         var current = self.currentPage();
+
         if (total < 12 ||
             index > (current - 2) && index < (current + 2) ||
             index > total - 2 ||

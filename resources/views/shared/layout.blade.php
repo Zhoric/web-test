@@ -32,13 +32,13 @@
         });
     </script>
     <div class="admin-menu">
-        <a href="/admin/main">Главная</a>
-        <a href="/admin/lecturers">Преподаватели</a>
-        <a href="/admin/groups">Группы</a>
-        <a href="/admin/students">Студенты</a>
-        <a href="/admin/disciplines">Дисциплины</a>
-        <a href="/admin/tests">Тесты</a>
-        <a href="/admin/results">Результаты</a>
+        <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>
+        <a href="/admin/lecturers" data-bind="css: {'current': $root.page() === menu.admin.lecturers}">Преподаватели</a>
+        <a href="/admin/groups" data-bind="css: {'current': $root.page() === menu.admin.groups}">Группы</a>
+        <a href="/admin/students" data-bind="css: {'current': $root.page() === menu.admin.students}">Студенты</a>
+        <a href="/admin/disciplines" data-bind="css: {'current': $root.page() === menu.admin.disciplines}">Дисциплины</a>
+        <a href="/admin/tests" data-bind="css: {'current': $root.page() === menu.admin.tests}">Тесты</a>
+        <a href="/admin/results" data-bind="css: {'current': $root.page() === menu.admin.results}">Результаты</a>
         <a href="/logout" class="user">Выход</a>
     </div>
     @yield('content')

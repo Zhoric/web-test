@@ -2,6 +2,7 @@ $(document).ready(function(){
     var institutesViewModel = function(){
         return new function(){
             var self = this;
+            self.page = ko.observable(menu.admin.main);
             self.errors = new errors();
 
             self.initial = {
@@ -115,6 +116,7 @@ $(document).ready(function(){
             self.get.institutes();
 
             return {
+                page: self.page,
                 current: self.current,
                 initial: self.initial,
                 actions: self.actions,

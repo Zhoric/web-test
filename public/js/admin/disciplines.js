@@ -6,6 +6,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.page = ko.observable(menu.admin.disciplines);
             self.errors = errors();
             self.pagination = pagination();
 
@@ -227,15 +228,15 @@ $(document).ready(function(){
                     var pageSize = 'pageSize=' + self.pagination.pageSize();
                     var url = '/api/disciplines/show?' + page + '&' + pageSize + '&' + name + '&' + profile;
 
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.disciplines(result.Data.data());
-                            self.pagination.itemsCount(result.Data.count());
-                            return;
+                    $ajaxget({
+                        url: url,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.disciplines(data.data());
+                            self.pagination.itemsCount(data.count());
                         }
-                        self.errors.show(result.Message());
                     });
+
                 },
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();
@@ -331,6 +332,7 @@ $(document).ready(function(){
             });
 
             return {
+                page: self.page,
                 disciplines: self.disciplines,
                 pagination: self.pagination,
                 multiselect: self.multiselect,

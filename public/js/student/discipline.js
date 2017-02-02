@@ -33,7 +33,7 @@ $(document).ready(function(){
                 discipline: function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
-                    
+
                     var requestParams = {
                         url : '/api/disciplines/' + id,
                         successCallback: function(data){

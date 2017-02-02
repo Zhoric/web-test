@@ -5,6 +5,8 @@ $(document).ready(function(){
     var groupsViewModel = function(){
         return new function(){
             var self = this;
+
+            self.page = ko.observable(menu.admin.groups);
             self.errors = new errors();
             self.pagination = pagination();
             self.pagination.pageSize(10);
@@ -265,6 +267,7 @@ $(document).ready(function(){
             self.get.institutes();
 
             return {
+                page: self.page,
                 current: self.current,
                 actions: self.actions,
                 filter: self.filter,
