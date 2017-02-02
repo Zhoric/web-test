@@ -78,7 +78,7 @@
             </div>
             <div class="details-column width-15p">
                 <label class="title">Время</label>
-                <span class="info" data-bind="text: minutes() + ':' + minutes()"></span>
+                <span class="info" data-bind="text: minutes() + ':' + seconds()"></span>
             </div>
         </div>
         <div class="details-row float-buttons">
@@ -135,7 +135,7 @@
                     <!-- /ko -->
                     <input placeholder="Начните вводить"
                            data-bind="autocomplete: {
-                           data: $root.multiselect.source, 
+                           data: $root.multiselect.source,
                            format: $root.multiselect.text,
                            onSelect: $root.multiselect.select,
                            after: true},
