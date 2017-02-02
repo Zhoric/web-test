@@ -8,7 +8,7 @@
     <div class="content">
         <div class="items">
             <div class="items-head">
-                <h1>Администрирование учетных записей студентов</h1>
+                <h1>Учетные записи студентов</h1>
                 <label class="adder" data-bind="click: $root.actions.start.create">Добавить</label>
             </div>
             <!-- ko if: $root.mode() === state.create -->
@@ -32,7 +32,7 @@
         <div class="filter" data-bind="with: $root.filter">
             <div class="filter-block">
                 <label class="title">ФИО студента</label>
-                <input type="text" data-bind="value: name"/>
+                <input type="text" data-bind="value: name, valueUpdate: 'keyup'"/>
             </div>
             <div class="filter-block">
                 <label class="title">Название группы</label>

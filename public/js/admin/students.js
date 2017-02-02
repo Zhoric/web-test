@@ -203,6 +203,9 @@ $(document).ready(function(){
                     self.pagination.itemsCount(0);
                 }
             });
+            self.filter.name.subscribe(function(){
+                self.get.students();
+            });
             self.filter.request.subscribe(function(value){
                 self.get.students();
             });
