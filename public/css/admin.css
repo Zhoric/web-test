@@ -537,19 +537,20 @@ button.move:hover {
   color: #8D9899;
   font-weight: 600;
   margin: 0 -2px;
-  transition: background 0.5s ease 0s;
-  -webkit-transition: background 0.5s ease 0s;
-  -o-transition: background 0.5s ease 0s;
-  -moz-transition: background 0.5s ease 0s;
 }
 .admin-menu a.user {
   float: right;
   padding: 0 15px;
+  line-height: 57px;
+}
+.admin-menu a.user:hover {
+  padding-bottom: 0;
 }
 .admin-menu a:hover,
 .admin-menu a.current {
-  color: #fff;
-  background: #5D8CAE;
+  color: #5D8CAE;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #5D8CAE;
 }
 .multiselect-wrap {
   margin: 0 !important;
@@ -627,6 +628,30 @@ button.move:hover {
 }
 .knockout-autocomplete.after-menu {
   position: absolute;
+}
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 13px;
+  margin: 20px auto;
+  border: 1px solid #BFBFBF;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progressBar div {
+  position: relative;
+  height: 100%;
+  background-color: #5D8CAE;
+}
+.progressBar .progressText {
+  color: #fff;
+  position: absolute;
+  margin: 0 auto;
+  top: -3px;
+  font-size: 12px;
+  left: 0;
+  right: 0;
+  background-color: transparent;
 }
 .a-style-none a,
 .a-style-none a:hover {

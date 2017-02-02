@@ -27,17 +27,18 @@
     color: @missnorris;
     font-weight: 600;
     margin: 0 -2px;
-    transition: background 0.5s ease 0s;
-    -webkit-transition: background 0.5s ease 0s;
-    -o-transition: background 0.5s ease 0s;
-    -moz-transition: background 0.5s ease 0s;
     &.user{
       float: right;
       padding: 0 15px;
+      line-height: 57px;
+      &:hover{
+        padding-bottom: 0;
+      }
     }
     &:hover, &.current{
-      color: @white;
-      background: @patronus;
+      color: @patronus;
+      padding-bottom: 16px;
+      border-bottom: 3px solid @patronus;
     }
   }
 }
@@ -122,6 +123,33 @@
   &.after-menu {
     position: absolute;
   }
+}
+
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 13px;
+  margin: 20px auto;
+  border: 1px solid @akcio;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBar div {
+  position: relative;
+  height: 100%;
+  background-color: @patronus;
+}
+
+.progressBar .progressText {
+  color: @white;
+  position: absolute;
+  margin: 0 auto;
+  top: -3px;
+  font-size: 12px;
+  left: 0;
+  right: 0;
+  background-color: transparent;
 }
 
 .a-style-none{
