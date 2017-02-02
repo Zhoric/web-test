@@ -6,6 +6,36 @@
   font-family: 'FontAwesome';
   src: url('/fonts/fontawesome-webfont.ttf');
 }
+.menu {
+  background: white;
+}
+.menu a {
+  text-decoration: none;
+  border: none;
+  font-size: 18px;
+  line-height: 60px;
+  padding: 18px 15px;
+  color: #8D9899;
+  font-weight: 600;
+  margin: 0 -2px;
+}
+.menu a.user {
+  float: right;
+  padding: 0 15px;
+  line-height: 57px;
+}
+.menu a.user:hover {
+  padding-bottom: 0;
+}
+.menu a:hover,
+.menu a.current {
+  color: #5D8CAE;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #5D8CAE;
+}
+.form-heights {
+  line-height: 30px;
+}
 label.title {
   display: block;
   font-size: 12px;
@@ -48,6 +78,9 @@ span.info {
 span.required {
   content: '*';
   color: #D24D57;
+}
+.pointer {
+  cursor: pointer;
 }
 input[type=radio].custom-radio {
   vertical-align: top;
@@ -148,38 +181,6 @@ input[type=checkbox].custom-checkbox:checked + label:after {
 .clear {
   clear: both;
 }
-.menu {
-  height: 50px;
-  width: 100%;
-  background: #fff;
-}
-.menu div {
-  height: 100%;
-  width: auto;
-  color: #000;
-  display: inline-block;
-  padding: 0 10px;
-  cursor: pointer;
-  margin-right: -4px;
-}
-.menu div:hover {
-  background: #5D8CAE;
-  color: #fff;
-}
-.menu div.current {
-  background: #5D8CAE;
-  color: #fff;
-}
-.menu div:last-child {
-  float: right;
-}
-.menu span {
-  line-height: 50px;
-  font-size: 16px;
-}
-.menu span i {
-  padding: 0 5px;
-}
 body {
   background: #F2F1EF;
   font-family: 'Roboto Regular' !important;
@@ -187,7 +188,7 @@ body {
 }
 .content {
   width: 90%;
-  margin: 5% auto;
+  margin: 3% auto;
 }
 .items,
 .layer {
@@ -227,15 +228,14 @@ body {
   width: 100%;
   margin-bottom: 7px;
 }
-.filter .filter-block input[type=text] {
-  width: 99%;
-}
+.filter .filter-block input[type=text],
 .filter .filter-block select {
   width: 100%;
 }
 .filter span.clear {
   float: right;
   font-size: 15px;
+  margin-top: 10px;
   color: #7f8c8d;
   cursor: pointer;
 }
@@ -280,7 +280,6 @@ body {
 span.radio {
   color: #7f8c8d;
   font-size: 13px;
-  line-height: 1;
   cursor: pointer;
 }
 span.radio-important,
@@ -320,6 +319,15 @@ span .correct {
 span .incorrect {
   color: #D24D57;
 }
+span.coloredin-patronus {
+  color: #5D8CAE !important;
+}
+span.date-string {
+  font-size: 12px;
+}
+.bold {
+  font-weight: bold;
+}
 .image-expander {
   width: 100%;
   height: 100%;
@@ -338,6 +346,9 @@ span .incorrect {
   width: auto;
   height: auto;
   display: table;
+}
+.width-auto {
+  width: auto;
 }
 .width-zero {
   width: 0;
@@ -428,6 +439,9 @@ span .incorrect {
 }
 .width-100p {
   width: 100%;
+}
+.zero-margin {
+  margin: 0 !important;
 }
 .clear {
   clear: both;

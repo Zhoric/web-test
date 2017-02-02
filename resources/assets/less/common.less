@@ -48,6 +48,34 @@
 @silver: #BDC3C7;
 @jungle: #2ABB9B;
 
+.menu{
+  background: white;
+  a{
+    text-decoration: none;
+    border: none;
+    font-size: 18px;
+    line-height: 60px;
+    padding: 18px 15px;
+    color: @missnorris;
+    font-weight: 600;
+    margin: 0 -2px;
+    &.user{
+      float: right;
+      padding: 0 15px;
+      line-height: 57px;
+      &:hover{
+        padding-bottom: 0;
+      }
+    }
+    &:hover, &.current{
+      color: @patronus;
+      padding-bottom: 16px;
+      border-bottom: 3px solid @patronus;
+    }
+  }
+}
+
+
 .form-heights{
   line-height: 30px;
 }
@@ -191,38 +219,6 @@ input[type=checkbox].custom-checkbox{
 .float-left{float:left}
 .clear{clear:both}
 
-.menu{
-  height: 50px;
-  width: 100%;
-  background: @white;
-  div{
-    height: 100%;
-    width: auto;
-    color: @black;
-    display: inline-block;
-    padding: 0 10px;
-    cursor: pointer;
-    margin-right: -4px;
-    &:hover{
-      background: @patronus;
-      color: @white;
-    }
-    &.current{
-      background: @patronus;
-      color: @white;
-    }
-    &:last-child{
-      float: right;
-    }
-  }
-  span{
-    line-height: 50px;
-    font-size: 16px;
-    i{
-      padding: 0 5px;
-    }
-  }
-}
 
 body{
   background: @porcelain;

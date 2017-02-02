@@ -1,19 +1,9 @@
 <div class="menu">
-    <div class="current">
-        <span><i class="fa">&#xf015;</i>Главная</span>
-    </div>
-    <div>
-        <span><i class="fa">&#xf123;</i>Результаты</span>
-    </div>
-    <div>
-        <span><i class="fa">&#xf080;</i>Статистика</span>
-    </div>
-    <div>
-        <span><i class="fa">&#xf29c;</i>&nbsp;FAQ</span>
-    </div>
-    <div>
-        <span data-bind="click: $root.actions.logout">Выход<i class="fa">&#xf08b;</i></span>
-    </div>
+    <a href="/home" data-bind="css: {'current': $root.page() === menu.student.main}">Главная</a>
+    <a href="/results" data-bind="css: {'current': $root.page() === menu.student.results}">Результаты</a>
+    <a href="/stats" data-bind="css: {'current': $root.page() === menu.student.stats}">Статистика</a>
+    <a href="/faq" data-bind="css: {'current': $root.page() === menu.student.faq}">FAQ</a>
+    <a href="/logout" class="user">Выход</a>
 </div>
 
 

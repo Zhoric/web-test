@@ -6,6 +6,33 @@
   font-family: 'FontAwesome';
   src: url('/fonts/fontawesome-webfont.ttf');
 }
+.menu {
+  background: white;
+}
+.menu a {
+  text-decoration: none;
+  border: none;
+  font-size: 18px;
+  line-height: 60px;
+  padding: 18px 15px;
+  color: #8D9899;
+  font-weight: 600;
+  margin: 0 -2px;
+}
+.menu a.user {
+  float: right;
+  padding: 0 15px;
+  line-height: 57px;
+}
+.menu a.user:hover {
+  padding-bottom: 0;
+}
+.menu a:hover,
+.menu a.current {
+  color: #5D8CAE;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #5D8CAE;
+}
 .form-heights {
   line-height: 30px;
 }
@@ -153,38 +180,6 @@ input[type=checkbox].custom-checkbox:checked + label:after {
 }
 .clear {
   clear: both;
-}
-.menu {
-  height: 50px;
-  width: 100%;
-  background: #fff;
-}
-.menu div {
-  height: 100%;
-  width: auto;
-  color: #000;
-  display: inline-block;
-  padding: 0 10px;
-  cursor: pointer;
-  margin-right: -4px;
-}
-.menu div:hover {
-  background: #5D8CAE;
-  color: #fff;
-}
-.menu div.current {
-  background: #5D8CAE;
-  color: #fff;
-}
-.menu div:last-child {
-  float: right;
-}
-.menu span {
-  line-height: 50px;
-  font-size: 16px;
-}
-.menu span i {
-  padding: 0 5px;
 }
 body {
   background: #F2F1EF;
@@ -524,33 +519,6 @@ button.move:hover {
 }
 .text-center {
   text-align: center;
-}
-.admin-menu {
-  background: white;
-}
-.admin-menu a {
-  text-decoration: none;
-  border: none;
-  font-size: 18px;
-  line-height: 60px;
-  padding: 18px 15px;
-  color: #8D9899;
-  font-weight: 600;
-  margin: 0 -2px;
-}
-.admin-menu a.user {
-  float: right;
-  padding: 0 15px;
-  line-height: 57px;
-}
-.admin-menu a.user:hover {
-  padding-bottom: 0;
-}
-.admin-menu a:hover,
-.admin-menu a.current {
-  color: #5D8CAE;
-  padding-bottom: 16px;
-  border-bottom: 3px solid #5D8CAE;
 }
 .multiselect-wrap {
   margin: 0 !important;

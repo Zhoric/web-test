@@ -31,7 +31,7 @@
             loading.hide();
         });
     </script>
-    <div class="admin-menu">
+    <div class="menu">
         <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>
         <a href="/admin/lecturers" data-bind="css: {'current': $root.page() === menu.admin.lecturers}">Преподаватели</a>
         <a href="/admin/groups" data-bind="css: {'current': $root.page() === menu.admin.groups}">Группы</a>
