@@ -156,6 +156,12 @@ var menu = {
         disciplines: 'disciplines',
         tests: 'tests',
         results: 'results'
+    },
+    student: {
+        main: 'home',
+        results: 'results',
+        stats: 'statistics',
+        faq: 'faq'
     }
 };
 

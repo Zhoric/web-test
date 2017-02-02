@@ -7,6 +7,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.page = ko.observable(menu.student.main);
             self.errors = errors();
 
             self.current = {
@@ -65,6 +66,7 @@ $(document).ready(function(){
             self.get.disciplines();
 
             return {
+                page: self.page,
                 current: self.current,
                 filter: self.filter,
                 actions: self.actions,

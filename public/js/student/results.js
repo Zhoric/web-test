@@ -7,6 +7,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
+            self.page = ko.observable(menu.student.results);
             self.errors = errors();
 
             self.current = {
@@ -42,10 +43,9 @@ $(document).ready(function(){
                         self.get.result();
                     },
                     question: function(data){
-                        console.log(data);
                         self.current.question(data);
                         commonHelper.modal.open('#question-details-modal');
-                    },
+                    }
                 }
             };
 
@@ -99,6 +99,7 @@ $(document).ready(function(){
             });
 
             return {
+                page: self.page,
                 current: self.current,
                 filter: self.filter,
                 actions: self.actions,
