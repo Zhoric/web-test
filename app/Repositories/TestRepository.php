@@ -68,9 +68,8 @@ class TestRepository extends BaseRepository
 
     public function getByUserAndDiscipline($userId, $disciplineId){
         $qb = $this->repo->createQueryBuilder('t');
-
         $query = $qb->join(\DisciplinePlan::class, 'dp', Join::WITH,
-            'dp.id = t.discipline AND t.discipline = :discipline AND t.isActive = true')
+            'dp.discipline = t.discipline AND t.discipline = :discipline AND t.isActive = true')
             ->setParameter('discipline', $disciplineId)
             ->join(\Group::class, 'g', Join::WITH, 'g.studyplan = dp.studyplan')
             ->join(\StudentGroup::class, 'sg', Join::WITH, 'sg.group = g.id AND sg.student = :student')
