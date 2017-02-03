@@ -24,7 +24,3 @@ elixir(function(mix){
     mix.less('site.less');
     mix.less('test.less');
 });
-
-elixir(function(mix){
-    mix.coffee('institutes-coffee.coffee');
-});

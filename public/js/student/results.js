@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 10.12.16.
- */
 $(document).ready(function(){
 
     var resultsViewModel = function(){
@@ -20,11 +17,12 @@ $(document).ready(function(){
 
             self.filter = {
                 disciplines: ko.observableArray([]),
-                discipline: ko.observable()
-            };
+                discipline: ko.observable(),
+                state: ko.observable(),
 
-            self.alter = {
-
+                clear: function(){
+                    self.filter.discipline(null);
+                }
             };
 
             self.actions = {
@@ -51,50 +49,43 @@ $(document).ready(function(){
 
             self.get = {
                 disciplines: function(){
-                    $.get('/api/disciplines/testresults', function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.filter.disciplines(result.Data());
-                            // TODO:[UI] УДАЛИТЬ
-                            self.filter.discipline(result.Data()[1]);
-                            //
-                            return;
+                    $ajaxget({
+                        url: '/api/disciplines/testresults',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.filter.disciplines(data());
                         }
-                        self.errors.show(result.Message());
-                    })
+                    });
                 },
                 results: function(){
-                    var url = '/api/results/discipline/' + self.filter.discipline().id();
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            console.log(result);
-                            self.current.results(result.Data());
-                            return;
+                    $ajaxget({
+                        url: '/api/results/discipline/' + self.filter.discipline().id(),
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.results(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 result: function(){
-                    var url = '/api/results/show/' + self.current.id();
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            if (result.Data.test.type() === 2){
-                                self.current.details(result.Data);
+                    $ajaxget({
+                        url: '/api/results/show/' + self.current.id(),
+                        errors: self.errors,
+                        successCallback: function(data){
+                            if (data.test.type() === types.test.study.id){
+                                self.current.details(data);
                             }
-                            console.log(self.current.details());
-                            return;
                         }
-                        self.errors.show(result.Message());
                     });
-                },
+                }
             };
             self.get.disciplines();
 
             self.filter.discipline.subscribe(function(value){
                 if (value){
                     self.get.results();
+                }
+                else{
+                    self.current.results([]);
                 }
             });
 

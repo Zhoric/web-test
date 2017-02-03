@@ -66,24 +66,27 @@ $(document).ready(function(){
                             questionId: self.current.question().id()
                         };
 
-                        if (qType === 1){
-                            ids.push(self.current.singleAnswer());
-                            answer.answerIds = ids;
+                        switch(qType){
+                            case questionType.closedSingle:
+                                ids.push(self.current.singleAnswer());
+                                break;
+                            case questionType.closedMultiple:
+                                self.current.answers().find(function(item){
+                                    if (item.isRight() === true){
+                                        ids.push(item.id());
+                                    }
+                                });
+                                break;
+                            case questionType.openSingleLine:
+                            case questionType.openMultiLine:
+                                answer.answerText = self.current.answerText();
+                                break;
+                            case questionType.code:
+                                answer.answerText = self.code.text();
+                                break;
                         }
-                        if (qType === 2){
-                            self.current.answers().find(function(item){
-                                if (item.isRight() === true){
-                                    ids.push(item.id());
-                                }
-                            });
-                            answer.answerIds = ids;
-                        }
-                        if (qType === 3 || qType === 4){
-                            answer.answerText = self.current.answerText();
-                        }
-                        if (qType === 5){
-                            answer.answerText = self.code.text();
-                        }
+                        answer.answerIds = ids;
+
                         return JSON.stringify(answer);
                     }
                 },
@@ -98,48 +101,62 @@ $(document).ready(function(){
 
             self.get = {
                 question: function(){
-                    $get('/api/tests/nextQuestion', function(data){
-                        if (data.hasOwnProperty('question')){
+                    $ajaxget({
+                        url: '/api/tests/nextQuestion',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            if (!data.hasOwnProperty('question')) return;
+
                             self.current.question(data.question);
                             self.current.timeLeft(data.question.time());
 
                             data.question.type() === questionType.code
                                 ? self.get.code()
-                                : self.code.empty();self.code.empty();
+                                : self.code.empty();
 
                             data.answers()
                                 ? self.current.answers(data.answers())
                                 : self.current.answers([]);
                         }
-                    }, self.errors)();
+                    });
                 },
                 code: function(){
-                    var id = self.current.question().id();
-                    var url = '/api/program/byQuestion/' + id;
-
-                    $get(url, function(data){
-                        self.code.fill(data);
-                    }, self.errors)();
+                    $ajaxget({
+                        url: '/api/program/byQuestion/' + self.current.question().id(),
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.code.fill(data);
+                        }
+                    });
                 }
             };
             self.post = {
                 answers: function(){
                     var json = self.toggleCurrent.stringify.answer();
-                    console.log(json);
-                    $post('/api/tests/answer', json, self.errors, function(){
-                        self.toggleCurrent.clear();
-                        self.get.question();
-                    })();
+
+                    $ajaxpost({
+                        url: '/api/tests/answer',
+                        data: json,
+                        successCallback: function(){
+                            self.toggleCurrent.clear();
+                            self.get.question();
+                        }
+                    });
                 },
                 startTest: function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
 
-                    $post('/api/tests/start', JSON.stringify({testId: id}), self.errors, function(){
-                        var test = url.substring(url.indexOf('test/') + 5, url.lastIndexOf('/'));
-                        self.allowTimer(test === types.test.control.name);
-                        self.get.question();
-                    })();
+                    $ajaxpost({
+                        url: '/api/tests/start',
+                        data: JSON.stringify({testId: id}),
+                        errors: self.errors,
+                        successCallback: function(){
+                            var test = url.substring(url.indexOf('test/') + 5, url.lastIndexOf('/'));
+                            self.allowTimer(test === types.test.control.name);
+                            self.get.question();
+                        }
+                    });
                 }
             };
 
@@ -154,11 +171,8 @@ $(document).ready(function(){
                 }, 1000);
             });
             self.current.timeLeft.subscribe(function(value){
-                if (!value){
-                    if(self.current.question()){
-                        self.actions.answer();
-                    }
-                }
+                if (value || !self.current.question()) return;
+                self.actions.answer();
             });
 
             return {

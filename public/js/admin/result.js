@@ -7,7 +7,7 @@ $(document).ready(function(){
     var themeViewModel = function(){
         return new function(){
             var self = this;
-            
+
             self.page = ko.observable(menu.admin.results);
             self.theme = ko.observable({});
 

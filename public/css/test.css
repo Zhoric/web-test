@@ -30,7 +30,7 @@
 .menu a:hover,
 .menu a.current {
   color: #5D8CAE;
-  padding-bottom: 16px;
+  padding-bottom: 15px;
   border-bottom: 3px solid #5D8CAE;
 }
 .form-heights {

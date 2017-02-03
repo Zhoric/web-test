@@ -14,7 +14,7 @@ $(document).ready(function(){
     var themeViewModel = function(){
         return new function(){
             var self = this;
-
+            self.page = ko.observable(menu.admin.disciplines);
             self.errors = errors();
             self.pagination = pagination();
 
@@ -125,23 +125,18 @@ $(document).ready(function(){
                     },
                     question: function(data, answers){
                         self.alter.empty.file();
-                        var type = self.filter.types().find(function(item){
-                            return item.id() === data.type();
-                        });
-                        var complexity = self.filter.complexityTypes().find(function(item){
-                            return item.id() === data.complexity();
-                        });
-                        var minutes = Math.floor(data.time()/60);
-                        var seconds = data.time()%60;
+                        var types = self.alter.get.types(data);
+                        var time = self.alter.get.parsedTime(data.time());
+
 
                         self.current.question()
                             .id(data.id())
                             .text(data.text())
                             .time(data.time())
-                            .complexity(complexity)
-                            .type(type)
-                            .minutes(minutes)
-                            .seconds(seconds)
+                            .complexity(types.complexity)
+                            .type(types.type)
+                            .minutes(time.minutes)
+                            .seconds(time.seconds)
                             .image(data.image())
                             .showImage(data.image());
                         self.current.answers(answers());
@@ -314,6 +309,26 @@ $(document).ready(function(){
                         }
 
                         return true;
+                    }
+                },
+                get: {
+                    types: function(data){
+                        var type = self.filter.types().find(function(item){
+                            return item.id() === data.type();
+                        });
+                        var complexity = self.filter.complexityTypes().find(function(item){
+                            return item.id() === data.complexity();
+                        });
+                        return {
+                            type: type,
+                            complexity: complexity
+                        }
+                    },
+                    parsedTime: function(time){
+                        return {
+                            minutes: Math.floor(time/60),
+                            seconds: time%60
+                        }
                     }
                 }
             };
@@ -652,6 +667,7 @@ $(document).ready(function(){
 
 
             return {
+                page: self.page,
                 theme: self.theme,
                 pagination: self.pagination,
                 alter: self.alter,

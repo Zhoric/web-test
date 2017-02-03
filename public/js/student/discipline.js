@@ -35,27 +35,24 @@ $(document).ready(function(){
                     var url = window.location.href;
                     var id = +url.substr(url.lastIndexOf('/')+1);
 
-                    var requestParams = {
-                        url : '/api/disciplines/' + id,
+                    $ajaxget({
+                        url: '/api/disciplines/' + id,
+                        erros: self.errors,
                         successCallback: function(data){
                             self.current.discipline.id(data.id());
                             self.current.discipline.name(data.name());
                             self.get.tests();
                         }
-                    };
-
-                    $ajaxget(requestParams);
+                    });
                 },
                 tests: function(){
-                    var requestParams = {
+                    $ajaxget({
                         url: '/api/tests/showForStudent?discipline=' + self.current.discipline.id(),
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.tests(data());
                         }
-                    };
-
-                    $ajaxget(requestParams);
+                    });
                 }
             };
             self.get.discipline();
