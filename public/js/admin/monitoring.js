@@ -90,7 +90,7 @@ $(document).ready(function(){
                 clear: function(){
                     self.filter.profile(null);
                     self.filter.state('any');
-                    self.filter.interval(interval.fivesec);
+                    self.filter.interval(interval.thirtysec);
                 }
             };
             self.errors = errors();
@@ -208,7 +208,9 @@ $(document).ready(function(){
                 }
                 self.filter
                     .disciplines([])
-                    .groups([]);
+                    .discipline(null)
+                    .groups([])
+                    .group(null);
                 self.post.settings({'monitoring_profile': null});
             });
             self.filter.discipline.subscribe(function(value){

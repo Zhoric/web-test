@@ -938,6 +938,22 @@ table.questions td:last-child {
   width: 11%;
   text-align: right;
 }
+table.monitoring {
+  width: 100%;
+}
+table.monitoring thead tr td {
+  text-align: center;
+  padding: 7px 15px;
+  background: #BFBFBF;
+  color: #fff;
+}
+table.monitoring tr td {
+  border-bottom: 1px solid #EDEEF0;
+  padding: 3px 15px;
+}
+table.monitoring .progressBar {
+  margin: 0!important;
+}
 .action-button {
   width: 100%;
   background: #EDEEF0;
