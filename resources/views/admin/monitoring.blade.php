@@ -13,7 +13,25 @@
             <h1>Мониторинг тестирования</h1>
         </div>
         <div class="items-body">
-            <div data-bind="progressBar: { value : percentage }"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <td>ФИО студента</td>
+                        <td>Предварительная оценка</td>
+                        <td>Прогресс</td>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: current.results">
+                    <tr>
+                        <td data-bind="text: studentName"></td>
+                        <td data-bind="text: mark"></td>
+                        <td class="text-center">
+                            <div data-bind="progressBar: {value: precentage}"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {{--<div data-bind="progressBar: { value : percentage }"></div>--}}
         </div>
     </div>
 

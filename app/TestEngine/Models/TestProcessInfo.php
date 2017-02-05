@@ -29,7 +29,8 @@ class TestProcessInfo implements JsonSerializable
             'allQuestions' => $this->allQuestions,
             'answeredQuestions' => $this->answeredQuestions,
             'mark' => $this->mark,
-            'state' => $this->state
+            'state' => $this->state,
+            'precentage' => floor($this->answeredQuestions/$this->allQuestions * 100)
         );
     }
 

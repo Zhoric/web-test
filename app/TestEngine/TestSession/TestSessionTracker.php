@@ -80,6 +80,7 @@ class TestSessionTracker
         foreach ($sessionIds as $sessionId){
             // Берём $sessionId[0], т.к. на самом деле $sessionId - это массив вида [sessionId, sessionState].
             $session = $this->testSessionFactory->getBySessionId($sessionId[0]);
+
             $studentInfo = $this->userManager->getStudentInfo($session->getUserId());
             $studentGroupId = $studentInfo->getGroup()->getId();
 
@@ -87,7 +88,6 @@ class TestSessionTracker
             if ($studentGroupId != $groupId){
                 continue;
             }
-
             $studentFullName = NameHelper::concatFullName($studentInfo->getFirstName(),
                 $studentInfo->getMiddleName(), $studentInfo->getLastName());
 
