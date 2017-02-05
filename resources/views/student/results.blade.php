@@ -70,10 +70,6 @@
                     <div class="details-row result-details" data-bind="with: $root.current.details">
                         <div class="" data-bind="foreach: answers">
                             <div class="item" data-bind="click: $root.actions.show.question">
-                                <span class="float-right radio-neutral" data-bind="if: rightPercentage() === null">&nbsp;Ожидает&nbsp;проверки</span>
-                                <!-- ko if: rightPercentage() !== null -->
-                                <span class="float-right radio-important" data-bind="text: rightPercentage() + '/100'"></span>
-                                <!-- /ko -->
                                 <span data-bind="text: question.text"></span>
                             </div>
                         </div>
@@ -109,18 +105,11 @@
         <div class="details-row" data-bind="if: $root.current.question">
             <!-- ko with: $root.current.question -->
             <div class="details-column width-98p">
-                <label class="title">Оценка за вопрос</label>
-                <span class="radio-negative" data-bind="if: rightPercentage() === null">Ожидает&nbsp;проверки</span>
-                <!-- ko if: rightPercentage() !== null -->
-                <span class="radio-important" data-bind="text: rightPercentage() + '/100'"></span>
-                <!-- /ko -->
-            </div>
-            <div class="details-column width-98p">
                 <label class="title">Вопрос</label>
                 <span class="info" data-bind="text: question.text"></span>
             </div>
             <div class="details-column width-98p">
-                <label class="title">Ответ</label>
+                <label class="title">Ваш ответ</label>
                 <span class="info" data-bind="text: commonHelper.parseAnswers(answer()) "></span>
             </div>
             <!-- /ko -->
