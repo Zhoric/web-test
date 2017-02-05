@@ -147,6 +147,12 @@ var commonHelper = {
     }
 };
 
+var interval = {
+    fivesec: 5000,
+    thirtysec: 30000,
+    onemin: 60000
+};
+
 var menu = {
     admin: {
         main: 'institutes',

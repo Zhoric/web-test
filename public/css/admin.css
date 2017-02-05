@@ -629,6 +629,20 @@ button.move:hover {
   text-decoration: none;
   border-bottom: 0;
 }
+span.interval {
+  font-size: 17px;
+  line-height: 25px;
+  padding: 0 5px 0px 5px;
+  margin: 0px 5px 0px 0;
+  cursor: pointer;
+}
+span.interval:hover {
+  border-bottom: 2px solid #5D8CAE;
+}
+span.interval.current {
+  color: #5D8CAE;
+  border-bottom: 2px solid #5D8CAE;
+}
 h3 {
   color: #6C7A89;
 }

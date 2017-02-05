@@ -8,7 +8,8 @@ $(document).ready(function(){
                 settings: ko.observable(null)
             };
             self.current = {
-                results: ko.observableArray([])
+                results: ko.observableArray([]),
+                refreshTime: ko.observable(5000),
             };
             self.filter = {
                 profile: ko.observable(),
@@ -16,25 +17,12 @@ $(document).ready(function(){
                 group: ko.observable(),
                 test: ko.observable(),
                 state: ko.observable(),
-                interval: ko.observable(),
+                interval: ko.observable(interval.thirtysec),
 
                 profiles: ko.observableArray([]),
                 disciplines: ko.observableArray([]),
                 groups: ko.observableArray([]),
                 tests: ko.observableArray([]),
-                intervals: ko.observableArray([{
-                    id: ko.observable(1),
-                    name: ko.observable('5 секунд')
-                }, {
-                    id: ko.observable(2),
-                    name: ko.observable('30 секунд')
-                },{
-                    id: ko.observable(3),
-                    name: ko.observable('1 минута')
-                }, {
-                    id: ko.observable(4),
-                    name: ko.observable('5 минут')
-                }]),
 
                 set: {
                     profile: function(){
@@ -78,14 +66,10 @@ $(document).ready(function(){
                         if (!value) return;
                         self.filter.state(value());
                     },
-                    intervals: function(){
-                        var id = self.initial.settings().monitoring_interval;
-                        if (!id) return;
-                        self.filter.intervals().find(function(item){
-                            if (item.id() == id()){
-                                self.filter.interval(item);
-                            }
-                        });
+                    interval: function(){
+                        var value = self.initial.settings().monitoring_interval;
+                        if (!value) return;
+                        self.filter.interval(value());
                     }
                 },
                 get: {
@@ -106,16 +90,15 @@ $(document).ready(function(){
                 clear: function(){
                     self.filter.profile(null);
                     self.filter.state('any');
-                    self.filter.interval(null);
+                    self.filter.interval(interval.fivesec);
                 }
             };
             self.errors = errors();
 
 
             self.actions = {
-                percentage: function(data){
-                    console.log(data);
-                    return 20;
+                setInterval: function(data, e){
+                    self.filter.interval(+$(e.target).attr('secs'));
                 }
             };
 
@@ -138,7 +121,7 @@ $(document).ready(function(){
                             self.initial.settings(data);
                             self.get.profiles();
                             self.filter.set.state();
-                            self.filter.set.intervals();
+                            self.filter.set.interval();
                         },
                         errorCallback: function(){
                             self.settings(null);
@@ -257,9 +240,10 @@ $(document).ready(function(){
                 self.post.settings({'monitoring_state': self.filter.state()});
             });
             self.filter.interval.subscribe(function(value){
-                value
-                    ? self.post.settings({'monitoring_interval': self.filter.interval().id()})
-                    : self.post.settings({'monitoring_interval': null});
+                self.post.settings({'monitoring_interval': self.filter.interval()});
+                setInterval(function(){
+                    self.get.results();
+                }, value);
             });
 
 
@@ -267,7 +251,7 @@ $(document).ready(function(){
                 page: self.page,
                 current: self.current,
                 filter: self.filter,
-                showResult: self.showResult,
+                actions: self.actions,
                 errors: self.errors
             };
         };

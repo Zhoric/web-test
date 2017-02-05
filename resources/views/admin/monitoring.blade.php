@@ -31,7 +31,6 @@
                     </tr>
                 </tbody>
             </table>
-            {{--<div data-bind="progressBar: { value : percentage }"></div>--}}
         </div>
     </div>
 
@@ -75,10 +74,9 @@
         </div>
         <div class="filter-block">
             <label class="title">Интервал обновления</label>
-            <select data-bind="options: $root.filter.intervals,
-                       optionsText: 'name',
-                       value: $root.filter.interval,
-                       optionsCaption: 'Выберите интервал обновления'"></select>
+            <span class="interval" secs="5000" data-bind="click: $root.actions.setInterval, css: {'current' : filter.interval() == interval.fivesec}">5 сек.</span>
+            <span class="interval" secs="30000" data-bind="click: $root.actions.setInterval, css: {'current' : filter.interval() == interval.thirtysec}">30 сек.</span>
+            <span class="interval" secs="60000" data-bind="click: $root.actions.setInterval, css: {'current' : filter.interval() == interval.onemin}">1 мин.</span>
         </div>
         <div class="filter-block">
             <span class="clear" data-bind="click: filter.clear">Очистить</span>

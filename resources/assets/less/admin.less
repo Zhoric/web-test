@@ -134,6 +134,21 @@
   }
 }
 
+span.interval{
+  font-size: 17px;
+  line-height: 25px;
+  padding: 0 5px 0px 5px;
+  margin: 0px 5px 0px 0;
+  cursor: pointer;
+  &:hover{
+    border-bottom: 2px solid @patronus;
+  }
+  &.current{
+    color: @patronus;
+    border-bottom: 2px solid @patronus;
+  }
+}
+
 h3{
   color: @filch;
 }
