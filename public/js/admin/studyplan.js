@@ -1,10 +1,15 @@
 $(document).ready(function () {
+    ko.validation.init({
+        messagesOnModified: true,
+        insertMessages: false
+    });
     var studyplanViewModel = function () {
         return new function () {
             var self = this;
             self.page = ko.observable(menu.admin.main);
             self.errors = new errors();
             self.mode = ko.observable(state.none);
+            self.validation = {};
             self.initial = {
                 unUrlPlanId: function(){
                     var url = window.location.href;
@@ -22,7 +27,9 @@ $(document).ready(function () {
                 disciplines: ko.observableArray([]),
                 discipline: {
                     id: ko.observable(0),
-                    startSemester: ko.observable(0),
+                    startSemester: ko.observable(0).extend({
+                        required: true
+                    }),
                     semestersCount: ko.observable(0),
                     hours: ko.observable(0),
                     hasProject: ko.observable(true),
@@ -30,7 +37,9 @@ $(document).ready(function () {
                     discipline: ko.observable(''),
                     disciplineId: ko.observable(0)
                 },
-                selection: ko.observable(null)
+                selection: ko.observable(null).extend({
+                    required: true
+                })
             };
             self.filter = {
                 discipline: ko.observable('')
@@ -171,6 +180,22 @@ $(document).ready(function () {
             self.initial.unUrlPlanId();
             self.get.fullList();
 
+            self.events = {
+                focusout: function(data, e){
+                    var selector = $(e.target).attr('id');
+                    self.validation[selector]
+                        ? self.validation[selector].destroy()
+                        : self.validation[selector] = new validationTooltip({
+                            selector: '#' + selector
+                    });
+                    self.validation[selector].open();
+                },
+                focusin: function(data, e){
+                    var selector = $(e.target).attr('id');
+                    self.validation[selector] ? self.validation[selector].close() : null;
+                }
+            };
+
             self.initial.selection.subscribe(function(value){
                 if (value){
                     self.current.discipline().disciplineId(value.id());
@@ -191,7 +216,8 @@ $(document).ready(function () {
                 filter: self.filter,
                 mode: self.mode,
                 errors: self.errors,
-                actions: self.actions
+                actions: self.actions,
+                events: self.events
             }
         };
     };

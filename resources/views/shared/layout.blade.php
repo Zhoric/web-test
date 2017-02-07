@@ -15,6 +15,7 @@
     <script src="{{ URL::asset('js/helpers/ko-pager.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>
     @yield('javascript')
 </head>
 <body>

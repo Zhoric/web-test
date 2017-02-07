@@ -1,6 +1,10 @@
 @extends('shared.layout')
 @section('title', 'Учебные планы')
 @section('javascript')
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
+    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/admin/studyplan.js')}}"></script>
 @endsection
 @section('content')
@@ -81,25 +85,37 @@
     <div class="details-row" data-bind="if: $root.mode() === state.create">
         <div class="details-column width-98p">
             <label class="title">Название дисциплины</label>
-            <select data-bind="options: $root.initial.disciplines,
+            <select id="discipline_selection"
+                    data-bind="options: $root.initial.disciplines,
                        optionsText: 'name',
                        value: $root.initial.selection,
-                       optionsCaption: 'Выберите дисциплину'"></select>
+                       optionsCaption: 'Выберите дисциплину',
+                       validationElement: $root.initial.selection,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"></select>
         </div>
     </div>
 
     <div class="details-row">
         <div class="details-column width-31p">
             <label class="title">Начальный семестр</label>
-            <input type="text" data-bind="value: startSemester"/>
+            <input id="start_semester_input" type="text"
+                   data-bind="value: startSemester,
+                   validationElement: startSemester,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
         </div>
         <div class="details-column width-31p">
             <label class="title">Количество семестров</label>
-            <input type="text" data-bind="value: semestersCount"/>
+            <input id="semesters_count_input" type="text"
+                   data-bind="value: semestersCount,
+                   validationElement: semestersCount,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
         </div>
         <div class="details-column width-31p">
             <label class="title">Количество часов</label>
-            <input type="text" data-bind="value: hours"/>
+            <input id="hours_input" type="text"
+                   data-bind="value: hours,
+                   validationElement: hours,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
         </div>
     </div>
     <div class="details-row">
