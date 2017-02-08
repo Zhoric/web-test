@@ -1,8 +1,4 @@
 $(document).ready(function () {
-    ko.validation.init({
-        messagesOnModified: true,
-        insertMessages: false
-    });
     var studyplanViewModel = function () {
         return new function () {
             var self = this;
@@ -25,18 +21,6 @@ $(document).ready(function () {
                     }, 5000);
                 },
                 disciplines: ko.observableArray([]),
-                discipline: {
-                    id: ko.observable(0),
-                    startSemester: ko.observable(0).extend({
-                        required: true
-                    }),
-                    semestersCount: ko.observable(0),
-                    hours: ko.observable(0),
-                    hasProject: ko.observable(true),
-                    hasExam: ko.observable(true),
-                    discipline: ko.observable(''),
-                    disciplineId: ko.observable(0)
-                },
                 selection: ko.observable(null).extend({
                     required: true
                 })
@@ -46,11 +30,35 @@ $(document).ready(function () {
             };
             self.current = {
                 disciplines: ko.observableArray([]),
-                discipline: ko.observable(self.initial.discipline),
+                discipline: ko.observable({
+                    id: ko.observable(0),
+                    startSemester: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10,
+                        number: true
+                    }),
+                    semestersCount: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10,
+                        number: true
+                    }),
+                    hours: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10000,
+                        number: true
+                    }),
+                    hasProject: ko.observable(true),
+                    hasExam: ko.observable(true),
+                    discipline: ko.observable(''),
+                    disciplineId: ko.observable(0)
+                }),
                 planId: ko.observable()
             };
             self.alter = {
-              stringify: function(){
+                stringify: function(){
                   var discipline = ko.mapping.toJS(self.current.discipline);
                   if (self.mode() === state.create) delete discipline.id;
                   return JSON.stringify({
@@ -58,17 +66,29 @@ $(document).ready(function () {
                       studyPlanId: self.current.planId(),
                       disciplineId: self.current.discipline().disciplineId()
                   })
-              }
+              },
+                fill: function(d){
+                  self.current.discipline().id(d.id()).hours(d.hours())
+                      .startSemester(d.startSemester()).semestersCount(d.semestersCount())
+                      .hasProject(d.hasProject()).hasExam(d.hasExam())
+                      .discipline(d.discipline()).disciplineId(d.disciplineId());
+                },
+                empty: function(){
+                    self.current.discipline().id(0).hours('')
+                        .startSemester('').semestersCount('')
+                        .hasProject(true).hasExam(true)
+                        .discipline('').disciplineId(0);
+                }
             };
             self.actions = {
                 show: function(data){
                     var isCurrent = self.current.discipline().id() === data.id();
                     if (isCurrent){
-                        self.current.discipline(self.initial.discipline);
+                        self.alter.empty();
                         self.mode(state.none);
                         return;
                     }
-                    self.current.discipline.copy(data);
+                    self.alter.fill(data);
                     self.mode(state.info);
                 },
                 start: {
@@ -76,7 +96,7 @@ $(document).ready(function () {
                         self.mode() === state.create
                             ? self.mode(state.none)
                             : self.mode(state.create);
-                        self.current.discipline(self.initial.discipline);
+                        self.alter.empty();
                     },
                     update: function(){
                         self.mode(state.update);
@@ -95,9 +115,8 @@ $(document).ready(function () {
                     }
                 },
                 cancel: function(){
-                    console.log(self.mode());
                     if (self.mode() === state.create){
-                        self.current.discipline(self.initial.discipline);
+                        self.alter.empty();
                         self.mode(state.none);
                     }
                     self.mode(state.info);
@@ -154,7 +173,7 @@ $(document).ready(function () {
                         errors: self.errors,
                         successCallback: function(){
                             self.mode(state.none);
-                            self.current.discipline(self.initial.discipline);
+                            self.alter.empty();
                             self.initial.selection(null);
                             self.get.disciplines();
                         }
@@ -168,7 +187,7 @@ $(document).ready(function () {
                         data: null,
                         errors: self.errors,
                         successCallback: function(){
-                            self.current.discipline(self.initial.discipline);
+                            self.alter.empty();
                             self.mode(state.none);
                             self.get.disciplines();
                         }
