@@ -39,7 +39,7 @@
         });
         ko.validation.init({
             messagesOnModified: true,
-            insertMessages: false,
+            insertMessages:false,
             errorsAsTitle: true
         });
         ko.validation.locale('ru-RU');

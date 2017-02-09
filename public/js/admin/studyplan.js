@@ -127,6 +127,7 @@ $(document).ready(function () {
                     var saveSelector = 'update-studyplan-item';
                     self.validation[saveSelector].option('timer', 1000);
                     self.validation[saveSelector].open();
+                    self.events.showErrors();
                     return false;
                 },
                 cancel: function(){

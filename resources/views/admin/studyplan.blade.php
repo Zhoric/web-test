@@ -82,7 +82,7 @@
 <script type="text/html" id="update-discipline">
     <div class="details-row" data-bind="if: $root.mode() === state.create">
         <div class="details-column width-98p">
-            <label class="title">Название дисциплины</label>
+            <label class="title">Название дисциплины <span class="required">*</span></label>
             <select id="discipline_selection"
                     data-bind="options: $root.initial.disciplines,
                        optionsText: 'name',
@@ -95,21 +95,21 @@
 
     <div class="details-row">
         <div class="details-column width-31p">
-            <label class="title">Начальный семестр</label>
+            <label class="title">Начальный семестр <span class="required">*</span></label>
             <input id="start_semester_input" type="text"
                    data-bind="value: startSemester,
                    validationElement: startSemester,
                    event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
         </div>
         <div class="details-column width-31p">
-            <label class="title">Количество семестров</label>
+            <label class="title">Количество семестров <span class="required">*</span></label>
             <input id="semesters_count_input" type="text"
                    data-bind="value: semestersCount,
                    validationElement: semestersCount,
                    event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
         </div>
         <div class="details-column width-31p">
-            <label class="title">Количество часов</label>
+            <label class="title">Количество часов <span class="required">*</span></label>
             <input id="hours_input" type="text"
                    data-bind="value: hours,
                    validationElement: hours,
