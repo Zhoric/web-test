@@ -77,38 +77,53 @@
         <div class="details-column width-48p">
             <div class="details-row">
                 <div class="details-column width-98p zero-margin">
-                    <label class="title">Фамилия</label>
-                    <input type="text" data-bind="value: lastname"/>
+                    <label class="title">Фамилия&nbsp;<span class="required">*</span></label>
+                    <input id="iLastName" type="text" validate
+                           data-bind="value: lastname,
+                           validationElement: lastname,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p zero-margin">
-                    <label class="title">Имя</label>
-                    <input type="text" data-bind="value: firstname"/>
+                    <label class="title">Имя&nbsp;<span class="required">*</span></label>
+                    <input id="iFirstName" validate type="text"
+                           data-bind="value: firstname,
+                           validationElement: firstname,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p zero-margin">
                     <label class="title">Отчество</label>
-                    <input type="text" data-bind="value: patronymic"/>
+                    <input id="iPatronymic" validate type="text"
+                           data-bind="value: patronymic,
+                           validationElement:patronymic,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
         </div>
         <div class="details-column width-48p float-right">
             <div class="details-row">
                 <div class="details-column width-98p zero-margin">
-                    <label class="title">E-mail</label>
-                    <input type="text" data-bind="value: email"/>
+                    <label class="title">E-mail&nbsp;<span class="required">*</span></label>
+                    <input id="IEmail" validate type="text"
+                           data-bind="value: email,
+                           validationElement: email,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p zero-margin">
-                    <label class="title">Пароль</label>
+                    <label class="title">Пароль&nbsp;<span class="required" data-bind="if: $root.mode() === state.create">*</span></label>
                     <!-- ko if: $root.mode() === state.update -->
                     <span class="radio-important" data-bind="click: $root.actions.password.change">Изменить пароль</span>
                     <!-- /ko -->
                     <!-- ko if: $root.mode() === state.create -->
-                    <input type="password" data-bind="value: $root.current.password"/>
+                    <input  id="iPassword" validate type="password"
+                            data-bind="value: password,
+                            validationElement: password,
+                            event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                     <!-- /ko -->
                 </div>
             </div>
@@ -141,21 +156,32 @@
     <div class="details-row float-buttons">
         <div class="details-column width-99p">
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
-            <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
+            <button id="bUpdateLecturer" accept-validation class="approve"
+                    title="Проверьте правильность заполнения полей"
+                    data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
     </div>
 </script>
 
 <div class="g-hidden">
     <div class="box-modal" id="change-password-modal">
-        <div class="popup-delete">
-            <div>
-                <label class="title">Новый пароль</label>
-                <input type="password" data-bind="value: $root.current.password" />
+        <div class="layer width-auto zero-margin">
+            <div class="layer-head">
+                <h3>Новый пароль</h3>
             </div>
-            <div>
-                <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>
-                <button data-bind="click: $root.actions.password.cancel" class="cancel arcticmodal-close">Отмена</button>
+            <div class="layer-body">
+                <div class="details-row">
+                    <div class="details-column width-98p">
+                        <input id="iMPassword" validate type="password"
+                               data-bind="value: $root.current.password,
+                               validationElement: $root.current.password,
+                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}" />
+                    </div>
+                </div>
+                <div class="details-row float-buttons">
+                    <button data-bind="click: $root.actions.password.cancel" class="cancel arcticmodal-close">Отмена</button>
+                    <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>
+                </div>
             </div>
         </div>
     </div>
@@ -163,25 +189,38 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="change-success-modal">
-        <div class="popup-delete">
-            <div>
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
                 <h3>Пароль успешно изменён</h3>
             </div>
-            <div>
-                <button class="approve arcticmodal-close">OK</button>
+            <div class="layer-body zero-margin">
+                <div class="details-row float-buttons">
+                    <button class="approve arcticmodal-close">OK</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="remove-request-modal">
-        <div class="popup-delete">
-            <h3>Удалить выбранного преподавателя?</h3>
-            <div>
-                <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
-                <button class="cancel arcticmodal-close">Отмена</button>
+    <div class="box-modal removal-modal" id="remove-request-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранного преподавателя?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
+                </div>
             </div>
         </div>
+        {{--<div class="popup-delete">--}}
+            {{--<h3>Удалить выбранного преподавателя?</h3>--}}
+            {{--<div>--}}
+                {{--<button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>--}}
+                {{--<button class="cancel arcticmodal-close">Отмена</button>--}}
+            {{--</div>--}}
+        {{--</div>--}}
     </div>
 </div>

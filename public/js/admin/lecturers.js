@@ -6,6 +6,8 @@ $(document).ready(function(){
             self.page = ko.observable(menu.admin.lecturers);
             self.errors = errors();
             self.pagination = pagination();
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
             self.pagination.pageSize(15);
             self.mode = ko.observable(state.none);
             self.multiselect = new multiselect({
@@ -15,20 +17,42 @@ $(document).ready(function(){
             });
 
             self.initial = {
-                lecturer: {
-                    id: ko.observable(''),
-                    firstname: ko.observable(''),
-                    lastname: ko.observable(''),
-                    patronymic: ko.observable(''),
-                    email: ko.observable('')
-                },
                 disciplines: ko.observableArray([])
             };
             self.current = {
                 lecturers: ko.observableArray([]),
-                lecturer: ko.observable(self.initial.lecturer),
+                lecturer: ko.validatedObservable({
+                    id: ko.observable(''),
+                    firstname: ko.observable('').extend({
+                        required: true,
+                        pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                        maxLength: 80
+                    }),
+                    lastname: ko.observable('').extend({
+                        required: true,
+                        pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                        maxLength: 80
+                    }),
+                    patronymic: ko.observable('').extend({
+                        pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                        maxLength: 80
+                    }),
+                    email: ko.observable('').extend({required: true, email: true}),
+                    password: ko.observable().extend({
+                        required: true,
+                        minLength: 6,
+                        maxLength: 8
+                    })
+                }),
                 disciplines: ko.observableArray([]),
-                password: ko.observable(null)
+                password: ko.validatedObservable(null).extend({
+                    required: {
+                        params: true,
+                        message: 'Вы не можете оставить это поле путым'
+                    },
+                    minLength: 6,
+                    maxLength: 16
+                })
             };
 
             self.filter = {
@@ -40,7 +64,7 @@ $(document).ready(function(){
             self.actions = {
                 show: function(data){
                     if (self.mode() === state.none || self.current.lecturer().id() !== data.lecturer.id()){
-                        self.current.lecturer.copy(data.lecturer);
+                        self.alter.fill(data.lecturer);
                         self.current.disciplines(data.disciplines());
                         self.multiselect.multipleSelect()(self.current.disciplines());
                         self.mode(state.info);
@@ -53,11 +77,13 @@ $(document).ready(function(){
                         self.mode() === state.create
                             ? self.mode(state.none)
                             : self.mode(state.create);
-                        self.current.lecturer(self.initial.lecturer);
+                        self.alter.empty();
                         self.current.disciplines([]);
+                        commonHelper.buildValidationList(self.validation);
                     },
                     update: function(){
                         self.mode(state.update);
+                        commonHelper.buildValidationList(self.validation);
                     },
                     remove: function(){
                         commonHelper.modal.open('#remove-request-modal');
@@ -65,7 +91,9 @@ $(document).ready(function(){
                 },
                 end: {
                     update: function(){
-                        self.post.lecturer();
+                        self.current.lecturer.isValid()
+                            ? self.post.lecturer()
+                            : self.validation[$('[accept-validation]').attr('id')].open();
                     },
                     remove: function(){
                         self.post.removal();
@@ -73,24 +101,26 @@ $(document).ready(function(){
                 },
                 cancel: function(){
                     self.mode(state.none);
-                    self.current.lecturer(self.initial.lecturer);
+                    self.alter.empty();
                     self.current.disciplines([]);
                     self.multiselect.empty();
                     self.current.password(null);
                 },
-
                 password: {
                     change: function(){
                         commonHelper.modal.open('#change-password-modal');
                     },
                     cancel: function(){
                         self.current.password(null);
+                        self.validation[$('.box-modal [validate]').attr('id')].close();
                         commonHelper.modal.close('#change-password-modal');
                     },
                     approve: function(){
-                        self.post.password();
+                        self.current.password.isValid()
+                            ? self.post.password()
+                            : self.validation[$('.box-modal [validate]').attr('id')].open();
                     }
-                },
+                }
             };
 
             self.alter = {
@@ -98,7 +128,9 @@ $(document).ready(function(){
                     lecturer: function(){
                         var lecturer = ko.mapping.toJS(self.current.lecturer);
                         var disciplines = [];
+
                         if (self.mode() === state.create) delete lecturer.id;
+                        delete lecturer.password;
 
                         self.multiselect.tags().find(function(item){
                             disciplines.push(item.id());
@@ -115,6 +147,19 @@ $(document).ready(function(){
                             password: self.current.password()
                         });
                     }
+                },
+                fill: function(data){
+                    self.current.lecturer()
+                        .id(data.id()).email(data.email())
+                        .firstname(data.firstname())
+                        .lastname(data.lastname())
+                        .patronymic(data.patronymic())
+                        .password('password');
+                },
+                empty: function(){
+                    self.current.lecturer()
+                        .id('').email('').password('')
+                        .firstname('').lastname('').patronymic('');
                 }
             };
             self.get = {
@@ -124,26 +169,24 @@ $(document).ready(function(){
                             '?page=' + self.pagination.currentPage() +
                             '&pageSize=' + self.pagination.pageSize() + name;
 
-                    var requestOptions = {
+                    $ajaxget({
                         url: url,
                         errors: self.errors,
                         successCallback: function (data) {
                             self.current.lecturers(data.data());
                             self.pagination.itemsCount(data.count());
                         }
-                    };
-                    $ajaxget(requestOptions);
+                    });
                 },
                 disciplines: function(){
-                    var requestOptions = {
+                    $ajaxget({
                         url: '/api/disciplines/',
                         errors: self.errors,
                         successCallback: function(data){
                             self.initial.disciplines(data());
                             self.multiselect.setDataSource(self.initial.disciplines());
                         }
-                    };
-                    $ajaxget(requestOptions);
+                    });
                 }
             };
             self.post = {
@@ -196,8 +239,6 @@ $(document).ready(function(){
             self.get.disciplines();
             self.get.lecturers();
 
-
-
             return {
                 page: self.page,
                 initial: self.initial,
@@ -207,6 +248,7 @@ $(document).ready(function(){
                 mode: self.mode,
                 pagination: self.pagination,
                 errors: self.errors,
+                events: self.events,
                 multiselect: self.multiselect
             };
         };

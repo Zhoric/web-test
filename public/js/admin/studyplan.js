@@ -3,12 +3,7 @@ $(document).ready(function () {
         return new function () {
             var self = this;
             self.page = ko.observable(menu.admin.main);
-            self.validation = {
-                'update-studyplan-item': new validationTooltip({
-                    selector: '#update-studyplan-item',
-                    side: 'left'
-                })
-            };
+            self.validation = {};
             self.events = new validationEvents(self.validation);
             self.errors = new errors();
             self.mode = ko.observable(state.none);
@@ -118,19 +113,13 @@ $(document).ready(function () {
                 },
                 end: {
                     update: function(){
-                        self.actions.validate()
-                            ? self.post.discipline() : null;
+                        self.current.discipline.isValid()
+                            ? self.post.discipline()
+                            : self.validation[$('[accept-validation]').attr('id')].open();
                     },
                     remove: function(){
                         self.post.removal();
                     }
-                },
-                validate: function(){
-                    if (self.current.discipline.isValid()) return true;
-                    var saveSelector = 'update-studyplan-item';
-                    self.validation[saveSelector].option('timer', 1000);
-                    self.validation[saveSelector].open();
-                    return false;
                 },
                 cancel: function(){
                     if (self.mode() === state.create){

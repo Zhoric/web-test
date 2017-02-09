@@ -134,7 +134,14 @@ var commonHelper = {
                 selector: '#' + selector
             });
         });
-        console.log(validation);
+        $('[accept-validation]').each(function(){
+            var selector = $(this).attr('id');
+            validation[selector] = new validationTooltip({
+                selector: '#' + selector,
+                side: 'left'
+            });
+            validation[selector].option('timer', 2000);
+        });
     },
     shortenText: function(text, length){
         var dots = (text.length > length) ? ' ...' : '';
@@ -142,7 +149,17 @@ var commonHelper = {
     },
     modal: {
         open: function(selector){
-            $(selector).arcticmodal();
+            $(selector).arcticmodal({
+                closeOnEsc: false,
+                closeOnOverlayClick: false,
+                overlay: {
+                    css: {
+                        backgroundColor: '#000',
+                        backgroundPosition: '50% 0',
+                        opacity: .5
+                    }
+                }
+            });
         },
         close: function(selector){
             $(selector).arcticmodal('close');
