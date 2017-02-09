@@ -127,7 +127,15 @@ var commonHelper = {
 
         return date;
     },
-
+    buildValidationList: function(validation){
+        $('[validate]').each(function(){
+            var selector = $(this).attr('id');
+            validation[selector] = new validationTooltip({
+                selector: '#' + selector
+            });
+        });
+        console.log(validation);
+    },
     shortenText: function(text, length){
         var dots = (text.length > length) ? ' ...' : '';
         return text.substr(0, length) + dots;

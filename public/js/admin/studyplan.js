@@ -9,7 +9,7 @@ $(document).ready(function () {
                     side: 'left'
                 })
             };
-            self.events = new validationEvents(self.validation),
+            self.events = new validationEvents(self.validation);
             self.errors = new errors();
             self.mode = ko.observable(state.none);
 
@@ -105,9 +105,11 @@ $(document).ready(function () {
                             ? self.mode(state.none)
                             : self.mode(state.create);
                         self.alter.empty();
+                        commonHelper.buildValidationList(self.validation);
                     },
                     update: function(){
                         self.mode(state.update);
+                        commonHelper.buildValidationList(self.validation);
                     },
                     remove: function(){
                         self.mode(state.remove);
@@ -116,7 +118,8 @@ $(document).ready(function () {
                 },
                 end: {
                     update: function(){
-                        self.actions.validate() ? self.post.discipline() : null;
+                        self.actions.validate()
+                            ? self.post.discipline() : null;
                     },
                     remove: function(){
                         self.post.removal();

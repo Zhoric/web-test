@@ -18,8 +18,8 @@ var validationTooltip = function(init){
         this.initialize();
         $(selector).tooltipster('content') ? $(selector).tooltipster('open') : null;
     };
-    this.text = function(){
-        $(selector).tooltipster('content', init.text());
+    this.text = function(text){
+        $(selector).tooltipster('content', text);
     };
     this.option = function(option, value){
         this.initialize();
