@@ -215,12 +215,5 @@
                 </div>
             </div>
         </div>
-        {{--<div class="popup-delete">--}}
-            {{--<h3>Удалить выбранного преподавателя?</h3>--}}
-            {{--<div>--}}
-                {{--<button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>--}}
-                {{--<button class="cancel arcticmodal-close">Отмена</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
     </div>
 </div>

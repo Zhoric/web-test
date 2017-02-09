@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 11.10.16.
- */
 $(document).ready(function(){
     var groupsViewModel = function(){
         return new function(){
@@ -8,20 +5,14 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.groups);
             self.errors = new errors();
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
             self.pagination = pagination();
             self.pagination.pageSize(10);
             self.mode = ko.observable(state.none);
 
             self.initial = {
                 profileId: ko.observable(null),
-                group: {
-                    id: ko.observable(0),
-                    name: ko.observable(''),
-                    prefix: ko.observable(''),
-                    number: ko.observable(1),
-                    isFulltime: ko.observable(true),
-                    course: ko.observable(1)
-                },
                 unUrlProfileId: function(){
                     var url = window.location.href;
                     var id = +url.substring(url.lastIndexOf('/'));
@@ -34,7 +25,22 @@ $(document).ready(function(){
 
             self.current = {
                 groups: ko.observableArray([]),
-                group: ko.observable(self.initial.group),
+                group: ko.validatedObservable({
+                    id: ko.observable(''),
+                    name: ko.observable('').extend({required: true}),
+                    prefix: ko.observable('').extend({maxLength: 15}),
+                    number: ko.observable('').extend({
+                        required: true,
+                        min: 1,
+                        number: true
+                    }),
+                    isFulltime: ko.observable(true),
+                    course: ko.observable('').extend({
+                        min: 1,
+                        required: true,
+                        number: true
+                    })
+                }),
 
                 institutes: ko.observableArray([]),
                 institute: ko.observable(null),
@@ -45,7 +51,7 @@ $(document).ready(function(){
                 plans: ko.observableArray([]),
                 plan: ko.observable(null),
 
-                groupPlan: ko.observable(null),
+                groupPlan: ko.validatedObservable(null).extend({required: true}),
                 isGenerated: ko.observable(false)
             };
             self.filter = {
@@ -66,6 +72,16 @@ $(document).ready(function(){
 
                         return JSON.stringify(result);
                     }
+                },
+                fill: function(data){
+                    self.current.group().id(data.id()).isFulltime(data.isFulltime())
+                        .name(data.name()).prefix(data.prefix())
+                        .number(data.number()).course(data.course());
+                },
+                empty: function(){
+                    self.current.group().id('').isFulltime(true)
+                        .name('').prefix('')
+                        .number('').course('');
                 }
             };
             self.actions = {
@@ -74,22 +90,33 @@ $(document).ready(function(){
                         self.mode() === state.create
                             ? self.mode(state.none)
                             : self.mode(state.create);
-                        self.current.group(self.initial.group);
+                        self.alter.empty();
                         self.current.groupPlan(null);
+                        commonHelper.buildValidationList(self.validation);
                     },
                     update: function(data){
-                        self.current.group.copy(data);
+                        self.alter.fill(data);
                         self.get.plan();
                         self.mode(state.update);
+                        commonHelper.buildValidationList(self.validation);
                     },
                     remove: function(data){
-                        self.current.group.copy(data);
+                        self.alter.fill(data);
                         self.mode(state.remove);
                         commonHelper.modal.open('#remove-group-modal');
                     }
                 },
                 end: {
                     update: function(){
+                        if(!self.current.group.isValid()){
+                            self.validation[$('[accept-validation]').attr('id')].open();
+                            return;
+                        }
+                        if (!self.current.groupPlan.isValid()){
+                            self.validation[$('[special]').attr('id')].open();
+                            return;
+                        }
+
                         self.post.group();
                     },
                     remove: function(){
@@ -98,7 +125,7 @@ $(document).ready(function(){
                     }
                 },
                 cancel: function(){
-                    self.current.group(self.initial.group);
+                    self.alter.empty();
                     self.current.groupPlan(null);
                     self.mode(state.none);
                     self.current.isGenerated(false);
@@ -126,6 +153,7 @@ $(document).ready(function(){
                 },
                 selectPlan: {
                     start: function(){
+                        self.validation[$('[special]').attr('id')].close();
                         commonHelper.modal.open('#select-plan-modal');
                     },
                     cancel: function(){
@@ -272,6 +300,7 @@ $(document).ready(function(){
                 actions: self.actions,
                 filter: self.filter,
                 errors: self.errors,
+                events: self.events,
                 pagination: self.pagination,
                 mode: self.mode
             };

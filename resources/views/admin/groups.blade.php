@@ -92,23 +92,32 @@
             <div class="details-row">
                 <div class="details-column width-50p">
                     <label class="title">Префикс</label>
-                    <input type="text" data-bind="value: prefix"/>
+                    <input id="iGroupPrefix" validate type="text"
+                           data-bind="value: prefix,
+                           validationElement: prefix,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-50p">
-                    <label class="title">Курс</label>
-                    <input type="text" data-bind="value: course"/>
+                    <label class="title">Курс&nbsp;<span class="required">*</span></label>
+                    <input id="iGroupCourse" validate type="text"
+                           data-bind="value: course,
+                           validationElement: course,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-50p">
-                    <label class="title">Номер группы</label>
-                    <input type="text" data-bind="value: number"/>
+                    <label class="title">Номер группы&nbsp;<span class="required">*</span></label>
+                    <input id="iGroupNumber" type="text" validate
+                           data-bind="value: number,
+                           validationElement: number,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
         </div>
-        <div class="details-column width-48p">
+        <div class="details-column width-50p">
             <div class="details-row">
                 <div class="details-column">
                     <label class="title">Форма обучения</label>
@@ -120,19 +129,31 @@
             <div class="details-row">
                 <div class="details-column width-70p">
                     <label class="title">
-                        Полное наименование группы
+                        Полное&nbsp;наименование&nbsp;группы
                         <span class="coloredin-patronus bold" data-bind="click: $root.actions.generate">(Сгенерировать)</span>
+                        <span class="required">*</span>
                     </label>
-                    <input type="text" data-bind="value: name, enable: $root.current.isGenerated"/>
+                    <input id="iGroupNameGenerated" validate type="text"
+                           data-bind="value: name,
+                           enable: $root.current.isGenerated,
+                           validationElement: name,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p">
-                    <label class="title">Учебный план</label>
+                    <label class="title">Учебный план&nbsp;<span class="required">*</span></label>
                     <!-- ko if: $root.current.groupPlan() -->
-                    <span class="form-heights info coloredin-patronus pointer" data-bind="text: $root.current.groupPlan().name, click: $root.actions.selectPlan.start"></span>
+                    <span class="form-heights info coloredin-patronus pointer"
+                          data-bind="text: $root.current.groupPlan().name,
+                          click: $root.actions.selectPlan.start">
+                    </span>
                     <!-- /ko -->
-                    <span class="form-heights info coloredin-patronus pointer" data-bind="if: !$root.current.groupPlan(), click: $root.actions.selectPlan.start">Изменить</span>
+                    <span class="form-heights info coloredin-patronus pointer" id="sGroupStudyPlan"
+                          validate special title="Пожалуйста, выберите учебный план"
+                          data-bind="if: !$root.current.groupPlan(),
+                          click: $root.actions.selectPlan.start">Изменить
+                    </span>
                 </div>
             </div>
         </div>
@@ -140,7 +161,12 @@
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
             <button data-bind="click: $root.actions.cancel" class="cancel">Отмена</button>
-            <button data-bind="click: $root.actions.end.update" class="approve">Сохранить</button>
+            <button id="bUpdateGroup" accept-validation class="approve"
+                    title="Проверьте правильность заполнения полей"
+                    data-bind="click: $root.actions.end.update" >Сохранить</button>
         </div>
     </div>
+</script>
+<script type="text/html" id="update-group">
+
 </script>
