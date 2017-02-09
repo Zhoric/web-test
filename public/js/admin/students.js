@@ -9,33 +9,59 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.students);
             self.errors = errors();
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
             self.pagination = pagination();
-            self.pagination.pageSize(15);
+            self.pagination.pageSize(20);
             self.mode = ko.observable(state.none);
 
             self.initial = {
-                student: {
-                    id: ko.observable(''),
-                    firstname: ko.observable(''),
-                    lastname: ko.observable(''),
-                    patronymic: ko.observable(''),
-                    group: ko.observable(null),
-                    email: ko.observable(''),
-                    active: ko.observable(true)
-                },
                 groups: ko.observableArray([])
             };
             self.current = {
                 students: ko.observableArray([]),
-                student: ko.observable(self.initial.student),
-                group: ko.observable(null),
-                password: ko.observable(null)
+                student: ko.validatedObservable({
+                    id: ko.observable(''),
+                    firstname: ko.observable('').extend({
+                        required: true,
+                        pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                        maxLength: 80
+                    }),
+                    lastname: ko.observable('').extend({
+                        required: true,
+                        pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                        maxLength: 80
+                    }),
+                    patronymic: ko.observable('').extend({
+                        pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                        maxLength: 80
+                    }),
+                    group: ko.observable(null).extend({required: true}),
+                    email: ko.observable('').extend({required: true, email: true}),
+                    password: ko.observable('').extend({
+                        required: true,
+                        minLength: 6,
+                        maxLength: 16
+                    }),
+                    active: ko.observable(true)
+                }),
+                password: ko.observable(null).extend({
+                    required: true,
+                    minLength: 6,
+                    maxLength: 16
+                })
             };
 
             self.filter = {
                 name: ko.observable(''),
-                group: ko.observable(),
-                request: ko.observable(filters.active.all)
+                group: ko.observable(''),
+                request: ko.observable(filters.active.all),
+                clear: function(){
+                    self.filter
+                        .name('')
+                        .group('')
+                        .request(filters.active.all);
+                }
             };
             self.actions = {
                 show: function(data){
@@ -44,18 +70,22 @@ $(document).ready(function(){
                         return;
                     }
                     self.mode(state.none);
-                    self.current.student(self.initial.student);
+                    self.alter.empty();
                 },
                 start: {
                     create: function(){
                         self.mode() === state.create
                             ? self.mode(state.none)
                             : self.mode(state.create);
-                        self.current.student(self.initial.student);
+                        self.alter.empty();
+                        commonHelper.buildValidationList(self.validation);
                     },
                     update: function(data){
                         self.mode(state.update);
-                        self.current.student.copy(data);
+                        self.alter.fill(data);
+                        console.log(data);
+                        self.alter.set.group(data.group().id());
+                        commonHelper.buildValidationList(self.validation);
                     },
                     remove: function(){
                         commonHelper.modal.open('#remove-request-modal');
@@ -67,7 +97,9 @@ $(document).ready(function(){
                             commonHelper.modal.open('#cancel-request-modal');
                             return;
                         }
-                        self.post.student();
+                        self.current.student.isValid()
+                            ? self.post.student()
+                            : self.validation[$('[accept-validation]').attr('id')].open();
                     },
                     remove: function(){
                         self.post.request();
@@ -75,8 +107,7 @@ $(document).ready(function(){
                 },
                 cancel: function(){
                     self.mode(state.none);
-                    self.current.student(self.initial.student);
-                    self.current.group(null);
+                    self.alter.empty();
                     self.current.password(null);
                 },
 
@@ -86,10 +117,13 @@ $(document).ready(function(){
                     },
                     cancel: function(){
                         self.current.password(null);
+                        self.validation[$('.box-modal [validate]').attr('id')].close();
                         commonHelper.modal.close('#change-password-modal');
                     },
                     approve: function(){
-                        self.post.password();
+                        self.current.password.isValid()
+                            ? self.post.password()
+                            : self.validation[$('.box-modal [validate]').attr('id')].open();
                     }
                 },
                 switch: {
@@ -104,12 +138,11 @@ $(document).ready(function(){
 
             self.alter = {
                 set: {
-                    group: function(){
-                        var id = self.current.student().group.id();
+                    group: function(id){
                         var group = self.initial.groups().find(function(item){
                             return item.id() === id;
                         });
-                        self.current.group(group);
+                        self.current.student().group(group);
                     }
                 },
                 stringify: {
@@ -124,7 +157,7 @@ $(document).ready(function(){
 
                         return JSON.stringify({
                             student: student,
-                            groupId: self.current.group().id()
+                            groupId: self.current.student().group().id()
                         });
                     },
                     password: function(){
@@ -133,43 +166,65 @@ $(document).ready(function(){
                             password: self.current.password()
                         });
                     }
+                },
+                fill: function(data){
+                    self.current.student().id(data.id())
+                        .firstname(data.firstname()).lastname(data.lastname())
+                        .patronymic(data.patronymic())
+                        .email(data.email()).active(data.active())
+                        .password('password');
+                },
+                empty: function(){
+                    self.current.student().id('')
+                        .firstname('').lastname('').patronymic('')
+                        .group(null).email('').active(true).password('');
                 }
             };
             self.get = {
                 students: function(){
-                    var group = self.filter.group() ? self.filter.group().name() : '';
-
+                    var name = self.filter.name() ? '&name=' + self.filter.name() : '';
+                    var group = self.filter.group() ? '&groupName=' + self.filter.group() : '';
                     var active = self.filter.request() === filters.active.active ? true : '';
                     active = self.filter.request() === filters.active.inactive ? false : active;
+                    active = active ? '&isActive=' + active : '';
 
-                    var url = '/api/user/show?' +
-                        'name=' + self.filter.name() +
-                        '&groupName=' + group +
-                        '&isActive=' + active +
-                        '&pageSize=' + self.pagination.pageSize() +
-                        '&page=' + self.pagination.currentPage();
+                    var url = '/api/user/show' +
+                        '?page=' + self.pagination.currentPage() +
+                        '&pageSize=' + self.pagination.pageSize()
+                        + name + group + active;
 
-                    $get(url, function(data){
-                        self.current.students(data.data());
-                        self.pagination.itemsCount(data.count());
-                    }, self.errors)();
+                    $ajaxget({
+                        url: url,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.students(data.data());
+                            self.pagination.itemsCount(data.count());
+                        }
+                    });
                 },
                 student: function(id){
-                    var url = '/api/user/getStudent/' + id;
-                    $get(url, function(data){
-                        self.current.student(data);
-                        self.alter.set.group();
-                        self.mode(state.info);
-                        console.log(self.current.student());
-                    }, self.errors)();
+                    $ajaxget({
+                        url: '/api/user/getStudent/' + id,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.alter.fill(data);
+                            self.alter.set.group(data.group.id());
+                            self.mode(state.info);
+                        }
+                    });
                 },
                 groups: function(){
-                    $get('/api/groups', function(data){
-                        self.initial.groups(data());
-                    }, self.errors)();
+                    $ajaxget({
+                        url: '/api/groups',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.initial.groups(data());
+                        }
+                    });
                 }
             };
             self.get.groups();
+            self.get.students();
             self.post = {
                 request: function(){
                     var url = '/api/user/delete/' + self.current.student().id();
@@ -227,6 +282,7 @@ $(document).ready(function(){
                 filter: self.filter,
                 current: self.current,
                 actions: self.actions,
+                events: self.events,
                 mode: self.mode,
                 pagination: self.pagination,
                 errors: self.errors

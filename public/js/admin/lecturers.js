@@ -41,7 +41,7 @@ $(document).ready(function(){
                     password: ko.observable().extend({
                         required: true,
                         minLength: 6,
-                        maxLength: 8
+                        maxLength: 16
                     })
                 }),
                 disciplines: ko.observableArray([]),

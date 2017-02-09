@@ -14,12 +14,9 @@
             <!-- ko if: $root.mode() === state.create -->
             <div class="details" data-bind="template: {name: 'update-user-info', data: $root.current.student}"></div>
             <!-- /ko -->
-            <h3 class="text-center" data-bind="if: !filter.group()">Пожалуйста, выберите группу</h3>
             <div class="items-body" data-bind="if: current.students().length">
                 <!-- ko foreach: current.students -->
                 <div class="item" data-bind="click: $root.actions.show, css: {'current': id() === $root.current.student().id()}">
-                    <span class="float-right" data-bind="if: active()">Подтверждена</span>
-                    <span class="float-right" data-bind="if: !active()">Ожидает подтверждения</span>
                     <span data-bind="text: lastname() + ' ' + firstname() + ' ' + patronymic()"></span>
                 </div>
                     <!-- ko if: $root.mode() !== state.none && $root.current.student().id() === id()  -->
@@ -36,24 +33,20 @@
             </div>
             <div class="filter-block">
                 <label class="title">Название группы</label>
-                <select data-bind="options: $root.initial.groups,
-                       optionsText: 'name',
-                       value: group,
-                       optionsCaption: 'Выберите группу'"></select>
+                <input type="text" data-bind="value: group, valueUpdate: 'keyup'"/>
             </div>
             <div class="filter-block">
+                <label class="title">Статус учетной записи</label>
                 <input id="all-students" data-bind="checked: request" value="all" type="radio" group="filter" class="custom-radio"/>
-                <label for="all-students">Все</label>
-            </div>
-            <div class="filter-block">
+                <label class="block" for="all-students">Все</label>
                 <input id="active-students" data-bind="checked: request" value="active" type="radio" group="filter" class="custom-radio"/>
-                <label for="active-students">Подтвержденные</label>
+                <label class="block" for="active-students">Подтвержденные</label>
+                <input id="non-active-students" data-bind="checked: request" value="inactive" type="radio" group="filter" class="custom-radio"/>
+                <label class="block" for="non-active-students">Не подтвержденные</label>
             </div>
             <div class="filter-block">
-                <input id="non-active-students" data-bind="checked: request" value="inactive" type="radio" group="filter" class="custom-radio"/>
-                <label for="non-active-students">Не подтвержденные</label>
+                <span class="clear" data-bind="click: clear">Очистить</span>
             </div>
-            <div class="filter-block"></div>
         </div>
     </div>
     @include('admin.shared.error-modal')
@@ -92,47 +85,65 @@
         <div class="details-column width-48p">
             <div class="details-row">
                 <div class="details-column width-98p">
-                    <label class="title">Фамилия</label>
-                    <input type="text" data-bind="value: lastname"/>
+                    <label class="title">Фамилия&nbsp;<span class="required">*</span></label>
+                    <input id="iStudentLastName" validate type="text"
+                           data-bind="value: lastname,
+                           validationElement: lastname,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p">
-                    <label class="title">Имя</label>
-                    <input type="text" data-bind="value: firstname"/>
+                    <label class="title">Имя&nbsp;<span class="required">*</span></label>
+                    <input id="iStudentFirstName" validate type="text"
+                           data-bind="value: firstname,
+                           validationElement: firstname,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p">
                     <label class="title">Отчество</label>
-                    <input type="text" data-bind="value: patronymic"/>
+                    <input id="iStudentPatronymic" validate type="text"
+                           data-bind="value: patronymic,
+                           validationElement: patronymic,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
         </div>
         <div class="details-column width-48p float-right">
             <div class="details-row">
                 <div class="details-column width-98p">
-                    <label class="title">Группа</label>
-                    <select data-bind="options: $root.initial.groups,
-                       optionsText: 'name',
-                       value: $root.current.group,
-                       optionsCaption: 'Выберите группу'"></select>
+                    <label class="title">Группа&nbsp;<span class="required">*</span></label>
+                    <select id="sStudentGroupSelection" validate
+                            data-bind="options: $root.initial.groups,
+                            optionsText: 'name',
+                            value: group,
+                            optionsCaption: 'Выберите группу',
+                            validationElement: group,
+                            event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"></select>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p">
-                    <label class="title">E-mail</label>
-                    <input type="text" data-bind="value: email"/>
+                    <label class="title">E-mail&nbsp;<span class="required">*</span></label>
+                    <input id="iStudentEmail" validate type="text"
+                           data-bind="value: email, validationElement: email,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                 </div>
             </div>
             <div class="details-row">
                 <div class="details-column width-98p">
-                    <label class="title">Пароль</label>
+                    <label class="title">Пароль&nbsp;
+                        <span class="required" data-bind="if: $root.mode() === state.create">*</span>
+                    </label>
                     <!-- ko if: $root.mode() === state.update -->
                     <span class="radio-important" data-bind="click: $root.actions.password.change">Изменить пароль</span>
                     <!-- /ko -->
                     <!-- ko if: $root.mode() === state.create -->
-                    <input type="password" data-bind="value: $root.current.password"/>
+                    <input id="iStudentPassword" type="password" validate
+                           data-bind="value: password, validationElement: password,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
                     <!-- /ko -->
                 </div>
             </div>
@@ -147,21 +158,32 @@
             <span class="radio" data-bind="click: $root.actions.switch.off, css: {'radio-negative': !active()}">Отклонить</span>
             <!-- /ko -->
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
-            <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
+            <button id="bUpdateLecturer" accept-validation class="approve"
+                    title="Проверьте правильность заполнения полей"
+                    data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
     </div>
 </script>
 
 <div class="g-hidden">
     <div class="box-modal" id="change-password-modal">
-        <div class="popup-delete">
-            <div>
-                <label class="title">Новый пароль</label>
-                <input type="password" data-bind="value: $root.current.password" />
+        <div class="layer width-auto zero-margin">
+            <div class="layer-head">
+                <h3>Новый пароль</h3>
             </div>
-            <div>
-                <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>
-                <button data-bind="click: $root.actions.password.cancel" class="cancel arcticmodal-close">Отмена</button>
+            <div class="layer-body">
+                <div class="details-row">
+                    <div class="details-column width-98p">
+                        <input id="iMStudentPassword" validate type="password"
+                               data-bind="value: $root.current.password,
+                               validationElement: $root.current.password,
+                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}" />
+                    </div>
+                </div>
+                <div class="details-row float-buttons">
+                    <button data-bind="click: $root.actions.password.cancel" class="cancel arcticmodal-close">Отмена</button>
+                    <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>
+                </div>
             </div>
         </div>
     </div>
@@ -169,38 +191,46 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="change-success-modal">
-        <div class="popup-delete">
-            <div>
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
                 <h3>Пароль успешно изменён</h3>
             </div>
-            <div>
-                <button class="approve arcticmodal-close">OK</button>
+            <div class="layer-body zero-margin">
+                <div class="details-row float-buttons">
+                    <button class="approve arcticmodal-close">OK</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="remove-request-modal">
-        <div class="popup-delete">
-            <div><h3 class="text-center">Удалить выбранную заявку?</h3></div>
-            <div>
-                <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
-                <button class="cancel arcticmodal-close">Отмена</button>
+    <div class="box-modal removal-modal" id="remove-request-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранную заявку?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="cancel-request-modal">
-        <div class="popup-delete">
-            <div>
-                <h3 class="text-center">Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>
+    <div class="box-modal removal-modal" id="cancel-request-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>
             </div>
-            <div>
-                <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
-                <button class="cancel arcticmodal-close">Отмена</button>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
