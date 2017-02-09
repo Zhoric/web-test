@@ -1,22 +1,27 @@
-/**
- * Created by nyanjii on 11.10.16.
- */
 $(document).ready(function(){
     var disciplinesViewModel = function(){
         return new function(){
             var self = this;
 
             self.page = ko.observable(menu.admin.disciplines);
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
             self.errors = errors();
             self.pagination = pagination();
 
             self.disciplines = ko.observableArray([]);
 
             self.current = {
-                discipline: ko.observable({
+                discipline: ko.validatedObservable({
                     id: ko.observable(0),
-                    name: ko.observable(''),
-                    abbreviation: ko.observable(''),
+                    name: ko.observable('').extend({
+                        required: true,
+                        maxLength: 200
+                    }),
+                    abbreviation: ko.observable('').extend({
+                        required: true,
+                        maxLength: 50
+                    }),
                     description: ko.observable('')
                 }),
                 profiles: ko.observableArray([]),
@@ -66,7 +71,10 @@ $(document).ready(function(){
             };
             self.filter = {
                 discipline: ko.observable(''),
-                profile : ko.observable()
+                profile : ko.observable(),
+                clear: function(){
+                    self.filter.discipline('').profile(null);
+                }
             };
             self.toggleCurrent = {
                 fill: function(data){
@@ -117,23 +125,30 @@ $(document).ready(function(){
                 startAdd: function(){
                     self.toggleCurrent.empty();
                     self.mode() === 'add' ? self.mode('none') : self.mode('add');
+                    commonHelper.buildValidationList(self.validation);
                 },
                 startUpdate: function(){
                     self.mode('edit');
+                    commonHelper.buildValidationList(self.validation);
                 },
                 startRemove: function(){
                     self.mode('delete');
                     commonHelper.modal.open('#delete-modal');
                 },
                 update: function(){
-                    var url = self.mode() === 'add' ? '/api/disciplines/create' : '/api/disciplines/update';
-                    var json = self.toggleCurrent.stringify();
-                    self.post(url, json);
+                    if (!self.current.discipline.isValid()){
+                        self.validation[$('[accept-validation]').attr('id')].open();
+                        return;
+                    }
+                    if (!self.multiselect.tags().length){
+                        self.validation[$('[special]').attr('id')].open();
+                        return;
+                    }
+                    self.post.discipline();
                 },
                 remove: function(){
                     commonHelper.modal.close('#delete-modal');
-                    var url = '/api/disciplines/delete/' + self.current.discipline().id();
-                    self.post(url, '');
+                    self.post.discipline();
                 },
                 cancel: function(){
                     if (self.mode() === 'add'){
@@ -299,18 +314,24 @@ $(document).ready(function(){
             self.get.disciplines();
             self.get.profiles();
 
-
-            self.post = function(url, json){
-                $.post(url, json, function(response){
-                    var result = ko.mapping.fromJSON(response);
-                    if (result.Success()){
-                        self.mode('none');
-                        self.toggleCurrent.empty();
-                        self.get.disciplines();
-                        return;
-                    }
-                    self.errors.show(result.Message());
-                });
+            self.post = {
+                discipline: function(){
+                    var url = '/api/disciplines/';
+                    url = self.mode() === 'delete' ? url + 'delete/' + self.current.discipline().id() : url;
+                    url = self.mode() === 'add' ? url + 'create' : url;
+                    url = self.mode() === 'edit' ? url + 'update' : url;
+                    console.log(url);
+                    $ajaxpost({
+                        url: url,
+                        errors: self.errors,
+                        data: self.mode() === 'delete' ? null : self.toggleCurrent.stringify(),
+                        successCallback: function(){
+                            self.mode('none');
+                            self.toggleCurrent.empty();
+                            self.get.disciplines();
+                        }
+                    });
+                }
             };
 
             // SUBSCRIPTIONS
@@ -341,7 +362,8 @@ $(document).ready(function(){
                 mode: self.mode,
                 csed: self.csed,
                 filter: self.filter,
-                errors: self.errors
+                errors: self.errors,
+                events: self.events
             };
         };
     };

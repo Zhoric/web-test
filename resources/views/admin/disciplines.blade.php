@@ -150,18 +150,22 @@
     <div class="details discipline">
         <div class="details-row">
             <div class="details-column width-20p">
-                <label class="title">Аббревиатура</label>
-                <input type="text" data-bind="value: abbreviation">
+                <label class="title">Аббревиатура&nbsp;<span class="required">*</span></label>
+                <input id="iAbbreviation" validate type="text"
+                       data-bind="value: abbreviation,validationElement: abbreviation,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
             <div class="details-column width-75p">
-                <label class="title">Полное название дисциплины</label>
-                <input type="text" data-bind="value: name">
+                <label class="title">Полное название дисциплины&nbsp;<span class="required">*</span></label>
+                <input id="iFullName" validate type="text"
+                       data-bind="value: name,validationElement: name,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
         </div>
         <div class="details-row">
             <div class="details-column profile">
-                <label class="title">Профили</label>
-                <div class="multiselect-wrap">
+                <label class="title">Профили&nbsp;<span class="required">*</span></label>
+                <div id="dProfiles" validate special class="multiselect-wrap" title="Пожалуйста, укажите хотя бы один профиль">
                     <!-- ko if: $root.multiselect.tags().length -->
                     <div class="multiselect">
                         <ul data-bind="foreach: $root.multiselect.tags">
@@ -176,7 +180,10 @@
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
                 <button data-bind="click: $root.csed.cancel" class="cancel">Отмена</button>
-                <button data-bind="click: $root.csed.update" class="approve">Сохранить</button>
+                <button id="bAcceptDiscipline" title="Проверьте правильность заполнения полей"
+                        data-bind="click: $root.csed.update"
+                        accept-validation class="approve">Сохранить
+                </button>
             </div>
         </div>
     </div>
