@@ -576,6 +576,8 @@ $(document).ready(function(){
                     var template_content = $(template).text();
                     if (!template_content) return;
 
+                    
+
                     if (!$(e.target).hasClass('tooltipstered')){
                         $(e.target).tooltipster({
                             theme: 'tooltipster-light',

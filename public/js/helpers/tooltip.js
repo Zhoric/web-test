@@ -1,12 +1,14 @@
 var validationTooltip = function(init){
     var selector = init.selector;
+    var side = init.side ? init.side : 'top';
 
     this.initialize = function(){
         if (this.isInitialized()) return;
 
         $(selector).tooltipster({
             theme: 'tooltipster-light',
-            trigger: 'custom'
+            trigger: 'custom',
+            side: side
         });
     };
     this.isInitialized = function(){
@@ -19,6 +21,10 @@ var validationTooltip = function(init){
     this.text = function(){
         $(selector).tooltipster('content', init.text());
     };
+    this.option = function(option, value){
+        this.initialize();
+        $(selector).tooltipster('option', option, value);
+    };
     this.close = function(){
         this.isInitialized() ? $(selector).tooltipster('close') : null;
     };
@@ -28,3 +34,4 @@ var validationTooltip = function(init){
 
     this.initialize();
 };
+

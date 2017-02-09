@@ -133,7 +133,7 @@
     <div class="details-row float-buttons">
         <div class="details-column float-right width-100p">
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
-            <button class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
+            <button id="update-studyplan-item" title="Проверьте правильность заполнения формы" class="approve" data-bind="click: $root.actions.end.update">Сохранить</button>
         </div>
     </div>
 </script>

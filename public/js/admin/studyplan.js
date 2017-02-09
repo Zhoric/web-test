@@ -3,9 +3,17 @@ $(document).ready(function () {
         return new function () {
             var self = this;
             self.page = ko.observable(menu.admin.main);
+            self.validation = {
+                'update-studyplan-item': new validationTooltip({
+                    selector: '#update-studyplan-item',
+                    side: 'left'
+                })
+            };
+            self.events = new validationEvents(self.validation),
             self.errors = new errors();
             self.mode = ko.observable(state.none);
-            self.validation = {};
+
+
             self.initial = {
                 unUrlPlanId: function(){
                     var url = window.location.href;
@@ -30,7 +38,7 @@ $(document).ready(function () {
             };
             self.current = {
                 disciplines: ko.observableArray([]),
-                discipline: ko.observable({
+                discipline: ko.validatedObservable({
                     id: ko.observable(0),
                     startSemester: ko.observable(0).extend({
                         required: true,
@@ -108,11 +116,18 @@ $(document).ready(function () {
                 },
                 end: {
                     update: function(){
-                        self.post.discipline();
+                        self.actions.validate() ? self.post.discipline() : null;
                     },
                     remove: function(){
                         self.post.removal();
                     }
+                },
+                validate: function(){
+                    if (self.current.discipline.isValid()) return true;
+                    var saveSelector = 'update-studyplan-item';
+                    self.validation[saveSelector].option('timer', 1000);
+                    self.validation[saveSelector].open();
+                    return false;
                 },
                 cancel: function(){
                     if (self.mode() === state.create){
@@ -196,24 +211,11 @@ $(document).ready(function () {
                 }
             };
 
+
             self.initial.unUrlPlanId();
             self.get.fullList();
 
-            self.events = {
-                focusout: function(data, e){
-                    var selector = $(e.target).attr('id');
-                    self.validation[selector]
-                        ? self.validation[selector].destroy()
-                        : self.validation[selector] = new validationTooltip({
-                            selector: '#' + selector
-                    });
-                    self.validation[selector].open();
-                },
-                focusin: function(data, e){
-                    var selector = $(e.target).attr('id');
-                    self.validation[selector] ? self.validation[selector].close() : null;
-                }
-            };
+
 
             self.initial.selection.subscribe(function(value){
                 if (value){
