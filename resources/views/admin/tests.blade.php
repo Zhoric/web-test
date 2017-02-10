@@ -93,30 +93,46 @@
     <div class="details">
         <div class="details-row">
             <div class="details-column width-98p">
-                <label class="title">Название</label>
-                <input tooltip-mark="subject_tooltip" type="text" data-bind="value: subject, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                <label class="title">Название&nbsp;<span class="required">*</span></label>
+                <input type="text" id="iTestSubject" validate
+                       data-bind="value: subject,
+                       valueUpdate: 'keyup',
+                       validationElement: subject,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
-
         </div>
         <div class="details-row">
             <div class="details-column width-20p">
-                <label class="title">Дительность теста</label>
-                <input class="time" type="text" tooltip-mark="minutes_tooltip" data-bind="value: minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout} " placeholder="00">
+                <label class="title">Дительность&nbsp;теста&nbsp;<span class="required">*</span></label>
+                <input class="time" type="text" id="iTestMinutes"
+                       data-bind="value: minutes, valueUpdate: 'keyup',
+                       validationElement: minutes,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
+                       placeholder="мин." validate>
                 <span>:</span>
-                <input class="time" type="text" tooltip-mark="seconds_tooltip" data-bind="value: seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout} " placeholder="00">
+                <input class="time" type="text" id="iTestSeconds"
+                       data-bind="value: seconds,
+                       valueUpdate: 'keyup',
+                       validationElement: seconds,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
+                       placeholder="сек." validate>
             </div>
             <div class="details-column width-40p">
-                <label class="title">Тип теста</label>
+                <label class="title">Тип&nbsp;теста</label>
                 <span class="radio" data-bind="css: {'radio-important': type()}, click: $root.alter.set.type.asTrue">Контроль знаний</span>
                 <span>|</span>
                 <span class="radio" data-bind="css: {'radio-important': !type()}, click: $root.alter.set.type.asFalse">Обучающий</span>
             </div>
             <div class="details-column attempts width-19p">
-                <label class="title">Количество попыток</label>
-                <input tooltip-mark="tryouts_tooltip" class="attempts" type="text" data-bind="value: attempts, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                <label class="title">Количество&nbsp;попыток&nbsp;<span class="required">*</span></label>
+                <input class="attempts" type="text" id="iTestAttempts" validate
+                       data-bind="value: attempts,
+                       valueUpdate: 'keyup',
+                       validationElement: attempts,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
             <div class="details-column width-25p">
-                <label class="title">Принцип подбора вопросов</label>
+                <label class="title">Принцип&nbsp;подбора&nbsp;вопросов</label>
                 <span class="radio" data-bind="css: { 'radio-important': isRandom() }, click: $root.alter.set.random.asTrue">Случайный</span>
                 <span>|</span>
                 <span class="radio" data-bind="css: { 'radio-important': !isRandom() }, click: $root.alter.set.random.asFalse">Адаптивный</span>
@@ -124,8 +140,9 @@
         </div>
         <div class="details-row">
             <div class="details-column width-98p">
-                <label class="title">Темы</label>
-                <div class="multiselect-wrap">
+                <label class="title">Темы&nbsp;<span class="required">*</span></label>
+                <div class="multiselect-wrap" id="dTestThemesMulti"
+                     title="Пожалуйста, укажите хотя бы одну тему" validate special>
                     <!-- ko if: $root.multiselect.tags().length -->
                     <div class="multiselect">
                         <ul data-bind="foreach: $root.multiselect.tags">
@@ -133,7 +150,7 @@
                         </ul>
                     </div>
                     <!-- /ko -->
-                    <input placeholder="Начните вводить"
+                    <input placeholder="Начните вводить название темы"
                            data-bind="autocomplete: {
                            data: $root.multiselect.source,
                            format: $root.multiselect.text,
@@ -146,8 +163,10 @@
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
                 <input class="custom-checkbox" id="test-is-active" type="checkbox" data-bind="checked: isActive"><label for="test-is-active">Активный</label>
-                <button data-bind="click: $root.csed.test.cancel" class="cancel"><span class="fa">&#xf00d;</span>&nbsp;Отмена</button>
-                <button data-bind="click: $root.csed.test.update" class="approve save-button"><span class="fa">&#xf00c;</span>&nbsp;Сохранить</button>
+                <button data-bind="click: $root.csed.test.cancel" class="cancel">Отмена</button>
+                <button id="bUpdateLecturer" accept-validation class="approve"
+                        title="Проверьте правильность заполнения полей"
+                        data-bind="click: $root.csed.test.update">Сохранить</button>
             </div>
         </div>
 

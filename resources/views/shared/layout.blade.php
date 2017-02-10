@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="{{ URL::asset('css/admin.css')}}" />
     <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
     <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/ru-RU.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
@@ -42,7 +42,7 @@
             insertMessages:false,
             errorsAsTitle: true
         });
-        ko.validation.locale('ru-RU');
+        //ko.validation.locale('ru-RU');
     </script>
     <div class="menu">
         <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>

@@ -11,42 +11,16 @@ $(document).ready(function(){
             var self = this;
             self.page = ko.observable(menu.admin.tests);
             self.errors = errors();
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
             self.current = {
                 test: ko.validatedObservable({
                     id: ko.observable(0),
-                    subject: ko.observable().extend({
-                        required: {
-                            params: true,
-                            message: 'Вы не можете оставить это поле пустым'
-                        }
-                    }),
-                    attempts: ko.observable(3).extend({
-                        number: {
-                            params: true,
-                            message: 'Только целое десятичное число'
-                        }
-                    }),
+                    subject: ko.observable().extend({ required: true }),
+                    attempts: ko.observable(3).extend({required: true, number: true, min: 1, max: 100 }),
                     timeTotal: ko.observable(0),
-                    minutes: ko.observable().extend({
-                        required: {
-                            params: true,
-                            message: 'Поле не может быть пустым'
-                        },
-                        number: {
-                            params: true,
-                            message: 'Только целое десятичное число'
-                        }
-                    }),
-                    seconds: ko.observable().extend({
-                        required: {
-                            params: true,
-                            message: 'Поле не может быть пустым'
-                        },
-                        number: {
-                            params: true,
-                            message: 'Только целое десятичное число'
-                        }
-                    }),
+                    minutes: ko.observable().extend({ required: true, number: true, min: 1, max: 60}),
+                    seconds: ko.observable().extend({ required: true, number: true, min: 0, max: 59}),
                     type: ko.observable(true),
                     isActive: ko.observable(true),
                     isRandom: ko.observable(true),
@@ -62,24 +36,6 @@ $(document).ready(function(){
                 clear: function(){
                     self.filter.name('');
                     self.filter.discipline(null);
-                }
-            };
-            self.validationTooltip = {
-                init: function(selector){
-                    $(selector).tooltipster({
-                        theme: 'tooltipster-light',
-                        trigger: 'custom',
-                        timer: 3000,
-                        position: 'left'
-                    });
-                },
-                open: function(selector, content){
-                    $(selector).tooltipster('content', content)
-                        .tooltipster('open');
-                },
-                checkIfExists: function(selector){
-                    if ($(selector).hasClass('tooltipstered')) return;
-                    self.validationTooltip.init(selector);
                 }
             };
             self.alter = {
@@ -174,24 +130,6 @@ $(document).ready(function(){
                             self.current.test().type(false);
                         }
                     }
-                },
-                check: {
-                    test: function(){
-                        var test = self.current.test;
-                        var selector = '.save-button';
-
-                        if (!test.isValid()){
-                            self.validationTooltip.open(selector, 'Поля не заполнены');
-                            return false;
-                        }
-
-                        if (!self.multiselect.tags().length){
-                            self.validationTooltip.open(selector, 'Выберите хотя бы одну тему');
-                            return false;
-                        }
-
-                        return true;
-                    }
                 }
             };
             self.pagination = pagination();
@@ -215,22 +153,29 @@ $(document).ready(function(){
                     toggleAdd: function(){
                         self.alter.empty.test();
                         self.mode() === 'add' ? self.mode('none') : self.mode('add');
-                        self.validationTooltip.checkIfExists('.save-button');
+                        commonHelper.buildValidationList(self.validation);
                     },
                     startRemove: function(data){
                         self.alter.fill.test(data);
                         self.mode('delete');
-                        self.toggleModal('#delete-modal', '');
+                        commonHelper.modal.open('#delete-modal');
                     },
                     remove: function(){
                         self.post.removedTest();
                     },
                     startEdit: function(){
                         self.mode('edit');
-                        self.validationTooltip.checkIfExists('.save-button');
+                        commonHelper.buildValidationList(self.validation);
                     },
                     update: function(){
-                        if (!self.alter.check.test()) return;
+                        if (!self.current.test.isValid()){
+                            self.validation[$('[accept-validation]').attr('id')].open();
+                            return;
+                        }
+                        if (!self.multiselect.tags().length){
+                            self.validation[$('[special]').attr('id')].open();
+                            return;
+                        }
                         self.mode() === 'add' ? self.post.test('create') : self.post.test('update');
                     },
                     cancel: function(){
@@ -240,7 +185,7 @@ $(document).ready(function(){
                             return;
                         }
                         self.mode('info');
-                    },
+                    }
                 }
             };
 
@@ -317,7 +262,7 @@ $(document).ready(function(){
                     $.post('/api/tests/delete/' + self.current.test().id(), function(response){
                         var result = ko.mapping.fromJSON(response);
                         if (result.Success()) {
-                            self.toggleModal('#delete-modal', 'close');
+                            commonHelper.modal.close('#delete-modal');
                             self.get.tests();
                             self.mode('none');
                             return;
@@ -328,31 +273,6 @@ $(document).ready(function(){
             };
 
             self.get.disciplines();
-
-            self.events = {
-                focusout: function(data, e){
-                    var template = '#' + $(e.target).attr('tooltip-mark') + ' span';
-                    var template_content = $(template).text();
-                    if (!template_content) return;
-
-                    if (!$(e.target).hasClass('tooltipstered')){
-                        $(e.target).tooltipster({
-                            theme: 'tooltipster-light',
-                            trigger: 'custom'
-                        });
-                    }
-
-                    $(e.target).tooltipster('content', template_content).tooltipster('open');
-                },
-                focusin: function(data, e){
-                    if (!$(e.target).hasClass('tooltipstered')) return;
-                    $(e.target).tooltipster('close');
-                }
-            };
-
-            self.toggleModal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
 
             //SUBSCRIPTIONS
             self.pagination.itemsCount.subscribe(function(value){
@@ -365,7 +285,6 @@ $(document).ready(function(){
             self.pagination.currentPage.subscribe(function(value){
                 self.get.tests();
             });
-
             self.filter.discipline.subscribe(function(value){
                 self.mode('none');
                 if (value){
@@ -388,7 +307,6 @@ $(document).ready(function(){
                 csed: self.csed,
                 filter: self.filter,
                 events: self.events,
-                toggleModal: self.toggleModal,
                 errors: self.errors
             };
         };
