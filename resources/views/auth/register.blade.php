@@ -12,43 +12,51 @@
             <h2>Заявка на регистрацию</h2>
         </div>
         <div>
-            <input type="text" tooltip-mark="last_tooltip" placeholder="Фамилия"
-                   data-bind="value: user().name.last,
+            <input type="text" id="iAuthLastName"  placeholder="Фамилия" validate
+                   data-bind="value: user().lastname,
                    valueUpdate:'keydown',
-                   event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                   validationElement: user().lastname,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
         </div>
         <div>
-            <input type="text" tooltip-mark="first_tooltip" placeholder="Имя"
-                   data-bind="value: user().name.first,
-                   valueUpdate:'keydown', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
-        </div>
-        <div>
-            <input type="text" tooltip-mark="patronymic_tooltip" placeholder="Отчество"
-                   data-bind="value: user().name.patronymic,
+            <input type="text" id="iAuthFirstName" placeholder="Имя" validate
+                   data-bind="value: user().firstname,
                    valueUpdate:'keydown',
-                   event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                   validationElement: user().firstname,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
         </div>
         <div>
-            <input type="text" tooltip-mark="email_tooltip" placeholder="E-mail"
+            <input type="text" id="iAuthPatronymic" placeholder="Отчество" validate
+                   data-bind="value: user().patronymic,
+                   valueUpdate:'keydown',
+                   validationElement: user().patronymic,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+        </div>
+        <div>
+            <input type="text" id="iAuthEmail" placeholder="E-mail" validate
                    data-bind="value: user().email,
                    valueUpdate:'keydown',
-                   event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                   validationElement: user().email,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
         </div>
         <div>
-            <input type="password" tooltip-mark="password_tooltip" placeholder="Пароль"
+            <input type="password" id="iAuthPassword" placeholder="Пароль" validate
                    data-bind="value: user().password,
                    valueUpdate:'keydown',
-                   event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                   validationElement: user().password,
+                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
         </div>
         <div>
-            <select  tooltip-mark="group_tooltip"
+            <select id="sAuthGroup" validate
                      data-bind="options: groups, optionsText: 'name',
                      value: user().group,
-                     optionsCaption: 'Выберите группу'">
+                     optionsCaption: 'Выберите группу',
+                     validationElement: user().group,
+                     event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </select>
         </div>
         <div>
-            <button tooltip-mark="overall_tooltip" data-bind="click: register">Отправить</button>
+            <button data-bind="click: $root.register">Отправить</button>
             <a href="/login">Войти</a>
             <div class="clear"></div>
         </div>
@@ -56,33 +64,11 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="register-info">
-        <!-- ko if: registerResult()-->
-        <h3 data-bind="text: registerResult().Data"></h3>
+        <!-- ko if: $root.registerResult.success() -->
+        <h3 data-bind="text: $root.registerResult.message "></h3>
         <button data-bind="click: acceptInformation">OK</button>
         <!-- /ko -->
     </div>
 </div>
-<div class="tooltip_templates">
-    <span id="last_tooltip">
-        <span data-bind="validationMessage: $root.user().name.last"></span>
-    </span>
-    <span id="first_tooltip">
-        <span data-bind="validationMessage: $root.user().name.first"></span>
-    </span>
-    <span id="patronymic_tooltip">
-        <span data-bind="validationMessage: $root.user().name.patronymic"></span>
-    </span>
-    <span id="email_tooltip">
-        <span data-bind="validationMessage: $root.user().email"></span>
-    </span>
-    <span id="password_tooltip">
-        <span data-bind="validationMessage: $root.user().password"></span>
-    </span>
-    <span id="group_tooltip">
-        <span>Выбор группы обязателен</span>
-    </span>
-    <span id="overall_tooltip">
-        <span>Не все поля заполнены</span>
-    </span>
-</div>
+    @include('shared.error-modal')
 @endsection

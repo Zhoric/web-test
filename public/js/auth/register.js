@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 01.10.16.
- */
 //var doubleNameRegex = '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$';
 $(document).ready(function(){
 
@@ -13,115 +10,68 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+            self.errors = errors();
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
 
             self.user = ko.validatedObservable({
-                name : {
-                    last: ko.observable().extend({
-                        required: {
-                            params: true,
-                            message: 'Поле обязательно для заполнения'
-                        },
-                        pattern: {
-                            params: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
-                            message: 'Некорректный формат фамилии. Прим. "Иванов" или "Иванов-Семёнов"'
-                        },
-                        maxLength: {
-                            params: 100,
-                            message: 'Длина поля не может быть более 100 символов.'
-                        }
-                    }),
-                    first: ko.observable().extend({
-                        required: {
-                            params: true,
-                            message: 'Поле обязательно для заполнения'
-                        },
-                        pattern: {
-                            params: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
-                            message: 'Некорректный формат имени. Прим. "Мария" "Мария-Вера"'
-                        },
-                        maxLength: {
-                            params: 100,
-                            message: 'Длина поля не может быть более 100 символов.'
-                        }
-                    }),
-                    patronymic: ko.observable().extend({
-                        pattern: {
-                            params: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
-                            message: 'Некорректный формат отчества.'
-                        },
-                        maxLength: {
-                            params: 100,
-                            message: 'Длина поля не может быть более 100 символов.'
-                        }
-                    })
-                },
+                lastname: ko.observable().extend({
+                    required: true,
+                    pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                    maxLength: 80
+                }),
+                firstname:  ko.observable().extend({
+                    required: true,
+                    pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                    maxLength: 80
+                }),
+                patronymic: ko.observable().extend({
+                    pattern: '^[А-ЯЁ][а-яё]+(\-{1}(?:[А-ЯЁ]{1}(?:[а-яё]+)))?$',
+                    maxLength: 80
+                }),
                 email: ko.observable().extend({
-                    required: {
-                        params: true,
-                        message: 'Поле обязатель для заполнения'
-                    },
-                    email: {
-                        params: true,
-                        message: 'Некорректный формат ввода email'
-                    },
-                    maxLength: {
-                        params: 100,
-                        message: 'Длина поля не может быть более 100 символов.'
-                    }
+                    required: true,
+                    email: true
                 }),
                 password: ko.observable().extend({
-                    required: {
-                        params: true,
-                        message: 'Поле обязательно для заполнения'
-                    },
-                    pattern: {
-                        params: '^[a-zA-Z0-9]{8}$',
-                        message: 'Пароль может состоять только из 8 символов букв и цифр.'
-                    }
+                    required: true,
+                    minLength: 6,
+                    maxLength: 16
                 }),
                 group: ko.observable().extend({
                     required: true
                 })
             });
-            self.valid = ko.observable(true);
             self.groups = ko.observableArray([]);
-            self.registerResult = ko.observable();
+            self.registerResult = {
+                success: ko.observable(),
+                message: ko.observable('')
+            };
 
-            self.stringify = function(){
-                var user = {
-                    lastname: self.user().name.last(),
-                    firstname: self.user().name.first(),
-                    patronymic: self.user().name.patronymic(),
-                    email: self.user().email(),
-                    password: self.user().password()
-                };
-                return JSON.stringify({
+            self.register = function(){
+                var user = ko.mapping.toJS(self.user);
+                delete user.group;
+
+                var json = JSON.stringify({
                     user: user,
                     groupId: self.user().group().id()
                 });
-            };
-            self.register = function(){
-                if (!self.check.user()) return;
-                var url = '/register';
-                var json = self.stringify();
-                $.post(url, json, function(response){
-                    var result = ko.mapping.fromJSON(response);
-                    if (result.Success()){
-                        self.registerResult(result);
-                        self.modal('#register-info', '');
-                        return;
+
+                $ajaxpost({
+                    url: '/register',
+                    data: json,
+                    errors: self.errors,
+                    successCallback: function(data){
+                        self.registerResult
+                            .success(true)
+                            .message(data());
+                        commonHelper.modal.open('#register-info');
+                    },
+                    errorCallback: function(data){
+                        self.registerResult
+                            .success(false)
+                            .message(data());
                     }
-                    self.errors.show(result.Message());
                 });
             };
 
@@ -144,97 +94,25 @@ $(document).ready(function(){
             };
             self.get = {
                 groups: function(){
-                    $.get('api/groups/', function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.groups(result.Data());
-                            return;
+                    $ajaxget({
+                        url: 'api/groups/',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.groups(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 }
             };
-            self.modal = function(selector, action){
-                $(selector).arcticmodal(action);
-            };
+
             self.acceptInformation = function(){
-                self.modal('register-info', 'close');
-                if (self.registerResult().Success()){
+                commonHelper.modal.close('register-info');
+                if (self.registerResult.success()){
                     window.location.href = '/login';
                 }
             };
 
             self.get.groups();
-
-            self.events = {
-                focusout: function(data, e){
-                    var template = '#' + $(e.target).attr('tooltip-mark') + ' span';
-
-                    var template_content = $(template).text();
-                    if (!template_content) return;
-
-                    if (!$(e.target).hasClass('tooltipstered')){
-                        $(e.target).tooltipster({
-                            theme: 'tooltipster-light',
-                            trigger: 'custom',
-                            position: 'right'
-                        });
-                    }
-
-                    $(e.target).tooltipster('content', template_content).tooltipster('open');
-                },
-                focusin: function(data, e){
-                    self.events.closeTooltip.overall();
-                    if (!$(e.target).hasClass('tooltipstered')) return;
-                    $(e.target).tooltipster('close');
-                },
-                showTooltip: {
-                    group: function(){
-                        var groupField = 'select[tooltip-mark=group_tooltip]';
-                        var message = $('#group_tooltip span').text();
-                        if (!$(groupField).hasClass('tooltipstered')){
-                            $(groupField).tooltipster({
-                                theme: 'tooltipster-light',
-                                trigger: 'custom',
-                                position: 'right'
-                            });
-                        }
-                        $(groupField).tooltipster('content', message).tooltipster('open');
-                    },
-                    overall: function(){
-                        var saveButton = 'button[tooltip-mark=overall_tooltip]';
-                        var message = $('#overall_tooltip span').text();
-                        if (!$(saveButton).hasClass('tooltipstered')){
-                            $(saveButton).tooltipster({
-                                theme: 'tooltipster-light',
-                                trigger: 'custom',
-                                position: 'left'
-                            });
-                        }
-                        $(saveButton).tooltipster('content', message).tooltipster('open');
-                    }
-                },
-                closeTooltip:{
-                    group: function(){
-                        var groupField = 'select[tooltip-mark=group_tooltip]';
-                        if (!$(groupField).hasClass('tooltipstered')) return;
-                        $(groupField).tooltipster('close');
-                    },
-                    overall: function(){
-                        var saveButton = 'button[tooltip-mark=overall_tooltip]';
-                        if (!$(saveButton).hasClass('tooltipstered')) return;
-                        $(saveButton).tooltipster('close');
-                    },
-
-                }
-            };
-
-            self.user().group.subscribe(function(value){
-                if (value){
-                    self.events.closeTooltip.group();
-                    self.events.closeTooltip.overall();
-                }
-            });
+            commonHelper.buildValidationList(self.validation);
 
             return {
                 user: self.user,
@@ -242,7 +120,8 @@ $(document).ready(function(){
                 registerResult: self.registerResult,
                 acceptInformation: self.acceptInformation,
                 groups: self.groups,
-                events: self.events
+                events: self.events,
+                errors: self.errors
             };
         };
     };

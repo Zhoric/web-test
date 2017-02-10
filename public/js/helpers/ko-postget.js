@@ -61,7 +61,7 @@ $ajaxpost = function(request){
                 request.successCallback(result.Data);
             return;
         }
-        if (typeof request.errorCallback !== 'undefined') request.errorCallback();
+        if (typeof request.errorCallback !== 'undefined') request.errorCallback(result.Data);
         request.errors.show(result.Message());
     });
 };

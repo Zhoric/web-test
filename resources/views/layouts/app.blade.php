@@ -13,6 +13,8 @@
 
     <link rel="stylesheet" href="{{ URL::asset('css/styles.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/jquery.arcticmodal.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
+    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/simple.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/auth.css')}}" />
     <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
@@ -20,9 +22,13 @@
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-events.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
+
 @yield('javascript')
 
     <!-- Scripts -->
@@ -30,6 +36,21 @@
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
+    </script>
+    <script>
+        var loading = $(".LoadingImage");
+        $(document).ajaxStart(function () {
+            loading.show();
+        });
+
+        $(document).ajaxStop(function () {
+            loading.hide();
+        });
+        ko.validation.init({
+            messagesOnModified: true,
+            insertMessages:false,
+            errorsAsTitle: true
+        });
     </script>
 </head>
 <body>
