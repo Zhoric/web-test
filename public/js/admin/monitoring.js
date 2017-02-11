@@ -16,7 +16,7 @@ $(document).ready(function(){
                 discipline: ko.observable(),
                 group: ko.observable(),
                 test: ko.observable(),
-                state: ko.observable(),
+                state: ko.observable('any'),
                 interval: ko.observable(interval.thirtysec),
 
                 profiles: ko.observableArray([]),
@@ -63,13 +63,13 @@ $(document).ready(function(){
                     },
                     state: function(){
                         var value = self.initial.settings().monitoring_state;
-                        if (!value) return;
-                        self.filter.state(value());
+                        debugger;
+                        if (value) self.filter.state(value());
                     },
                     interval: function(){
                         var value = self.initial.settings().monitoring_interval;
-                        if (!value) return;
-                        self.filter.interval(value());
+                        debugger;
+                        if (value) self.filter.interval(value());
                     }
                 },
                 get: {
