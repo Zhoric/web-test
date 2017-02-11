@@ -184,9 +184,10 @@ $(document).ready(function(){
                 students: function(){
                     var name = self.filter.name() ? '&name=' + self.filter.name() : '';
                     var group = self.filter.group() ? '&groupName=' + self.filter.group() : '';
-                    var active = self.filter.request() === filters.active.active ? true : '';
-                    active = self.filter.request() === filters.active.inactive ? false : active;
-                    active = active ? '&isActive=' + active : '';
+
+                    var active = self.filter.request() === filters.active.all ? '' : '';
+                    active = self.filter.request() === filters.active.inactive ? '&isActive=false' : active;
+                    active = self.filter.request() === filters.active.active ? '&isActive=true' : active;
 
                     var url = '/api/user/show' +
                         '?page=' + self.pagination.currentPage() +
