@@ -9,7 +9,7 @@ $(document).ready(function(){
             };
             self.current = {
                 results: ko.observableArray([]),
-                refreshTime: ko.observable(5000),
+                refreshTime: ko.observable(interval.thirtysec)
             };
             self.filter = {
                 profile: ko.observable(),
@@ -63,13 +63,12 @@ $(document).ready(function(){
                     },
                     state: function(){
                         var value = self.initial.settings().monitoring_state;
-                        debugger;
                         if (value) self.filter.state(value());
                     },
                     interval: function(){
                         var value = self.initial.settings().monitoring_interval;
-                        debugger;
-                        if (value) self.filter.interval(value());
+                        if (!value) return;
+                        if ($.isNumeric(value())) self.filter.interval(value());
                     }
                 },
                 get: {
@@ -241,13 +240,24 @@ $(document).ready(function(){
             self.filter.state.subscribe(function(){
                 self.post.settings({'monitoring_state': self.filter.state()});
             });
+
+            //TIMER
+            var timer;
             self.filter.interval.subscribe(function(value){
                 self.post.settings({'monitoring_interval': self.filter.interval()});
-                setInterval(function(){
-                    self.get.results();
-                }, value);
-            });
 
+                if (timer) clearInterval(timer);
+                if ($.isNumeric(value)) self.current.refreshTime(value);
+                timer = setInterval(function(){
+                    var time = self.current.refreshTime() - 1000;
+                    self.current.refreshTime(time);
+                }, 1000);
+            });
+            self.current.refreshTime.subscribe(function(value){
+                if (value) return;
+                self.get.results();
+                self.current.refreshTime(self.filter.interval());
+            });
 
             return {
                 page: self.page,
