@@ -116,6 +116,29 @@
   }
 }
 
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  div{
+    position: relative;
+    height: 100%;
+    background-color: @patronus;
+  }
+  .progressText{
+    color: @white;
+    position: absolute;
+    margin: 0 auto;
+    top: -3px;
+    font-size: 12px;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+  }
+}
+
 .test-block{
   display: inline-block;
   float: left;
@@ -155,9 +178,9 @@
     background: @akcio;
     width: 100%;
     height: 5px;
-    .progressbar{
-
-    }
+  }
+  .progressText{
+    display: none;
   }
 }
 

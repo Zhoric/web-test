@@ -619,6 +619,28 @@ button.move:hover {
 .item:hover span {
   color: #fff;
 }
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+.progressBar div {
+  position: relative;
+  height: 100%;
+  background-color: #5D8CAE;
+}
+.progressBar .progressText {
+  color: #fff;
+  position: absolute;
+  margin: 0 auto;
+  top: -3px;
+  font-size: 12px;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+}
 .test-block {
   display: inline-block;
   float: left;
@@ -659,6 +681,9 @@ button.move:hover {
   background: #BFBFBF;
   width: 100%;
   height: 5px;
+}
+.test-block .progressText {
+  display: none;
 }
 #question-details-modal {
   max-height: 300px;

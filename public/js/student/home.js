@@ -1,70 +1,48 @@
-/**
- * Created by nyanjii on 28.10.16.
- */
 $(document).ready(function(){
-
     var homeViewModel = function(){
         return new function(){
             var self = this;
-
             self.page = ko.observable(menu.student.main);
             self.errors = errors();
-
             self.current = {
                 user: ko.observable(),
-                disciplines: ko.observableArray([]),
-                rows: ko.observableArray([])
+                disciplines: ko.observableArray([])
             };
-
             self.filter = {
-                name: ko.observable()
+                name: ko.observable(''),
+                clear: function(){
+                    self.filter.name('');
+                }
             };
-
             self.actions = {
                 details: function(data){
                     window.location.href = '/discipline/' + data.discipline.id();
                 },
-                splitDisciplinesByRows: function(){
-                    var row = [];
-                    var rowCounter = 1;
-                    self.current.disciplines().find(function(item, i){
-                        row.push(item);
-                        if ((i+1) % 4 === 0){
-                            self.current.rows.push({
-                                rowId: ko.observable(rowCounter++),
-                                disciplines: ko.observableArray(row)
-                            });
-                            row = [];
-                        }
-                    });
-                    if (row.length){
-                        self.current.rows.push({
-                            rowId: ko.observable(rowCounter),
-                            disciplines: ko.observableArray(row)
-                        });
-                    }
-                },
                 logout: function(){
                     window.location.href = '/logout';
+                },
+                percentage: function(data){
+                    var percent = data.testsPassed() /  data.testsCount() * 100;
+                    return ko.observable(percent);
                 }
             };
-
             self.get = {
                 disciplines: function(){
-                    var url = '/api/disciplines/actual';
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.disciplines(result.Data());
-                            self.actions.splitDisciplinesByRows();
-                            return;
+                    $ajaxget({
+                        url: '/api/disciplines/actual',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.disciplines(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 }
             };
             self.get.disciplines();
 
+            self.filter.name.subscribe(function(){
+                //self.get.disciplines();
+            });
+            // TODO: подумать о реализации фильтра
             return {
                 page: self.page,
                 current: self.current,
