@@ -67,27 +67,26 @@ class UserRepository extends BaseRepository implements IUserRepository
         $qb = $this->repo->createQueryBuilder('u');
         $query = $qb;
 
-        if (isset($groupName)){
+        if (isset($groupName) && !empty($groupName)){
             $query = $query->join(StudentGroup::class, 'sg', Join::WITH, 'sg.student = u.id')
-                ->join(Group::class, 'g', Join::WITH, 'g.id = sg.group AND g.name LIKE :groupName')
-                ->setParameter('groupName', "%$groupName%");
+                ->join(Group::class, 'g', Join::WITH, "g.id = sg.group AND g.name LIKE '".$groupName."%'");
         }
 
         if (isset($name) && !empty($name)){
-            $query = $query->where("u.firstname LIKE :name")
-                ->orWhere("u.lastname LIKE :name")
-                ->orWhere("u.patronymic LIKE :name")
-                ->setParameter('name', "%$name%");
+            $query = $query->andWhere("u.firstname LIKE '%".$name."%'")
+                ->orWhere("u.lastname LIKE '%".$name."%'")
+                ->orWhere("u.patronymic LIKE '%".$name."%'");
         }
+
         if (isset($isActive) && !empty($isActive)){
-            $query = $query->where("u.active = $isActive");
+            $query = $query->andWhere("u.active = ".$isActive);
         }
 
         $countQuery = clone $query;
         $data =  $this->paginate($pageSize, $pageNum, $query, 'u.lastname');
 
         $count = $countQuery->select(
-            $qb->expr()
+            $countQuery->expr()
                 ->count('u.id'))
             ->getQuery()
             ->getSingleScalarResult();

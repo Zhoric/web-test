@@ -254,11 +254,7 @@ $(document).ready(function(){
             };
 
             self.filter.group.subscribe(function(value){
-                if (value) self.get.students();
-                else {
-                    self.current.students([]);
-                    self.pagination.itemsCount(0);
-                }
+                self.get.students();
             });
             self.filter.name.subscribe(function(){
                 self.get.students();
