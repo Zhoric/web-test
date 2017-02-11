@@ -619,6 +619,47 @@ button.move:hover {
 .item:hover span {
   color: #fff;
 }
+.test-block {
+  display: inline-block;
+  float: left;
+  width: 230px;
+  margin: 2% 2%;
+}
+.test-block .head {
+  height: 40px;
+  line-height: 40px;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: #5D8CAE;
+  cursor: pointer;
+}
+.test-block .body {
+  height: 110px;
+  background: #EDEEF0;
+}
+.test-block .body .test {
+  width: 100%;
+  height: 70px;
+  line-height: 85px;
+  color: #5D8CAE;
+  font-size: 40px;
+  text-align: center;
+}
+.test-block .body .sign {
+  width: 100%;
+  color: #6C7A89;
+  font-size: 14px;
+  text-align: center;
+  line-height: 14px;
+}
+.test-block .footer {
+  background: #BFBFBF;
+  width: 100%;
+  height: 5px;
+}
 #question-details-modal {
   max-height: 300px;
   width: 700px;

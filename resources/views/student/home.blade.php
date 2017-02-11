@@ -16,13 +16,27 @@
         <div class="items">
             <!-- ko foreach: $root.current.rows -->
             <div class="row" data-bind="foreach: disciplines">
-                <div class="discipline">
-                    <div class="discipline-head" data-bind="click: $root.actions.details">
+                {{--<div class="discipline">--}}
+                    {{--<div class="discipline-head" data-bind="click: $root.actions.details">--}}
+                        {{--<span data-bind="text: discipline.abbreviation"></span>--}}
+                    {{--</div>--}}
+                    {{--<div class="discipline-body">--}}
+                        {{--<span data-bind="text: testsPassed() + '/' + testsCount()"></span>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                <div class="test-block" data-bind="click: $root.actions.details">
+                    <div class="head">
                         <span data-bind="text: discipline.abbreviation"></span>
                     </div>
-                    <div class="discipline-body">
-                        <span data-bind="text: testsPassed() + '/' + testsCount()"></span>
+                    <div class="body">
+                        <div class="test">
+                            <span data-bind="text: testsPassed() + '/' + testsCount()"></span>
+                        </div>
+                        <div class="sign">
+                            <span>Пройдено тестов</span>
+                        </div>
                     </div>
+                    <div class="footer"></div>
                 </div>
             </div>
             <!-- /ko -->

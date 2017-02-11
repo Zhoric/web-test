@@ -116,6 +116,52 @@
   }
 }
 
+.test-block{
+  display: inline-block;
+  float: left;
+  width: 230px;
+  margin: 2% 2%;
+  .head{
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: @white;
+    background: @patronus;
+    cursor: pointer;
+  }
+  .body{
+    height: 110px;
+    background: @patronus-shade;
+    .test{
+      width: 100%;
+      height: 70px;
+      line-height: 85px;
+      color: @patronus;
+      font-size: 40px;
+      text-align: center;
+    }
+    .sign{
+      width: 100%;
+      color: @filch;
+      font-size: 14px;
+      text-align: center;
+      line-height: 14px;
+    }
+  }
+  .footer{
+    background: @akcio;
+    width: 100%;
+    height: 5px;
+    .progressbar{
+
+    }
+  }
+}
+
+
 // --------- MODALS ---------- //
 #question-details-modal{
   max-height: 300px;
