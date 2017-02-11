@@ -3,11 +3,7 @@
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
-    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
-    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/ace.js') }}"></script>
     <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
@@ -52,24 +48,42 @@
     <div class="layer theme">
         <div class="details-rows">
             <div class="details-column width-15p">
-                <label class="title">Время на ответ <span class="required">*</span></label>
-                <input class="time" tooltip-mark="minutes_tooltip" type="text" data-bind=", value: $root.current.question().minutes, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
+                <label class="title">Время&nbsp;на&nbsp;ответ&nbsp;<span class="required">*</span></label>
+                <input class="time" type="text" id="iQMinutes"
+                       data-bind="value: $root.current.question().minutes,
+                       valueUpdate: 'keyup',
+                       validationElement: $root.current.question().minutes,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
+                       placeholder="мин." validate/>
                 <span>&nbsp;:&nbsp;</span>
-                <input class="time" tooltip-mark="seconds_tooltip" type="text" data-bind="value: $root.current.question().seconds, valueUpdate: 'keyup', event: {focusin: $root.events.focusin, focusout: $root.events.focusout}" placeholder="00"/>
+                <input class="time" type="text" id="iQSeconds"
+                       data-bind="value: $root.current.question().seconds,
+                       valueUpdate: 'keyup',
+                       validationElement: $root.current.question().seconds,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
+                       placeholder="сек." validate/>
             </div>
             <div class="details-column width-39p">
-                <label class="title">Тип вопроса <span class="required">*</span></label>
-                <select data-bind="options: $root.filter.types,
-                   optionsText: 'name',
-                   value: $root.current.question().type,
-                   optionsCaption: 'Выберите тип'"></select>
+                <label class="title">Тип&nbsp;вопроса&nbsp;<span class="required">*</span></label>
+                <select id="sQType" validate
+                        data-bind="options: $root.filter.types,
+                        optionsText: 'name',
+                        value: $root.current.question().type,
+                        optionsCaption: 'Выберите тип',
+                        validationElement: $root.current.question().type,
+                        event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+                </select>
             </div>
             <div class="details-column width-39p">
-                <label class="title">Сложность вопроса <span class="required">*</span></label>
-                <select data-bind="options: $root.filter.complexityTypes,
-                   optionsText: 'name',
-                   value: $root.current.question().complexity,
-                   optionsCaption: 'Выберите сложность'"></select>
+                <label class="title">Сложность&nbsp;вопроса&nbsp;<span class="required">*</span></label>
+                <select id="sQComplexity" validate
+                        data-bind="options: $root.filter.complexityTypes,
+                        optionsText: 'name',
+                        value: $root.current.question().complexity,
+                        optionsCaption: 'Выберите сложность',
+                        validationElement: $root.current.question().complexity,
+                        event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+                </select>
             </div>
         </div>
         <div class="details-row">
@@ -85,10 +99,13 @@
                             </div>
                         </div>
                         <div class="file-input">
-                            <input type="file" data-bind="fileInput: $root.current.fileData, customFileInput: {
-                        buttonClass: 'upload-btn', fileNameClass: 'disabled',
-                        buttonText: 'Выберите файл', changeButtonText: 'Изменить',
-                        clearButtonText: 'Очистить', clearButtonClass: 'clean-btn', noFileText: 'Файл не выбран'}" accept="image/*">
+                            <input type="file"
+                                   data-bind="fileInput: $root.current.fileData,
+                                   customFileInput: {
+                                   buttonClass: 'upload-btn', fileNameClass: 'disabled',
+                                   buttonText: 'Выберите файл', changeButtonText: 'Изменить',
+                                   clearButtonText: 'Очистить', clearButtonClass: 'clean-btn',
+                                   noFileText: 'Файл не выбран'}" accept="image/*">
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -104,25 +121,33 @@
         </div>
         <div class="details-row">
             <div class="details-column width-98p">
-                <label class="title">Текст вопроса <span class="required">*</span></label>
-                <textarea tooltip-mark="question_tooltip" type="text" data-bind="value: $root.current.question().text, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}"></textarea>
+                <label class="title">Текст&nbsp;вопроса&nbsp;<span class="required">*</span></label>
+                <textarea id="taQText" validate
+                        data-bind="value: $root.current.question().text,
+                        validationElement: $root.current.question().complexity,
+                        event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+                </textarea>
             </div>
         </div>
         <!-- ko if: $root.current.question().isCode() && $root.current.question().type() -->
 
         <div class="details-row">
             <div class="details-column width-45p">
-                <label class="title">Входные параметры<span class="required"></span></label>
+                <label class="title">Входные&nbsp;параметры&nbsp;<span class="required">*</span></label>
                 <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
             </div>
             <div class="details-column width-45p float-right">
-                <label class="title">Выходные параметры<span class="required"></span></label>
-                <textarea data-bind="value: $root.code.params.output" placeholder="Выходные параметры"></textarea>
+                <label class="title">Выходной&nbsp;параметр&nbsp;<span class="required">*</span></label>
+                <textarea data-bind="value: $root.code.params.output" placeholder="Выходной параметр"></textarea>
             </div>
         </div>
         <div class="details-row float-buttons">
             <div class="details-column width-99p">
-                <button data-bind="click: $root.code.params.add" class="approve"><span class="fa">&#xf067;</span>&nbsp;Добавить набор параметров</button>
+                <button id="bQParams" validate special
+                        title="Пожалуйста, укажите хотя бы один набор параметров"
+                        data-bind="click: $root.code.params.add" class="approve">
+                    <span class="fa">&#xf067;</span>&nbsp;Добавить набор параметров
+                </button>
             </div>
         </div>
         <!-- ko if: $root.code.params.set().length -->
@@ -142,16 +167,21 @@
         </div>
         <!-- /ko -->
         <div class="details-row">
-            <div class="details-column width-100p">
-                <button data-bind="click: $root.code.open" class="action-button"><span class="fa">&#xf121;</span>&nbsp;Отладка программы</button>
+            <div class="details-column width-98p">
+                <button data-bind="click: $root.code.open" class="action-button">
+                    <span class="fa">&#xf121;</span>&nbsp;Отладка программы
+                </button>
             </div>
         </div>
         <!-- /ko -->
         <!-- ko if: !$root.current.question().isOpenMultiLine() && !$root.current.question().isCode() && $root.current.question().type() -->
         <div class="details-row variants">
             <div class="details-column width-98p">
-                <label class="title">Варианты ответов<span class="required"></span></label>
-                <input type="text" data-bind="value: $root.current.answer().text, valueUpdate: 'keyup', event: {keyup: $root.events.answers}"/>
+                <label class="title">Варианты&nbsp;ответов&nbsp;<span class="required">*</span></label>
+                <input type="text" id="iQAnswers" validate special
+                       data-bind="value: $root.current.answer().text,
+                       valueUpdate: 'keyup',
+                       event: {keyup: $root.events.answers}"/>
                 <button data-bind="click: $root.csed.answer.add" class="fa mini approve">&#xf067;</button>
             </div>
         </div>
@@ -181,7 +211,9 @@
         <div class="details-row float-buttons">
             <div class="details-column width-99p">
                 <button class="cancel" data-bind="click: $root.csed.question.cancel">Отмена</button>
-                <button class="approve approve-btn" data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
+                <button id="bUpdateQuestion" accept-validation class="approve"
+                        title="Проверьте правильность заполнения полей"
+                        data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
             </div>
         </div>
     </div>
@@ -211,7 +243,7 @@
             <!-- /ko -->
             </tbody>
         </table>
-        @include('admin.shared.pagination')
+        @include('shared.pagination')
     </div>
 
     <div class="filter theme">
@@ -236,22 +268,8 @@
     </div>
 
 </div>
-    @include('admin.shared.error-modal')
+    @include('shared.error-modal')
 @endsection
-<div class="tooltip_templates">
-    <span id="minutes_tooltip">
-        <span data-bind="validationMessage: $root.current.question().minutes"></span>
-    </span>
-    <span id="seconds_tooltip">
-        <span data-bind="validationMessage: $root.current.question().seconds"></span>
-    </span>
-    <span id="theme-name_tooltip">
-        <span data-bind="validationMessage: $root.current.theme().name"></span>
-    </span>
-    <span id="question_tooltip">
-        <span data-bind="validationMessage: $root.current.question().text"></span>
-    </span>
-</div>
 
 <div class="g-hidden">
     <div class="box-modal" id="delete-modal">
