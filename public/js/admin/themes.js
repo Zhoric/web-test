@@ -319,6 +319,7 @@ $(document).ready(function(){
                 theme: {
                     edit: function(){
                         self.mode('theme.edit');
+                        commonHelper.buildValidationList(self.validation);
                     },
                     update: function(){
                         if (!self.current.theme().name.isValid()) return;

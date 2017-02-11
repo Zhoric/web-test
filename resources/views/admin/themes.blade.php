@@ -23,7 +23,10 @@
                 <h2><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></h2>
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
-                <input type="text" tooltip-mark="theme-name_tooltip" data-bind="value: $root.current.theme().name, event: {focusin: $root.events.focusin, focusout: $root.events.focusout}">
+                <input type="text" id="iThemeName" validate
+                       data-bind="value: $root.current.theme().name,
+                       validationElement: $root.current.theme().name,
+                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                 <span>
                     <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
                     <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
