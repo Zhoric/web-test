@@ -19,14 +19,16 @@
             <div class="details-column width-25p">
                 <div class="details-row">
                     <div class="details-column width-100p">
-                        <label class="title">Дата прохождения теста</label>
+                        <label class="title">Дата&nbsp;прохождения&nbsp;теста</label>
                         <span class="info" data-bind="text: dateTime.date"></span>
                     </div>
                 </div>
                 <div class="details-row">
                     <div class="details-column width-100p">
-                        <label class="title">Номер попытки &nbsp;
-                            <span class="coloredin-patronus bold" data-bind="visible: $root.current.results().length ,click: $root.actions.results.view">(Все попытки)</span>
+                        <label class="title">Номер&nbsp;попытки&nbsp;
+                            <span class="coloredin-patronus bold"
+                                  data-bind="visible: $root.current.results().length,
+                                  click: $root.actions.results.view">(Все&nbsp;попытки)</span>
                         </label>
                         <span class="info" data-bind="text: attempt"></span>
                         <span class="info">/</span>
@@ -55,7 +57,7 @@
             <div class="details-column width-30p">
                 <div class="details-row">
                     <div class="details-column width-100p">
-                        <label class="title">ФИО студента</label>
+                        <label class="title">ФИО&nbsp;студента</label>
                         <span class="info" data-bind="text: user.lastName() + ' ' +
                                                             user.firstName() + ' ' +
                                                             user.patronymic()"></span>
@@ -75,10 +77,12 @@
     </div>
     <div class="layer">
         <div class="details" data-bind="foreach: current.answers">
-            <div class="details-row special-item" data-bind="click: $root.actions.answer.show, css: {'current': $root.current.answer().id() === id()}">
+            <div class="details-row special-item"
+                 data-bind="click: $root.actions.answer.show,
+                 css: {'current': $root.current.answer().id() === id()}">
                 <div class="details-column width-98p">
                     <!-- ko if: rightPercentage() === null -->
-                    <span title="Требуется проверка" class="tagged fa">&#xf123;</span>
+                    <span title="Требуется проверка" class="tagged fa">&#xf06a;</span>
                     <!-- /ko -->
                     <span data-bind="text: $root.actions.answer.fit.question($data)"></span>
                 </div>
@@ -95,7 +99,10 @@
                         <span class="radio-important" data-bind="text: $root.current.mark.value, click: $root.actions.mark.edit"></span>
                         <!-- /ko -->
                         <!-- ko if: $root.current.mark.isInput() -->
-                        <input class="text-center" type="text" data-bind="value: $root.current.mark.value">
+                        <input class="text-center" type="text" id="iResultMark" validate
+                               data-bind="value: $root.current.mark.value,
+                               validationElement: $root.current.mark.value,
+                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         <span class="fa radio-important" data-bind="click: $root.actions.mark.approve">&#xf00c;</span>
                         <span class="fa radio-important" data-bind="click: $root.actions.mark.cancel">&#xf00d;</span>
                         <!-- /ko -->
@@ -109,7 +116,7 @@
                         </div>
                     </div>
                     <div class="details-column">
-                        <span class="fa icon">&#xf24a;</span>
+                        <span class="fa icon">&#xf27a;</span>
                         <span class="text" class="text" data-bind="text: answer"></span>
                     </div>
                 </div>

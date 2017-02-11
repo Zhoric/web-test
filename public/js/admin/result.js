@@ -10,7 +10,8 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.results);
             self.theme = ko.observable({});
-
+            self.validation = {};
+            self.events = new validationEvents(self.validation);
             self.errors = errors();
 
             self.current = {
@@ -29,7 +30,12 @@ $(document).ready(function(){
                 }),
                 mark: {
                     isInput: ko.observable(false),
-                    value: ko.observable('Оценить')
+                    value: ko.validatedObservable('Оценить').extend({
+                        required: true,
+                        digit: true,
+                        min: 0,
+                        max: 100
+                    })
                 }
             };
             self.actions = {
@@ -38,6 +44,7 @@ $(document).ready(function(){
                         self.current.answer().id() === data.id() ?
                             self.current.answer().id(0) :
                             self.toggleCurrent.fill.answer(data);
+                        self.current.mark.isInput(false);
                     },
 
                     fit: {
@@ -54,13 +61,13 @@ $(document).ready(function(){
                         if (data.rightPercentage()){
                             self.current.mark.value(data.rightPercentage());
                         }
+                        commonHelper.buildValidationList(self.validation);
                     },
                     approve: function(data){
                         var value = self.current.mark.value;
-                        if ($.isNumeric(value()) && value() <= 100 && value() >= 0 && value() !== ''){
-                            data.rightPercentage(value());
-                            self.post.mark(data.id(), value());
-                        }
+                        if (!value.isValid()) return;
+                        data.rightPercentage(value());
+                        self.post.mark(data.id(), value());
                         self.current.mark.isInput(false);
                         value('Оценить');
                     },
@@ -137,40 +144,19 @@ $(document).ready(function(){
             };
             self.post = {
                 mark: function(id, mark){
-                    var url = '/api/results/setMark';
-                    $.post(url, JSON.stringify({answerId: id, mark: mark}), function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
+                    $ajaxpost({
+                        url: '/api/results/setMark',
+                        data: JSON.stringify({answerId: id, mark: mark}),
+                        errors: self.errors,
+                        successCallback: function(){
                             self.get.result();
-                            return;
                         }
-                        self.errors.show(result.Message());
                     });
-                },
+                }
             };
 
             self.get.result();
 
-            self.events = {
-                focusout: function(data, e){
-                    var template = '#' + $(e.target).attr('tooltip-mark') + ' span';
-                    var template_content = $(template).text();
-                    if (!template_content) return;
-
-                    if (!$(e.target).hasClass('tooltipstered')){
-                        $(e.target).tooltipster({
-                            theme: 'tooltipster-light',
-                            trigger: 'custom'
-                        });
-                    }
-
-                    $(e.target).tooltipster('content', template_content).tooltipster('open');
-                },
-                focusin: function(data, e){
-                    if (!$(e.target).hasClass('tooltipstered')) return;
-                    $(e.target).tooltipster('close');
-                }
-            };
 
             return {
                 page: self.page,
