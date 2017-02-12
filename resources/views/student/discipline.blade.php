@@ -18,14 +18,12 @@
             <div class="progress-bar">
 
             </div>
-            <div class="tests">
-                <!-- ko foreach: current.tests -->
-                <div class="test" data-bind="click: $root.actions.start">
+            <div class="items-body" data-bind="foreach: current.tests">
+                <div class="item test" data-bind="click: $root.actions.start">
                     <span data-bind="text: test.subject"></span>
                     <span class="attempts" data-bind="text: attemptsLeft() +'/' + (attemptsLeft() + attemptsMade()) + ' попыток'"></span>
                     <span class="start">Пройти тест</span>
                 </div>
-                <!-- /ko -->
             </div>
         </div>
         <div class="filter">

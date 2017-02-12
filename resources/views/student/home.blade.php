@@ -14,8 +14,7 @@
 @section('content')
     <div class="content">
         <div class="items">
-
-            <div class="row" data-bind="foreach: current.disciplines">
+            <div data-bind="foreach: current.disciplines">
                 <div class="test-block" data-bind="click: $root.actions.details">
                     <div class="head">
                         <span data-bind="text: discipline.abbreviation"></span>

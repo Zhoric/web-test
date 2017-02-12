@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 05.12.16.
- */
 $(document).ready(function(){
 
     var disciplineTestsViewModel = function(){
@@ -19,7 +16,8 @@ $(document).ready(function(){
             };
 
             self.filter = {
-
+                test: ko.observable(''),
+                clear: function(){}
             };
 
             self.actions = {
@@ -37,7 +35,7 @@ $(document).ready(function(){
 
                     $ajaxget({
                         url: '/api/disciplines/' + id,
-                        erros: self.errors,
+                        errors: self.errors,
                         successCallback: function(data){
                             self.current.discipline.id(data.id());
                             self.current.discipline.name(data.name());

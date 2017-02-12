@@ -526,41 +526,7 @@ button.move:hover {
 .details-column {
   margin: 1%;
 }
-.row {
-  width: 100%;
-  height: 150px;
-}
-.row:after {
-  clear: both;
-}
-.row .discipline {
-  width: 21%;
-  display: inline-block;
-  float: left;
-  margin: 2% 2%;
-}
-.row .discipline-head {
-  height: 40px;
-  text-align: center;
-  background: #5D8CAE;
-  color: #fff;
-  line-height: 40px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-}
-.row .discipline-body {
-  height: 110px;
-  background: #EDEEF0;
-  color: #5D8CAE;
-  line-height: 110px;
-  font-size: 40px;
-  text-align: center;
-}
-.tests {
-  margin-top: 20px;
-}
-.tests .test {
+.item {
   background: #EDEEF0;
   color: #6C7A89;
   cursor: pointer;
@@ -568,23 +534,40 @@ button.move:hover {
   margin-bottom: 1px;
   font-size: 16px;
 }
-.tests .test:hover {
-  color: #5D8CAE;
+.item:hover {
+  background: #5D8CAE;
+  color: #fff;
 }
-.tests .test:hover span.start {
-  display: inline;
+.item:hover span {
+  color: #fff;
 }
-.tests .test:hover span.attempts {
+.item.test {
+  background: #EDEEF0;
+  background-image: -webkit-linear-gradient(#5D8CAE, #5D8CAE);
+  background-image: linear-gradient(#5D8CAE, #5D8CAE);
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 0 100%;
+  -webkit-transition: background-size 0.4s, color 0s;
+  transition: background-size 0.4s, color 0s;
+}
+.item.test span.start {
   display: none;
 }
-.tests .test span.attempts,
-.tests .test span.start {
+.item.test span.attempts {
   float: right;
 }
-.tests .test span.start {
-  font-size: 20px;
-  cursor: pointer;
+.item.test:hover {
+  background-size: 100% 100%;
+}
+.item.test:hover span {
   display: none;
+}
+.item.test:hover span.start {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #fff;
 }
 .result {
   margin: 1% 0;
@@ -602,21 +585,6 @@ button.move:hover {
 }
 .result.current label,
 .result.current span {
-  color: #fff;
-}
-.item {
-  background: #EDEEF0;
-  color: #6C7A89;
-  cursor: pointer;
-  padding: 10px 20px;
-  margin-bottom: 1px;
-  font-size: 16px;
-}
-.item:hover {
-  background: #5D8CAE;
-  color: #fff;
-}
-.item:hover span {
   color: #fff;
 }
 .progressBar {
@@ -646,6 +614,7 @@ button.move:hover {
   float: left;
   width: 230px;
   margin: 2% 2%;
+  cursor: pointer;
 }
 .test-block .head {
   height: 40px;
@@ -656,7 +625,6 @@ button.move:hover {
   font-weight: bold;
   color: #fff;
   background: #5D8CAE;
-  cursor: pointer;
 }
 .test-block .body {
   height: 110px;
