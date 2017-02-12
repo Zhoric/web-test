@@ -522,53 +522,14 @@ button.move:hover {
 .text-center {
   text-align: center;
 }
-#code-editor-modal {
-  width: 800px;
-  height: 500px;
-  overflow: auto;
-}
-#code-editor-modal#editor {
-  position: relative;
-}
-#code-editor-modal .cancel,
-#code-editor-modal .save,
-#code-editor-modal #button {
-  margin: 15px 0 0;
-  color: #fff;
-  background: #264348;
-  cursor: pointer;
-  border: 0;
-  padding: 10px;
-}
-#code-editor-modal .cancel {
-  background: #bfbfbf;
-  float: right;
-}
-#code-editor-modal .cancel:hover {
-  background: #D24D57;
-}
-#code-editor-modal .save {
-  background: #2ABB9B;
-  margin-right: 5px;
-  float: right;
-}
-#code-editor-modal .ace_editor,
-#code-editor-modal .code-task {
-  display: inline-table;
-  position: relative;
-}
-#code-editor-modal .ace_editor {
-  width: 60%;
-  height: 87%;
-  border: 1px solid #e3e3e3;
-}
-#code-editor-modal .code-task {
-  width: 38%;
-  top: 10px;
-  white-space: pre-wrap;
-}
 body {
   background: #F2F1EF !important;
+}
+h1 {
+  margin-top: 15px;
+}
+label.title {
+  line-height: 12px;
 }
 .layer-head,
 .layer-body {
@@ -605,12 +566,6 @@ body {
   line-height: 12px;
   color: #6C7A89;
   text-align: right;
-}
-h1 {
-  margin-top: 15px;
-}
-label.title {
-  line-height: 12px;
 }
 .timer {
   position: relative;
@@ -651,139 +606,6 @@ label.title {
   width: auto;
   height: auto;
 }
-.content {
-  background: #fff;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  margin: 70px auto;
-  width: 80%;
-  -webkit-transition: all .2s;
-  transition: all .2s;
-}
-.question-head {
-  padding: 30px 50px 0 50px;
-}
-.question-head h3 {
-  width: 80%;
-  text-align: justify;
-  display: inline-block;
-}
-.question-head h1 {
-  float: right;
-  width: 10%;
-  margin-top: 23px;
-  color: #e74c3c;
-}
-.question-head img {
-  max-width: 250px;
-  max-height: 250px;
-  width: auto;
-  height: auto;
-  clear: both;
-  display: block;
-  margin: 0 auto;
-  padding-top: 10px;
-  cursor: pointer;
-}
-.question-answers {
-  padding: 30px 50px 50px;
-}
-.question-answers .container {
-  width: 80%;
-}
-.question-answers input[type=text],
-.question-answers textarea {
-  width: 75%;
-}
-.question-answers textarea {
-  height: 150px;
-}
-.test-results .hasMark {
-  text-align: center;
-}
-.test-results h2 {
-  text-align: center;
-  padding: 30px;
-  font-weight: bold;
-}
-.test-results .text-middle {
-  text-align: center;
-  display: block;
-}
-.test-results .date {
-  font-size: 12px;
-  display: block;
-  float: right;
-  color: #757d75;
-}
-.test-results .result-text {
-  border-bottom: 3px dashed #e3e3e3;
-  border-top: 3px dashed #e3e3e3;
-  width: 90%;
-  margin: 0 auto;
-  padding: 20px;
-}
-.test-results button {
-  width: 200px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  margin: 20px;
-  margin-left: 5%;
-}
-.test-results span {
-  font-size: 18px;
-  line-height: 25px;
-}
-#image-expander {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 50;
-  top: 0;
-  left: 0;
-  position: fixed;
-  padding: 1%;
-  display: none;
-}
-#image-expander img {
-  max-height: 90%;
-  max-width: 90%;
-  margin: 0 auto;
-  width: auto;
-  height: auto;
-  display: table;
-}
-.next-question {
-  height: 70px;
-}
-.next-question button {
-  float: right;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  margin: 10px 35px;
-}
-.next-question:after {
-  clear: both;
-}
-.answers {
-  margin-bottom: 20px;
-  margin-top: 10px;
-}
-.answers input[type=text] {
-  width: 97%;
-  height: 28px;
-  padding: 5px 15px;
-}
-.answers textarea {
-  padding: 7px 20px;
-  height: 150px;
-  width: 96%;
-  margin-left: 0px;
-  margin-right: 0px;
-}
 .action-holder {
   height: 40px;
   width: 100%;
@@ -801,16 +623,21 @@ label.title {
   background: #000;
   color: #fff;
 }
-button.write-code-btn {
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  margin: 10px 35px;
+.answers {
+  margin-bottom: 20px;
+  margin-top: 10px;
 }
-label.code-text {
-  color: #bfbfbf;
-  display: block;
-  white-space: pre-wrap;
+.answers input[type=text] {
+  width: 100%;
+  height: 40px;
+  padding: 7px 15px;
+}
+.answers textarea {
+  padding: 10px 20px;
+  height: 150px;
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 /*# sourceMappingURL=test.css.map */
