@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 28.10.16.
- */
 $(document).ready(function(){
     var editor = ace.edit("editor");
     editor.getSession().setMode("ace/mode/c_cpp");
@@ -8,7 +5,7 @@ $(document).ready(function(){
     var testingViewModel = function(){
         return new function(){
             var self = this;
-
+            self.errors = errors();
             self.code = {
                 task: ko.observable(''),
                 text: ko.observable(''),
@@ -33,6 +30,12 @@ $(document).ready(function(){
             };
             self.allowTimer = ko.observable(null);
             self.current = {
+                test: {
+                    id: ko.observable(),
+                    name: ko.observable(''),
+                    discipline: ko.observable(''),
+                    type: ko.observable()
+                },
                 question: ko.observable(null),
                 answers: ko.observableArray([]),
                 answerText: ko.observable(''),
@@ -40,7 +43,7 @@ $(document).ready(function(){
                 timeLeft : ko.observable(-1),
                 testResult: ko.observable()
             };
-            self.errors = errors();
+
             self.actions = {
                 answer: function(){
                     self.post.answers();
@@ -57,7 +60,7 @@ $(document).ready(function(){
                     },
                 }
             };
-            self.toggleCurrent = {
+            self.alter = {
                 stringify: {
                     answer: function(){
                         var qType = self.current.question().type();
@@ -100,6 +103,21 @@ $(document).ready(function(){
             };
 
             self.get = {
+                description: function(){
+                    var cookie = $.cookie();
+
+                    if (!cookie.testId){
+                        alert('хитрая жопа');
+                        return;
+                    }
+                    self.current.test
+                        .id(+cookie.testId).name(cookie.testName)
+                        .type(+cookie.testType).discipline(cookie.disciplineName);
+
+                    commonHelper.cookies.remove(cookie);
+
+                    self.post.startTest();
+                },
                 question: function(){
                     $ajaxget({
                         url: '/api/tests/nextQuestion',
@@ -132,35 +150,32 @@ $(document).ready(function(){
             };
             self.post = {
                 answers: function(){
-                    var json = self.toggleCurrent.stringify.answer();
+                    var json = self.alter.stringify.answer();
 
                     $ajaxpost({
                         url: '/api/tests/answer',
                         data: json,
+                        errors: self.errors,
                         successCallback: function(){
-                            self.toggleCurrent.clear();
+                            self.alter.clear();
                             self.get.question();
                         }
                     });
                 },
                 startTest: function(){
-                    var url = window.location.href;
-                    var id = +url.substr(url.lastIndexOf('/')+1);
-
                     $ajaxpost({
                         url: '/api/tests/start',
-                        data: JSON.stringify({testId: id}),
+                        data: JSON.stringify({testId: self.current.test.id()}),
                         errors: self.errors,
                         successCallback: function(){
-                            var test = url.substring(url.indexOf('test/') + 5, url.lastIndexOf('/'));
-                            self.allowTimer(test === types.test.control.name);
+                            self.allowTimer(self.current.test.type() === types.test.control.id);
                             self.get.question();
                         }
                     });
                 }
             };
 
-            self.post.startTest();
+            self.get.description();
 
             // TIMER
             self.allowTimer.subscribe(function(value){
@@ -176,7 +191,6 @@ $(document).ready(function(){
             });
 
             return {
-                toggleCurrent: self.toggleCurrent,
                 current: self.current,
                 actions: self.actions,
                 code: self.code,
