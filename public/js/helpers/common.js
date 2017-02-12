@@ -165,6 +165,22 @@ var commonHelper = {
             $(selector).arcticmodal('close');
         }
     },
+    cookies: {
+        create: function(cookies){
+            for (var prop in cookies){
+                if (cookies.hasOwnProperty(prop)){
+                    $.cookie(prop, cookies[prop], { path : "/" });
+                }
+            }
+        },
+        remove: function(cookies){
+            for (var prop in cookies){
+                if (cookies.hasOwnProperty(prop)){
+                    $.removeCookie(prop, { path : "/" });
+                }
+            }
+        }
+    },
     parseAnswers: function(answers){
         return answers
             .replace(/<\/answer>/g, '\n\n')
