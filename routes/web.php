@@ -25,7 +25,7 @@ Route::get('welcome',function (){
    return View('welcome');
 });
 
-Route::get('/test/{type}/{id}', function(){return View('student.test');});
+Route::get('/test', function(){return View('student.test');});
 Route::get('/home', function(){return View('student.home');})
     ->middleware('checkRole:'.UserRole::Student);
 Route::get('/results', function(){return View('student.results');})

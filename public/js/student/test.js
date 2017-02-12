@@ -41,14 +41,14 @@ $(document).ready(function(){
                 answerText: ko.observable(''),
                 singleAnswer: ko.observable(0),
                 timeLeft : ko.observable(-1),
-                testResult: ko.observable()
+                testResult: ko.observable(null)
             };
 
             self.actions = {
                 answer: function(){
                     self.post.answers();
                 },
-                goHome: function(){
+                home: function(){
                     window.location.href = '/home';
                 },
                 image: {
@@ -123,7 +123,11 @@ $(document).ready(function(){
                         url: '/api/tests/nextQuestion',
                         errors: self.errors,
                         successCallback: function(data){
-                            if (!data.hasOwnProperty('question')) return;
+                            if (!data.hasOwnProperty('question')) {
+                                self.current.testResult(data);
+                                self.allowTimer(false);
+                                return;
+                            }
 
                             self.current.question(data.question);
                             self.current.timeLeft(data.question.time());

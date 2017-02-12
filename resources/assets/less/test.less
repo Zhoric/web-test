@@ -63,6 +63,41 @@ body{
 .layer-head, .layer-body{
   margin: 15px;
 }
+.layer-body > .test-result{
+  border-top: 5px dashed @akcio;
+  border-bottom: 5px dashed @akcio;
+  margin: 15px 0 25px 0;
+  div{
+    width: 100%;
+    text-align: center;
+  }
+  .student{
+    margin-top: 20px;
+    font-size: 21px;
+    line-height: 21px;
+    font-weight: 500;
+  }
+  .mark{
+    margin: 25px 0 10px 0;
+    font-size: 40px;
+    line-height: 40px;
+    color: @patronus;
+    .no-mark{
+      color: @filch;
+      font-size: 17px;
+    }
+  }
+  .date{
+    height: 17px;
+    font-size: 12px;
+    line-height: 12px;
+    color: @filch;
+    text-align: right;
+  }
+}
+h1{
+  margin-top: 15px;
+}
 
 label.title{
   line-height: 12px;

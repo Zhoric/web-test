@@ -22,9 +22,13 @@ $(document).ready(function(){
 
             self.actions = {
                 start: function(data){
-                    window.location.href = '/test/'
-                        + types.test.name(data.test.type()) + '/'
-                        + data.test.id();
+                    commonHelper.cookies.create({
+                        testId: data.test.id(),
+                        testName: data.test.subject(),
+                        disciplineName: data.test.disciplineName(),
+                        testType: data.test.type()
+                    });
+                    window.location.href = '/test';
                 }
             };
 

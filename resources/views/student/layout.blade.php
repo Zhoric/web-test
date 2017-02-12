@@ -10,9 +10,11 @@
     @yield('style')
 
     <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery.cookie.js')}}"></script>
     <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-progressbar.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
