@@ -90,8 +90,9 @@ input[type=radio].custom-radio {
 }
 input[type=radio].custom-radio + label {
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 30px;
+  display: block;
 }
 input[type=radio].custom-radio:not(checked) {
   position: absolute;
@@ -104,7 +105,7 @@ input[type=radio].custom-radio:not(checked) + label {
 input[type=radio].custom-radio:not(checked) + label:before {
   content: '';
   position: absolute;
-  top: 0;
+  top: 5px;
   left: 0;
   width: 19px;
   height: 19px;
@@ -115,7 +116,7 @@ input[type=radio].custom-radio:not(checked) + label:before {
 input[type=radio].custom-radio:not(checked) + label:after {
   content: '';
   position: absolute;
-  top: 4px;
+  top: 9px;
   left: 4px;
   width: 13px;
   height: 13px;
@@ -135,8 +136,9 @@ input[type=checkbox].custom-checkbox {
   margin: 0 3px 0 0;
 }
 input[type=checkbox].custom-checkbox + label {
+  display: block;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 30px;
 }
 input[type=checkbox].custom-checkbox:not(checked) {
@@ -150,7 +152,7 @@ input[type=checkbox].custom-checkbox:not(checked) + label {
 input[type=checkbox].custom-checkbox:not(checked) + label:before {
   content: '';
   position: absolute;
-  top: 0;
+  top: 2px;
   left: 0;
   width: 20px;
   height: 20px;
@@ -164,7 +166,7 @@ input[type=checkbox].custom-checkbox:not(checked) + label:after {
   color: #5D8CAE;
   position: absolute;
   left: 2px;
-  top: -4px;
+  top: -2px;
   opacity: 0;
   -webkit-transition: all .2s;
   transition: all .2s;
@@ -559,6 +561,7 @@ button.move:hover {
 }
 .item.test:hover {
   background-size: 100% 100%;
+  color: #5D8CAE;
 }
 .item.test:hover span {
   display: none;
