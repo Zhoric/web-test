@@ -2,6 +2,7 @@
 
 namespace TestEngine;
 
+use Exception;
 use Helpers\NameHelper;
 use Illuminate\Redis\Database;
 use Managers\TestManager;
@@ -14,6 +15,16 @@ class TestSessionTracker
      * Префикс ключа для отслеживания сессии тестирования.
      */
     const sessionTrackingPrefix = "TS_";
+
+    /**
+     * Индекс идентификатора сессии тестирования в массиве, представляющем краткую информацию о сессии.
+     */
+    const sessionIdIndex = 0;
+
+    /**
+     * Индекс состояния сессии тестирования в массиве, представляющем краткую информацию о сессии.
+     */
+    const sessionStateIndex = 1;
 
     /**
      * @var Database
@@ -34,6 +45,7 @@ class TestSessionTracker
      * @var UserManager
      */
     protected $userManager;
+
 
     public function __construct(
         Database $redisClient,
@@ -75,11 +87,16 @@ class TestSessionTracker
      */
     public function getCurrentSessions($testId, $groupId, $requestedState = null){
         $currentSessionsInfo = [];
-        $sessionIds = $this->getCurrentSessionsIds($testId, $requestedState);
+        $currentSessionsShortInfo = $this->getCurrentSessionsShortInfo($testId, $requestedState);
 
-        foreach ($sessionIds as $sessionId){
-            // Берём $sessionId[0], т.к. на самом деле $sessionId - это массив вида [sessionId, sessionState].
-            $session = $this->testSessionFactory->getBySessionId($sessionId[0]);
+        foreach ($currentSessionsShortInfo as $sessionShortInfo){
+            try{
+                $session = $this->testSessionFactory->getBySessionId($sessionShortInfo[self::sessionIdIndex]);
+            } catch (Exception $exception){
+                // Такое может произойти, если сессия тестирования протухла, но ещё трекается.
+                // Просто игнорируем такие сессии.
+                continue;
+            }
 
             $studentInfo = $this->userManager->getStudentInfo($session->getUserId());
             $studentGroupId = $studentInfo->getGroup()->getId();
@@ -94,8 +111,14 @@ class TestSessionTracker
             $testProcessInfo = new TestProcessInfo();
             $testProcessInfo->setAllQuestions(count($session->getAllQuestionsIds()));
             $testProcessInfo->setAnsweredQuestions(count($session->getAnsweredQuestionsIds()));
+
+            // Если тест ещё в процессе, количество отвеченных вопросов по факту на 1 меньше.
+            ($sessionShortInfo[self::sessionStateIndex] == TestSessionStatus::InProgress)
+                ? $testProcessInfo->setAnsweredQuestions(count($session->getAnsweredQuestionsIds()) - 1)
+                : $testProcessInfo->setAnsweredQuestions(count($session->getAnsweredQuestionsIds()));
+
             $testProcessInfo->setStudentName($studentFullName);
-            $testProcessInfo->setState($sessionId[1]);
+            $testProcessInfo->setState($sessionShortInfo[self::sessionStateIndex]);
             $testProcessInfo->setMark(TestResultCalculator::calculateIntermediateResult($session->getTestResultId()));
 
             array_push($currentSessionsInfo, $testProcessInfo);
@@ -105,7 +128,7 @@ class TestSessionTracker
     }
 
     /**
-     * Получение списка идентификаторов текущих/недавно завершенных сессий тестирования.
+     * Получение списка идентификаторов и состояний текущих/недавно завершенных сессий тестирования.
      * Паттерн для поиска интересующих идентификаторов в хранилище Redis Cache составляется следующим образом:
      * {ПРЕФИКС}{ИДЕНТИФИКАТОР_ТЕСТА}-*
      * Так как идентификатор сессии тестирования составляется из идентфикатора теста и  идентификатора тестируемого,
@@ -119,12 +142,12 @@ class TestSessionTracker
      * TS_3_26
      * TS_3_33
      * @param $testId - Идентификатор теста.
-     * @param null $requestedState
+     * @param null $requestedState - Состояние, которое должны иметь возвращаемые сессии тестирования.
      * @return array - Возвращает массив кортежей вида [идентификатор_сессии, состояние_сессии].
      */
-    private function getCurrentSessionsIds($testId, $requestedState = null){
+    private function getCurrentSessionsShortInfo($testId, $requestedState = null){
         $sessionKeys = $this->redisClient->keys(self::sessionTrackingPrefix.$testId.'-*');
-        $sessionIds = [];
+        $sessionInfos = [];
 
         foreach ($sessionKeys as $sessionKey){
             $sessionId = $this->extractSessionId($sessionKey);
@@ -133,14 +156,14 @@ class TestSessionTracker
             if (isset($requestedState)){
 
                 if ($sessionState == $requestedState){
-                    array_push($sessionIds, $sessionId);
+                    array_push($sessionInfos, [$sessionId, $sessionState]);
                 }
             } else {
-                array_push($sessionIds, [$sessionId, $sessionState]);
+                array_push($sessionInfos, [$sessionId, $sessionState]);
             }
         }
 
-        return $sessionIds;
+        return $sessionInfos;
     }
 
     /**

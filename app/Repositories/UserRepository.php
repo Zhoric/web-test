@@ -67,8 +67,12 @@ class UserRepository extends BaseRepository implements IUserRepository
         $qb = $this->repo->createQueryBuilder('u');
         $query = $qb;
 
+        $query = $query ->join(RoleUser::class, 'ru', Join::WITH, "ru.user = u.id")
+            ->join(Role::class, 'r', Join::WITH, "ru.role = r.id AND r.slug LIKE '".UserRole::Student."'");
+
         if (isset($groupName) && !empty($groupName)){
-            $query = $query->join(StudentGroup::class, 'sg', Join::WITH, 'sg.student = u.id')
+            $query = $query
+                ->join(StudentGroup::class, 'sg', Join::WITH, 'sg.student = u.id')
                 ->join(Group::class, 'g', Join::WITH, "g.id = sg.group AND g.name LIKE '".$groupName."%'");
         }
 
