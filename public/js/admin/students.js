@@ -150,10 +150,9 @@ $(document).ready(function(){
                         var student = ko.mapping.toJS(self.current.student);
                         delete student.group;
 
-                        if (self.mode() === state.create){
-                            student.password = self.current.password();
-                            delete student.id;
-                        }
+                        self.mode() === state.create
+                            ? delete student.id
+                            : delete student.password;
 
                         return JSON.stringify({
                             student: student,
