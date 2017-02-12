@@ -58,6 +58,12 @@ class GroupManager
     public function deleteGroup($groupId){
         $group = $this->_unitOfWork->groups()->find($groupId);
         if ($group != null){
+            $studentsInGroupCount = $this->_unitOfWork->users()->getGroupStudentsCount($groupId);
+
+            if ($studentsInGroupCount > 0){
+                throw new Exception('Невозможно удалить группу, в которой есть студенты.');
+            }
+
             $this->_unitOfWork->groups()->delete($group);
             $this->_unitOfWork->commit();
         }

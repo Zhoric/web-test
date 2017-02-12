@@ -98,6 +98,22 @@ class UserRepository extends BaseRepository implements IUserRepository
         return new PaginationResult($data, $count);
     }
 
+    public function getGroupStudentsCount($groupId){
+        $qb = $this->repo->createQueryBuilder('u');
+
+        $query = $qb
+            ->join(StudentGroup::class, 'sg', Join::WITH, 'sg.student = u.id')
+            ->join(Group::class, 'g', Join::WITH, "g.id = sg.group AND g.id = $groupId");
+
+        $count = $query->select(
+            $query->expr()
+                ->count('u.id'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count;
+    }
+
     public function getLecturersByNamePaginated($pageSize, $pageNum, $name){
         $qb = $this->repo->createQueryBuilder('u');
         $query = $qb->join(RoleUser::class, 'ru', Join::WITH, 'ru.user = u.id')
