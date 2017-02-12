@@ -82,7 +82,7 @@ body{
   font-family: "Roboto Regular" !important;
 }
 
-.login{
+.login, .register{
   background: #fff;
   width: 350px;
   height: auto;
@@ -92,7 +92,7 @@ body{
 
 }
 
-input{
+input, select{
   height: 35px;
   width: 300px;
   font-size: 16px;
@@ -111,6 +111,12 @@ input{
   }
 }
 
+select{
+  height: 45px;
+  width: 330px;
+  cursor: pointer;
+}
+
 button{
   color: @white;
   background: @patronus;
@@ -126,13 +132,19 @@ button{
   }
 }
 
+.logo, .register-logo{
+  width: auto;
+  height: auto;
+  margin-top: -10px;
+}
 .logo{
   max-height: 100px;
   max-width: 100px;
-  width: auto;
-  height: auto;
   margin-bottom: 5px;
-  margin-top: -10px;
+}
+.register-logo{
+  max-height: 50px;
+  max-width: 50px;
 }
 
 .university{
@@ -142,11 +154,16 @@ button{
   margin-bottom: 25px;
 }
 
-.header{
+.header, .head{
   margin-bottom: 20px;
-  margin-top: 35px;
   color: @filch;
   font-size: 23px;
+}
+.header{
+  margin-top: 35px;
+}
+.head{
+  margin-top: 20px;
 }
 
 .not-registered{

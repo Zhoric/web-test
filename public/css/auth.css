@@ -6,7 +6,8 @@ body {
   background: #F2F1EF;
   font-family: "Roboto Regular" !important;
 }
-.login {
+.login,
+.register {
   background: #fff;
   width: 350px;
   height: auto;
@@ -14,7 +15,8 @@ body {
   padding: 40px 50px;
   text-align: center;
 }
-input {
+input,
+select {
   height: 35px;
   width: 300px;
   font-size: 16px;
@@ -27,10 +29,16 @@ input {
   -webkit-text-fill-color: #6C7A89;
   font-family: "Roboto Regular" !important;
 }
-input:focus {
+input:focus,
+select:focus {
   border: 0 !important;
   outline-width: 0 !important;
   border-top: 1px solid #6C7A89;
+}
+select {
+  height: 45px;
+  width: 330px;
+  cursor: pointer;
 }
 button {
   color: #fff;
@@ -46,13 +54,20 @@ button {
 button:hover {
   background: #000;
 }
+.logo,
+.register-logo {
+  width: auto;
+  height: auto;
+  margin-top: -10px;
+}
 .logo {
   max-height: 100px;
   max-width: 100px;
-  width: auto;
-  height: auto;
   margin-bottom: 5px;
-  margin-top: -10px;
+}
+.register-logo {
+  max-height: 50px;
+  max-width: 50px;
 }
 .university {
   font-size: 10px;
@@ -60,11 +75,17 @@ button:hover {
   color: #7f8c8d;
   margin-bottom: 25px;
 }
-.header {
+.header,
+.head {
   margin-bottom: 20px;
-  margin-top: 35px;
   color: #6C7A89;
   font-size: 23px;
+}
+.header {
+  margin-top: 35px;
+}
+.head {
+  margin-top: 20px;
 }
 .not-registered {
   margin-top: 7px;

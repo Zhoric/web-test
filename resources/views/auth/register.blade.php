@@ -9,7 +9,10 @@
 @section('content')
     <div class="register">
         <div>
-            <h2>Заявка на регистрацию</h2>
+            <img class="register-logo" src="{{ URL::asset('images/sevsu-logo.jpg')}}"/>
+        </div>
+        <div class="head">
+            <span>Заявка на регистрацию</span>
         </div>
         <div>
             <input type="text" id="iAuthLastName"  placeholder="Фамилия" validate
@@ -57,8 +60,10 @@
         </div>
         <div>
             <button data-bind="click: $root.register">Отправить</button>
-            <a href="/login">Войти</a>
-            <div class="clear"></div>
+        </div>
+        <div class="not-registered">
+            <span>Уже&nbsp;зарегистрированы?</span>
+            <a href="/login">Войти&nbsp;в&nbsp;систему</a>
         </div>
     </div>
 
