@@ -5,9 +5,15 @@
 @endsection
 
 @section('content')
-    <div class="register login">
+    <div class="login">
         <div>
-            <h2>Вход</h2>
+            <img class="logo" src="{{ URL::asset('images/sevsu-logo.jpg')}}"/>
+        </div>
+        <div class="university">
+            <span>Севастопольский государственный университет</span>
+        </div>
+        <div class="header">
+            <span>Система контроля знаний</span>
         </div>
         <div>
             <input type="text" data-bind="value: user.email" placeholder="Логин">
@@ -17,8 +23,10 @@
         </div>
         <div>
             <button data-bind="click: $root.login">Войти</button>
-            <a href="/register">Регистрация</a>
-            <div class="clear"></div>
+        </div>
+        <div class="not-registered">
+            <span>Ещё&nbsp;не&nbsp;зарегистрированы?</span>
+            <a href="/register">Отправить&nbsp;заявку</a>
         </div>
     </div>
     @include('shared.error-modal')
