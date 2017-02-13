@@ -17,6 +17,7 @@
             <div class="items-head">
                 <h1>Просмотр результатов</h1>
             </div>
+            <h3 data-bind="if: !$root.filter.discipline()" class="text-center">Пожалуйста, выберите дисциплину</h3>
             <div class="items-body" data-bind="foreach: $root.current.results">
                 <div class="result" data-bind="click: $root.actions.show.result, css: {'current': $root.current.id() === id() && $root.current.details()}">
                     <div class="details-row clear">

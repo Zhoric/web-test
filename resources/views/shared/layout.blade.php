@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>@yield('title')</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('images/favicon.ico')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/styles.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/jquery.arcticmodal.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
