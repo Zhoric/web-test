@@ -68,6 +68,7 @@
                 <!-- ko if: $root.current.details() && $root.current.id() === id() -->
                 <div class="details">
                     <div class="details-row result-details" data-bind="with: $root.current.details">
+                        <h3 class="text-center">Вопросы, на которые были даны неправильные ответы</h3>
                         <div class="" data-bind="foreach: answers">
                             <div class="item" data-bind="click: $root.actions.show.question">
                                 <span data-bind="text: question.text"></span>

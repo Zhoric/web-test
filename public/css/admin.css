@@ -36,6 +36,12 @@
 .form-heights {
   line-height: 27px;
 }
+h3 {
+  color: #6C7A89;
+}
+.text-center {
+  text-align: center;
+}
 label.title {
   display: block;
   font-size: 12px;
