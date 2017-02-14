@@ -8,9 +8,14 @@ $(document).ready(function(){
             self.events = new validationEvents(self.validation);
             self.errors = errors();
             self.pagination = pagination();
+            //self.mode = ko.observable(state.none);
+            self.multiselect = new multiselect({
+                dataTextField: 'fullname',
+                dataValueField: 'id',
+                valuePrimitive: true
+            });
 
             self.disciplines = ko.observableArray([]);
-
             self.current = {
                 discipline: ko.validatedObservable({
                     id: ko.observable(0),
@@ -24,7 +29,6 @@ $(document).ready(function(){
                     }),
                     description: ko.observable('')
                 }),
-                profiles: ko.observableArray([]),
                 themes: ko.observableArray([]),
                 theme: ko.observable({
                     id: ko.observable(0),
@@ -38,37 +42,6 @@ $(document).ready(function(){
                     content: ko.observable('')
                 })
             };
-            self.multiselect = {
-                data: ko.observableArray([]),
-                tags: ko.observableArray([]),
-                show: function(data){
-                    return data.fullname();
-                },
-                select: function(data){
-                    var item = self.multiselect.tags().find(function(item){
-                        return item.id() === data.id();
-                    });
-                    if (!item) self.multiselect.tags.push(data);
-                    return '';
-                },
-                remove: function(data){
-                    self.multiselect.tags.remove(data);
-                },
-                empty: function(){
-                    self.multiselect.tags([]);
-                },
-                fill: function(){
-                    var profiles = self.current.profiles;
-                    self.multiselect.data().find(function(item){
-                        var id = item.id();
-                        profiles().find(function(profile){
-                            if (profile.profile_id() == id){
-                                self.multiselect.select(item);
-                            }
-                        });
-                    });
-                }
-            };
             self.filter = {
                 discipline: ko.observable(''),
                 profile : ko.observable(),
@@ -76,6 +49,10 @@ $(document).ready(function(){
                     self.filter.discipline('').profile(null);
                 }
             };
+
+            self.alter = {};
+            self.actions = {};
+
             self.toggleCurrent = {
                 fill: function(data){
                     self.current.discipline()
@@ -90,7 +67,6 @@ $(document).ready(function(){
                         .name('')
                         .abbreviation('')
                         .description('');
-                    self.current.profiles([]);
                     self.multiselect.empty();
                 },
                 stringify: function(){
@@ -255,26 +231,27 @@ $(document).ready(function(){
                 },
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();
-                    if (id){
-                        $.get('/api/disciplines/' + id + '/profiles', function(response){
-                            var result = ko.mapping.fromJSON(response);
-                            if (result.Success()){
-                                self.current.profiles(result.Data());
-                                self.multiselect.fill();
-                                return;
-                            }
-                            self.errors.show(result.Message());
-                        });
-                    }
+                    if (!id) return;
+                    $ajaxget({
+                        url: '/api/disciplines/' + id + '/profiles',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            var profiles = [];
+                            $.each(data(), function(i, item){
+                                profiles.push(+item.profile_id());
+                            });
+                            console.log(profiles);
+                            self.multiselect.multipleSelect()(profiles);
+                        }
+                    });
                 },
                 profiles: function(){
-                    $.get('/api/profiles', function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.multiselect.data(result.Data());
-                            return;
+                    $ajaxget({
+                        url: '/api/profiles',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.multiselect.setDataSource(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 themes: function(){

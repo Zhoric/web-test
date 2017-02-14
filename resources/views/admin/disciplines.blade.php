@@ -3,6 +3,7 @@
 @section('javascript')
 
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
     <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
 @endsection
 
@@ -41,7 +42,7 @@
         </div>
         <div class="filter-block">
             <label class="title">Направление</label>
-            <select data-bind="options: $root.multiselect.data,
+            <select data-bind="options: $root.multiselect.source,
                        optionsText: 'fullname',
                        value: $root.filter.profile,
                        optionsCaption: 'Выберите профиль'"></select>
@@ -163,7 +164,7 @@
             </div>
         </div>
         <div class="details-row">
-            <div class="details-column profile">
+            <div class="details-column profile width-98p">
                 <label class="title">Профили&nbsp;<span class="required">*</span></label>
                 <div id="dProfiles" validate special class="multiselect-wrap" title="Пожалуйста, укажите хотя бы один профиль">
                     <!-- ko if: $root.multiselect.tags().length -->
@@ -173,7 +174,12 @@
                         </ul>
                     </div>
                     <!-- /ko -->
-                    <input data-bind="autocomplete: { data: $root.multiselect.data, format: $root.multiselect.show, onSelect: $root.multiselect.select}, css: {'full': $root.multiselect.tags().length}" value=""/>
+                    <input placeholder="Начните вводить название направления"
+                            data-bind="autocomplete: {
+                            data: $root.multiselect.source,
+                            format: $root.multiselect.text,
+                            onSelect: $root.multiselect.select},
+                            css: {'full': $root.multiselect.tags().length}" value=""/>
                 </div>
             </div>
         </div>
