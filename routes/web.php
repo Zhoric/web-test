@@ -190,6 +190,7 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('delete/{id}', 'GroupController@delete');
             Route::get('{id}/students', 'GroupController@getGroupStudents');
             Route::get('{id}/studyplan', 'GroupController@getGroupStudyPlan');
+            Route::post('acceptAll/{id}', 'GroupController@acceptAll');
 
             /*------------------------------------------------------------------------
             *                      Работа со студентами группы                       */

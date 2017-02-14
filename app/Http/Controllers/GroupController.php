@@ -161,4 +161,14 @@ class GroupController extends Controller
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
+
+    public function acceptAll($id)
+    {
+        try {
+            $this->_groupManager->acceptAll($id);
+            return $this->successJSONResponse();
+        } catch (Exception $exception) {
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
 }

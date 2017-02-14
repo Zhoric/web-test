@@ -151,4 +151,27 @@ class GroupManager
             $this->_unitOfWork->commit();
         }
     }
+
+    /**
+     * Принять заявки на регистрацию сразу всей группы.
+     * @param $groupId - Идентификатор группы.
+     * @throws Exception
+     */
+    public function acceptAll($groupId){
+        $groupStudents = $this->_unitOfWork
+            ->users()
+            ->getGroupStudents($groupId);
+
+        if (!isset($groupStudents) || empty($groupStudents)){
+            throw new Exception("Не найдены студенты указанной группы!");
+        }
+
+        /** @var User $student */
+        foreach ($groupStudents as $student){
+            $student->setActive(true);
+            $this->_unitOfWork->users()->update($student);
+        }
+
+        $this->_unitOfWork->commit();
+    }
 }
