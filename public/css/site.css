@@ -662,6 +662,33 @@ button.move:hover {
 .test-block .progressText {
   display: none;
 }
+.filter input,
+.filter select {
+  height: 25px;
+  font-size: 14px;
+  padding: 5px 0 5px 0;
+  text-indent: 10px;
+  border: 1px solid #BFBFBF;
+  border-radius: 2px;
+  color: #666666;
+  font-family: "Roboto Regular" !important;
+}
+.filter input:focus,
+.filter select:focus {
+  outline-width: 0 !important;
+}
+.filter input.height-35px {
+  height: 35px;
+}
+.filter select {
+  padding: 2px;
+  height: 35px;
+}
+.filter input[type=radio] + label {
+  font-size: 14px;
+  padding: 1px 0 0 30px !important;
+  color: #666666;
+}
 #question-details-modal {
   max-height: 300px;
   width: 700px;

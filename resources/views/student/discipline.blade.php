@@ -29,7 +29,7 @@
         <div class="filter">
             <div class="filter-block">
                 <label class="title">Тест</label>
-                <input class="custom-radio" type="text" placeholder="Название"/>
+                <input class="height-35px" type="text" placeholder="Название"/>
             </div>
             <div class="filter-block">
                 <input class="custom-radio" type="radio" id="all-tests"/><label for="all-tests">Все</label>

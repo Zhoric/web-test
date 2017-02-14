@@ -1,18 +1,6 @@
 @import (less) "common.less";
 
-@danger: @alizarin;
-@grey: @greish;
-@jungleGreen: #2ABB9B;
-@buttonGreen: @jungleGreen;
-@green: @nephritis;
-@mainTheme: @greensea;
-@crimson-red: #D24D57;
-@warning: #E29C45;
-
-
-
-
-
+@mild-black: #666666;
 
 .details-row.result-details{
   margin: -1px 0 1% 0;
@@ -85,7 +73,6 @@
   }
 }
 
-
 .progressBar {
   position: relative;
   width: 100%;
@@ -151,6 +138,34 @@
   }
   .progressText{
     display: none;
+  }
+}
+
+.filter{
+  input, select{
+    height: 25px;
+    font-size: 14px;
+    padding: 5px 0 5px 0;
+    text-indent: 10px;
+    border: 1px solid @akcio;
+    border-radius: 2px;
+    color: @mild-black;
+    font-family: "Roboto Regular" !important;
+    &:focus{
+      outline-width: 0 !important;
+    }
+  }
+  input.height-35px{
+    height: 35px;
+  }
+  select{
+    padding: 2px;
+    height: 35px;
+  }
+  input[type=radio]+label{
+    font-size: 14px;
+    padding: 1px 0 0 30px !important;
+    color: @mild-black;
   }
 }
 

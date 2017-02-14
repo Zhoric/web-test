@@ -36,7 +36,7 @@
         <div class="filter">
             <div class="filter-block">
                 <label class="title">Дисциплина</label>
-                <input class="custom-radio" type="text" placeholder="Название/аббревиатура"/>
+                <input type="text" placeholder="Название/аббревиатура"/>
             </div>
             <div class="filter-block">
                 <input class="custom-radio" type="radio" id="all-disciplines"/><label for="all-disciplines">Все</label>
