@@ -198,4 +198,10 @@ class QuestionManager
     public function getQuestionAnswers($questionId){
         return $this->_unitOfWork->answers()->getByQuestion($questionId);
     }
+
+    public function getGivenAnswersIds($testResultId){
+        return $this->_unitOfWork
+            ->givenAnswers()
+            ->getIdsByTestResult($testResultId);
+    }
 }

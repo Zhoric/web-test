@@ -71,7 +71,6 @@ class TestProcessTeachingStrategy extends BaseTestProcessStrategy implements ITe
 
             $questionId = $questionAnswer->getQuestionId();
 
-            $this->validateTime($questionId);
             $this->validateQuestionToAnswer($questionId);
 
             $question = $this->_questionManager->getWithAnswers($questionId);

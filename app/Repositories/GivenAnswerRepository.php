@@ -33,5 +33,15 @@ class GivenAnswerRepository extends BaseRepository
         return $query->execute();
     }
 
+    public function getIdsByTestResult($testResultId){
+        $qb = $this->repo->createQueryBuilder('ga');
+        $query = $qb
+            ->join(Question::class, 'q', Join::WITH, "ga.testResult = $testResultId AND ga.question = q.id")
+            ->select("q.id")
+            ->getQuery();
+
+        return $query->execute();
+    }
+
 
 }

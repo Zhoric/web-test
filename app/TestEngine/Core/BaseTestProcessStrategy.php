@@ -251,6 +251,12 @@ class BaseTestProcessStrategy
             throw new Exception('Не удалось сохранить ответ!');
         }
 
+        $answeredQuestionsIds = $this->_questionManager->getGivenAnswersIds($testResultId);
+
+        if (in_array($question->getId(), $answeredQuestionsIds)){
+            throw new Exception("На данный вопрос уже был дан ответ.");
+        }
+
         $givenAnswer = new GivenAnswer();
         $givenAnswer->setTestResult($testResult);
         $givenAnswer->setQuestion($question);
