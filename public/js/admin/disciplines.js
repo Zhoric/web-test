@@ -136,7 +136,6 @@ $(document).ready(function(){
                 },
                 showSections: function (data, e) {
                     e.stopPropagation();
-                    self.current.discipline(data);
                     self.get.sectionsByDiscipline();
 
                     commonHelper.modal.open('#sections-modal');
