@@ -59,6 +59,7 @@ $(document).ready(function(){
                         self.current.plan.mode(state.none);
                     },
                     approve: function(){
+                        if (!self.current.plan.name()) return;
                         self.post.plan();
                     }
                 }

@@ -669,10 +669,6 @@ button {
 .details-column.tile-boredom span:hover {
   color: #6C7A89;
 }
-.item.plan input {
-  width: 240px;
-  height: 38px;
-}
 .details-column {
   margin: 1%;
 }
@@ -1074,6 +1070,24 @@ table.monitoring .progressBar {
 }
 .knockout-autocomplete.after-menu {
   position: absolute;
+}
+#show-plans-modal {
+  max-height: 500px;
+}
+#show-plans-modal .layer {
+  margin: 20px 0 0 0;
+  padding-top: 0;
+  overflow-y: auto;
+  max-height: 460px;
+}
+#show-plans-modal .layer .item.no-hover > input {
+  width: 200px;
+  height: 39px;
+}
+.modal-close {
+  margin-top: 5px;
+  margin-right: 5px;
+  font-size: 21px;
 }
 #compile-modal {
   max-height: 450px;

@@ -33,8 +33,8 @@
 
     <div class="g-hidden">
         <div class="box-modal" id="show-plans-modal">
-            <div class="box-modal_close arcticmodal-close">закрыть</div>
-            <div class="layer zero-margin width-auto">
+            <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
+            <div class="layer width-auto">
                 <h3>Учебные планы</h3>
                 <!-- ko if: $root.current.plan.mode() === state.none -->
                 <div class="item text-center" data-bind="click: $root.actions.plan.create">
@@ -42,10 +42,30 @@
                 </div>
                 <!-- /ko -->
                 <!-- ko if: $root.current.plan.mode() === state.create -->
-                <div class="item no-hover plan">
+                <div class="item no-hover">
                     <input type="text" data-bind="value: $root.current.plan.name"/>
                     <button class="approve" data-bind="click: $root.actions.plan.approve">Сохранить</button>
                     <button class="cancel" data-bind="click: $root.actions.plan.cancel">Отмена</button>
+                </div>
+                <!-- /ko -->
+                <!-- ko foreach: $root.current.plans -->
+                <div class="item" data-bind="click: $root.actions.moveTo.plan">
+                    <span data-bind="text: name"></span>
+                </div>
+                <!-- /ko -->
+                <!-- ko foreach: $root.current.plans -->
+                <div class="item" data-bind="click: $root.actions.moveTo.plan">
+                    <span data-bind="text: name"></span>
+                </div>
+                <!-- /ko -->
+                <!-- ko foreach: $root.current.plans -->
+                <div class="item" data-bind="click: $root.actions.moveTo.plan">
+                    <span data-bind="text: name"></span>
+                </div>
+                <!-- /ko -->
+                <!-- ko foreach: $root.current.plans -->
+                <div class="item" data-bind="click: $root.actions.moveTo.plan">
+                    <span data-bind="text: name"></span>
                 </div>
                 <!-- /ko -->
                 <!-- ko foreach: $root.current.plans -->
