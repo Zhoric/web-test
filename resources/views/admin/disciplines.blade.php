@@ -47,6 +47,9 @@
                        value: $root.filter.profile,
                        optionsCaption: 'Выберите профиль'"></select>
         </div>
+        <div class="filter-block">
+            <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
+        </div>
     </div>
 </div>
 

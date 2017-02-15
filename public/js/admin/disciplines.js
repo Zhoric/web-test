@@ -319,13 +319,15 @@ $(document).ready(function(){
                     ));
                 }
             });
-            self.pagination.currentPage.subscribe(function(value){
+            self.pagination.currentPage.subscribe(function(){
                 self.get.disciplines();
             });
             self.filter.discipline.subscribe(function(){
+                self.pagination.currentPage(1);
                 self.get.disciplines();
             });
             self.filter.profile.subscribe(function(){
+                self.pagination.currentPage(1);
                 self.get.disciplines();
             });
 
