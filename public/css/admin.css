@@ -562,6 +562,18 @@ input {
   font-size: 15px;
   border: 1px solid #d3d3d3;
 }
+select {
+  height: 30px;
+  font-size: 14px;
+  text-indent: 2px;
+  border: 1px solid #BFBFBF;
+  background: #fff;
+  border-radius: 2px;
+  font-family: "Roboto Regular" !important;
+}
+button {
+  cursor: pointer;
+}
 .inline {
   display: inline-block;
 }
@@ -636,10 +648,13 @@ input {
 .items .result a:hover {
   border: 1px solid #5D8CAE;
 }
+.details {
+  margin-top: -2px;
+}
 .details-column.tile-boredom {
   background: #EDEEF0;
   width: 150px;
-  height: 100px;
+  height: 110px;
   padding: 5px 15px;
 }
 .details-column.tile-boredom span {
@@ -875,6 +890,10 @@ table.monitoring .progressBar {
 }
 .filter.theme {
   position: absolute;
+}
+.filter-block input[type=text] {
+  padding: 0;
+  text-indent: 5px;
 }
 #change-password-modal {
   width: 400px;
