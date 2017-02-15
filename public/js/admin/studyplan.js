@@ -29,7 +29,10 @@ $(document).ready(function () {
                 })
             };
             self.filter = {
-                discipline: ko.observable('')
+                discipline: ko.observable(''),
+                clear: function(){
+                    self.filter.discipline('');
+                }
             };
             self.current = {
                 disciplines: ko.observableArray([]),

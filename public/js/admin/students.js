@@ -252,13 +252,16 @@ $(document).ready(function(){
                 }
             };
 
-            self.filter.group.subscribe(function(value){
+            self.filter.group.subscribe(function(){
+                self.pagination.currentPage(1);
                 self.get.students();
             });
             self.filter.name.subscribe(function(){
+                self.pagination.currentPage(1);
                 self.get.students();
             });
-            self.filter.request.subscribe(function(value){
+            self.filter.request.subscribe(function(){
+                self.pagination.currentPage(1);
                 self.get.students();
             });
             self.pagination.itemsCount.subscribe(function(value){

@@ -31,8 +31,12 @@
         </div>
         <div class="filter">
             <div class="filter-block">
-                <label class="title">Название дисциплины</label>
-                <input type="text" data-bind="value: $root.filter.discipline, valueUpdate: 'keyup'">
+                <label class="title">Дисциплина</label>
+                <input type="text" placeholder="Полное название дисциплины"
+                       data-bind="value: $root.filter.discipline, valueUpdate: 'keyup'">
+            </div>
+            <div class="filter-block">
+                <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
             </div>
         </div>
     </div>

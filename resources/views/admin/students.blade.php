@@ -28,12 +28,12 @@
         </div>
         <div class="filter" data-bind="with: $root.filter">
             <div class="filter-block">
-                <label class="title">ФИО студента</label>
-                <input type="text" data-bind="value: name, valueUpdate: 'keyup'"/>
+                <label class="title">Студент</label>
+                <input type="text" data-bind="value: name, valueUpdate: 'keyup'" placeholder="ФИО студента"/>
             </div>
             <div class="filter-block">
-                <label class="title">Название группы</label>
-                <input type="text" data-bind="value: group, valueUpdate: 'keyup'"/>
+                <label class="title">Группа</label>
+                <input type="text" data-bind="value: group, valueUpdate: 'keyup'" placeholder="Название группы"/>
             </div>
             <div class="filter-block">
                 <label class="title">Статус учетной записи</label>
