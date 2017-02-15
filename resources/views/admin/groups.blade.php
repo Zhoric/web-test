@@ -32,6 +32,9 @@
             <label class="title">Название группы </label>
             <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
         </div>
+        <div class="filter-block">
+            <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
+        </div>
     </div>
 </div>
 <div class="g-hidden">
@@ -48,7 +51,7 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="select-plan-modal">
-        <div class="box-modal_close arcticmodal-close">закрыть</div>
+        <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
         <div class="layer zero-margin width-auto">
             <h3>Учебный план</h3>
             <div class="details-row">

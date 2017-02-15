@@ -35,8 +35,9 @@
         </div>
         <div class="filter">
             <div class="filter-block">
-                <label class="title">ФИО преподавателя</label>
-                <input type="text" data-bind="value: filter.name, valueUpdate: 'keyup'"/>
+                <label class="title">Преподаватель</label>
+                <input type="text" placeholder="ФИО преподавателя"
+                       data-bind="value: filter.name, valueUpdate: 'keyup'"/>
             </div>
             <div class="filter-block">
                 <span class="clear" data-bind="click: filter.clear">Очистить</span>

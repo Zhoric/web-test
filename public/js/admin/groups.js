@@ -55,7 +55,10 @@ $(document).ready(function(){
                 isGenerated: ko.observable(false)
             };
             self.filter = {
-                name: ko.observable('')
+                name: ko.observable(''),
+                clear: function(){
+                    self.filter.name('');
+                }
             };
             self.alter = {
                 stringify: {
@@ -288,6 +291,7 @@ $(document).ready(function(){
                 self.get.groups();
             });
             self.filter.name.subscribe(function(){
+                self.pagination.currentPage(1);
                 self.get.groups();
             });
 
