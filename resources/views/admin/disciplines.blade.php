@@ -19,14 +19,10 @@
         <!-- /ko -->
         <div class="items-body">
             <!-- ko foreach: disciplines -->
-            <div class="item">
-                <div class="inline width-85p" data-bind="click: $root.csed.show">
-                    <span data-bind="text: name"></span>
-                </div>
-                <div class="inline tags width-10p">
-                    <span class="fa tag" data-bind="click: $root.moveTo.tests" title="Перейти к тестам">&#xf022;</span>
-                    <span class="fa tag" data-bind="click: $root.csed.showSections" title="Общие разделы">&#xf0f6;</span>
-                </div>
+            <div class="item" data-bind="click: $root.csed.show">
+                <span class="fa tag float-right" data-bind="click: $root.csed.showSections" title="Общие разделы">&#xf0f6;</span>
+                <span class="fa tag float-right" data-bind="click: $root.moveTo.tests" title="Перейти к тестам">&#xf022;</span>
+                <span data-bind="text: name"></span>
             </div>
             <!-- ko if: $root.mode() !== 'none' && $data.id() === $root.current.discipline().id()-->
             <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>

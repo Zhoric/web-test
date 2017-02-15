@@ -134,7 +134,8 @@ $(document).ready(function(){
                     }
                     self.mode('info');
                 },
-                showSections: function (data) {
+                showSections: function (data, e) {
+                    e.stopPropagation();
                     self.current.discipline(data);
                     self.get.sectionsByDiscipline();
 
@@ -206,7 +207,8 @@ $(document).ready(function(){
                 theme: function(data){
                     window.location.href = '/admin/theme/' + data.id();
                 },
-                tests: function(data){
+                tests: function(data, e){
+                    e.stopPropagation();
                     window.location.href = '/admin/tests/' + data.id();
                 }
             };

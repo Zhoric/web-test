@@ -479,30 +479,8 @@ a:hover {
   color: #5D8CAE;
   border-bottom: 1px dashed #5D8CAE;
 }
-input {
-  background: #fff;
-  border: 1px solid #d3d3d3;
-  font-size: 15px;
-  font-family: 'Roboto Regular';
-}
 textarea {
   font-family: 'Roboto Regular';
-}
-select {
-  height: 30px;
-  background: #fff;
-  margin: 0;
-}
-select[multiple='true'] {
-  height: auto;
-}
-select[multiple='true'] option {
-  font-size: 20px;
-  margin: 0 0 2px;
-}
-select[multiple='true'] option:checked {
-  background: #16a085 -webkit-linear-gradient(bottom, #16a085 0%, #16a085 100%);
-  background: #16a085 linear-gradient(0deg, #16a085 0%, #16a085 100%);
 }
 button.danger {
   background: #e74c3c;
