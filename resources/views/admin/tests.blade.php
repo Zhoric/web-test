@@ -156,7 +156,8 @@
                            format: $root.multiselect.text,
                            onSelect: $root.multiselect.select,
                            after: true},
-                           css: {'full': $root.multiselect.tags().length}" value=""/>
+                           css: {'full': $root.multiselect.tags().length}"
+                           type="text" value=""/>
                 </div>
             </div>
         </div>

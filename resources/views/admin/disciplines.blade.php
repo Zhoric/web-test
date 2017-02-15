@@ -164,9 +164,10 @@
             </div>
         </div>
         <div class="details-row">
-            <div class="details-column profile width-98p">
+            <div class="details-column width-99p">
                 <label class="title">Профили&nbsp;<span class="required">*</span></label>
-                <div id="dProfiles" validate special class="multiselect-wrap" title="Пожалуйста, укажите хотя бы один профиль">
+                <div class="multiselect-wrap theme" id="dProfiles" validate special
+                     title="Пожалуйста, укажите хотя бы один профиль">
                     <!-- ko if: $root.multiselect.tags().length -->
                     <div class="multiselect">
                         <ul data-bind="foreach: $root.multiselect.tags">
@@ -179,7 +180,8 @@
                             data: $root.multiselect.source,
                             format: $root.multiselect.text,
                             onSelect: $root.multiselect.select},
-                            css: {'full': $root.multiselect.tags().length}" value=""/>
+                            css: {'full': $root.multiselect.tags().length}"
+                            type="text" value=""/>
                 </div>
             </div>
         </div>
