@@ -49,43 +49,8 @@
     </div>
 </div>
 
-<div class="g-hidden">
-    <div class="box-modal" id="delete-modal">
-        <div class="popup-delete">
-            <div><h3>Удалить выбранную дисциплину?</h3></div>
-            <div>
-                <button data-bind="click: $root.csed.remove" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.csed.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal" id="remove-theme-modal">
-        <div class="popup-delete">
-            <div><h3>Удалить выбранную тему?</h3></div>
-            <div>
-                <button data-bind="click: $root.actions.theme.end.remove" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.actions.theme.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal" id="add-theme-modal">
-        <div class="popup-theme">
-            <div><h3>Добавление темы</h3></div>
-            <div>
-                <label>Название</label></br>
-                <input type="text" data-bind="value: $root.current.theme().name" placeholder="Название темы">
-            </div>
-            <div class="popup-btn-group">
-                <button data-bind="click: $root.csed.theme.add" class="fa">&#xf00c;</button>
-                <button class="fa danger arcticmodal-close">&#xf00d;</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 <script type="text/html" id="show-details">
     <div class="">
@@ -245,13 +210,48 @@
         </div>
     </div>
 </div>
+
 <div class="g-hidden">
-    <div class="box-modal" id="remove-section-modal">
-        <div class="popup-delete">
-            <div><span>Удалить выбранный раздел?</span></div>
-            <div>
-                <button data-bind="click: $root.csed.section.remove" class="fa">&#xf00c;</button>
-                <button class="fa danger arcticmodal-close">&#xf00d;</button>
+    <div class="box-modal removal-modal" id="remove-theme-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранную тему?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close" data-bind="root.actions.theme.cancel">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.theme.end.remove">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
+    <div class="box-modal removal-modal" id="delete-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранную дисциплину?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close" data-bind="click: $root.csed.cancel">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.csed.remove">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
+    <div class="box-modal removal-modal" id="remove-section-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранный раздел?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.csed.section.remove">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
