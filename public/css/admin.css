@@ -1078,8 +1078,10 @@ table.werewolf.themes tr > td:first-child {
   padding: 3px 0;
   height: auto;
   width: 44%;
+  z-index: 10;
 }
 .knockout-autocomplete.menu li {
+  background: #EDEEF0;
   text-transform: inherit;
   font-family: 'Roboto Regular';
   font-size: 15px;

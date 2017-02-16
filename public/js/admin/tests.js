@@ -1,11 +1,4 @@
-/**
- * Created by nyanjii on 26.10.16.
- */
 $(document).ready(function(){
-    ko.validation.init({
-        messagesOnModified: true,
-        insertMessages: false
-    });
     var testsViewModel = function(){
         return new function(){
             var self = this;
@@ -13,90 +6,94 @@ $(document).ready(function(){
             self.errors = errors();
             self.validation = {};
             self.events = new validationEvents(self.validation);
+            self.modals = {
+                removeTest: '#remove-test-modal'
+            };
+            self.pagination = pagination();
+            self.multiselect = new multiselect({
+                dataTextField: 'name',
+                dataValueField: 'id',
+                valuePrimitive: false
+            });
+            self.mode = ko.observable(state.none);
+
             self.current = {
                 test: ko.validatedObservable({
                     id: ko.observable(0),
                     subject: ko.observable().extend({ required: true }),
-                    attempts: ko.observable(3).extend({required: true, number: true, min: 1, max: 100 }),
+                    attempts: ko.observable(3).extend({required: true, digit: true, min: 1, max: 100 }),
                     timeTotal: ko.observable(0),
-                    minutes: ko.observable().extend({ required: true, number: true, min: 1, max: 60}),
-                    seconds: ko.observable().extend({ required: true, number: true, min: 0, max: 59}),
+                    minutes: ko.observable().extend({ required: true, digit: true, min: 1, max: 60}),
+                    seconds: ko.observable().extend({ required: true, digit: true, min: 0, max: 59}),
                     type: ko.observable(true),
                     isActive: ko.observable(true),
                     isRandom: ko.observable(true),
                     themes: ko.observableArray([])
                 }),
                 tests: ko.observableArray([]),
-
                 disciplines: ko.observableArray([])
             };
             self.filter = {
                 name: ko.observable(''),
                 discipline: ko.observable(),
                 clear: function(){
-                    self.filter.name('');
-                    self.filter.discipline(null);
+                    self.filter
+                        .discipline(null).name('');
                 }
             };
             self.alter = {
-                fill: {
-                    test: function(data){
-                        var minutes = Math.floor(data.timeTotal()/60);
-                        var seconds = data.timeTotal()%60;
-                        var type = data.type() === 1;
+                fill: function(data){
+                    var minutes = Math.floor(data.timeTotal()/60);
+                    var seconds = data.timeTotal()%60;
+                    var type = data.type() === 1;
 
-                        data.minutes = ko.observable(minutes ? minutes : '00');
-                        data.seconds = ko.observable(seconds);
-                        data.themes = ko.observableArray([]);
-                        data.type(type);
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    seconds = seconds < 10 ? '0' + seconds : seconds;
 
-                        self.current.test.copy(data);
-                        self.get.testThemes(data.id());
-                    }
+                    self.current.test()
+                        .id(data.id()).subject(data.subject())
+                        .attempts(data.attempts()).timeTotal(data.timeTotal())
+                        .minutes(minutes).seconds(seconds).type(type)
+                        .isActive(data.isActive()).isRandom(data.isRandom());
+
+                    self.get.testThemes();
                 },
-                empty: {
-                    test: function(){
-                        self.current.test()
-                            .id(0)
-                            .subject('')
-                            .attempts(3)
-                            .timeTotal(0)
-                            .minutes('')
-                            .seconds('')
-                            .type(true)
-                            .isActive(true)
-                            .isRandom(true)
-                            .themes([]);
-                        self.multiselect.empty();
-                    }
+                empty: function(){
+                    self.current.test()
+                        .id(0)
+                        .subject('')
+                        .attempts(3)
+                        .timeTotal(0)
+                        .minutes('')
+                        .seconds('')
+                        .type(true)
+                        .isActive(true)
+                        .isRandom(true)
+                        .themes([]);
+                    self.multiselect.empty();
                 },
-                stringify: {
-                    test: function(){
-                        var t = self.current.test();
-                        var totalTime = +t.minutes() * 60 + +t.seconds();
-                        var themes = [];
+                stringify: function(){
+                    var t = self.current.test();
+                    var themes = [];
+                    t.timeTotal(+t.minutes() * 60 + +t.seconds());
 
-                        var test = {
-                            subject: t.subject(),
-                            attempts: t.attempts(),
-                            timeTotal: totalTime,
-                            type: t.type() ? 1 : 2,
-                            isActive: t.isActive(),
-                            isRandom: t.isRandom()
-                        };
-                        if (self.mode() === 'edit'){
-                            test.id = t.id();
-                        }
-                        self.multiselect.tags().find(function(item){
-                            themes.push(item.id());
-                        });
+                    var test = ko.mapping.toJS(self.current.test);
 
-                        return JSON.stringify({
-                            test: test,
-                            themeIds: themes,
-                            disciplineId: self.filter.discipline().id()
-                        });
-                    }
+                    delete test.minutes;
+                    delete test.seconds;
+                    delete test.themes;
+
+                    self.mode() === state.create ? delete test.id : null;
+
+                    self.multiselect.tags().find(function(item){
+                        themes.push(item.id());
+                    });
+
+                    return JSON.stringify({
+                        test: test,
+                        themeIds: themes,
+                        disciplineId: self.filter.discipline().id()
+                    });
                 },
                 set: {
                     filter: function(){
@@ -132,41 +129,31 @@ $(document).ready(function(){
                     }
                 }
             };
-            self.pagination = pagination();
-            self.multiselect = new multiselect({
-                    dataTextField: 'name',
-                    dataValueField: 'id',
-                    valuePrimitive: false
-            });
-            self.mode = ko.observable('none');
-            self.csed = {
-                test: {
-                    show: function(data){
-                        if (self.mode() === 'info'){
-                            self.mode('none');
-                        }
-                        else{
-                            self.mode('info');
-                            self.alter.fill.test(data);
-                        }
-                    },
-                    toggleAdd: function(){
-                        self.alter.empty.test();
-                        self.mode() === 'add' ? self.mode('none') : self.mode('add');
+
+            self.actions = {
+                show: function(data){
+                    self.current.test().id() === data.id()
+                        ? self.actions.cancel()
+                        : self.mode(state.info) && self.alter.fill(data);
+                },
+                start: {
+                    add: function(){
+                        self.mode() === state.create
+                            ? self.mode(state.none)
+                            : self.mode(state.create);
+                        self.alter.empty();
                         commonHelper.buildValidationList(self.validation);
                     },
-                    startRemove: function(data){
-                        self.alter.fill.test(data);
-                        self.mode('delete');
-                        commonHelper.modal.open('#delete-modal');
+                    update: function(){
+                        self.mode(state.update);
+                        commonHelper.buildValidationList(self.validation);
                     },
                     remove: function(){
-                        self.post.removedTest();
-                    },
-                    startEdit: function(){
-                        self.mode('edit');
-                        commonHelper.buildValidationList(self.validation);
-                    },
+                        self.mode(state.remove);
+                        commonHelper.modal.open(self.modals.removeTest);
+                    }
+                },
+                end: {
                     update: function(){
                         if (!self.current.test.isValid()){
                             self.validation[$('[accept-validation]').attr('id')].open();
@@ -176,64 +163,61 @@ $(document).ready(function(){
                             self.validation[$('[special]').attr('id')].open();
                             return;
                         }
-                        self.mode() === 'add' ? self.post.test('create') : self.post.test('update');
+                        self.post.test();
                     },
-                    cancel: function(){
-                        if (self.mode() === 'add' || self.mode() === 'edit'){
-                            self.mode('none');
-                            self.alter.empty.test();
-                            return;
-                        }
-                        self.mode('info');
+                    remove: function(){
+                        self.post.removedTest();
                     }
+                },
+                cancel: function(){
+                    self.alter.empty();
+                    self.mode(state.none);
                 }
             };
 
             self.get = {
                 disciplines: function(){
-                    $.get('/api/disciplines/', function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.current.disciplines(result.Data());
-                            self.alter.set.filter();
-                            return;
+                    $ajaxget({
+                        url: '/api/disciplines/',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.disciplines(data());
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 tests: function(){
-                    var filterDiscipline = 'discipline=' + self.filter.discipline().id();
-                    var page = '&page=' + self.pagination.currentPage();
+                    if (!self.filter.discipline()){
+                        self.current.tests([]);
+                        return;
+                    }
+                    var page = '?page=' + self.pagination.currentPage();
                     var pageSize = '&pageSize=' + self.pagination.pageSize();
-                    var name = '&name=' + self.filter.name();
+                    var name = self.filter.name() ?'&name=' + self.filter.name() : '';
+                    var filterDiscipline = '&discipline=' + self.filter.discipline().id();
 
-                    var url = '/api/tests/show?' + filterDiscipline +
-                        page + pageSize + name;
-
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.current.tests(result.Data.data());
-                            self.pagination.itemsCount(result.Data.count());
+                    var url = '/api/tests/show' + page + pageSize + name + filterDiscipline;
+                    $ajaxget({
+                        url: url,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.tests(data.data());
+                            self.pagination.itemsCount(data.count());
                             self.get.themes();
-                            return;
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 themes: function(){
-                    var url = '/api/disciplines/' + self.filter.discipline().id() + '/themes';
                     $ajaxget({
-                        url: url,
+                        url: '/api/disciplines/' + self.filter.discipline().id() + '/themes',
                         errors: self.errors,
                         successCallback: function(data){
                             self.multiselect.setDataSource(data());
                         }
                     });
                 },
-                testThemes: function(id){
+                testThemes: function(){
                     $ajaxget({
-                        url: '/api/tests/' + id + '/themes',
+                        url: '/api/tests/' + self.current.test().id() + '/themes',
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.test().themes(data());
@@ -243,31 +227,26 @@ $(document).ready(function(){
                 }
             };
             self.post = {
-                test: function(action){
-                    var url = '/api/tests/' + action;
-                    var json = self.alter.stringify.test();
-
-                    $.post(url, json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.mode('none');
-                            self.alter.empty.test();
+                test: function(){
+                    $ajaxpost({
+                        url: '/api/tests/' + self.mode(),
+                        data: self.alter.stringify(),
+                        errors: self.errors,
+                        successCallback: function(){
+                            self.actions.cancel();
                             self.get.tests();
-                            return;
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 removedTest: function(){
-                    $.post('/api/tests/delete/' + self.current.test().id(), function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            commonHelper.modal.close('#delete-modal');
+                    $ajaxpost({
+                        url: '/api/tests/delete/' + self.current.test().id(),
+                        data: null,
+                        errors: self.errors,
+                        successCallback: function(){
+                            self.actions.cancel();
                             self.get.tests();
-                            self.mode('none');
-                            return;
                         }
-                        self.errors.show(result.Message());
                     });
                 }
             };
@@ -282,18 +261,17 @@ $(document).ready(function(){
                     ));
                 }
             });
-            self.pagination.currentPage.subscribe(function(value){
+            self.pagination.currentPage.subscribe(function(){
                 self.get.tests();
             });
-            self.filter.discipline.subscribe(function(value){
-                self.mode('none');
-                if (value){
-                    self.get.tests();
-                    return;
-                }
-                self.current.tests([]);
+            self.filter.discipline.subscribe(function(){
+                self.mode(state.none);
+                self.pagination.currentPage(1);
+                self.get.tests();
             });
             self.filter.name.subscribe(function(){
+                self.mode(state.none);
+                self.pagination.currentPage(1);
                 self.get.tests();
             });
 
@@ -303,8 +281,8 @@ $(document).ready(function(){
                 pagination: self.pagination,
                 multiselect: self.multiselect,
                 alter: self.alter,
+                actions: self.actions,
                 mode: self.mode,
-                csed: self.csed,
                 filter: self.filter,
                 events: self.events,
                 errors: self.errors

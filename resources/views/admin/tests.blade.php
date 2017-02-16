@@ -3,7 +3,6 @@
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
-    {{--<link rel="stylesheet" href="{{ URL::asset('css/knockout.autocomplete.css')}}"/>--}}
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
@@ -17,19 +16,19 @@
         <div class="items-head">
             <h1>Администрирование тестов</h1>
             <!-- ko if: $root.filter.discipline() -->
-            <label class="adder" data-bind="click: $root.csed.test.toggleAdd">Добавить</label>
+            <label class="adder" data-bind="click: $root.actions.start.add">Добавить</label>
             <!-- /ko -->
         </div>
         <!-- ko if: !$root.filter.discipline() && !$root.current.tests.length -->
         <h3 class="text-center">Пожалуйста, выберите дисциплину</h3>
         <!-- /ko -->
-        <!-- ko if: $root.mode() === 'add'-->
+        <!-- ko if: $root.mode() === state.create-->
         <div data-bind="template: {name: 'show-details', data: $root.current.test}"></div>
         <!-- /ko -->
         <div class="items-body">
             <!-- ko foreach: $root.current.tests -->
-            <div class="item" data-bind="text: subject, click: $root.csed.test.show, css: {'current': $root.current.test().id() === id()}"></div>
-            <!-- ko if: $root.mode() !== 'none' && $root.current.test().id() === $data.id() -->
+            <div class="item" data-bind="text: subject, click: $root.actions.show, css: {'current': $root.current.test().id() === id()}"></div>
+            <!-- ko if: $root.mode() !== state.none && $root.current.test().id() === id() -->
             <div data-bind="template: {name: 'show-details', data: $root.current.test}"></div>
             <!-- /ko -->
             <!-- /ko -->
@@ -40,27 +39,27 @@
     <div class="filter">
         <div class="filter-block">
             <label class="title">Дициплина</label>
-            <select data-bind="options: current.disciplines,
+            <select data-bind="options: $root.current.disciplines,
                        optionsText: 'name',
-                       value: filter.discipline,
-                       optionsCaption: 'Выберете дисциплину'"></select>
+                       value: $root.filter.discipline,
+                       optionsCaption: 'Выберите дисциплину'"></select>
         </div>
         <div class="filter-block">
             <label class="title">Название теста</label>
-            <input type="text" data-bind="value: filter.name, valueUpdate: 'keyup'">
+            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
         </div>
         <div class="filter-block">
-            <span class="clear" data-bind="click: filter.clear">Очистить</span>
+            <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
         </div>
     </div>
 </div>
 
 <script type="text/html" id="show-details">
     <div>
-        <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' -->
+        <!-- ko if: $root.mode() === state.info || $root.mode() === state.remove -->
         <div class="width100" data-bind="template: {name: 'info-mode', data: $data}"></div>
         <!-- /ko -->
-        <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
+        <!-- ko if: $root.mode() === state.update || $root.mode() === state.create-->
         <div class="width100" data-bind="template: {name: 'edit-mode', data: $data}"></div>
         <!-- /ko -->
     </div>
@@ -68,23 +67,23 @@
 <script type="text/html" id="info-mode">
     <div class="details test">
         <div class="details-row">
-            <div class="details-column width-50p">
+            <div class="details-column">
                 <label class="title">Название</label>
                 <span class="info" data-bind="text: subject"></span>
             </div>
-            <div class="details-column width-25p">
+            <div class="details-column">
                 <label class="title">Тип</label>
                 <span class="info" data-bind="text: type() ? 'Контроль знаний' : 'Обучающий'"></span>
             </div>
-            <div class="details-column width-15p">
+            <div class="details-column">
                 <label class="title">Время</label>
                 <span class="info" data-bind="text: minutes() + ':' + seconds()"></span>
             </div>
         </div>
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
-                <button class="remove" data-bind="click: $root.csed.test.startRemove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
-                <button class="approve" data-bind="click: $root.csed.test.startEdit"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
+                <button class="remove" data-bind="click: $root.actions.start.remove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
+                <button class="approve" data-bind="click: $root.actions.start.update"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
             </div>
         </div>
     </div>
@@ -164,10 +163,10 @@
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
                 <input class="custom-checkbox" id="test-is-active" type="checkbox" data-bind="checked: isActive"><label for="test-is-active">Активный</label>
-                <button data-bind="click: $root.csed.test.cancel" class="cancel">Отмена</button>
+                <button data-bind="click: $root.actions.cancel" class="cancel">Отмена</button>
                 <button id="bUpdateLecturer" accept-validation class="approve"
                         title="Проверьте правильность заполнения полей"
-                        data-bind="click: $root.csed.test.update">Сохранить</button>
+                        data-bind="click: $root.actions.end.update">Сохранить</button>
             </div>
         </div>
 
@@ -177,28 +176,17 @@
 @endsection
 
 <div class="g-hidden">
-    <div class="box-modal" id="delete-modal">
-        <div class="popup-delete">
-            <div><h3>Удалить выбранный тест?</h3></div>
-            <div>
-                <button data-bind="click: $root.csed.test.remove" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.csed.test.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
+    <div class="box-modal removal-modal" id="remove-test-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранный тест?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="tooltip_templates">
-    <span id="subject_tooltip">
-        <span data-bind="validationMessage: $root.current.test().subject"></span>
-    </span>
-    <span id="minutes_tooltip">
-        <span data-bind="validationMessage: $root.current.test().minutes"></span>
-    </span>
-    <span id="seconds_tooltip">
-        <span data-bind="validationMessage: $root.current.test().seconds"></span>
-    </span>
-    <span id="tryouts_tooltip">
-        <span data-bind="validationMessage: $root.current.test().attempts"></span>
-    </span>
 </div>
