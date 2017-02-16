@@ -3,6 +3,7 @@
 namespace Managers;
 
 use DisciplinePlan;
+use Exception;
 use MarkType;
 use Repositories\UnitOfWork;
 use Studyplan;
@@ -63,6 +64,14 @@ class StudyPlanManager
     }
 
     public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId, $disciplineId){
+
+        $existingDisciplinePlan = $this->_unitOfWork->disciplinePlans()
+            ->where("DisciplinePlan.studyplan = $studyPlanId AND DisciplinePlan.discipline = $disciplineId");
+
+        if (!empty($existingDisciplinePlan)){
+            throw new Exception("Указанная дисциплина уже содержится в данном учебном плане!");
+        }
+
         $studyPlan = $this->_unitOfWork->studyPlans()->find($studyPlanId);
         $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
         $disciplinePlan->setStudyplan($studyPlan);
