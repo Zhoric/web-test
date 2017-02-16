@@ -3,7 +3,6 @@
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
-    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>

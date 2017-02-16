@@ -43,7 +43,7 @@
             insertMessages:false,
             errorsAsTitle: true
         });
-        //ko.validation.locale('ru-RU');
+        ko.validation.locale('ru-RU');
     </script>
     <div class="menu">
         <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>
