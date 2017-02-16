@@ -7,7 +7,7 @@
 @section('content')
     <div class="login">
         <div>
-            <img class="logo" src="{{ URL::asset('images/sevsu-logo.jpg')}}"/>
+            <img class="logo" src="{{ URL::asset('images/sevsu-logo.png')}}"/>
         </div>
         <div class="university">
             <span>Севастопольский государственный университет</span>

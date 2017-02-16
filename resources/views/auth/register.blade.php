@@ -9,7 +9,7 @@
 @section('content')
     <div class="register">
         <div>
-            <img class="register-logo" src="{{ URL::asset('images/sevsu-logo.jpg')}}"/>
+            <img class="register-logo" src="{{ URL::asset('images/sevsu-logo.png')}}"/>
         </div>
         <div class="head">
             <span>Заявка на регистрацию</span>
