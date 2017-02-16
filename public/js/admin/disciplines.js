@@ -9,6 +9,9 @@ $(document).ready(function(){
             self.errors = errors();
             self.pagination = pagination();
             //self.mode = ko.observable(state.none);
+            self.modals = {
+                removeTheme: '#remove-theme-modal'
+            };
             self.multiselect = new multiselect({
                 dataTextField: 'fullname',
                 dataValueField: 'id',
@@ -32,7 +35,8 @@ $(document).ready(function(){
                 themes: ko.observableArray([]),
                 theme: ko.observable({
                     id: ko.observable(0),
-                    name: ko.observable('')
+                    name: ko.observable(''),
+                    mode: ko.observable(state.none)
                 }),
                 sections : ko.observableArray([]),
                 section: ko.observable({
@@ -51,7 +55,42 @@ $(document).ready(function(){
             };
 
             self.alter = {};
-            self.actions = {};
+            self.actions = {
+                theme: {
+                    start: {
+                        add: function(){
+                            self.current.theme()
+                                .id(0).name('')
+                                .mode(state.create);
+                        },
+                        remove: function(data, e){
+                            e.stopPropagation();
+                            self.current.theme()
+                                .id(data.id())
+                                .name(data.name())
+                                .mode(state.remove);
+                            commonHelper.modal.open(self.modals.removeTheme);
+                        }
+                    },
+                    end: {
+                        add: function(){
+                            if (!self.current.theme().name()) return;
+                            self.post.theme();
+                        },
+                        remove: function(){
+                            self.post.removal.theme();
+                        }
+                    },
+                    cancel: function(){
+                        self.current.theme()
+                            .id(0).name('')
+                            .mode(state.none);
+                    },
+                    move: function(data){
+                        window.location.href = '/admin/theme/' + data.id();
+                    }
+                }
+            };
 
             self.toggleCurrent = {
                 fill: function(data){
@@ -142,36 +181,9 @@ $(document).ready(function(){
 
                 },
                 theme: {
-                    startAdd: function(){
-                        self.current.theme().id(0).name('');
-                        commonHelper.modal.open('#add-theme-modal');
-                    },
-                    add: function(){
-                        var url = '/api/disciplines/themes/create';
-                        var json = JSON.stringify({
-                            theme: {
-                                name: self.current.theme().name()
-                            },
-                            disciplineId: self.current.discipline().id()
-                        });
-                        $.post(url, json, function(){
-                            commonHelper.modal.close('#add-theme-modal');
-                            self.get.themes();
-                        });
-                    },
-                    startRemove: function(data){
-                        commonHelper.modal.open('#remove-theme-modal');
-                        self.current.theme().id(data.id()).name(data.name());
-                    },
-                    remove: function(){
-                        var url = '/api/disciplines/themes/delete/' + self.current.theme().id();
-                        $.post(url, function(){
-                            commonHelper.modal.close('#remove-theme-modal');
-                            self.get.themes();
-                        });
-                    },
-                    showSections : function(data) {
-                        self.current.theme(data);
+                    showSections : function(data, e) {
+                        e.stopPropagation();
+                        //self.current.theme(data);
                         self.get.sectionsByTheme();
                         commonHelper.modal.open('#sections-modal');
                     },
@@ -298,7 +310,6 @@ $(document).ready(function(){
                     url = self.mode() === 'delete' ? url + 'delete/' + self.current.discipline().id() : url;
                     url = self.mode() === 'add' ? url + 'create' : url;
                     url = self.mode() === 'edit' ? url + 'update' : url;
-                    console.log(url);
                     $ajaxpost({
                         url: url,
                         errors: self.errors,
@@ -309,6 +320,38 @@ $(document).ready(function(){
                             self.get.disciplines();
                         }
                     });
+                },
+                theme: function(){
+                    var json = JSON.stringify({
+                        theme: {
+                            name: self.current.theme().name()
+                        },
+                        disciplineId: self.current.discipline().id()
+                    });
+
+                    $ajaxpost({
+                        url: '/api/disciplines/themes/create',
+                        errors: self.errors,
+                        data: json,
+                        successCallback: function(){
+                            self.actions.theme.cancel();
+                            self.get.themes();
+                        }
+                    });
+                },
+                removal: {
+                    theme: function(){
+                        $ajaxpost({
+                            url: '/api/disciplines/themes/delete/' + self.current.theme().id(),
+                            data: null,
+                            errors: self.errors,
+                            successCallback: function(){
+                                commonHelper.modal.close(self.modals.removeTheme);
+                                self.actions.theme.cancel();
+                                self.get.themes();
+                            }
+                        });
+                    }
                 }
             };
 
@@ -340,6 +383,7 @@ $(document).ready(function(){
                 current: self.current,
                 moveTo: self.moveTo,
                 mode: self.mode,
+                actions: self.actions,
                 csed: self.csed,
                 filter: self.filter,
                 errors: self.errors,

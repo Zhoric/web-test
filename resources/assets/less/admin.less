@@ -413,14 +413,36 @@ table.werewolf{
 }
 table.werewolf.themes{
   margin-top: -2px;
-  tr:first-child{
-    text-align: center;
-    height: 40px;
-    font-size: 16px;
-    color: @filch;
+  tr{
     cursor: pointer;
+    .actions{
+      visibility: hidden;
+    }
+    &.adder-row {
+      height: 40px;
+      font-size: 16px;
+      color: @filch;
+      cursor: pointer;
+      .fa{
+        margin: 0 5px;
+        font-size: 17px;
+      }
+      &:hover {
+        background: @patronus-shade;
+      }
+    }
+    &.input-row{
+      height: 40px;
+      input{
+        width: 100%;
+        height: 39px;
+      }
+    }
     &:hover{
       background: @patronus-shade;
+      .actions{
+        visibility: visible;
+      }
     }
   }
   tr > td{

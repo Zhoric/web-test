@@ -65,8 +65,8 @@
         <div class="popup-delete">
             <div><h3>Удалить выбранную тему?</h3></div>
             <div>
-                <button data-bind="click: $root.csed.theme.remove" class="fa">&#xf00c;</button>
-                <button class="fa danger arcticmodal-close">&#xf00d;</button>
+                <button data-bind="click: $root.actions.theme.end.remove" class="fa">&#xf00c;</button>
+                <button data-bind="click: $root.actions.theme.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
             </div>
         </div>
     </div>
@@ -103,31 +103,34 @@
                         <tr><th>№</th><th>Темы</th><th>Действия</th></tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td colspan="3" data-bind="click: $root.csed.theme.startAdd">
+                    <!-- ko if: $root.current.theme().mode() !== state.create-->
+                    <tr class="adder-row">
+                        <td colspan="3" data-bind="click: $root.actions.theme.start.add">
                             <span class="fa">&#xf067;</span>&nbsp;Добавить тему
                         </td>
                     </tr>
-                    {{--<tr>--}}
-                        {{--<td colspan="2">--}}
-                            {{--<input type="text"/>--}}
-                        {{--</td>--}}
-                        {{--<td>--}}
-                            {{--<button data-bind="" class="fa approve mini"></button>--}}
-                            {{--<button data-bind="" class="fa remove mini"></button>--}}
-                        {{--</td>--}}
-                    {{--</tr>--}}
-                    <!-- ko foreach: $root.current.themes-->
-                    <tr>
-                        <td data-bind="text: $index()+1"></td>
-                        <td><a data-bind="text: name, click: $root.moveTo.theme"></a></td>
+                    <!-- /ko -->
+                    <!-- ko if: $root.current.theme().mode() === state.create -->
+                    <tr class="input-row">
+                        <td colspan="2">
+                            <input type="text" data-bind="value: $root.current.theme().name" placeholder="Название темы"/>
+                        </td>
                         <td>
-                            <button data-bind="click: $root.csed.theme.showSections" class="fa approve mini">&#xf0f6;</button>
-                            <button data-bind="click: $root.csed.theme.startRemove" class="fa remove mini">&#xf014;</button>
+                            <button data-bind="click: $root.actions.theme.end.add" class="fa approve mini">&#xf00c;</button>
+                            <button data-bind="click: $root.actions.theme.cancel" class="fa remove mini">&#xf00d;</button>
                         </td>
                     </tr>
                     <!-- /ko -->
-
+                    <!-- ko foreach: $root.current.themes-->
+                    <tr data-bind="click: $root.actions.theme.move">
+                        <td data-bind="text: $index()+1"></td>
+                        <td data-bind="text: name"><a data-bind="text: name, click: $root.moveTo.theme"></a></td>
+                        <td>
+                            <button data-bind="click: $root.csed.theme.showSections" class="fa approve mini actions">&#xf0f6;</button>
+                            <button data-bind="click: $root.actions.theme.start.remove" class="fa remove mini actions">&#xf014;</button>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
                     </tbody>
                 </table>
             </div>
