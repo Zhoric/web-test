@@ -19,7 +19,7 @@
         <!-- /ko -->
         <div class="items-body">
             <!-- ko foreach: disciplines -->
-            <div class="item" data-bind="click: $root.csed.show">
+            <div class="item" data-bind="click: $root.csed.show, css: {'current': $root.current.discipline().id() === id()}">
                 <span class="fa tag float-right" data-bind="click: $root.csed.showSections" title="Общие разделы">&#xf0f6;</span>
                 <span class="fa tag float-right" data-bind="click: $root.moveTo.tests" title="Перейти к тестам">&#xf022;</span>
                 <span data-bind="text: name"></span>
@@ -98,9 +98,9 @@
         <!-- ko if: $root.mode() !== 'add' -->
         <div class="details discipline">
             <div class="details-row">
-                <table class="stripe-table themes">
+                <table class="werewolf themes">
                     <thead>
-                    <tr><th>№</th><th>Темы</th><th>Действия</th></tr>
+                        <tr><th>№</th><th>Темы</th><th>Действия</th></tr>
                     </thead>
                     <tbody>
                     <tr>
@@ -108,6 +108,15 @@
                             <span class="fa">&#xf067;</span>&nbsp;Добавить тему
                         </td>
                     </tr>
+                    {{--<tr>--}}
+                        {{--<td colspan="2">--}}
+                            {{--<input type="text"/>--}}
+                        {{--</td>--}}
+                        {{--<td>--}}
+                            {{--<button data-bind="" class="fa approve mini"></button>--}}
+                            {{--<button data-bind="" class="fa remove mini"></button>--}}
+                        {{--</td>--}}
+                    {{--</tr>--}}
                     <!-- ko foreach: $root.current.themes-->
                     <tr>
                         <td data-bind="text: $index()+1"></td>

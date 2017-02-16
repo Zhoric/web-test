@@ -53,26 +53,6 @@
                     <span data-bind="text: name"></span>
                 </div>
                 <!-- /ko -->
-                <!-- ko foreach: $root.current.plans -->
-                <div class="item" data-bind="click: $root.actions.moveTo.plan">
-                    <span data-bind="text: name"></span>
-                </div>
-                <!-- /ko -->
-                <!-- ko foreach: $root.current.plans -->
-                <div class="item" data-bind="click: $root.actions.moveTo.plan">
-                    <span data-bind="text: name"></span>
-                </div>
-                <!-- /ko -->
-                <!-- ko foreach: $root.current.plans -->
-                <div class="item" data-bind="click: $root.actions.moveTo.plan">
-                    <span data-bind="text: name"></span>
-                </div>
-                <!-- /ko -->
-                <!-- ko foreach: $root.current.plans -->
-                <div class="item" data-bind="click: $root.actions.moveTo.plan">
-                    <span data-bind="text: name"></span>
-                </div>
-                <!-- /ko -->
             </div>
         </div>
     </div>

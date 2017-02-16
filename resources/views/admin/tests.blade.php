@@ -28,7 +28,7 @@
         <!-- /ko -->
         <div class="items-body">
             <!-- ko foreach: $root.current.tests -->
-            <div class="item" data-bind="text: subject, click: $root.csed.test.show"></div>
+            <div class="item" data-bind="text: subject, click: $root.csed.test.show, css: {'current': $root.current.test().id() === id()}"></div>
             <!-- ko if: $root.mode() !== 'none' && $root.current.test().id() === $data.id() -->
             <div data-bind="template: {name: 'show-details', data: $root.current.test}"></div>
             <!-- /ko -->

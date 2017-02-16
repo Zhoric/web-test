@@ -319,30 +319,30 @@ table.paramset{
     }
   }
 }
-table.themes{
-  td{
-    width: 80%;
-    &:first-child{
-      width: 5%;
-      text-align: center;
-    }
-    &:last-child{
-      width: 11%;
-      text-align: right;
-    }
-  }
-  td[colspan]{
-    text-align: center;
-    font-size: 19px;
-    padding: 12px;
-    @color: @filch;
-    &:hover{
-      cursor: pointer;
-      background: @patronus-shade;
-      color: @filch;
-    }
-  }
-}
+//table.themes{
+//  td{
+//    width: 80%;
+//    &:first-child{
+//      width: 5%;
+//      text-align: center;
+//    }
+//    &:last-child{
+//      width: 11%;
+//      text-align: right;
+//    }
+//  }
+//  td[colspan]{
+//    text-align: center;
+//    font-size: 19px;
+//    padding: 12px;
+//    @color: @filch;
+//    &:hover{
+//      cursor: pointer;
+//      background: @patronus-shade;
+//      color: @filch;
+//    }
+//  }
+//}
 table.variants{
   button.remove{
     margin-right: 10px;
@@ -381,6 +381,7 @@ table.questions{
     }
   }
 }
+
 table.monitoring{
   width: 100%;
   thead tr td{
@@ -397,6 +398,43 @@ table.monitoring{
     margin: 0!important;
   }
 }
+table.werewolf{
+  width: 100%;
+  thead tr th{
+    text-align: center;
+    padding: 7px 15px;
+    background: @akcio;
+    color: @white;
+  }
+  tr td{
+    border-bottom: 1px solid @patronus-shade;
+    padding: 3px 15px;
+  }
+}
+table.werewolf.themes{
+  margin-top: -2px;
+  tr:first-child{
+    text-align: center;
+    height: 40px;
+    font-size: 16px;
+    color: @filch;
+    cursor: pointer;
+    &:hover{
+      background: @patronus-shade;
+    }
+  }
+  tr > td{
+    &:last-child{
+      width: 100px;
+      text-align: center;
+    }
+    &:first-child{
+      width: 15px;
+      text-align: center;
+    }
+  }
+}
+
 
 .action-button{
   width: 100%;
