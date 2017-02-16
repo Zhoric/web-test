@@ -142,8 +142,10 @@ $(document).ready(function(){
                 },
                 moveTo: {
                     students: function(data){
-                        var url = '/admin/students/' + data.id();
-                        window.location.href = url;
+                        commonHelper.cookies.create({
+                            groupName : data.name()
+                        });
+                        window.location.href = '/admin/students/' + data.id();
                     }
                 },
                 switchForm: {

@@ -219,12 +219,19 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.initial.groups(data());
+                            var cookie = $.cookie();
+                            if (cookie){
+                                self.filter.group(cookie.groupName);
+                                commonHelper.cookies.remove(cookie);
+                                return;
+                            }
+                            self.get.students();
                         }
                     });
                 }
             };
             self.get.groups();
-            self.get.students();
+
             self.post = {
                 request: function(){
                     var url = '/api/user/delete/' + self.current.student().id();
