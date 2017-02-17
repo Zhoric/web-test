@@ -330,6 +330,9 @@ span .incorrect {
 span.coloredin-patronus {
   color: #5D8CAE !important;
 }
+span.coloredin-crimson {
+  color: #D24D57 !important;
+}
 span.date-string {
   font-size: 12px;
 }
