@@ -8,9 +8,12 @@ $(document).ready(function(){
             self.events = new validationEvents(self.validation);
             self.errors = errors();
             self.pagination = pagination();
-            //self.mode = ko.observable(state.none);
+            self.mode = ko.observable(state.none);
             self.modals = {
-                removeTheme: '#remove-theme-modal'
+                removeTheme: '#remove-theme-modal',
+                removeDiscipline: '#delete-modal',
+                section: '#sections-modal',
+                removeSection: '#remove-section-modal',
             };
             self.multiselect = new multiselect({
                 dataTextField: 'fullname',
@@ -18,8 +21,8 @@ $(document).ready(function(){
                 valuePrimitive: true
             });
 
-            self.disciplines = ko.observableArray([]);
             self.current = {
+                disciplines: ko.observableArray([]),
                 discipline: ko.validatedObservable({
                     id: ko.observable(0),
                     name: ko.observable('').extend({
@@ -54,7 +57,6 @@ $(document).ready(function(){
                 }
             };
 
-            self.alter = {};
             self.actions = {
                 theme: {
                     start: {
@@ -89,10 +91,103 @@ $(document).ready(function(){
                     move: function(data){
                         window.location.href = '/admin/theme/' + data.id();
                     }
+                },
+                discipline: {
+                    show: function(data){
+                        if (self.mode() === state.none ||
+                            self.current.discipline().id() !== data.id()){
+                            self.mode(state.info);
+                            self.alter.fill(data);
+                            self.get.disciplineProfiles();
+                            self.get.themes();
+                            return;
+                        }
+                        self.actions.discipline.cancel();
+                    },
+                    start: {
+                        add: function(){
+                            self.mode() === state.create
+                                ? self.mode(state.none)
+                                : self.mode(state.create);
+                            self.alter.empty();
+                            commonHelper.buildValidationList(self.validation);
+                        },
+                        update: function(){
+                            self.mode(state.update);
+                            commonHelper.buildValidationList(self.validation);
+                        },
+                        remove: function(){
+                            self.mode(state.remove);
+                            commonHelper.modal.open(self.modals.removeDiscipline);
+                        }
+                    },
+                    end: {
+                        update: function(){
+                            if (!self.current.discipline.isValid()){
+                                self.validation[$('[accept-validation]').attr('id')].open();
+                                return;
+                            }
+                            if (!self.multiselect.tags().length){
+                                self.validation[$('[special]').attr('id')].open();
+                                return;
+                            }
+                            self.post.discipline();
+                        },
+                        remove: function(){
+                            commonHelper.modal.close(self.modals.removeDiscipline);
+                            self.post.removal.discipline();
+                        }
+                    },
+                    cancel: function(){
+                        self.mode(state.none);
+                        self.alter.empty();
+                    },
+                    move: function(){
+                        e.stopPropagation();
+                        window.location.href = '/admin/tests/' + data.id();
+                    }
+                },
+                section: {
+                    show: function(data, e){
+                        e.stopPropagation();
+                        self.get.sectionsByDiscipline();
+                        commonHelper.modal.open(self.modals.section);
+                    },
+                    start: {
+                        remove: function(){
+                            commonHelper.modal.open('#remove-section-modal');
+                            self.current.section(data);
+                        }
+                    },
+                    end: {
+                        update: function(){
+                            window.location.href = '/admin/editor/' + data.id();
+                        },
+                        remove: function(){
+                            self.post.removal.section();
+                        }
+                    },
+                    move: function(data){
+                        window.location.href = '/section/' + data.id();
+                    },
+                    theme: {
+                        show: function(data, e){
+                            e.stopPropagation();
+                            self.current.theme().name(data.name()).id(data.id());
+                            self.get.sectionsByTheme();
+                            commonHelper.modal.open(self.modals.section);
+                        },
+                        add: function(){
+                            window.location.href = '/admin/editor/new/' +
+                                self.current.discipline().id() + '/' +
+                                self.current.theme().id();
+                        }
+                    }
+
                 }
             };
 
-            self.toggleCurrent = {
+            self.alter = {
                 fill: function(data){
                     self.current.discipline()
                         .id(data.id())
@@ -116,7 +211,7 @@ $(document).ready(function(){
                         abbreviation: edit.abbreviation(),
                         description: edit.description()
                     };
-                    self.mode() === 'edit' ? forpost.id = edit.id() : null;
+                    self.mode() === state.update ? forpost.id = edit.id() : null;
                     self.multiselect.tags().find(function(item){
                         profiles.push(item.id());
                     });
@@ -124,105 +219,6 @@ $(document).ready(function(){
                 }
             };
 
-            self.mode = ko.observable('none');
-            self.csed = {
-                show: function(data){
-                    if (self.mode() === 'none' || self.current.discipline().id() !== data.id()){
-                        self.mode('info');
-                        self.toggleCurrent.fill(data);
-                        self.get.disciplineProfiles();
-                        self.get.themes();
-                        return;
-                    }
-                    self.mode('none');
-                    self.toggleCurrent.empty();
-                },
-                startAdd: function(){
-                    self.toggleCurrent.empty();
-                    self.mode() === 'add' ? self.mode('none') : self.mode('add');
-                    commonHelper.buildValidationList(self.validation);
-                },
-                startUpdate: function(){
-                    self.mode('edit');
-                    commonHelper.buildValidationList(self.validation);
-                },
-                startRemove: function(){
-                    self.mode('delete');
-                    commonHelper.modal.open('#delete-modal');
-                },
-                update: function(){
-                    if (!self.current.discipline.isValid()){
-                        self.validation[$('[accept-validation]').attr('id')].open();
-                        return;
-                    }
-                    if (!self.multiselect.tags().length){
-                        self.validation[$('[special]').attr('id')].open();
-                        return;
-                    }
-                    self.post.discipline();
-                },
-                remove: function(){
-                    commonHelper.modal.close('#delete-modal');
-                    self.post.discipline();
-                },
-                cancel: function(){
-                    if (self.mode() === 'add'){
-                        self.mode('none');
-                        self.toggleCurrent.empty();
-                        return;
-                    }
-                    self.mode('info');
-                },
-                showSections: function (data, e) {
-                    e.stopPropagation();
-                    self.get.sectionsByDiscipline();
-
-                    commonHelper.modal.open('#sections-modal');
-
-                },
-                theme: {
-                    showSections : function(data, e) {
-                        e.stopPropagation();
-                        //self.current.theme(data);
-                        self.get.sectionsByTheme();
-                        commonHelper.modal.open('#sections-modal');
-                    },
-                    addSection : function (data) {
-                        window.location.href = '/admin/editor/new/' + self.current.discipline().id() + '/' + self.current.theme().id();
-                    }
-                },
-                section: {
-                    startRemove: function (data) {
-                        commonHelper.modal.open('#remove-section-modal');
-                        self.current.section(data);
-                    },
-                    remove: function () {
-                        var url = '/api/sections/delete/' + self.current.section().id();
-                        $.post(url, function(){
-                            commonHelper.modal.close('#remove-section-modal');
-                            self.get.sections();
-                        });
-                    },
-                    edit: function (data) {
-                        window.location.href = '/admin/editor/' + data.id();
-
-                    },
-                    info: function (data) {
-                        window.location.href = '/section/' + data.id();
-                    }
-                    
-                }
-            };
-
-            self.moveTo = {
-                theme: function(data){
-                    window.location.href = '/admin/theme/' + data.id();
-                },
-                tests: function(data, e){
-                    e.stopPropagation();
-                    window.location.href = '/admin/tests/' + data.id();
-                }
-            };
             self.get = {
                 disciplines: function(profileId){
                     var filter = self.filter;
@@ -236,7 +232,7 @@ $(document).ready(function(){
                         url: url,
                         errors: self.errors,
                         successCallback: function(data){
-                            self.disciplines(data.data());
+                            self.current.disciplines(data.data());
                             self.pagination.itemsCount(data.count());
                         }
                     });
@@ -253,7 +249,6 @@ $(document).ready(function(){
                             $.each(data(), function(i, item){
                                 profiles.push(+item.profile_id());
                             });
-                            console.log(profiles);
                             self.multiselect.multipleSelect()(profiles);
                         }
                     });
@@ -306,17 +301,12 @@ $(document).ready(function(){
 
             self.post = {
                 discipline: function(){
-                    var url = '/api/disciplines/';
-                    url = self.mode() === 'delete' ? url + 'delete/' + self.current.discipline().id() : url;
-                    url = self.mode() === 'add' ? url + 'create' : url;
-                    url = self.mode() === 'edit' ? url + 'update' : url;
                     $ajaxpost({
-                        url: url,
+                        url: '/api/disciplines/' + self.mode(),
                         errors: self.errors,
-                        data: self.mode() === 'delete' ? null : self.toggleCurrent.stringify(),
+                        data: self.alter.stringify(),
                         successCallback: function(){
-                            self.mode('none');
-                            self.toggleCurrent.empty();
+                            self.actions.discipline.cancel();
                             self.get.disciplines();
                         }
                     });
@@ -351,6 +341,28 @@ $(document).ready(function(){
                                 self.get.themes();
                             }
                         });
+                    },
+                    discipline: function(){
+                        $ajaxpost({
+                            url: '/api/disciplines/delete/' + self.current.discipline().id(),
+                            errors: self.errors,
+                            data: null,
+                            successCallback: function(){
+                                self.actions.discipline.cancel();
+                                self.get.disciplines();
+                            }
+                        });
+                    },
+                    section: function(){
+                        $ajaxpost({
+                            url: '/api/sections/delete/' + self.current.section().id(),
+                            errors: self.errors,
+                            data: null,
+                            successCallback: function(){
+                                commonHelper.modal.close(self.modals.removeSection);
+                                self.get.sections();
+                            }
+                        });
                     }
                 }
             };
@@ -377,7 +389,6 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
-                disciplines: self.disciplines,
                 pagination: self.pagination,
                 multiselect: self.multiselect,
                 current: self.current,

@@ -12,19 +12,19 @@
     <div class="items disciplines">
         <div class="items-head">
             <h1>Администрирование дисциплин</h1>
-            <label class="adder" data-bind="click: $root.csed.startAdd">Добавить</label>
+            <label class="adder" data-bind="click: $root.actions.discipline.start.add">Добавить</label>
         </div>
-        <!-- ko if: $root.mode() === 'add'-->
+        <!-- ko if: $root.mode() === state.create-->
         <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
         <!-- /ko -->
         <div class="items-body">
-            <!-- ko foreach: disciplines -->
-            <div class="item" data-bind="click: $root.csed.show, css: {'current': $root.current.discipline().id() === id()}">
-                <span class="fa tag float-right" data-bind="click: $root.csed.showSections" title="Общие разделы">&#xf0f6;</span>
-                <span class="fa tag float-right" data-bind="click: $root.moveTo.tests" title="Перейти к тестам">&#xf022;</span>
+            <!-- ko foreach: $root.current.disciplines -->
+            <div class="item" data-bind="click: $root.actions.discipline.show, css: {'current': $root.current.discipline().id() === id()}">
+                <span class="fa tag float-right" data-bind="click: $root.actions.section.show" title="Общие разделы">&#xf0f6;</span>
+                <span class="fa tag float-right" data-bind="click: $root.actions.discipline.move" title="Перейти к тестам">&#xf022;</span>
                 <span data-bind="text: name"></span>
             </div>
-            <!-- ko if: $root.mode() !== 'none' && $data.id() === $root.current.discipline().id()-->
+            <!-- ko if: $root.mode() !== state.none && $data.id() === $root.current.discipline().id()-->
             <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
             <!-- /ko -->
             <!-- /ko -->
@@ -54,13 +54,13 @@
 
 <script type="text/html" id="show-details">
     <div class="">
-        <!-- ko if: $root.mode() === 'info' || $root.mode() === 'delete' || $root.mode() === 'section' -->
+        <!-- ko if: $root.mode() === state.info || $root.mode() === state.remove || $root.mode() === 'section' -->
         <div data-bind="template: {name: 'info-mode', data: $data}"></div>
         <!-- /ko -->
-        <!-- ko if: $root.mode() === 'edit' || $root.mode() === 'add'-->
+        <!-- ko if: $root.mode() === state.update || $root.mode() === state.create-->
         <div data-bind="template: {name: 'edit-mode', data: $data}"></div>
         <!-- /ko -->
-        <!-- ko if: $root.mode() !== 'add' -->
+        <!-- ko if: $root.mode() !== state.create -->
         <div class="details discipline">
             <div class="details-row">
                 <table class="werewolf themes">
@@ -89,9 +89,9 @@
                     <!-- ko foreach: $root.current.themes-->
                     <tr data-bind="click: $root.actions.theme.move">
                         <td data-bind="text: $index()+1"></td>
-                        <td data-bind="text: name"><a data-bind="text: name, click: $root.moveTo.theme"></a></td>
+                        <td data-bind="text: name"><a data-bind="text: name, click: $root.actions.theme.move"></a></td>
                         <td>
-                            <button data-bind="click: $root.csed.theme.showSections" class="fa approve mini actions">&#xf0f6;</button>
+                            <button data-bind="click: $root.actions.section.theme.show" class="fa approve mini actions">&#xf0f6;</button>
                             <button data-bind="click: $root.actions.theme.start.remove" class="fa remove mini actions">&#xf014;</button>
                         </td>
                     </tr>
@@ -106,19 +106,19 @@
 <script type="text/html" id="info-mode">
     <div class="details discipline">
         <div class="details-row">
-            <div class="details-column width-20p">
+            <div class="details-column">
                 <label class="title">Аббревиатура</label>
                 <span class="info" data-bind="text: abbreviation"></span>
             </div>
-            <div class="details-column width-75p">
+            <div class="details-column">
                 <label class="title">Полное название дисциплины</label>
                 <span class="info" data-bind="text: name"></span>
             </div>
         </div>
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
-                <button data-bind="click: $root.csed.startRemove" class="remove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
-                <button data-bind="click: $root.csed.startUpdate" class="approve"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
+                <button data-bind="click: $root.actions.discipline.start.remove" class="remove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
+                <button data-bind="click: $root.actions.discipline.start.update" class="approve"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
             </div>
         </div>
     </div>
@@ -163,9 +163,9 @@
         </div>
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
-                <button data-bind="click: $root.csed.cancel" class="cancel">Отмена</button>
+                <button data-bind="click: $root.actions.discipline.cancel" class="cancel">Отмена</button>
                 <button id="bAcceptDiscipline" title="Проверьте правильность заполнения полей"
-                        data-bind="click: $root.csed.update"
+                        data-bind="click: $root.actions.discipline.end.update"
                         accept-validation class="approve">Сохранить
                 </button>
             </div>
@@ -178,7 +178,7 @@
         <div class="box-modal_close arcticmodal-close">закрыть</div>
         <div class="width100">
             <div>
-                <button data-bind="click: $root.csed.theme.addSection" class="add-section"><span class="fa">&#xf067;</span>&nbsp;Добавить новый раздел</button>
+                <button data-bind="click: $root.actions.section.theme.add" class="add-section"><span class="fa">&#xf067;</span>&nbsp;Добавить новый раздел</button>
             </div>
             <!-- ko if:  $root.current.sections().length > 0-->
             <div class="section-info">
@@ -190,10 +190,10 @@
                 <!-- ko foreach: $root.current.sections-->
                 <tr>
                     <td data-bind="text: $index()+1"></td>
-                    <td><a data-bind="click: $root.csed.section.info, text: name"></a></td>
-                    <td><button data-bind="click: $root.csed.section.info" class="fa success">&#xf0f6;</button>
-                        <button data-bind="click: $root.csed.section.edit" class="fa info">&#xf040;</button>
-                        <button data-bind="click: $root.csed.section.startRemove" class="fa danger">&#xf014;</button>
+                    <td><a data-bind="click: $root.actions.section.move, text: name"></a></td>
+                    <td><button data-bind="click: $root.actions.section.move" class="fa success">&#xf0f6;</button>
+                        <button data-bind="click: $root.actions.section.end.update" class="fa info">&#xf040;</button>
+                        <button data-bind="click: $root.actions.section.start.remove" class="fa danger">&#xf014;</button>
                     </td>
                 </tr>
                 <!-- /ko -->
@@ -234,8 +234,8 @@
             </div>
             <div class="layer-body">
                 <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close" data-bind="click: $root.csed.cancel">Отмена</button>
-                    <button class="remove arcticmodal-close" data-bind="click: $root.csed.remove">Удалить</button>
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.discipline.end.remove">Удалить</button>
                 </div>
             </div>
         </div>
@@ -250,7 +250,7 @@
             <div class="layer-body">
                 <div class="details-row float-buttons">
                     <button class="cancel arcticmodal-close">Отмена</button>
-                    <button class="remove arcticmodal-close" data-bind="click: $root.csed.section.remove">Удалить</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.section.end.remove">Удалить</button>
                 </div>
             </div>
         </div>
