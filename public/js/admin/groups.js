@@ -293,6 +293,7 @@ $(document).ready(function(){
                 self.get.groups();
             });
             self.filter.name.subscribe(function(){
+                self.actions.cancel();
                 self.pagination.currentPage(1);
                 self.get.groups();
             });

@@ -260,14 +260,17 @@ $(document).ready(function(){
             };
 
             self.filter.group.subscribe(function(){
+                self.actions.cancel();
                 self.pagination.currentPage(1);
                 self.get.students();
             });
             self.filter.name.subscribe(function(){
+                self.actions.cancel();
                 self.pagination.currentPage(1);
                 self.get.students();
             });
             self.filter.request.subscribe(function(){
+                self.actions.cancel();
                 self.pagination.currentPage(1);
                 self.get.students();
             });

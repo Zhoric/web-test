@@ -227,6 +227,7 @@ $(document).ready(function(){
             };
 
             self.filter.name.subscribe(function(){
+                self.mode(state.none);
                 self.pagination.currentPage(1);
                 self.get.lecturers();
             });
