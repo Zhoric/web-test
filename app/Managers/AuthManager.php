@@ -12,10 +12,13 @@ use UserRole;
 class AuthManager
 {
     protected $unitOfWork;
+    protected $groupManager;
 
-    public function __construct(UnitOfWork $unitOfWork)
+    public function __construct(UnitOfWork $unitOfWork, GroupManager $groupManager)
     {
         $this->unitOfWork = $unitOfWork;
+        $this->groupManager = $groupManager;
+
     }
 
     public function checkIfEmailExists($email){
@@ -23,6 +26,33 @@ class AuthManager
             return true;
         }
         return false;
+    }
+
+    /**
+     * Отправляет заявку на регистрацуию
+     * @param User $user. Объект, содержащий креды
+     * @param $groupId - айди группы, которой будет принадлежать зареганый юзер
+     * @param $role  - роль зареганого юзера
+     * @throws Exception
+     * @return null|object
+     */
+    public function sendRegistrationRequest(User $user, $groupId,$role)
+    {
+            // По умолчанию регистрируем пользователя с ролью студента.
+            if (!isset($role)){
+                $role = UserRole::Student;
+            }
+            //Регистрируем его как неактивного
+            $createdUser = $this->createNewUser($user, $role, false);
+
+            if(isset($createdUser)) {
+                $this->groupManager->setStudentGroup($groupId, $createdUser->getId());
+            }
+            else {
+                throw new Exception('Ошибка при отправке заявки на регистрацию пользователя.');
+            }
+
+            return $createdUser;
     }
 
     /**

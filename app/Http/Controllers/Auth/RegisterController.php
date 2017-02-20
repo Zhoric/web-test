@@ -52,68 +52,27 @@ class RegisterController extends Controller
     }
 
 
-    /**
-     * Регистрация нового пользователя.
-     * @param Request $request
-     * @return null|object
-     */
-    protected function create(Request $request)
-    {
 
-        try{
+    public function register(Request $request)
+    {
+        try {
+
             $userData = $request->json('user');
             $groupId = $request->json('groupId');
             $role = $request->json('role');
 
-            // По умолчанию регистрируем пользователя с ролью студента.
-            if (!isset($role)){
-                $role = UserRole::Student;
-            }
-
             $user = new User();
             $user->fillFromJson($userData);
 
-            $createdUser = $this->authManager->createNewUser($user, $role, false);
-
-            if(isset($createdUser)) {
-                $this->groupManager->setStudentGroup($groupId, $createdUser->getId());
-            }
-            else {
-                throw new Exception('Ошибка при создании пользователя.');
-            }
-
-            return $createdUser;
-        } catch (Exception $exception){
-            return $this->faultJSONResponse($exception->getMessage());
-        }
-
-    }
-
-    public function checkIfEmailExists(Request $request){
-
-        try {
-            $email = $request->json('email');
-            $exists = $this->authManager->checkIfEmailExists($email);
-            return $this->successJSONResponse($exists);
-        }
-        catch (Exception $exception){
-            return $this->faultJSONResponse($exception->getMessage());
-        }
-
-    }
-
-    public function register(Request $request){
-        try {
-            $user = $this->create($request);
-            if(empty($user)){
+            $user = $this->authManager->sendRegistrationRequest($user, $groupId, $role);
+            if (empty($user)) {
                 throw new Exception('Ошибка при регистрации');
             }
-            event(new Registered($user));
 
+            event(new Registered($user));
             $message = 'Ваша заявка на регистрацию принята! Ждите';
             return $this->successJSONResponse($message);
-        }
-        catch (Exception $exception){
+        } catch (Exception $exception) {
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
