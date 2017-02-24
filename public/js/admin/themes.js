@@ -3,7 +3,6 @@ $(document).ready(function(){
     var editor = ace.edit("editor");
     editor.getSession().setMode("ace/mode/c_cpp");
 
-
     var themeViewModel = function(){
         return new function(){
             var self = this;

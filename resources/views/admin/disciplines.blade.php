@@ -80,7 +80,7 @@
                         <td colspan="2">
                             <input type="text" data-bind="value: $root.current.theme().name" placeholder="Название темы"/>
                         </td>
-                        <td>
+                        <td class="action-holder">
                             <button data-bind="click: $root.actions.theme.end.add" class="fa approve mini">&#xf00c;</button>
                             <button data-bind="click: $root.actions.theme.cancel" class="fa remove mini">&#xf00d;</button>
                         </td>
@@ -90,7 +90,7 @@
                     <tr data-bind="click: $root.actions.theme.move">
                         <td data-bind="text: $index()+1"></td>
                         <td data-bind="text: name"><a data-bind="text: name, click: $root.actions.theme.move"></a></td>
-                        <td>
+                        <td class="action-holder">
                             <button data-bind="click: $root.actions.section.theme.show" class="fa approve mini actions">&#xf0f6;</button>
                             <button data-bind="click: $root.actions.theme.start.remove" class="fa remove mini actions">&#xf014;</button>
                         </td>

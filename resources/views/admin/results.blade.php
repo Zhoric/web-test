@@ -44,32 +44,6 @@
                 </tr>
                 </tbody>
             </table>
-            {{--<div class="result">--}}
-                {{--<a class="result" data-bind="attr: {href: '/admin/result/' + id()}">--}}
-                    {{--<div class="details-row">--}}
-                        {{--<div class="details-column width-45p">--}}
-                            {{--<label class="title">ФИО студента</label>--}}
-                            {{--<span data-bind="text: user.lastName() + ' ' +--}}
-                                                   {{--user.firstName() + ' ' +--}}
-                                                   {{--user.patronymic()"></span>--}}
-                        {{--</div>--}}
-                        {{--<div class="details-column width-25p">--}}
-                            {{--<label class="title">Оценка</label>--}}
-                            {{--<!-- ko if: mark() !== null -->--}}
-                            {{--<span class="radio-important" data-bind="text: mark() +'/100'"></span>--}}
-                            {{--<!-- /ko -->--}}
-                            {{--<span class="radio-negative" data-bind="if: mark() === null">Требуется проверка</span>--}}
-                        {{--</div>--}}
-                        {{--<div class="details-column width-20p">--}}
-                            {{--<label class="title">Номер попытки</label>--}}
-                            {{--<span data-bind="text: attempt"></span>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                    {{--<div class="details-row date">--}}
-                        {{--<label data-bind="text: dateTime.date"></label>--}}
-                    {{--</div>--}}
-                {{--</a>--}}
-            {{--</div>--}}
         </div>
         <!-- /ko -->
     </div>

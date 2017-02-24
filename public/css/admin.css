@@ -451,6 +451,21 @@ span.date-string {
 .width-100p {
   width: 100%;
 }
+.height-100 {
+  height: 100px;
+}
+.minw-20 {
+  min-width: 20px;
+}
+.minw-220 {
+  min-width: 220px;
+}
+.minw-100 {
+  min-width: 100px;
+}
+.maxw-100p {
+  max-width: 100%;
+}
 .zero-margin {
   margin: 0 !important;
 }
@@ -789,57 +804,6 @@ button {
 .stripe-table button.remove {
   background: #D24D57;
 }
-table.paramset button.remove {
-  margin-right: 10px;
-}
-table.paramset td {
-  width: 40%;
-  white-space: pre-wrap;
-}
-table.paramset td:first-child {
-  width: 5%;
-  text-align: center;
-}
-table.paramset td:last-child {
-  width: 11%;
-  text-align: right;
-}
-table.variants button.remove {
-  margin-right: 10px;
-}
-table.variants td {
-  width: 60%;
-  text-align: center;
-}
-table.variants td:first-child {
-  width: 5%;
-  text-align: center;
-}
-table.variants td:nth-child(2) {
-  text-align: left;
-  white-space: pre-wrap;
-}
-table.variants td:last-child {
-  width: 11%;
-  text-align: right;
-}
-table.questions th:last-child {
-  text-align: right;
-}
-table.questions td {
-  width: 1%;
-  white-space: pre-wrap;
-}
-table.questions td:first-child {
-  width: 40%;
-}
-table.questions td:nth-child(2) {
-  width: 20%;
-}
-table.questions td:last-child {
-  width: 11%;
-  text-align: right;
-}
 table.monitoring {
   width: 100%;
 }
@@ -858,6 +822,8 @@ table.monitoring .progressBar {
 }
 table.werewolf {
   width: 100%;
+  border-spacing: 0;
+  cursor: default;
 }
 table.werewolf thead tr th {
   text-align: center;
@@ -868,6 +834,10 @@ table.werewolf thead tr th {
 table.werewolf tr td {
   border-bottom: 1px solid #EDEEF0;
   padding: 3px 15px;
+}
+table.werewolf td.action-holder {
+  padding: 3px 0px;
+  text-align: right;
 }
 table.werewolf.themes {
   margin-top: -2px;
@@ -924,6 +894,15 @@ table.werewolf.results td:first-child {
 }
 table.werewolf.results td:nth-child(3) {
   width: 130px;
+}
+table.werewolf.questions .actions {
+  visibility: hidden;
+}
+table.werewolf.questions tr:hover {
+  background: #EDEEF0;
+}
+table.werewolf.questions tr:hover .actions {
+  visibility: visible;
 }
 .action-button {
   width: 100%;

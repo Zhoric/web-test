@@ -23,14 +23,20 @@
                 <h2><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></h2>
                 <!-- /ko -->
                 <!-- ko if: $root.mode() === 'theme.edit' -->
-                <input type="text" id="iThemeName" validate
-                       data-bind="value: $root.current.theme().name,
-                       validationElement: $root.current.theme().name,
-                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
-                <span>
-                    <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
-                    <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
-                </span>
+                <table>
+                    <tr>
+                        <td>
+                            <input type="text" id="iThemeName" validate
+                                   data-bind="value: $root.current.theme().name,
+                                   validationElement: $root.current.theme().name,
+                                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+                        </td>
+                        <td>
+                            <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
+                            <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
+                        </td>
+                    </tr>
+                </table>
                 <!-- /ko -->
             </div>
 
@@ -125,7 +131,7 @@
         <div class="details-row">
             <div class="details-column width-98p">
                 <label class="title">Текст&nbsp;вопроса&nbsp;<span class="required">*</span></label>
-                <textarea id="taQText" validate
+                <textarea id="taQText" validate class="height-100 maxw-100p"
                         data-bind="value: $root.current.question().text,
                         validationElement: $root.current.question().complexity,
                         event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
@@ -156,13 +162,13 @@
         <!-- ko if: $root.code.params.set().length -->
         <div class="details-row">
             <div class="details-column width-98p">
-                <table class="stripe-table paramset">
+                <table class="werewolf">
                     <tbody data-bind="foreach: $root.code.params.set">
                     <tr>
-                        <td data-bind="text: $index()+1"></td>
-                        <td data-bind="text: input"></td>
-                        <td data-bind="text: expectedOutput"></td>
-                        <td><button class="remove mini fa" data-bind="click: $root.code.params.remove">&#xf014;</button></td>
+                        <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
+                        <td data-bind="text: input" class="width-50p"></td>
+                        <td data-bind="text: expectedOutput" class="width-50p"></td>
+                        <td class="action-holder"><button class="remove mini fa" data-bind="click: $root.code.params.remove">&#xf014;</button></td>
                     </tr>
                     </tbody>
                 </table>
@@ -191,17 +197,17 @@
         <!-- ko if: $root.current.answers().length -->
         <div class="details-row">
             <div class="details-column width-98p">
-                <table class="stripe-table variants">
+                <table class="werewolf">
                     <tbody data-bind="foreach: $root.current.answers">
                     <tr>
-                        <td data-bind="text: $index()+1"></td>
-                        <td data-bind="text: text"></td>
-                        <td data-bind="visible: !$root.current.question().isOpenSingleLine()">
+                        <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
+                        <td data-bind="text: text" class="width-100p"></td>
+                        <td data-bind="visible: !$root.current.question().isOpenSingleLine()" class="minw-220">
                             <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.alter.set.answerCorrectness">Правильный</span>
                             <span>|</span>
                             <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.alter.set.answerCorrectness" >Неправильный</span>
                         </td>
-                        <td>
+                        <td class="action-holder">
                             <button class="fa mini remove" data-bind="click: $root.csed.answer.remove">&#xf014;</button>
                         </td>
                     </tr>
@@ -223,26 +229,26 @@
     <!-- /ko -->
 
     <div class="items">
-        <table class="stripe-table questions">
+        <table class="werewolf questions">
             <thead>
-                <tr>
-                    <th>Вопрос</th>
-                    <th>Тип</th>
-                    <th>Сложность</th>
-                    <th>Действия</th>
-                </tr>
+            <tr>
+                <th>Вопрос</th>
+                <th>Тип</th>
+                <th>Сложность</th>
+                <th>Действия</th>
+            </tr>
             </thead>
             <tbody>
             <!-- ko foreach: $root.current.questions-->
-                <tr>
-                    <td data-bind="text: text" class="width-10p"></td>
-                    <td data-bind="text: $root.alter.set.type($data)"></td>
-                    <td data-bind="text: $root.alter.set.complexity($data)"></td>
-                    <td>
-                        <button data-bind="click: $root.csed.question.edit" class="fa approve mini">&#xf040;</button>
-                        <button data-bind="click: $root.csed.question.startDelete" class="fa remove mini">&#xf014;</button>
-                    </td>
-                </tr>
+            <tr>
+                <td data-bind="text: text" class="width-100p"></td>
+                <td data-bind="text: $root.alter.set.type($data)"></td>
+                <td data-bind="text: $root.alter.set.complexity($data)" class="text-center"></td>
+                <td class="minw-100 action-holder">
+                    <button data-bind="click: $root.csed.question.edit" class="fa approve mini actions">&#xf040;</button>
+                    <button data-bind="click: $root.csed.question.startDelete" class="fa remove mini actions">&#xf014;</button>
+                </td>
+            </tr>
             <!-- /ko -->
             </tbody>
         </table>

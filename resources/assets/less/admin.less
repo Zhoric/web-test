@@ -302,61 +302,6 @@ button{
     background: @crimson-red;
   }
 }
-table.paramset{
-  button.remove{
-    margin-right: 10px;
-  }
-  td{
-    width: 40%;
-    white-space: pre-wrap;
-    &:first-child{
-      width: 5%;
-      text-align: center;
-    }
-    &:last-child{
-      width: 11%;
-      text-align: right;
-    }
-  }
-}
-table.variants{
-  button.remove{
-    margin-right: 10px;
-  }
-  td{
-    width: 60%;
-    text-align: center;
-    &:first-child{
-      width: 5%;
-      text-align: center;
-    }
-    &:nth-child(2){
-      text-align: left;
-      white-space: pre-wrap;
-    }
-    &:last-child{
-      width: 11%;
-      text-align: right;
-    }
-  }
-}
-table.questions{
-  th:last-child{text-align: right}
-  td{
-    width: 1%;
-    white-space: pre-wrap;
-    &:first-child{
-      width: 40%;
-    }
-    &:nth-child(2){
-      width: 20%;
-    }
-    &:last-child{
-      width: 11%;
-      text-align: right;
-    }
-  }
-}
 
 table.monitoring{
   width: 100%;
@@ -376,6 +321,8 @@ table.monitoring{
 }
 table.werewolf{
   width: 100%;
+  border-spacing: 0;
+  cursor: default;
   thead tr th{
     text-align: center;
     padding: 7px 15px;
@@ -385,6 +332,10 @@ table.werewolf{
   tr td{
     border-bottom: 1px solid @patronus-shade;
     padding: 3px 15px;
+  }
+  td.action-holder{
+    padding: 3px 0px;
+    text-align: right;
   }
 }
 table.werewolf.themes{
@@ -447,7 +398,13 @@ table.werewolf.results{
     width: 130px;
   }
 }
-
+table.werewolf.questions{
+  .actions{visibility: hidden}
+  tr:hover{
+    .actions{visibility: visible}
+    background: @patronus-shade;
+  }
+}
 
 .action-button{
   width: 100%;
