@@ -12,28 +12,28 @@
 @section('content')
 <div class="image-expander" data-bind="click: function(){$('.image-expander').hide();}">
     <!-- ko if: $root.current.question().showImage() -->
-    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
+    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.actions.image.expand"/>
     <!-- /ko -->
 </div>
 <div class="content">
     <div class="layer">
-        <div class="details-row theme">
+        <div class="details-row">
             <div class="details-column width-98p">
-                <!-- ko ifnot: $root.mode() === 'theme.edit' -->
-                <h2><a data-bind="text: $root.current.theme().name, click: $root.csed.theme.edit"></a></h2>
+                <!-- ko ifnot: $root.current.theme.mode() === state.update -->
+                <h2><a data-bind="text: $root.current.theme.name, click: $root.actions.theme.start.update"></a></h2>
                 <!-- /ko -->
-                <!-- ko if: $root.mode() === 'theme.edit' -->
+                <!-- ko if: $root.current.theme.mode() === state.update -->
                 <table>
                     <tr>
-                        <td>
-                            <input type="text" id="iThemeName" validate
-                                   data-bind="value: $root.current.theme().name,
-                                   validationElement: $root.current.theme().name,
+                        <td class="width-100p">
+                            <input type="text" id="iThemeName" validate class="height-40"
+                                   data-bind="value: $root.current.theme.name,
+                                   validationElement: $root.current.theme.name,
                                    event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         </td>
-                        <td>
-                            <button data-bind="click: $root.csed.theme.update" class="fa approve mini">&#xf00c;</button>
-                            <button data-bind="click: $root.csed.theme.cancel" class="fa cancel mini">&#xf00d;</button>
+                        <td class="minw-100">
+                            <button data-bind="click: $root.actions.theme.end.update" class="fa approve mini">&#xf00c;</button>
+                            <button data-bind="click: $root.actions.theme.cancel" class="fa cancel mini">&#xf00d;</button>
                         </td>
                     </tr>
                 </table>
@@ -48,13 +48,13 @@
             </div>
 
             <div class="details-column width-98p">
-                <button class="action-button" data-bind="click: $root.csed.question.toggleAdd">Добавить вопрос</button>
+                <button class="action-button" data-bind="click: $root.actions.question.start.add">Добавить вопрос</button>
             </div>
         </div>
     </div>
 
-    <!-- ko if: $root.mode() === 'add' || $root.mode() === 'edit' -->
-    <div class="layer theme">
+    <!-- ko if: $root.mode() === state.create || $root.mode() === state.update -->
+    <div class="layer theme" id="question-form">
         <div class="details-rows">
             <div class="details-column width-15p">
                 <label class="title">Время&nbsp;на&nbsp;ответ&nbsp;<span class="required">*</span></label>
@@ -75,7 +75,7 @@
             <div class="details-column width-39p">
                 <label class="title">Тип&nbsp;вопроса&nbsp;<span class="required">*</span></label>
                 <select id="sQType" validate
-                        data-bind="options: $root.filter.types,
+                        data-bind="options: $root.initial.types,
                         optionsText: 'name',
                         value: $root.current.question().type,
                         optionsCaption: 'Выберите тип',
@@ -86,7 +86,7 @@
             <div class="details-column width-39p">
                 <label class="title">Сложность&nbsp;вопроса&nbsp;<span class="required">*</span></label>
                 <select id="sQComplexity" validate
-                        data-bind="options: $root.filter.complexityTypes,
+                        data-bind="options: $root.initial.complexity,
                         optionsText: 'name',
                         value: $root.current.question().complexity,
                         optionsCaption: 'Выберите сложность',
@@ -122,8 +122,8 @@
                 <!-- /ko -->
                 <!-- ko if: $root.current.question().showImage() -->
                 <div class="image-holder">
-                    <div class="fa remove" data-bind="click: $root.csed.image.remove">&#xf00d;</div>
-                    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.csed.image.expand"/>
+                    <div class="fa remove" data-bind="click: $root.actions.image.remove">&#xf00d;</div>
+                    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.actions.image.expand"/>
                 </div>
                 <!-- /ko -->
             </div>
@@ -141,11 +141,11 @@
         <!-- ko if: $root.current.question().isCode() && $root.current.question().type() -->
 
         <div class="details-row">
-            <div class="details-column width-45p">
+            <div class="details-column width-48p">
                 <label class="title">Входные&nbsp;параметры&nbsp;<span class="required">*</span></label>
                 <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
             </div>
-            <div class="details-column width-45p float-right">
+            <div class="details-column width-48p float-right">
                 <label class="title">Выходной&nbsp;параметр&nbsp;<span class="required">*</span></label>
                 <textarea data-bind="value: $root.code.params.output" placeholder="Выходной параметр"></textarea>
             </div>
@@ -191,7 +191,7 @@
                        data-bind="value: $root.current.answer().text,
                        valueUpdate: 'keyup',
                        event: {keyup: $root.events.answers}"/>
-                <button data-bind="click: $root.csed.answer.add" class="fa mini approve">&#xf067;</button>
+                <button data-bind="click: $root.actions.answer.add" class="fa mini approve">&#xf067;</button>
             </div>
         </div>
         <!-- ko if: $root.current.answers().length -->
@@ -208,7 +208,7 @@
                             <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.alter.set.answerCorrectness" >Неправильный</span>
                         </td>
                         <td class="action-holder">
-                            <button class="fa mini remove" data-bind="click: $root.csed.answer.remove">&#xf014;</button>
+                            <button class="fa mini remove" data-bind="click: $root.actions.answer.remove">&#xf014;</button>
                         </td>
                     </tr>
                     </tbody>
@@ -219,10 +219,10 @@
         <!-- /ko -->
         <div class="details-row float-buttons">
             <div class="details-column width-99p">
-                <button class="cancel" data-bind="click: $root.csed.question.cancel">Отмена</button>
+                <button class="cancel" data-bind="click: $root.actions.question.cancel">Отмена</button>
                 <button id="bUpdateQuestion" accept-validation class="approve"
                         title="Проверьте правильность заполнения полей"
-                        data-bind="click: $root.csed.question.update">Сохранить вопрос</button>
+                        data-bind="click: $root.actions.question.end.update">Сохранить вопрос</button>
             </div>
         </div>
     </div>
@@ -240,13 +240,13 @@
             </thead>
             <tbody>
             <!-- ko foreach: $root.current.questions-->
-            <tr>
+            <tr data-bind="attr: {id: 'qwn-' + id()}">
                 <td data-bind="text: text" class="width-100p"></td>
                 <td data-bind="text: $root.alter.set.type($data)"></td>
                 <td data-bind="text: $root.alter.set.complexity($data)" class="text-center"></td>
                 <td class="minw-100 action-holder">
-                    <button data-bind="click: $root.csed.question.edit" class="fa approve mini actions">&#xf040;</button>
-                    <button data-bind="click: $root.csed.question.startDelete" class="fa remove mini actions">&#xf014;</button>
+                    <button data-bind="click: $root.actions.question.start.update" class="fa approve mini actions">&#xf040;</button>
+                    <button data-bind="click: $root.actions.question.start.remove" class="fa remove mini actions">&#xf014;</button>
                 </td>
             </tr>
             <!-- /ko -->
@@ -258,21 +258,24 @@
     <div class="filter theme">
         <div class="filter-block">
             <label class="title">Вопрос</label>
-            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
+            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'" placeholder="Текст вопроса">
         </div>
         <div class="filter-block">
             <label class="title">Тип вопроса</label>
-            <select data-bind="options: $root.filter.types,
+            <select data-bind="options: $root.initial.types,
                        optionsText: 'name',
                        value: $root.filter.type,
                        optionsCaption: 'Выберите тип'"></select>
         </div>
         <div class="filter-block">
             <label class="title">Сложность вопроса</label>
-            <select data-bind="options: $root.filter.complexityTypes,
+            <select data-bind="options: $root.initial.complexity,
                        optionsText: 'name',
                        value: $root.filter.complexity,
                        optionsCaption: 'Выберите сложность'"></select>
+        </div>
+        <div class="filter-block">
+            <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
         </div>
     </div>
 
@@ -281,48 +284,63 @@
 @endsection
 
 <div class="g-hidden">
-    <div class="box-modal" id="delete-modal">
-        <div class="popup-delete">
-            <div><h3>Удалить выбранный вопрос?</h3></div>
-            <div>
-                <button data-bind="click: $root.csed.question.remove" class="fa">&#xf00c;</button>
-                <button data-bind="click: $root.csed.question.cancel" class="fa danger arcticmodal-close">&#xf00d;</button>
+    <div class="box-modal removal-modal" id="remove-question-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранный вопрос?</h3>
             </div>
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal" id="code-editor-modal">
-        <div>
-            <div id="editor"></div>
-            <input type="button" id="button" value="Скомпилировать" data-bind="click: $root.code.compile"/>
-            <input type="button" class="cancel arcticmodal-close" value="Отмена">
-            <input type="button" class="save" data-bind="click: $root.code.approve" value="Сохранить">
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal" id="compile-modal">
-        <div class="">
-            <div>
-                <h3 data-bind="text: $root.code.result.text"></h3>
-            </div>
-            <div>
-                <button class="arcticmodal-close width200">OK</button>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close" data-bind="click: $root.actions.question.cancel">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.question.end.remove">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="g-hidden">
+    <div class="box-modal" id="code-editor-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Программный код</h3>
+            </div>
+            <div class="layer-body">
+                <div id="editor"></div>
+            </div>
+            <div class="details-row">
+                <button class="approve float-left" data-bind="click: $root.code.compile">Скомпилировать</button>
+                <button class="cancel arcticmodal-close float-right">Отмена</button>
+                <button class="approve float-right mr-5" data-bind="click: $root.code.approve">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
+    <div class="box-modal" id="compile-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3 data-bind="text: $root.code.result.text"></h3>
+            </div>
+            <div class="layer-body zero-margin">
+                <div class="details-row float-buttons">
+                    <button class="arcticmodal-close approve">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="g-hidden">
     <div class="box-modal" id="save-code-modal">
-        <div class="">
-            <div>
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
                 <h3>Программный код будет показан студенту во время тестирования. Вы действительно хотите сохранить написанный код?</h3>
             </div>
-            <div>
-                <button class="arcticmodal-close width200" data-bind="click: $root.code.save">OK</button>
-                <button class="arcticmodal-close width200" data-bind="click: $root.code.clear">Очистить</button>
+            <div class="layer-body zero-margin">
+                <div class="details-row float-buttons">
+                    <button class="arcticmodal-close remove" data-bind="click: $root.code.clear">Очистить</button>
+                    <button class="arcticmodal-close approve" data-bind="click: $root.code.save">OK</button>
+                </div>
             </div>
         </div>
     </div>

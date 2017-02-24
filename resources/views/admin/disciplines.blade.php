@@ -219,7 +219,7 @@
             </div>
             <div class="layer-body">
                 <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close" data-bind="root.actions.theme.cancel">Отмена</button>
+                    <button class="cancel arcticmodal-close" data-bind="click: root.actions.theme.cancel">Отмена</button>
                     <button class="remove arcticmodal-close" data-bind="click: $root.actions.theme.end.remove">Удалить</button>
                 </div>
             </div>
@@ -233,7 +233,7 @@
                 <h3>Удалить выбранную дисциплину?</h3>
             </div>
             <div class="layer-body">
-                <div class="details-row float-buttons">
+                <div class="details-row">
                     <button class="cancel arcticmodal-close">Отмена</button>
                     <button class="remove arcticmodal-close" data-bind="click: $root.actions.discipline.end.remove">Удалить</button>
                 </div>

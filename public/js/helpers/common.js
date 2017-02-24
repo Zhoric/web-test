@@ -79,14 +79,29 @@ var types = {
             rusname: 'Лёгкий'
         },
         medium: {
-            id: 1,
+            id: 2,
             rusname: 'Средний'
         },
         hard: {
-            id: 1,
+            id: 3,
             rusname: 'Сложный'
         }
     }
+};
+
+var array = {
+    complexity: [
+        {id: types.complexity.easy.id, name: types.complexity.easy.rusname},
+        {id: types.complexity.medium.id, name: types.complexity.medium.rusname},
+        {id: types.complexity.hard.id, name: types.complexity.hard.rusname}
+    ],
+    question: [
+        {id: types.question.singleAnswer.id, name:  types.question.singleAnswer.rusname},
+        {id: types.question.multiAnswer.id, name:  types.question.multiAnswer.rusname},
+        {id: types.question.singleLine.id, name:  types.question.singleLine.rusname},
+        {id: types.question.multiLine.id, name:  types.question.multiLine.rusname},
+        {id: types.question.code.id, name:  types.question.code.rusname}
+    ]
 };
 
 var role = {
@@ -180,6 +195,11 @@ var commonHelper = {
                 }
             }
         }
+    },
+    scroll: function(selector){
+        $('html, body').animate({
+            scrollTop: $(selector).offset().top
+        }, 1000);
     },
     parseAnswers: function(answers){
         return answers
