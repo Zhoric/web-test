@@ -29,11 +29,11 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: current.results">
-                <tr>
+                <tr data-bind="click: $root.actions.show">
                     <td data-bind="text: attempt"></td>
                     <td data-bind="text: user.lastName() + ' ' +
                     user.firstName() + ' ' + user.patronymic()"></td>
-                    <td data-bind="text: dateTime.date"></td>
+                    <td data-bind="text: dateTime.date.parseDate()"></td>
                     <td>
                         <!-- ko if: mark() !== null -->
                         <span class="coloredin-patronus" data-bind="text: mark() +'/100'"></span>
@@ -64,21 +64,27 @@
             <select data-bind="options: $root.filter.groups,
                        optionsText: 'name',
                        value: $root.filter.group,
-                       optionsCaption: 'Выберите группу'"></select>
+                       optionsCaption: 'Выберите группу',
+                       enable: $root.filter.profile"></select>
         </div>
         <div class="filter-block">
             <label class="title">Дисциплина</label>
             <select data-bind="options: $root.filter.disciplines,
                        optionsText: 'name',
                        value: $root.filter.discipline,
-                       optionsCaption: 'Выберите дисциплину'"></select>
+                       optionsCaption: 'Выберите дисциплину',
+                       enable: $root.filter.profile"></select>
         </div>
         <div class="filter-block">
             <label class="title">Тест</label>
             <select data-bind="options: $root.filter.tests,
                        optionsText: 'subject',
                        value: $root.filter.test,
-                       optionsCaption: 'Выберите тест'"></select>
+                       optionsCaption: 'Выберите тест',
+                       enable: $root.filter.discipline"></select>
+        </div>
+        <div class="filter-block">
+            <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
         </div>
     </div>
     @include('admin.shared.error-modal')

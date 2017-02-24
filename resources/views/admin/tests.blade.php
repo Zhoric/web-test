@@ -44,8 +44,8 @@
                        optionsCaption: 'Выберите дисциплину'"></select>
         </div>
         <div class="filter-block">
-            <label class="title">Название теста</label>
-            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
+            <label class="title">Тест</label>
+            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'" placeholder="Название теста">
         </div>
         <div class="filter-block">
             <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>

@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 19.10.16.
- */
 $(document).ready(function(){
     var resultsViewModel = function(){
         return new function(){
@@ -8,7 +5,7 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.results);
             self.theme = ko.observable({});
-
+            self.errors = errors();
             self.settings = ko.observable(null);
 
             self.current = {
@@ -48,7 +45,6 @@ $(document).ready(function(){
                         var id = id || self.settings().result_group;
                         if (!id) return;
                         self.filter.groups().find(function(item){
-                            console.log(item.id() + ' ' + id());
                             if (item.id() == id()){
                                 self.filter.group(item);
                             }
@@ -64,25 +60,24 @@ $(document).ready(function(){
                         });
                     }
                 },
-                clear: function(){}
+                clear: function(){
+                    self.filter.profile() ? self.filter.profile(null) : null;
+                    self.filter.group() ? self.filter.group(null) : null;
+                    self.filter.discipline() ? self.filter.discipline(null) : null;
+                    self.filter.test() ? self.filter.test(null) : null;
+                    self.settings(null);
+                }
             };
-            self.errors = errors();
 
-            self.showResult = function(data){
-                window.location.href = '/admin/result/' + data.id();
-            };
+
             self.actions = {
-                parseDate: function(){
-                    self.current.results().find(function(item){
-                        var date = item.dateTime.date;
-                        date(commonHelper.parseDate(date()));
-                    });
+                show: function(data){
+                    window.location.href = '/admin/result/' + data.id();
                 }
             };
 
             self.get = {
                 settings: function(){
-                    var url = '/api/uisettings/get';
                     var json = JSON.stringify({
                         settings: [
                             "result_profile",
@@ -91,72 +86,58 @@ $(document).ready(function(){
                             "result_test"
                         ]
                     });
-                    $.post(url, json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.settings(result.Data);
-                            console.log(self.settings());
+                    $ajaxpost({
+                        url: '/api/uisettings/get',
+                        data: json,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.settings(data);
                             self.get.profiles();
-                            return;
+                        },
+                        errorCallback: function(){
+                            self.settings(null);
+                            self.get.profiles();
                         }
-                        self.errors.show(result.Message());
-                        self.settings(null);
-                        self.get.profiles();
                     });
                 },
                 profiles: function(){
-                    $.get('/api/profiles', function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.filter.profiles(result.Data());
-                            if (self.settings()) {
-                                self.filter.set.profile();
-                            }
-                            return;
+                    $ajaxget({
+                        url: '/api/profiles',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.filter.profiles(data());
+                            self.settings() ? self.filter.set.profile() : null;
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 disciplines: function(){
-                    var url = '/api/profile/'+ self.filter.profile().id() +'/disciplines';
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.filter.disciplines(result.Data());
-                            if (self.settings()){
-                                self.filter.set.discipline();
-                            }
-                            return;
+                    $ajaxget({
+                        url: '/api/profile/'+ self.filter.profile().id() +'/disciplines',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.filter.disciplines(data());
+                            self.settings() ? self.filter.set.discipline() : null;
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 groups: function(){
-                    var url = '/api/profile/'+ self.filter.profile().id() +'/groups';
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.filter.groups(result.Data());
-                            if (self.settings()){
-                                self.filter.set.group();
-                            }
-                            return;
+                    $ajaxget({
+                        url: '/api/profile/'+ self.filter.profile().id() +'/groups',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.filter.groups(data());
+                            self.settings() ? self.filter.set.group() : null;
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 tests: function(){
-                    var url = '/api/disciplines/' + self.filter.discipline().id()+ '/tests';
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.filter.tests(result.Data());
-                            if (self.settings()){
-                                self.filter.set.test();
-                            }
-                            return;
+                    $ajaxget({
+                        url: '/api/disciplines/' + self.filter.discipline().id()+ '/tests',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.filter.tests(data());
+                            self.settings() ? self.filter.set.test() : null;
                         }
-                        self.errors.show(result.Message());
                     });
                 },
                 results: function(){
@@ -165,30 +146,21 @@ $(document).ready(function(){
 
                     if (!group || !test) return;
 
-                    var url = '/api/results/show?groupId='+ group.id() + '&testId=' + test.id();
-
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()) {
-                            self.current.results(result.Data());
-                            self.actions.parseDate();
-                            return;
+                    $ajaxget({
+                        url: '/api/results/show?groupId='+ group.id() + '&testId=' + test.id(),
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.results(data());
                         }
-                        self.errors.show(result.Message());
                     });
-                },
+                }
             };
             self.post = {
                 settings: function(settings){
-                    var url = '/api/uisettings/set';
-                    var json = JSON.stringify({
-                        settings: settings
-                    });
-                    $.post(url, json, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (!result.Success()){
-                            self.errors.show(result.Message());
-                        }
+                    $ajaxpost({
+                        url: '/api/uisettings/set',
+                        errors: self.errors,
+                        data: JSON.stringify({settings: settings})
                     });
                 }
             };
@@ -239,6 +211,7 @@ $(document).ready(function(){
             return {
                 page: self.page,
                 current: self.current,
+                actions: self.actions,
                 filter: self.filter,
                 showResult: self.showResult,
                 errors: self.errors
