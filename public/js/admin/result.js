@@ -1,7 +1,3 @@
-/**
- * Created by nyanjii on 19.10.16.
- */
-
 $(document).ready(function(){
 
     var themeViewModel = function(){
@@ -43,7 +39,7 @@ $(document).ready(function(){
                     show: function(data){
                         self.current.answer().id() === data.id() ?
                             self.current.answer().id(0) :
-                            self.toggleCurrent.fill.answer(data);
+                            self.alter.fill.answer(data);
                         self.current.mark.isInput(false);
                     },
 
@@ -96,7 +92,7 @@ $(document).ready(function(){
                 }
             };
 
-            self.toggleCurrent = {
+            self.alter = {
                 fill: {
                     answer: function(d){
                         self.current.answer()
@@ -107,7 +103,6 @@ $(document).ready(function(){
                     }
                 }
             };
-            self.mode = ko.observable('none');
 
             self.get = {
                 result: function(){
@@ -120,7 +115,7 @@ $(document).ready(function(){
                         successCallback: function(data){
                             self.current.answers(data.answers());
                             self.current.result(data.testResult);
-                            self.current.attempts(data.attemptsAllowed);
+                            self.current.attempts(data.attemptsAllowed());
                             self.current.test(data.test);
 
                             self.actions.result.fit();
@@ -138,6 +133,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.results(data());
+                            commonHelper.tooltip({selector: '.tagged', side: 'left'})
                         }
                     });
                 }
@@ -162,10 +158,8 @@ $(document).ready(function(){
                 page: self.page,
                 errors: self.errors,
                 actions: self.actions,
-                toggleCurrent: self.toggleCurrent,
                 current: self.current,
                 mode: self.mode,
-                csed: self.csed,
                 filter: self.filter,
                 events: self.events
             };

@@ -205,6 +205,12 @@ var commonHelper = {
         return answers
             .replace(/<\/answer>/g, '\n\n')
             .slice(0, answers.lastIndexOf('\n\n'));
+    },
+    tooltip: function(settings){
+        $(settings.selector).tooltipster({
+            theme: 'tooltipster-light',
+            side: settings.side ? settings.side : 'top'
+        });
     }
 };
 

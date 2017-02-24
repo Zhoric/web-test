@@ -1,14 +1,6 @@
 @extends('shared.layout')
 @section('title', 'Результат теста')
 @section('javascript')
-    <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
-    <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
-    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
-    <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
-    <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/admin/result.js')}}"></script>
 @endsection
 
@@ -20,7 +12,7 @@
                 <div class="details-row">
                     <div class="details-column width-100p">
                         <label class="title">Дата&nbsp;прохождения&nbsp;теста</label>
-                        <span class="info" data-bind="text: dateTime.date"></span>
+                        <span class="info" data-bind="text: dateTime.date.parseDate()"></span>
                     </div>
                 </div>
                 <div class="details-row">
@@ -30,9 +22,7 @@
                                   data-bind="visible: $root.current.results().length,
                                   click: $root.actions.results.view">(Все&nbsp;попытки)</span>
                         </label>
-                        <span class="info" data-bind="text: attempt"></span>
-                        <span class="info">/</span>
-                        <span class="info" data-bind="text: $root.current.attempts()"></span>
+                        <span class="info" data-bind="text: attempt() +'/' + $root.current.attempts()"></span>
                     </div>
                 </div>
             </div>
@@ -40,13 +30,13 @@
                 <!-- ko with: $root.current.test -->
                 <div class="details-column width-38p">
                     <div class="details-row">
-                        <div class="details-column width-100p">
+                        <div class="details-column width-99p">
                             <label class="title">Тест</label>
                             <span class="info" data-bind="text: subject"></span>
                         </div>
                     </div>
                     <div class="details-row">
-                        <div class="details-column width-100p">
+                        <div class="details-column width-99p">
                             <label class="title">Дисциплина</label>
                             <span class="info" data-bind="text: disciplineName"></span>
                         </div>
@@ -56,7 +46,7 @@
             <!-- /ko -->
             <div class="details-column width-30p">
                 <div class="details-row">
-                    <div class="details-column width-100p">
+                    <div class="details-column width-99p">
                         <label class="title">ФИО&nbsp;студента</label>
                         <span class="info" data-bind="text: user.lastName() + ' ' +
                                                             user.firstName() + ' ' +
@@ -64,12 +54,12 @@
                     </div>
                 </div>
                 <div class="details-row">
-                    <div class="details-column width-100p">
+                    <div class="details-column width-99p">
                         <label class="title">Оценка</label>
                         <!-- ko if: mark() !== null -->
-                        <span class="radio-important" data-bind="text: mark() + '/100'"></span>
+                        <span class="coloredin-patronus info" data-bind="text: mark() + '/100'"></span>
                         <!-- /ko -->
-                        <span class="radio-negative" data-bind="if: mark() === null">Требуется проверка</span>
+                        <span class="coloredin-crimson info" data-bind="if: mark() === null">Требуется проверка</span>
                     </div>
                 </div>
             </div>
@@ -131,7 +121,7 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="attempts-modal">
-        <div class="box-modal_close arcticmodal-close">закрыть</div>
+        <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
         <div class="layer zero-margin width-auto">
             <h3>Все попытки</h3>
             <!-- ko foreach: $root.current.results -->
