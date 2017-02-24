@@ -4,9 +4,8 @@ namespace Repositories;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use League\Flysystem\Exception;
-use PaginationResult;
+use Exception;
+use ResultSelectionCriterion;
 use Test;
 use TestResult;
 use User;
@@ -54,21 +53,42 @@ class TestResultRepository extends BaseRepository
     }
 
     public function getByUserAndDiscipline($userId, $disciplineId){
-        $maxQb = $this->repo->createQueryBuilder('tr');
-        $maxQuery = $maxQb->select('MAX(tr.dateTime)')
-            ->join(Test::class, 't', Join::WITH, 't.discipline = :discipline')
-            ->where('tr.user = :userId')
-            ->setParameter('discipline', $disciplineId)
-            ->setParameter('userId', $userId)
-            ->groupBy('tr.user, tr.test')
+
+        $qb = $this->repo->createQueryBuilder('tr');
+        $query = $qb
+            ->join(Test::class, 't', Join::WITH, "t.discipline = $disciplineId AND tr.user = $userId")
+            ->leftJoin(TestResult::class, 'tr2', Join::WITH, 'tr.test = tr2.test 
+            AND tr.user = tr2.user AND tr2.attempt > tr.attempt')
+            ->where('tr2.id is NULL')
             ->getQuery();
 
-        $maxDateTimes = $maxQuery->execute();
+        return $query->execute();
+    }
+
+    public function getByUserAndDisciplineBetweenDates($userId, $disciplineId, $startDate, $endDate, $selectionCriterion){
+
+        switch ($selectionCriterion){
+            case ResultSelectionCriterion::LastAttempt:{
+                $selectionExpression = 'tr2.attempt > tr.attempt';
+                break;
+            }
+            case ResultSelectionCriterion::MaxMark:{
+                $selectionExpression = 'tr2.mark > tr.mark';
+                break;
+            }
+            case ResultSelectionCriterion::FirstAttempt:{
+                $selectionExpression = 'tr2.attempt < tr.attempt';
+                break;
+            }
+            default: throw new Exception('Указанный критерий выборки результатов не поддерживается!');
+        }
+
         $qb = $this->repo->createQueryBuilder('tr');
-        $query = $qb->join(Test::class, 't', Join::WITH, "t.discipline = $disciplineId")
-            ->where("tr.user = $userId")
-            ->where($qb->expr()->in('tr.dateTime', '?1'))
-            ->setParameter(1,$maxDateTimes)
+        $query = $qb
+            ->join(Test::class, 't', Join::WITH, "t.discipline = $disciplineId AND tr.user = $userId AND tr.test = t.id")
+            ->leftJoin(TestResult::class, 'tr2', Join::WITH, "tr.test = tr2.test 
+            AND tr.user = tr2.user AND tr.test = tr2.test AND $selectionExpression")
+            ->where("tr2.id is NULL AND tr.dateTime >= '$startDate' AND tr.dateTime <= '$endDate'")
             ->getQuery();
 
         return $query->execute();

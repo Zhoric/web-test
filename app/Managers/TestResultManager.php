@@ -5,10 +5,12 @@ namespace Managers;
 use DateTime;
 use ExtraAttempt;
 use Helpers\DateHelper;
+use Helpers\NameHelper;
 use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
 use Test;
 use TestEngine\GlobalTestSettings;
+use TestPassingChronologyViewModel;
 use TestResult;
 use TestResultViewModel;
 use TestType;
@@ -185,6 +187,74 @@ class TestResultManager
         return $testResults;
     }
 
+    public function getGroupTestPassingChronology($groupId, $disciplineId, $startDate, $endDate, $selectionCriterion)
+    {
+        $results = [];
+
+        $groupStudentsIds = $this->_unitOfWork
+            ->users()
+            ->getGroupStudentsIds($groupId);
+
+        if (isset($groupStudentsIds) && !empty($groupStudentsIds)){
+            foreach ($groupStudentsIds as $studentId){
+
+                $result = $this->getByUserAndDisciplineBetweenDates($studentId['id'], $disciplineId,
+                    $startDate, $endDate, $selectionCriterion);
+
+                array_push($results, $result);
+            }
+        }
+
+        //Удалить null'ы из массива.
+        $results = array_filter($results);
+
+        return $results;
+    }
+
+    public function getByUserAndDisciplineBetweenDates($userId, $disciplineId, $startDate, $endDate, $selectionCriterion)
+    {
+        $testResults = $this
+            ->_unitOfWork
+            ->testResults()
+            ->getByUserAndDisciplineBetweenDates($userId, $disciplineId, $startDate, $endDate, $selectionCriterion);
+
+        $marksSum = 0;
+        $marksCount = 0;
+
+        if (isset($testResults) && !empty($testResults)){
+            /** @var TestResult $testResult */
+            foreach ($testResults as $testResult) {
+                if ($testResult->getMark() != null){
+                    $marksSum += $testResult->getMark();
+                    $marksCount++;
+                }
+            }
+
+            $resultsViewModel = new TestPassingChronologyViewModel();
+            $resultsViewModel->name = NameHelper::concatUserFullName($testResults[0]->getUser());
+            $resultsViewModel->results = $testResults;
+            $resultsViewModel->mark = $marksSum > 0 ? floor($marksSum/$marksCount) : 0;
+
+            return $resultsViewModel;
+        }
+    }
+
+    public function delete($testResultId)
+    {
+        $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+        if (!isset($testResult)) {
+            throw new Exception('Ошибка! Указанный результат теста не найден!');
+        }
+        $this->_unitOfWork->testResults()->delete($testResult);
+        $this->_unitOfWork->commit();
+    }
+
+    public function deleteOlderThan($dateTime)
+    {
+        $this->_unitOfWork->testResults()->deleteOlderThan($dateTime);
+        $this->_unitOfWork->commit();
+    }
+
     /**
      * Обработка данных о результате прохождения теста перед отправкой студенту.
      * Результат прохождения теста будет показан студенту в развёрнутой форме только если тип теста - обучающий.
@@ -218,16 +288,6 @@ class TestResultManager
         return $resultViewModel;
     }
 
-    public function delete($testResultId)
-    {
-        $testResult = $this->_unitOfWork->testResults()->find($testResultId);
-        if (!isset($testResult)) {
-            throw new Exception('Ошибка! Указанный результат теста не найден!');
-        }
-        $this->_unitOfWork->testResults()->delete($testResult);
-        $this->_unitOfWork->commit();
-    }
-
     /**
      * Получение ответов, которые дал студент в ходе тестирования.
      * В зависимости от того, кто запрашивает ответы, они будут представлены
@@ -247,11 +307,5 @@ class TestResultManager
         } else {
             return $this->_unitOfWork->givenAnswers()->getByTestResult($testResultId);
         }
-    }
-
-    public function deleteOlderThan($dateTime)
-    {
-        $this->_unitOfWork->testResults()->deleteOlderThan($dateTime);
-        $this->_unitOfWork->commit();
     }
 }

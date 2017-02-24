@@ -3,6 +3,8 @@
 namespace Helpers;
 
 
+use User;
+
 class NameHelper
 {
     public static function concatFullName($firstName, $middleName, $lastName){
@@ -14,6 +16,14 @@ class NameHelper
         }
 
         return $fullName;
+    }
+
+    /**
+     * @param $user User
+     * @return string
+     */
+    public static function concatUserFullName($user){
+        return self::concatFullName($user->getFirstname(), $user->getPatronymic(), $user->getLastname());
     }
 
     private static function getFirstLetter($string){

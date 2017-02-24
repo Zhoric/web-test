@@ -149,4 +149,21 @@ class TestResultController extends Controller
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
+
+    public function getGroupResults(Request $request){
+        try{
+            $groupId = $request->query('groupId');
+            $disciplineId = $request->query('disciplineId');
+            $startDate = $request->query('startDate');
+            $endDate = $request->query('endDate');
+            $selectionCriterion = $request->query('criterion');
+
+            $results = $this->_testResultManager
+                ->getGroupTestPassingChronology($groupId, $disciplineId, $startDate, $endDate, $selectionCriterion);
+
+            return $this->successJSONResponse($results);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
 }

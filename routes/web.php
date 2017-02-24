@@ -324,6 +324,8 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'results'], function () {
         Route::get('show', 'TestResultController@getByGroupAndTest')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::get('getGroupResults','TestResultController@getGroupResults');
+        // ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::post('setMark', 'TestResultController@setAnswerMark')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('/getByUserAndTest', 'TestResultController@getByUserAndTest')
@@ -333,7 +335,6 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/discipline/{id}', 'TestResultController@getByDiscipline');
         Route::get('/show/{id}', 'TestResultController@getByIdForStudent');
         Route::get('{id}', 'TestResultController@getById');
-
     });
 
     /*-----------------------------------------------------------------------------
