@@ -36,7 +36,7 @@
             <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
             <div class="layer width-auto">
                 <h3>Учебные планы</h3>
-                <!-- ko if: $root.current.plan.mode() === state.none -->
+                <!-- ko if: $root.current.plan.mode() === state.none && $root.user.role() === role.admin.name -->
                 <div class="item text-center" data-bind="click: $root.actions.plan.create">
                     <span class="bold">Добавить новый учебный план</span>
                 </div>

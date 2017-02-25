@@ -17,7 +17,9 @@
         <div class="items-body" data-bind="foreach: $root.current.groups">
             <div class="item">
                 <span data-bind="text: name"></span>
+                <!-- ko if: $root.user.role() === role.admin.name -->
                 <span class="fa tag float-right" data-bind="click: $root.actions.start.remove" title="Удалить группу">&#xf1f8;</span>
+                <!-- /ko -->
                 <span class="fa tag float-right" data-bind="click: $root.actions.start.update" title="Редактировать">&#xf040;</span>
                 <span class="fa tag float-right" data-bind="click: $root.actions.moveTo.students" title="Перейти к учетным записям студентов">&#xf007;</span>
             </div>
@@ -29,8 +31,8 @@
     </div>
     <div class="filter">
         <div class="filter-block">
-            <label class="title">Название группы </label>
-            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'">
+            <label class="title">Группа </label>
+            <input type="text" data-bind="value: $root.filter.name, valueUpdate: 'keyup'" placeholder="Название группы">
         </div>
         <div class="filter-block">
             <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>

@@ -1,7 +1,6 @@
 @extends('shared.layout')
 @section('title', 'Дисциплины')
 @section('javascript')
-
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
     <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
@@ -12,7 +11,9 @@
     <div class="items disciplines">
         <div class="items-head">
             <h1>Администрирование дисциплин</h1>
+            <!-- ko if: $root.user.role() === role.admin.name -->
             <label class="adder" data-bind="click: $root.actions.discipline.start.add">Добавить</label>
+            <!-- /ko -->
         </div>
         <!-- ko if: $root.mode() === state.create-->
         <div data-bind="template: {name: 'show-details', data: $root.current.discipline}"></div>
@@ -29,7 +30,7 @@
             <!-- /ko -->
             <!-- /ko -->
         </div>
-        @include('admin.shared.pagination')
+        @include('shared.pagination')
     </div>
     <div class="filter">
         <div class="filter-block">
@@ -115,12 +116,14 @@
                 <span class="info" data-bind="text: name"></span>
             </div>
         </div>
+        <!-- ko if: $root.user.role() === role.admin.name -->
         <div class="details-row float-buttons">
             <div class="details-column width-100p">
                 <button data-bind="click: $root.actions.discipline.start.remove" class="remove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
                 <button data-bind="click: $root.actions.discipline.start.update" class="approve"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
             </div>
         </div>
+        <!-- /ko -->
     </div>
 </script>
 <script type="text/html" id="edit-mode">
@@ -219,23 +222,8 @@
             </div>
             <div class="layer-body">
                 <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close" data-bind="click: root.actions.theme.cancel">Отмена</button>
+                    <button class="cancel arcticmodal-close" data-bind="click: $root.actions.theme.cancel">Отмена</button>
                     <button class="remove arcticmodal-close" data-bind="click: $root.actions.theme.end.remove">Удалить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
-    <div class="box-modal removal-modal" id="delete-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Удалить выбранную дисциплину?</h3>
-            </div>
-            <div class="layer-body">
-                <div class="details-row">
-                    <button class="cancel arcticmodal-close">Отмена</button>
-                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.discipline.end.remove">Удалить</button>
                 </div>
             </div>
         </div>
@@ -256,6 +244,23 @@
         </div>
     </div>
 </div>
+<!-- ko if: $root.user.role() === role.admin.name -->
+<div class="g-hidden">
+    <div class="box-modal removal-modal" id="remove-discipline-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Удалить выбранную дисциплину?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.discipline.end.remove">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
 
-@include('admin.shared.error-modal')
+@include('shared.error-modal')
 @endsection

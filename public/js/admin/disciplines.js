@@ -11,10 +11,11 @@ $(document).ready(function(){
             self.events = new validationEvents(self.validation);
 
             self.pagination = pagination();
+            self.pagination.pageSize(10);
             self.mode = ko.observable(state.none);
             self.modals = {
                 removeTheme: '#remove-theme-modal',
-                removeDiscipline: '#delete-modal',
+                removeDiscipline: '#remove-discipline-modal',
                 section: '#sections-modal',
                 removeSection: '#remove-section-modal'
             };
@@ -145,7 +146,7 @@ $(document).ready(function(){
                         self.mode(state.none);
                         self.alter.empty();
                     },
-                    move: function(){
+                    move: function(data, e){
                         e.stopPropagation();
                         window.location.href = '/admin/tests/' + data.id();
                     }

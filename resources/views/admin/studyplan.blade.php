@@ -1,8 +1,6 @@
 @extends('shared.layout')
 @section('title', 'Учебные планы')
 @section('javascript')
-
-
     <script src="{{ URL::asset('js/admin/studyplan.js')}}"></script>
 @endsection
 @section('content')
@@ -10,7 +8,9 @@
         <div class="items">
             <div class="items-head">
                 <h1>Детализация учебного плана</h1>
+                <!-- ko if: $root.user.role() === role.admin.name -->
                 <label class="adder" data-bind="click: $root.actions.start.create">Добавить дисциплину</label>
+                <!-- /ko -->
             </div>
             <!-- ko if: $root.mode() === state.create -->
             <div class="details" data-bind="template: {name: 'update-discipline', data: $root.current.discipline}"></div>
@@ -76,12 +76,14 @@
             <span class="info coloredin-patronus" data-bind="text: !hasExam() && !hasProject() ? 'Нет' : ''"></span>
         </div>
     </div>
+    <!-- ko if: $root.user.role() === role.admin.name -->
     <div class="details-row float-buttons">
         <div class="details-column float-right width-100p">
             <button class="remove" data-bind="click: $root.actions.start.remove"><span class="fa">&#xf014;</span>&nbsp;Удалить</button>
             <button class="approve" data-bind="click: $root.actions.start.update"><span class="fa">&#xf040;</span>&nbsp;Редактировать</button>
         </div>
     </div>
+    <!-- /ko -->
 </script>
 <script type="text/html" id="update-discipline">
     <div class="details-row" data-bind="if: $root.mode() === state.create">

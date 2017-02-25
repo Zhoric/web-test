@@ -49,7 +49,9 @@
     </script>
     <div class="menu">
         <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>
+        <!-- ko if: $root.user.role() === role.admin.name -->
         <a href="/admin/lecturers" data-bind="css: {'current': $root.page() === menu.admin.lecturers}">Преподаватели</a>
+        <!-- /ko -->
         <a href="/admin/groups" data-bind="css: {'current': $root.page() === menu.admin.groups}">Группы</a>
         <a href="/admin/students" data-bind="css: {'current': $root.page() === menu.admin.students}">Студенты</a>
         <a href="/admin/disciplines" data-bind="css: {'current': $root.page() === menu.admin.disciplines}">Дисциплины</a>
