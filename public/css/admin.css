@@ -1115,6 +1115,10 @@ table.werewolf.questions tr:hover .actions {
 .knockout-autocomplete.after-menu {
   position: absolute;
 }
+.date-ico {
+  color: #6C7A89;
+  padding: 3px 5px 0 0;
+}
 #show-plans-modal {
   max-height: 500px;
 }

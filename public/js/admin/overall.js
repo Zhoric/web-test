@@ -1,15 +1,15 @@
 $(document).ready(function(){
-    var resultsViewModel = function(){
+    var overallViewModel = function(){
         return new function(){
             var self = this;
-
             self.page = ko.observable(menu.admin.results);
-            self.theme = ko.observable({});
             self.errors = errors();
             self.user = new user();
             self.user.read(self.errors);
-            self.settings = ko.observable(null);
 
+            self.initial = {
+                settings: ko.observable(null)
+            };
             self.current = {
                 results: ko.observableArray([])
             };
@@ -17,16 +17,17 @@ $(document).ready(function(){
                 profile: ko.observable(),
                 discipline: ko.observable(),
                 group: ko.observable(),
-                test: ko.observable(),
+                startDate: ko.observable(new Date()),
+                endDate: ko.observable(new Date()),
+                criterion: ko.observable(criterion.mark),
 
                 profiles: ko.observableArray([]),
                 disciplines: ko.observableArray([]),
                 groups: ko.observableArray([]),
-                tests: ko.observableArray([]),
 
                 set: {
                     profile: function(){
-                        var id = self.settings().result_profile;
+                        var id = self.initial.settings().monitoring_profile;
                         if (!id) return;
                         self.filter.profiles().find(function(item){
                             if (item.id() == id()){
@@ -35,7 +36,7 @@ $(document).ready(function(){
                         });
                     },
                     discipline: function(){
-                        var id = self.settings().result_discipline;
+                        var id = self.initial.settings().monitoring_discipline;
                         if (!id) return;
                         self.filter.disciplines().find(function(item){
                             if (item.id() == id()){
@@ -43,8 +44,8 @@ $(document).ready(function(){
                             }
                         });
                     },
-                    group: function(id){
-                        var id = id || self.settings().result_group;
+                    group: function(){
+                        var id = self.initial.settings().monitoring_group;
                         if (!id) return;
                         self.filter.groups().find(function(item){
                             if (item.id() == id()){
@@ -52,35 +53,24 @@ $(document).ready(function(){
                             }
                         });
                     },
-                    test: function(){
-                        var id = self.settings().result_test;
-                        if (!id) return;
-                        self.filter.tests().find(function(item){
-                            if (item.id() == id()){
-                                self.filter.test(item);
-                            }
-                        });
-                    }
+                    startDate: function(){},
+                    endDate: function(){}
                 },
                 clear: function(){
-                    self.filter.profile() ? self.filter.profile(null) : null;
-                    self.filter.group() ? self.filter.group(null) : null;
-                    self.filter.discipline() ? self.filter.discipline(null) : null;
-                    self.filter.test() ? self.filter.test(null) : null;
-                    self.settings(null);
+                    self.filter
+                        .startDate(new Date())
+                        .endDate(new Date())
+                        .profile(null);
                 }
             };
 
 
             self.actions = {
-                show: function(data){
-                    window.location.href = '/admin/result/' + data.id();
-                },
-                overall: function(){
-                    self.post.settings({'overall_profile': self.filter.profile().id()});
-                    self.post.settings({'overall_discipline': self.filter.discipline().id()});
-                    self.post.settings({'overall_group': self.filter.group().id()});
-                    window.location.href = '/admin/overallresults';
+                date: {
+                    start: function(){
+
+                    },
+                    end: function(){}
                 }
             };
 
@@ -88,18 +78,19 @@ $(document).ready(function(){
                 settings: function(){
                     var json = JSON.stringify({
                         settings: [
-                            "result_profile",
-                            "result_discipline",
-                            "result_group",
-                            "result_test"
+                            "overall_profile",
+                            "overall_discipline",
+                            "overall_group",
+                            "overall_start_date",
+                            "overall_end_date",
+                            "overall_criterion"
                         ]
                     });
                     $ajaxpost({
                         url: '/api/uisettings/get',
                         data: json,
-                        errors: self.errors,
                         successCallback: function(data){
-                            self.settings(data);
+                            self.initial.settings(data);
                             self.get.profiles();
                         },
                         errorCallback: function(){
@@ -112,9 +103,9 @@ $(document).ready(function(){
                     $ajaxget({
                         url: '/api/profiles',
                         errors: self.errors,
-                        successCallback: function(data){
+                        successCallback:function(data){
                             self.filter.profiles(data());
-                            self.settings() ? self.filter.set.profile() : null;
+                            self.filter.set.profile();
                         }
                     });
                 },
@@ -124,7 +115,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.filter.disciplines(data());
-                            self.settings() ? self.filter.set.discipline() : null;
+                            self.filter.set.discipline();
                         }
                     });
                 },
@@ -134,28 +125,18 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.filter.groups(data());
-                            self.settings() ? self.filter.set.group() : null;
+                            self.filter.set.group();
                         }
                     });
                 },
-                tests: function(){
-                    $ajaxget({
-                        url: '/api/disciplines/' + self.filter.discipline().id()+ '/tests',
-                        errors: self.errors,
-                        successCallback: function(data){
-                            self.filter.tests(data());
-                            self.settings() ? self.filter.set.test() : null;
-                        }
-                    });
-                },
+
                 results: function(){
-                    var group = self.filter.group();
-                    var test = self.filter.test();
-
-                    if (!group || !test) return;
+                    var test = '?testId=' + self.filter.test().id();
+                    var group = '&groupId=' + self.filter.group().id();
+                    var state = self.filter.get.state() ? '&state=' + self.filter.get.state() : '';
 
                     $ajaxget({
-                        url: '/api/results/show?groupId='+ group.id() + '&testId=' + test.id(),
+                        url:  '/api/tests/sessions' + test + group + state,
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.results(data());
@@ -163,12 +144,14 @@ $(document).ready(function(){
                     });
                 }
             };
+
             self.post = {
                 settings: function(settings){
                     $ajaxpost({
                         url: '/api/uisettings/set',
-                        errors: self.errors,
-                        data: JSON.stringify({settings: settings})
+                        data: JSON.stringify({
+                            settings: settings
+                        })
                     });
                 }
             };
@@ -179,54 +162,45 @@ $(document).ready(function(){
 
             self.filter.profile.subscribe(function(value){
                 if (value){
-                    self.post.settings({'result_profile': self.filter.profile().id()});
+                    self.post.settings({'monitoring_profile': self.filter.profile().id()});
                     self.get.groups();
                     self.get.disciplines();
                     return;
                 }
                 self.filter
                     .disciplines([])
-                    .groups([]);
-                self.post.settings({'result_profile': null});
+                    .discipline(null)
+                    .groups([])
+                    .group(null);
+                self.post.settings({'monitoring_profile': null});
             });
             self.filter.discipline.subscribe(function(value){
                 if (value){
-                    self.post.settings({'result_discipline': self.filter.discipline().id()});
+                    self.post.settings({'monitoring_discipline': self.filter.discipline().id()});
                     self.get.tests();
                     return;
                 }
                 self.filter.tests([]);
-                self.post.settings({'result_discipline': null});
+                self.post.settings({'monitoring_discipline': null});
             });
             self.filter.group.subscribe(function(value){
                 if (value){
-                    self.post.settings({'result_group': self.filter.group().id()});
+                    self.post.settings({'monitoring_group': self.filter.group().id()});
                     return;
                 }
-                self.post.settings({'result_group': null});
+                self.post.settings({'monitoring_group': null});
             });
-            self.filter.test.subscribe(function(value){
-                if (value){
-                    self.post.settings({'result_test': self.filter.test().id()});
-                    self.get.results();
-                    return;
-                }
-                self.current.results([]);
-                self.post.settings({'result_test': null});
-            });
-
 
             return {
                 page: self.page,
                 user: self.user,
                 current: self.current,
-                actions: self.actions,
                 filter: self.filter,
-                showResult: self.showResult,
+                actions: self.actions,
                 errors: self.errors
             };
         };
     };
 
-    ko.applyBindings(resultsViewModel());
+    ko.applyBindings(overallViewModel());
 });

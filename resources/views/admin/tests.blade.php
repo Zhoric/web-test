@@ -129,12 +129,6 @@
                        validationElement: attempts,
                        event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
-            <div class="details-column width-25p">
-                <label class="title">Принцип&nbsp;подбора&nbsp;вопросов</label>
-                <span class="radio" data-bind="css: { 'radio-important': isRandom() }, click: $root.alter.set.random.asTrue">Случайный</span>
-                <span>|</span>
-                <span class="radio" data-bind="css: { 'radio-important': !isRandom() }, click: $root.alter.set.random.asFalse">Адаптивный</span>
-            </div>
         </div>
         <div class="details-row">
             <div class="details-column width-98p">

@@ -1,7 +1,6 @@
 @extends('shared.layout')
 @section('title', 'Мониторинг тестирования')
 @section('javascript')
-    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-progressbar.js')}}"></script>
     <script src="{{ URL::asset('js/admin/monitoring.js')}}"></script>
 @endsection

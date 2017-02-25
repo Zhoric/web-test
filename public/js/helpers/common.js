@@ -125,6 +125,12 @@ var complexity = {
     hard: 3
 };
 
+var criterion = {
+    firstTry: 'firstTry',
+    secondTry: 'secondTry',
+    mark: 'maxMark'
+};
+
 var commonHelper = {
     parseDate: function(date){
         date = new Date(date);

@@ -18,6 +18,19 @@ ko.observable.fn.parseDate = function(){
 
     return date;
 };
+ko.observable.fn.parseDay = function(){
+    var date = new Date(this());
+    var options = {
+        timezone: 'UTC',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+    };
+    date = date.toLocaleString("ru", options);
+    date = date.replace(',', ' ');
+
+    return date;
+};
 
 ko.observable.fn.parseAnswer = function(){
     if (!this()) return;

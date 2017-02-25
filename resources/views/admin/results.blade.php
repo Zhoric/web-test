@@ -9,7 +9,8 @@
 <div class="content">
     <div class="items">
         <div class="items-head">
-            <h1>Поиск результатов</h1>
+            <h1>Результаты по тесту</h1>
+            <label class="adder" data-bind="click: $root.actions.overall">Результаты по дисциплине</label>
         </div>
         <!-- ko if: !$root.filter.test()-->
             <h3 class="text-center">Пожалуйста, заполните все поля фильтра</h3>
