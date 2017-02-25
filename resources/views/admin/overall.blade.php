@@ -15,6 +15,24 @@
             <h1>Результаты по дисциплине</h1>
             <label class="adder" data-bind="click: $root.actions.results">Результаты&nbsp;по&nbsp;тесту</label>
         </div>
+        <div class="items-body">
+            <table class="werewolf">
+                <thead>
+                    <tr>
+                        <th>ФИО студента</th>
+                        <th>Хронология прохождения тестов</th>
+                        <th>Средний балл</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="filter">

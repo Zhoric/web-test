@@ -69,6 +69,23 @@ $(document).ready(function(){
                         self.filter.criterion(criterion());
                     }
                 },
+                get: {
+                    criterion: function(){
+                        switch (self.filter.criterion()){
+                            case criterion.mark:
+                                return 1;
+                                break;
+                            case criterion.firstTry:
+                                return 2;
+                                break;
+                            case criterion.secondTry:
+                                return 3;
+                                break;
+                            default:
+                                return 1;
+                        }
+                    }
+                },
                 clear: function(){
                     self.filter
                         .startDate(new Date())
@@ -82,7 +99,9 @@ $(document).ready(function(){
 
 
             self.actions = {
-
+                results: function(){
+                    window.location.href = '/admin/results';
+                }
             };
 
             self.get = {
@@ -144,12 +163,24 @@ $(document).ready(function(){
                     });
                 },
                 results: function(){
-                    var test = '?testId=' + self.filter.test().id();
-                    var group = '&groupId=' + self.filter.group().id();
-                    var state = self.filter.get.state() ? '&state=' + self.filter.get.state() : '';
+                    if (!self.filter.group()) return;
+                    if (!self.filter.discipline()) return;
 
+                    var group = '?groupId=' + self.filter.group().id();
+                    var discipline = '&disciplineId=' + self.filter.discipline().id();
+                    var startDate = '&startDate=' + commonHelper.parseDate(self.filter.startDate());
+                    var endDate = '&endDate=' + commonHelper.parseDate(self.filter.endDate());
+                    var criterion = '&criterion=' + self.filter.get.criterion();
+
+
+                    var url = '/api/results/getGroupResults' +
+                        group + discipline +
+                        startDate + endDate +
+                        criterion;
+
+                    return;
                     $ajaxget({
-                        url:  '/api/tests/sessions' + test + group + state,
+                        url: url,
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.results(data());
@@ -195,15 +226,21 @@ $(document).ready(function(){
             self.filter.group.subscribe(function(value){
                 value
                     ? self.post.settings({'overall_group': self.filter.group().id()})
-                    : self.post.settings({'overall_group': null});
+                    && self.get.results()
+                    : self.current.results([])
+                    && self.post.settings({'overall_group': null});
+
             });
             self.filter.startDate.subscribe(function(){
+                self.get.results();
                 self.post.settings({'overall_start_date': self.filter.startDate()});
             });
             self.filter.endDate.subscribe(function(){
+                self.get.results();
                 self.post.settings({'overall_end_date': self.filter.endDate()});
             });
             self.filter.criterion.subscribe(function(){
+                self.get.results();
                 self.post.settings({'overall_criterion': self.filter.criterion()});
             });
 
