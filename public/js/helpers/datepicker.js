@@ -7,7 +7,6 @@ ko.bindingHandlers.datePicker = {
             keyboardNavigation: true,
             todayHighlight: true,
             autoclose: true,
-            daysOfWeekDisabled: [0, 6],
             format: 'mm/dd/yyyy'
         };
         if (binding.datePickerOptions) {

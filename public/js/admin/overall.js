@@ -27,7 +27,7 @@ $(document).ready(function(){
 
                 set: {
                     profile: function(){
-                        var id = self.initial.settings().monitoring_profile;
+                        var id = self.initial.settings().overall_profile;
                         if (!id) return;
                         self.filter.profiles().find(function(item){
                             if (item.id() == id()){
@@ -36,7 +36,7 @@ $(document).ready(function(){
                         });
                     },
                     discipline: function(){
-                        var id = self.initial.settings().monitoring_discipline;
+                        var id = self.initial.settings().overall_discipline;
                         if (!id) return;
                         self.filter.disciplines().find(function(item){
                             if (item.id() == id()){
@@ -45,7 +45,7 @@ $(document).ready(function(){
                         });
                     },
                     group: function(){
-                        var id = self.initial.settings().monitoring_group;
+                        var id = self.initial.settings().overall_group;
                         if (!id) return;
                         self.filter.groups().find(function(item){
                             if (item.id() == id()){
@@ -53,25 +53,36 @@ $(document).ready(function(){
                             }
                         });
                     },
-                    startDate: function(){},
-                    endDate: function(){}
+                    startDate: function(){
+                        var date = self.initial.settings().overall_start_date;
+                        if (!date) return;
+                        self.filter.startDate(date());
+                    },
+                    endDate: function(){
+                        var date = self.initial.settings().overall_end_date;
+                        if (!date) return;
+                        self.filter.endDate(date());
+                    },
+                    criterion: function(){
+                        var criterion = self.initial.settings().overall_criterion;
+                        if (!criterion) return;
+                        self.filter.criterion(criterion());
+                    }
                 },
                 clear: function(){
                     self.filter
                         .startDate(new Date())
                         .endDate(new Date())
-                        .profile(null);
+                        .criterion(criterion.mark);
+                    self.filter.profile() ? self.filter.profile(null) : null;
+                    self.filter.discipline() ? self.filter.discipline(null) : null;
+                    self.filter.group() ? self.filter.group(null) : null;
                 }
             };
 
 
             self.actions = {
-                date: {
-                    start: function(){
 
-                    },
-                    end: function(){}
-                }
             };
 
             self.get = {
@@ -92,6 +103,9 @@ $(document).ready(function(){
                         successCallback: function(data){
                             self.initial.settings(data);
                             self.get.profiles();
+                            self.filter.set.criterion();
+                            self.filter.set.startDate();
+                            self.filter.set.endDate();
                         },
                         errorCallback: function(){
                             self.settings(null);
@@ -129,7 +143,6 @@ $(document).ready(function(){
                         }
                     });
                 },
-
                 results: function(){
                     var test = '?testId=' + self.filter.test().id();
                     var group = '&groupId=' + self.filter.group().id();
@@ -162,7 +175,7 @@ $(document).ready(function(){
 
             self.filter.profile.subscribe(function(value){
                 if (value){
-                    self.post.settings({'monitoring_profile': self.filter.profile().id()});
+                    self.post.settings({'overall_profile': self.filter.profile().id()});
                     self.get.groups();
                     self.get.disciplines();
                     return;
@@ -172,23 +185,26 @@ $(document).ready(function(){
                     .discipline(null)
                     .groups([])
                     .group(null);
-                self.post.settings({'monitoring_profile': null});
+                self.post.settings({'overall_profile': null});
             });
             self.filter.discipline.subscribe(function(value){
-                if (value){
-                    self.post.settings({'monitoring_discipline': self.filter.discipline().id()});
-                    self.get.tests();
-                    return;
-                }
-                self.filter.tests([]);
-                self.post.settings({'monitoring_discipline': null});
+                value
+                    ? self.post.settings({'overall_discipline': self.filter.discipline().id()})
+                    : self.post.settings({'overall_discipline': null});
             });
             self.filter.group.subscribe(function(value){
-                if (value){
-                    self.post.settings({'monitoring_group': self.filter.group().id()});
-                    return;
-                }
-                self.post.settings({'monitoring_group': null});
+                value
+                    ? self.post.settings({'overall_group': self.filter.group().id()})
+                    : self.post.settings({'overall_group': null});
+            });
+            self.filter.startDate.subscribe(function(){
+                self.post.settings({'overall_start_date': self.filter.startDate()});
+            });
+            self.filter.endDate.subscribe(function(){
+                self.post.settings({'overall_end_date': self.filter.endDate()});
+            });
+            self.filter.criterion.subscribe(function(){
+                self.post.settings({'overall_criterion': self.filter.criterion()});
             });
 
             return {

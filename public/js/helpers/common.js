@@ -136,18 +136,15 @@ var commonHelper = {
         date = new Date(date);
         var options = {
             timezone: 'UTC',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
             year: 'numeric',
             month: 'numeric',
             day: 'numeric'
         };
-        date = date.toLocaleString("ru", options);
-        date = date.replace(',', ' ');
+        date = date.toLocaleString("be", options);
 
         return date;
     },
+
     buildValidationList: function(validation){
         $('[validate]').each(function(){
             var selector = $(this).attr('id');

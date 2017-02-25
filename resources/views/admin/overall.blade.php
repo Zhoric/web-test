@@ -26,18 +26,20 @@
                        optionsCaption: 'Выберите направление'"></select>
         </div>
         <div class="filter-block">
-            <label class="title">Группа</label>
-            <select data-bind="options: $root.filter.groups,
-                       optionsText: 'name',
-                       value: $root.filter.group,
-                       optionsCaption: 'Выберите группу'"></select>
-        </div>
-        <div class="filter-block">
             <label class="title">Дисциплина</label>
             <select data-bind="options: $root.filter.disciplines,
                        optionsText: 'name',
                        value: $root.filter.discipline,
-                       optionsCaption: 'Выберите дисциплину'"></select>
+                       optionsCaption: 'Выберите дисциплину',
+                       enable: $root.filter.profile"></select>
+        </div>
+        <div class="filter-block">
+            <label class="title">Группа</label>
+            <select data-bind="options: $root.filter.groups,
+                       optionsText: 'name',
+                       value: $root.filter.group,
+                       optionsCaption: 'Выберите группу',
+                       enable: $root.filter.profile"></select>
         </div>
         <div class="filter-block">
             <label class="title">Начало&nbsp;интервала</label>
