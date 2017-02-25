@@ -9,16 +9,10 @@ $(document).ready(function () {
                 content: ko.observable(''),
                 disciplineId: ko.observable(0)
             });
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
+            self.page = ko.observable(menu.admin.disciplines);
+            self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.theme = ko.observable(null);
 
             self.mode = ko.observable('none');
@@ -141,6 +135,8 @@ $(document).ready(function () {
 
 
             return {
+                page: self.page,
+                user: self.user,
                 section : self.section,
                 approve: self.approve,
                 text: self.text,

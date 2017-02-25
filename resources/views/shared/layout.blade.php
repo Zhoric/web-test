@@ -15,15 +15,16 @@
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/ru-RU.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-pager.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-events.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/user-info.js')}}"></script>
     @yield('javascript')
 </head>
 <body>
@@ -54,10 +55,9 @@
         <a href="/admin/disciplines" data-bind="css: {'current': $root.page() === menu.admin.disciplines}">Дисциплины</a>
         <a href="/admin/tests" data-bind="css: {'current': $root.page() === menu.admin.tests}">Тесты</a>
         <a href="/admin/results" data-bind="css: {'current': $root.page() === menu.admin.results}">Результаты</a>
-        <a href="/logout" class="user">Выход</a>
+        <a href="/logout" class="user" data-bind="text: $root.user.name()">Выход</a>
     </div>
     @yield('content')
-
     <div class="footer"></div>
 </body>
 </html>

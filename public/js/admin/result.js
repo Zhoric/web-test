@@ -9,6 +9,8 @@ $(document).ready(function(){
             self.validation = {};
             self.events = new validationEvents(self.validation);
             self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
 
             self.current = {
                 result: ko.observable(),
@@ -156,6 +158,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 errors: self.errors,
                 actions: self.actions,
                 current: self.current,

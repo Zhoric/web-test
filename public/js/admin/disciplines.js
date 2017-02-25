@@ -4,16 +4,19 @@ $(document).ready(function(){
             var self = this;
 
             self.page = ko.observable(menu.admin.disciplines);
+            self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.validation = {};
             self.events = new validationEvents(self.validation);
-            self.errors = errors();
+
             self.pagination = pagination();
             self.mode = ko.observable(state.none);
             self.modals = {
                 removeTheme: '#remove-theme-modal',
                 removeDiscipline: '#delete-modal',
                 section: '#sections-modal',
-                removeSection: '#remove-section-modal',
+                removeSection: '#remove-section-modal'
             };
             self.multiselect = new multiselect({
                 dataTextField: 'fullname',
@@ -389,6 +392,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 pagination: self.pagination,
                 multiselect: self.multiselect,
                 current: self.current,

@@ -8,6 +8,8 @@ $(document).ready(function(){
             var self = this;
             self.page = ko.observable(menu.admin.disciplines);
             self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.pagination = pagination();
             self.pagination.pageSize(10);
             self.validation = {};
@@ -656,6 +658,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 theme: self.theme,
                 initial: self.initial,
                 pagination: self.pagination,

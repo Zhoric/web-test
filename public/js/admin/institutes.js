@@ -4,6 +4,8 @@ $(document).ready(function(){
             var self = this;
             self.page = ko.observable(menu.admin.main);
             self.errors = new errors();
+            self.user = new user();
+            self.user.read(self.errors);
 
             self.initial = {
                 institutes: ko.observableArray([]),
@@ -118,6 +120,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 current: self.current,
                 initial: self.initial,
                 actions: self.actions,
@@ -125,6 +128,5 @@ $(document).ready(function(){
             };
         };
     };
-
     ko.applyBindings(institutesViewModel());
 });

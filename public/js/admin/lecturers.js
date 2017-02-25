@@ -5,6 +5,8 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.lecturers);
             self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.pagination = pagination();
             self.validation = {};
             self.events = new validationEvents(self.validation);
@@ -247,6 +249,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 initial: self.initial,
                 filter: self.filter,
                 current: self.current,

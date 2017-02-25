@@ -211,6 +211,18 @@ var commonHelper = {
             theme: 'tooltipster-light',
             side: settings.side ? settings.side : 'top'
         });
+    },
+    user: function(errors){
+        var userInfo = null;
+        $ajaxget({
+            url: '/api/user/current',
+            errors: errors,
+            successCallback: function(data){
+                userInfo = data;
+                console.log(data);
+            }
+        });
+        return userInfo;
     }
 };
 

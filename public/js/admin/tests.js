@@ -4,6 +4,8 @@ $(document).ready(function(){
             var self = this;
             self.page = ko.observable(menu.admin.tests);
             self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.validation = {};
             self.events = new validationEvents(self.validation);
             self.modals = {
@@ -277,6 +279,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 current: self.current,
                 pagination: self.pagination,
                 multiselect: self.multiselect,

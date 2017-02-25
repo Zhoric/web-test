@@ -18,3 +18,7 @@ ko.observable.fn.parseDate = function(){
 
     return date;
 };
+
+ko.observable.fn.nameInitials = function(){
+    console.log(this());
+};

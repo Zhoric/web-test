@@ -5,6 +5,8 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.groups);
             self.errors = new errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.validation = {};
             self.events = new validationEvents(self.validation);
             self.pagination = pagination();
@@ -303,6 +305,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 current: self.current,
                 actions: self.actions,
                 filter: self.filter,

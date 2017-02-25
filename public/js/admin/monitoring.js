@@ -3,6 +3,9 @@ $(document).ready(function(){
         return new function(){
             var self = this;
             self.page = ko.observable(menu.admin.results);
+            self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
 
             self.initial = {
                 settings: ko.observable(null)
@@ -92,7 +95,6 @@ $(document).ready(function(){
                     self.filter.interval(interval.thirtysec);
                 }
             };
-            self.errors = errors();
 
 
             self.actions = {
@@ -261,6 +263,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 current: self.current,
                 filter: self.filter,
                 actions: self.actions,

@@ -1,7 +1,3 @@
-/**
- * Created by nyanjii on 02.10.16.
- */
-
 $(document).ready(function(){
     var studentsViewModel = function(){
         return new function(){
@@ -9,6 +5,8 @@ $(document).ready(function(){
 
             self.page = ko.observable(menu.admin.students);
             self.errors = errors();
+            self.user = new user();
+            self.user.read(self.errors);
             self.validation = {};
             self.events = new validationEvents(self.validation);
             self.pagination = pagination();
@@ -287,6 +285,7 @@ $(document).ready(function(){
 
             return {
                 page: self.page,
+                user: self.user,
                 initial: self.initial,
                 filter: self.filter,
                 current: self.current,
