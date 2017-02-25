@@ -17,6 +17,15 @@ $(document).ready(function(){
                 results: ko.observableArray([]),
                 test: ko.observable(),
                 attempts: ko.observable(),
+                extraAttempts: {
+                    count: ko.observable(0).extend({
+                        required: true,
+                        min: 0,
+                        max: 1000,
+                        digit: true
+                    }),
+                    mode: ko.observable(state.none)
+                },
                 answers: ko.observableArray([]),
                 answer: ko.observable({
                     id: ko.observable(0),
@@ -74,15 +83,6 @@ $(document).ready(function(){
                         self.current.mark.value('Оценить');
                     }
                 },
-                result:{
-                    date: function(){
-                        var date = self.current.result().dateTime.date;
-                        date(commonHelper.parseDate(date()));
-                    },
-                    fit: function(){
-                        self.actions.result.date();
-                    }
-                },
                 results: {
                     view: function(){
                         commonHelper.modal.open('#attempts-modal');
@@ -90,6 +90,21 @@ $(document).ready(function(){
                     select: function(data){
                         commonHelper.modal.close('#attempts-modal');
                         window.location.href = '/admin/result/' + data.id();
+                    }
+                },
+                attempts: {
+                    start: function(){
+                        self.get.attempts();
+                        self.current.extraAttempts.mode(state.update);
+                        commonHelper.buildValidationList(self.validation);
+                    },
+                    end: function(){
+                        if (!self.current.extraAttempts.count.isValid()) return;
+                        self.post.attempts();
+                    },
+                    cancel: function(){
+                        self.current.extraAttempts
+                            .mode(state.none).count(0);
                     }
                 }
             };
@@ -119,8 +134,6 @@ $(document).ready(function(){
                             self.current.result(data.testResult);
                             self.current.attempts(data.attemptsAllowed());
                             self.current.test(data.test);
-
-                            self.actions.result.fit();
                             self.get.results();
                         }
                     });
@@ -138,6 +151,18 @@ $(document).ready(function(){
                             commonHelper.tooltip({selector: '.tagged', side: 'left'})
                         }
                     });
+                },
+                attempts: function(){
+                    var user = '?userId=' + self.current.result().user.id();
+                    var test = '&testId=' + self.current.result().testId();
+
+                    $ajaxget({
+                        url: '/api/attempts/get' + user + test,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.extraAttempts.count(data());
+                        }
+                    });
                 }
             };
             self.post = {
@@ -147,6 +172,22 @@ $(document).ready(function(){
                         data: JSON.stringify({answerId: id, mark: mark}),
                         errors: self.errors,
                         successCallback: function(){
+                            self.get.result();
+                        }
+                    });
+                },
+                attempts: function(){
+                    var json = JSON.stringify({
+                        testId: self.current.result().testId(),
+                        userId: self.current.result().user.id(),
+                        count: self.current.extraAttempts.count()
+                    });
+                    $ajaxpost({
+                        url: '/api/attempts/set',
+                        errors: self.errors,
+                        data: json,
+                        successCallback: function(){
+                            self.actions.attempts.cancel();
                             self.get.result();
                         }
                     });

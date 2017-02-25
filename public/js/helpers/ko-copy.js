@@ -19,6 +19,8 @@ ko.observable.fn.parseDate = function(){
     return date;
 };
 
-ko.observable.fn.nameInitials = function(){
-    console.log(this());
+ko.observable.fn.parseAnswer = function(){
+    if (!this()) return;
+    return this().replace(/<\/answer>/g, '\n\n')
+        .slice(0, this().lastIndexOf('\n\n'));
 };

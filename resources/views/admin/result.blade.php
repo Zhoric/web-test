@@ -18,11 +18,22 @@
                 <div class="details-row">
                     <div class="details-column width-100p">
                         <label class="title">Номер&nbsp;попытки&nbsp;
-                            <span class="coloredin-patronus bold"
+                            <span class="coloredin-patronus bold pointer"
                                   data-bind="visible: $root.current.results().length,
                                   click: $root.actions.results.view">(Все&nbsp;попытки)</span>
                         </label>
-                        <span class="info" data-bind="text: attempt() +'/' + $root.current.attempts()"></span>
+                        <span class="info" data-bind="text: attempt() +'/' + $root.current.attempts()"></span>&nbsp;&nbsp;
+                        <!-- ko if: $root.current.extraAttempts.mode() !== state.update -->
+                        <span class="coloredin-patronus bold pointer" data-bind="click: $root.actions.attempts.start">[Добавить]</span>
+                        <!-- /ko -->
+                        <!-- ko if: $root.current.extraAttempts.mode() === state.update -->
+                        <input class="text-center maxw-50 height-19" type="text" id="iExtraAttempts" validate
+                               data-bind="value: $root.current.extraAttempts.count,
+                               validationElement: $root.current.extraAttempts.count,
+                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+                        <span class="fa radio-important" data-bind="click: $root.actions.attempts.end">&#xf00c;</span>
+                        <span class="fa radio-important" data-bind="click: $root.actions.attempts.cancel">&#xf00d;</span>
+                        <!-- /ko -->
                     </div>
                 </div>
             </div>
@@ -81,7 +92,7 @@
             <div class="details-row special-item-details" data-bind="with: $root.current.answer">
                 <div class="details-column float-right">
                     <div class="result-setter">
-                        <label class="title">Правильность ответа</label>
+                        <label class="title">Правильность&nbsp;ответа</label>
                         <!-- ko if: rightPercentage() !== null && !$root.current.mark.isInput() -->
                         <span class="radio-important" data-bind="text: rightPercentage, click: $root.actions.mark.edit"></span>
                         <!-- /ko -->
@@ -107,7 +118,7 @@
                     </div>
                     <div class="details-column">
                         <span class="fa icon">&#xf27a;</span>
-                        <span class="text" class="text" data-bind="text: answer"></span>
+                        <span class="text" class="text" data-bind="text: answer.parseAnswer()"></span>
                     </div>
                 </div>
             </div>
@@ -123,7 +134,7 @@
     <div class="box-modal" id="attempts-modal">
         <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
         <div class="layer zero-margin width-auto">
-            <h3>Все попытки</h3>
+            <h3>Все&nbsp;попытки</h3>
             <!-- ko foreach: $root.current.results -->
             <div class="item" data-bind="click: $root.actions.results.select">
                 <span data-bind="text: attempt() + ')'"></span>
@@ -131,7 +142,7 @@
                         <span data-bind="text: mark"></span>
                         <span>/100</span>
                     </span>
-                <span data-bind="if: mark() === null">Требуется проверка</span>
+                <span data-bind="if: mark() === null">Требуется&nbsp;проверка</span>
                 <span class="float-right date-string" data-bind="text: dateTime.date.parseDate()"></span>
             </div>
             <!-- /ko -->

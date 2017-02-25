@@ -143,7 +143,7 @@ class TestResultManager
     {
         $extraAttempts = $this->_unitOfWork
             ->extraAttempts()
-            ->findByTestAndUser($userId, $testId);
+            ->findByTestAndUser($testId, $userId);
 
         return $extraAttempts != null ? $extraAttempts->getCount() : 0;
     }
