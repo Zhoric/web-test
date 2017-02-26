@@ -29,6 +29,7 @@ $(document).ready(function(){
 
                 set: {
                     profile: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_profile;
                         if (!id) return;
                         self.filter.profiles().find(function(item){
@@ -38,6 +39,7 @@ $(document).ready(function(){
                         });
                     },
                     discipline: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_discipline;
                         if (!id) return;
                         self.filter.disciplines().find(function(item){
@@ -47,6 +49,7 @@ $(document).ready(function(){
                         });
                     },
                     group: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_group;
                         if (!id) return;
                         self.filter.groups().find(function(item){
@@ -56,6 +59,7 @@ $(document).ready(function(){
                         });
                     },
                     test: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_test;
                         if (!id) return;
                         self.filter.tests().find(function(item){
@@ -65,10 +69,18 @@ $(document).ready(function(){
                         });
                     },
                     state: function(){
+                        self.filter.state('any');
+                        if (!self.initial.settings()) return;
                         var value = self.initial.settings().monitoring_state;
-                        if (value) self.filter.state(value());
+                        if (!value()) return;
+                        if (value() === 'any' ||
+                            value() === 'process' ||
+                            value() === 'finished')
+                            self.filter.state(value());
                     },
                     interval: function(){
+                        self.filter.interval(interval.thirtysec);
+                        if (!self.initial.settings()) return;
                         var value = self.initial.settings().monitoring_interval;
                         if (!value) return;
                         if ($.isNumeric(value())) self.filter.interval(value());
@@ -115,18 +127,22 @@ $(document).ready(function(){
                             "monitoring_interval"
                         ]
                     });
+                    var callback = function(){
+                        self.get.profiles();
+                        self.filter.set.state();
+                        self.filter.set.interval();
+                    };
                     $ajaxpost({
                         url: '/api/uisettings/get',
                         data: json,
+                        errors: self.errors,
                         successCallback: function(data){
                             self.initial.settings(data);
-                            self.get.profiles();
-                            self.filter.set.state();
-                            self.filter.set.interval();
+                            callback();
                         },
                         errorCallback: function(){
-                            self.settings(null);
-                            self.get.profiles();
+                            self.initial.settings(null);
+                            callback();
                         }
                     });
                 },
@@ -189,6 +205,7 @@ $(document).ready(function(){
                 settings: function(settings){
                     $ajaxpost({
                         url: '/api/uisettings/set',
+                        errors: self.errors,
                         data: JSON.stringify({
                             settings: settings
                         })

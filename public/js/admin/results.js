@@ -77,9 +77,10 @@ $(document).ready(function(){
                     window.location.href = '/admin/result/' + data.id();
                 },
                 overall: function(){
-                    self.post.settings({'overall_profile': self.filter.profile().id()});
-                    self.post.settings({'overall_discipline': self.filter.discipline().id()});
-                    self.post.settings({'overall_group': self.filter.group().id()});
+
+                    self.filter.profile() ? self.post.settings({'overall_profile': self.filter.profile().id()}) : null;
+                    self.filter.discipline() ? self.post.settings({'overall_discipline': self.filter.discipline().id()}): null;
+                    self.filter.group() ? self.post.settings({'overall_group': self.filter.group().id()}) : null;
                     window.location.href = '/admin/overallresults';
                 }
             };

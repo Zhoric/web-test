@@ -46,21 +46,24 @@
             <select data-bind="options: $root.filter.groups,
                        optionsText: 'name',
                        value: $root.filter.group,
-                       optionsCaption: 'Выберите группу'"></select>
+                       optionsCaption: 'Выберите группу',
+                       enable: $root.filter.profile()"></select>
         </div>
         <div class="filter-block">
             <label class="title">Дисциплина</label>
             <select data-bind="options: $root.filter.disciplines,
                        optionsText: 'name',
                        value: $root.filter.discipline,
-                       optionsCaption: 'Выберите дисциплину'"></select>
+                       optionsCaption: 'Выберите дисциплину',
+                       enable: $root.filter.profile()"></select>
         </div>
         <div class="filter-block">
             <label class="title">Тест</label>
             <select data-bind="options: $root.filter.tests,
                        optionsText: 'subject',
                        value: $root.filter.test,
-                       optionsCaption: 'Выберите тест'"></select>
+                       optionsCaption: 'Выберите тест',
+                       enable: $root.filter.group()"></select>
         </div>
         <div class="filter-block">
             <label class="title">Состояние</label>
