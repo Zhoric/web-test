@@ -451,6 +451,9 @@ span.date-string {
 .width-100p {
   width: 100%;
 }
+.width-80 {
+  width: 80px !important;
+}
 .height-19 {
   height: 19px;
 }
@@ -496,14 +499,9 @@ span.date-string {
 button {
   font-family: 'Roboto Regular';
   height: 40px;
-  width: 150px;
-  color: #ecf0f1;
-  background: #27ae60;
   border: 0;
+  cursor: pointer;
   font-size: 16px;
-}
-button:hover {
-  background: #000;
 }
 a {
   color: #000;

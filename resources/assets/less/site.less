@@ -5,7 +5,13 @@
 .details-row.result-details{
   margin: -1px 0 1% 0;
 }
-
+.details-row.float-buttons{
+  min-height: 40px;
+  button{
+    float:right;
+    margin: 0 1% 0 0;
+  }
+}
 .details-column{
   margin: 1%;
 }
@@ -170,12 +176,21 @@
   }
 }
 
-
 // --------- MODALS ---------- //
 #question-details-modal{
   max-height: 300px;
   width: 700px;
   span.info{
     white-space: pre-wrap;
+  }
+}
+
+#confirm-test-start-modal{
+  width: 450px;
+  p{
+    color: @unimportant;
+    font-size: 12px;
+    text-align: justify;
+    padding: 15px 0;
   }
 }

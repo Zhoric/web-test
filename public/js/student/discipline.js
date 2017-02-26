@@ -1,17 +1,20 @@
 $(document).ready(function(){
-
     var disciplineTestsViewModel = function(){
         return new function(){
             var self = this;
 
             self.page = ko.observable(menu.student.main);
             self.errors = errors();
+            self.modals = {
+                messageBox: '#confirm-test-start-modal'
+            };
 
             self.current = {
                 discipline: {
                     id: ko.observable(),
                     name: ko.observable()
                 },
+                test: null,
                 tests: ko.observableArray([])
             };
 
@@ -22,6 +25,11 @@ $(document).ready(function(){
 
             self.actions = {
                 start: function(data){
+                    self.current.test = data;
+                    commonHelper.modal.open(self.modals.messageBox);
+                },
+                end: function(){
+                    var data = self.current.test;
                     commonHelper.cookies.create({
                         testId: data.test.id(),
                         testName: data.test.subject(),

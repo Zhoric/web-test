@@ -85,6 +85,7 @@ $(document).ready(function(){
                     delete test.seconds;
                     delete test.themes;
 
+                    test.type = test.type ? 1 : 2;
                     self.mode() === state.create ? delete test.id : null;
 
                     self.multiselect.tags().find(function(item){

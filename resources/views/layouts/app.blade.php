@@ -23,6 +23,7 @@
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
+    <script src="{{ URL::asset('js/ru-RU.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>
@@ -52,6 +53,7 @@
             insertMessages:false,
             errorsAsTitle: true
         });
+        ko.validation.locale('ru-RU');
     </script>
 </head>
 <body>

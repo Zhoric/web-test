@@ -18,7 +18,10 @@
             <h1>Результаты по дисциплине</h1>
             <label class="adder" data-bind="click: $root.actions.results">Результаты&nbsp;по&nbsp;тесту</label>
         </div>
-        <div class="items-body">
+        <!-- ko if: !$root.filter.group() && !$root.filter.discipline() -->
+        <h3 class="text-center">Пожалуйста, заполните все поля фильтра</h3>
+        <!-- /ko -->
+        <div class="items-body" data-bind="if: $root.filter.group() && $root.filter.discipline()">
             <table class="werewolf">
                 <thead>
                     <tr>

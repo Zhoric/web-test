@@ -1,19 +1,15 @@
 $(document).ready(function(){
-    var editor = ace.edit("editor");
-    editor.getSession().setMode("ace/mode/c_cpp");
-
+    var editor;
     var testingViewModel = function(){
         return new function(){
             var self = this;
+
             self.errors = errors();
             self.code = {
                 task: ko.observable(''),
                 text: ko.observable(''),
                 write: function(){
                     commonHelper.modal.open('#code-editor-modal');
-                },
-                clear: function(){
-                    editor.setValue('');
                 },
                 fill: function(data){
                     self.code.task(self.current.question().text());
@@ -31,7 +27,7 @@ $(document).ready(function(){
             self.allowTimer = ko.observable(null);
             self.current = {
                 test: {
-                    id: ko.observable(),
+                    id: ko.observable(null),
                     name: ko.observable(''),
                     discipline: ko.observable(''),
                     type: ko.observable()
@@ -57,7 +53,7 @@ $(document).ready(function(){
                     },
                     hide: function(){
                         $('#image-expander').fadeOut();
-                    },
+                    }
                 }
             };
             self.alter = {
@@ -98,7 +94,6 @@ $(document).ready(function(){
                     self.current.answerText('');
                     self.current.answers([]);
                     self.current.question(null);
-                    self.code.clear();
                 }
             };
 
@@ -107,7 +102,7 @@ $(document).ready(function(){
                     var cookie = $.cookie();
 
                     if (!cookie.testId){
-                        alert('хитрая жопа');
+                        window.history.back();
                         return;
                     }
                     self.current.test
@@ -115,7 +110,6 @@ $(document).ready(function(){
                         .type(+cookie.testType).discipline(cookie.disciplineName);
 
                     commonHelper.cookies.remove(cookie);
-
                     self.post.startTest();
                 },
                 question: function(){
@@ -147,6 +141,8 @@ $(document).ready(function(){
                         url: '/api/program/byQuestion/' + self.current.question().id(),
                         errors: self.errors,
                         successCallback: function(data){
+                            editor = ace.edit("editor");
+                            editor.getSession().setMode("ace/mode/c_cpp");
                             self.code.fill(data);
                         }
                     });

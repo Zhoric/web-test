@@ -451,6 +451,9 @@ span.date-string {
 .width-100p {
   width: 100%;
 }
+.width-80 {
+  width: 80px !important;
+}
 .height-19 {
   height: 19px;
 }
@@ -496,14 +499,9 @@ span.date-string {
 button {
   font-family: 'Roboto Regular';
   height: 40px;
-  width: 150px;
-  color: #ecf0f1;
-  background: #27ae60;
   border: 0;
+  cursor: pointer;
   font-size: 16px;
-}
-button:hover {
-  background: #000;
 }
 a {
   color: #000;
@@ -544,6 +542,13 @@ button.move:hover {
 }
 .details-row.result-details {
   margin: -1px 0 1% 0;
+}
+.details-row.float-buttons {
+  min-height: 40px;
+}
+.details-row.float-buttons button {
+  float: right;
+  margin: 0 1% 0 0;
 }
 .details-column {
   margin: 1%;
@@ -710,6 +715,15 @@ button.move:hover {
 }
 #question-details-modal span.info {
   white-space: pre-wrap;
+}
+#confirm-test-start-modal {
+  width: 450px;
+}
+#confirm-test-start-modal p {
+  color: #7f8c8d;
+  font-size: 12px;
+  text-align: justify;
+  padding: 15px 0;
 }
 
 /*# sourceMappingURL=site.css.map */

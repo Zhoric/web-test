@@ -106,6 +106,7 @@ $(document).ready(function(){
                     self.filter.profile() ? self.filter.profile(null) : null;
                     self.filter.discipline() ? self.filter.discipline(null) : null;
                     self.filter.group() ? self.filter.group(null) : null;
+                    self.initial.settings(null);
                 }
             };
 

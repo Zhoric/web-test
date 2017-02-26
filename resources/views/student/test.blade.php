@@ -2,7 +2,6 @@
 @section('title', 'Тест')
 @section('style')
     <link rel="stylesheet" href="{{ URL::asset('css/test.css')}}"/>
-
 @endsection
 @section('javascript')
     <script src="{{ URL::asset('js/ace.js') }}"></script>
@@ -47,6 +46,9 @@
                 <div class="answers" data-bind="if: $root.current.question().type() === 4">
                     <textarea data-bind="value: $root.current.answerText" placeholder="Введите свой ответ"></textarea>
                 </div>
+                <div class="answers" data-bind="if: $root.current.question().type() === 5">
+                    <div id="editor"></div>
+                </div>
                 <div class="action-holder">
                     <button class="float-right approve answer" data-bind="click: $root.actions.answer">Ответить</button>
                 </div>
@@ -60,12 +62,16 @@
                         <span data-bind="text: user.patronymic"></span>
                     </div>
                     <div class="mark">
-                        <span class="no-mark" data-bind="if: !mark()">Результат вашего теста вы сможете узнать после того,
+                        <!-- ko if: mark() === null-->
+                        <span class="no-mark">Результат вашего теста вы сможете узнать после того,
                             как преподаватель проверит ваши ответы на открытые вопросы.</span>
-                        <span data-bind="text: mark"></span>
+                        <!-- /ko -->
+                        <!-- ko if: mark() !== null-->
+                        <span data-bind="text: mark() + '/100'"></span>
+                        <!-- /ko -->
                     </div>
                     <div class="date">
-                        <span data-bind="text: dateTime.date"></span>
+                        <span data-bind="text: dateTime.date.parseDate()"></span>
                     </div>
                 </div>
                 <div class="action-holder">
@@ -73,18 +79,6 @@
                 </div>
             </div>
         </div>
-
-    @include('shared.error-modal')
-@endsection
-
-
-<div class="g-hidden">
-    <div class="box-modal" id="code-editor-modal">
-        <div>
-            <div id="editor"></div>
-            <div class="code-task" data-bind="text: $root.code.task"></div>
-            <input type="button" class="cancel" data-bind="click: $root.code.clear" value="Очистить">
-            <input type="button" class="save arcticmodal-close" data-bind="click: $root.code.approve" value="Подтвердить">
-        </div>
     </div>
-</div>
+@include('shared.error-modal')
+@endsection
