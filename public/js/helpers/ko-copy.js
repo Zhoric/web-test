@@ -37,3 +37,30 @@ ko.observable.fn.parseAnswer = function(){
     return this().replace(/<\/answer>/g, '\n\n')
         .slice(0, this().lastIndexOf('\n\n'));
 };
+
+ko.observableArray.fn.knot = function(startDate, endDate){
+    return ko.pureComputed(function(){
+        var initial = this();
+        var timeline = [];
+        var item = null;
+        timeline.push({
+            name: 'Начало периода',
+            date: new Date(startDate),
+            radius: 2
+        });
+        for (var i=0; i < initial.length; i++){
+            item = initial[i];
+            timeline.push({
+                name: item.testName() + '<br/>Оценка: ' +
+                (item.mark() ? item.mark(): 'отсутствует' + '<br/>'),
+                date: new Date(item.dateTime.date())
+            });
+        }
+        timeline.push({
+            name: 'Конец периода',
+            date: new Date(endDate),
+            radius: 2
+        });
+        return timeline;
+    }, this);
+};

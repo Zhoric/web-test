@@ -4,7 +4,10 @@
     <link rel="stylesheet" href="{{ URL::asset('css/datepicker.css')}}"/>
     <script src="{{ URL::asset('js/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{ URL::asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{ URL::asset('js/d3.v2.min.js')}}"></script>
+    <script src="{{ URL::asset('js/timeknots-min.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/datepicker.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/timeline.js')}}"></script>
     <script src="{{ URL::asset('js/admin/overall.js')}}"></script>
 @endsection
 
@@ -24,11 +27,11 @@
                         <th>Средний балл</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody data-bind="foreach: $root.current.results">
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td data-bind="text: name" class="minw-200"></td>
+                        <td class="text-center width-100p" data-bind="timeline: results.knot($root.filter.startDate(), $root.filter.endDate())"></td>
+                        <td data-bind="text: mark" class="text-center"></td>
                     </tr>
                 </tbody>
             </table>

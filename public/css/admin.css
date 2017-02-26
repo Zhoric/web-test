@@ -463,6 +463,12 @@ span.date-string {
 .minw-20 {
   min-width: 20px;
 }
+.minw-50 {
+  min-width: 50px;
+}
+.minw-200 {
+  min-width: 200px;
+}
 .minw-220 {
   min-width: 220px;
 }
@@ -1118,6 +1124,9 @@ table.werewolf.questions tr:hover .actions {
 .date-ico {
   color: #6C7A89;
   padding: 3px 5px 0 0;
+}
+svg text[x][y] {
+  visibility: hidden;
 }
 #show-plans-modal {
   max-height: 500px;

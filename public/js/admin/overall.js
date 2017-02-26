@@ -60,15 +60,15 @@ $(document).ready(function(){
                         self.filter.startDate(new Date());
                         if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_start_date;
-                        if (date && date() instanceof Date)
-                            self.filter.startDate(date());
+                        if (date && !isNaN(new Date(date()).valueOf()))
+                            self.filter.startDate(new Date(date()));
                     },
                     endDate: function(){
                         self.filter.endDate(new Date());
                         if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_end_date;
-                        if (date && date() instanceof Date)
-                            self.filter.endDate(date());
+                        if (date && !isNaN(new Date(date()).valueOf()))
+                            self.filter.endDate(new Date(date()));
                     },
                     criterion: function(){
                         self.filter.criterion(criterion.mark);
@@ -108,7 +108,6 @@ $(document).ready(function(){
                     self.filter.group() ? self.filter.group(null) : null;
                 }
             };
-
 
             self.actions = {
                 results: function(){
@@ -188,13 +187,11 @@ $(document).ready(function(){
                     var endDate = '&endDate=' + commonHelper.parseDate(self.filter.endDate());
                     var criterion = '&criterion=' + self.filter.get.criterion();
 
-
                     var url = '/api/results/getGroupResults' +
                         group + discipline +
                         startDate + endDate +
                         criterion;
 
-                    return;
                     $ajaxget({
                         url: url,
                         errors: self.errors,
@@ -239,6 +236,7 @@ $(document).ready(function(){
                 value
                     ? self.post.settings({'overall_discipline': self.filter.discipline().id()})
                     : self.post.settings({'overall_discipline': null});
+                self.get.results();
             });
             self.filter.group.subscribe(function(value){
                 value
@@ -246,7 +244,7 @@ $(document).ready(function(){
                     && self.get.results()
                     : self.current.results([])
                     && self.post.settings({'overall_group': null});
-
+                self.get.results();
             });
             self.filter.startDate.subscribe(function(){
                 self.get.results();
