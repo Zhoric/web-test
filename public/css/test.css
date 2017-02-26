@@ -8,6 +8,9 @@
 }
 .menu {
   background: white;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
 }
 .menu a {
   text-decoration: none;
@@ -32,6 +35,28 @@
   color: #5D8CAE;
   padding-bottom: 15px;
   border-bottom: 3px solid #5D8CAE;
+}
+.menu a.user:hover + .menu-dd {
+  display: block;
+}
+.menu .menu-dd {
+  display: none;
+  position: absolute;
+  background: #fff;
+  right: 0;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  filter: progid:DXImageTransform.Microsoft.dropshadow(offX=5, offY=5, color=#000000);
+}
+.menu .menu-dd a {
+  display: block;
+  line-height: 25px;
+}
+.menu .menu-dd:hover {
+  display: block;
 }
 .form-heights {
   line-height: 27px;

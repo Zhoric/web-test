@@ -57,7 +57,12 @@
         <a href="/admin/disciplines" data-bind="css: {'current': $root.page() === menu.admin.disciplines}">Дисциплины</a>
         <a href="/admin/tests" data-bind="css: {'current': $root.page() === menu.admin.tests}">Тесты</a>
         <a href="/admin/results" data-bind="css: {'current': $root.page() === menu.admin.results}">Результаты</a>
-        <a href="/logout" class="user" data-bind="text: $root.user.name()">Выход</a>
+        <a  class="user" data-bind="text: $root.user.name()"></a>
+        <div class="menu-dd">
+            <a>Администрирование</a>
+            <a>Сменить пароль</a>
+            <a href="/logout">Выход</a>
+        </div>
     </div>
     @yield('content')
     <div class="footer"></div>
