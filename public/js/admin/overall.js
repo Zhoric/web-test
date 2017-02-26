@@ -27,6 +27,7 @@ $(document).ready(function(){
 
                 set: {
                     profile: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().overall_profile;
                         if (!id) return;
                         self.filter.profiles().find(function(item){
@@ -36,6 +37,7 @@ $(document).ready(function(){
                         });
                     },
                     discipline: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().overall_discipline;
                         if (!id) return;
                         self.filter.disciplines().find(function(item){
@@ -45,6 +47,7 @@ $(document).ready(function(){
                         });
                     },
                     group: function(){
+                        if (!self.initial.settings()) return;
                         var id = self.initial.settings().overall_group;
                         if (!id) return;
                         self.filter.groups().find(function(item){
@@ -54,19 +57,28 @@ $(document).ready(function(){
                         });
                     },
                     startDate: function(){
+                        self.filter.startDate(new Date());
+                        if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_start_date;
-                        if (!date) return;
-                        self.filter.startDate(date());
+                        if (date && date() instanceof Date)
+                            self.filter.startDate(date());
                     },
                     endDate: function(){
+                        self.filter.endDate(new Date());
+                        if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_end_date;
-                        if (!date) return;
-                        self.filter.endDate(date());
+                        if (date && date() instanceof Date)
+                            self.filter.endDate(date());
                     },
                     criterion: function(){
-                        var criterion = self.initial.settings().overall_criterion;
-                        if (!criterion) return;
-                        self.filter.criterion(criterion());
+                        self.filter.criterion(criterion.mark);
+                        if (!self.initial.settings()) return;
+                        var crit = self.initial.settings().overall_criterion;
+                        if (!crit) return;
+                        if (crit() === criterion.mark ||
+                            crit() === criterion.firstTry ||
+                            crit() === criterion.secondTry)
+                            self.filter.criterion(crit());
                     }
                 },
                 get: {
@@ -116,19 +128,23 @@ $(document).ready(function(){
                             "overall_criterion"
                         ]
                     });
+                    var callback = function(){
+                        self.get.profiles();
+                        self.filter.set.criterion();
+                        self.filter.set.startDate();
+                        self.filter.set.endDate();
+                    };
                     $ajaxpost({
                         url: '/api/uisettings/get',
                         data: json,
+                        errors: self.errors,
                         successCallback: function(data){
                             self.initial.settings(data);
-                            self.get.profiles();
-                            self.filter.set.criterion();
-                            self.filter.set.startDate();
-                            self.filter.set.endDate();
+                            callback();
                         },
                         errorCallback: function(){
-                            self.settings(null);
-                            self.get.profiles();
+                            self.initial.settings(null);
+                            callback();
                         }
                     });
                 },
@@ -193,6 +209,7 @@ $(document).ready(function(){
                 settings: function(settings){
                     $ajaxpost({
                         url: '/api/uisettings/set',
+                        errors: self.errors,
                         data: JSON.stringify({
                             settings: settings
                         })
