@@ -56,9 +56,10 @@ class TestResultRepository extends BaseRepository
 
         $qb = $this->repo->createQueryBuilder('tr');
         $query = $qb
-            ->join(Test::class, 't', Join::WITH, "t.discipline = $disciplineId AND tr.user = $userId")
-            ->leftJoin(TestResult::class, 'tr2', Join::WITH, 'tr.test = tr2.test 
-            AND tr.user = tr2.user AND tr2.attempt > tr.attempt')
+            ->join(Test::class, 't', Join::WITH, "t.discipline = $disciplineId 
+            AND tr.test = t.id AND tr.user = $userId")
+            ->leftJoin(TestResult::class, 'tr2', Join::WITH, "tr.test = tr2.test 
+            AND tr.user = tr2.user AND tr2.attempt > tr.attempt")
             ->where('tr2.id is NULL')
             ->getQuery();
 
