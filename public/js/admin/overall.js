@@ -6,7 +6,7 @@ $(document).ready(function(){
             self.errors = errors();
             self.user = new user();
             self.user.read(self.errors);
-
+ 
             self.initial = {
                 settings: ko.observable(null)
             };
@@ -20,11 +20,11 @@ $(document).ready(function(){
                 startDate: ko.observable(new Date()),
                 endDate: ko.observable(new Date()),
                 criterion: ko.observable(criterion.mark),
-
+ 
                 profiles: ko.observableArray([]),
                 disciplines: ko.observableArray([]),
                 groups: ko.observableArray([]),
-
+ 
                 set: {
                     profile: function(){
                         if (!self.initial.settings()) return;
@@ -109,13 +109,13 @@ $(document).ready(function(){
                     self.initial.settings(null);
                 }
             };
-
+ 
             self.actions = {
                 results: function(){
                     window.location.href = '/admin/results';
                 }
             };
-
+ 
             self.get = {
                 settings: function(){
                     var json = JSON.stringify({
@@ -181,18 +181,18 @@ $(document).ready(function(){
                 results: function(){
                     if (!self.filter.group()) return;
                     if (!self.filter.discipline()) return;
-
+ 
                     var group = '?groupId=' + self.filter.group().id();
                     var discipline = '&disciplineId=' + self.filter.discipline().id();
                     var startDate = '&startDate=' + commonHelper.parseDate(self.filter.startDate());
                     var endDate = '&endDate=' + commonHelper.parseDate(self.filter.endDate());
                     var criterion = '&criterion=' + self.filter.get.criterion();
-
+ 
                     var url = '/api/results/getGroupResults' +
                         group + discipline +
                         startDate + endDate +
                         criterion;
-
+ 
                     $ajaxget({
                         url: url,
                         errors: self.errors,
@@ -202,7 +202,7 @@ $(document).ready(function(){
                     });
                 }
             };
-
+ 
             self.post = {
                 settings: function(settings){
                     $ajaxpost({
@@ -214,11 +214,11 @@ $(document).ready(function(){
                     });
                 }
             };
-
+ 
             self.get.settings();
-
+ 
             //SUBSCRIPTIONS
-
+ 
             self.filter.profile.subscribe(function(value){
                 if (value){
                     self.post.settings({'overall_profile': self.filter.profile().id()});
@@ -259,7 +259,7 @@ $(document).ready(function(){
                 self.get.results();
                 self.post.settings({'overall_criterion': self.filter.criterion()});
             });
-
+ 
             return {
                 page: self.page,
                 user: self.user,
@@ -270,6 +270,6 @@ $(document).ready(function(){
             };
         };
     };
-
+ 
     ko.applyBindings(overallViewModel());
 });

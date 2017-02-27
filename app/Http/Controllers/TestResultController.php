@@ -161,7 +161,7 @@ class TestResultController extends Controller
             $results = $this->_testResultManager
                 ->getGroupTestPassingChronology($groupId, $disciplineId, $startDate, $endDate, $selectionCriterion);
 
-            return $this->successJSONResponse($results);
+            return $this->successJSONResponse(array_values($results));
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
