@@ -6,14 +6,12 @@ $(document).ready(function(){
     var themeViewModel = function(){
         return new function(){
             var self = this;
-            self.page = ko.observable(menu.admin.disciplines);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.pagination = pagination();
-            self.pagination.pageSize(10);
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
+
+            initializeViewModel.call(self, {
+                page: menu.admin.disciplines,
+                pagination: 10,
+                mode: true
+            });
             self.modals = {
                 removeQuestion: '#remove-question-modal',
                 compile: '#compile-modal',
@@ -310,7 +308,6 @@ $(document).ready(function(){
                 }
             };
 
-            self.mode = ko.observable(state.none);
             self.actions = {
                 theme: {
                     start: {
@@ -656,21 +653,9 @@ $(document).ready(function(){
                 }
             });
 
-            return {
-                page: self.page,
-                user: self.user,
-                theme: self.theme,
-                initial: self.initial,
-                pagination: self.pagination,
-                alter: self.alter,
-                current: self.current,
-                mode: self.mode,
-                actions: self.actions,
-                filter: self.filter,
-                events: self.events,
-                errors: self.errors,
-                code: self.code
-            };
+            var ret = returnStandart.call(self);
+            ret.theme = self.theme;
+            return ret;
         };
     };
 

@@ -4,13 +4,9 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.admin.results);
-            self.theme = ko.observable({});
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
+            initializeViewModel.call(self, {
+                page: menu.admin.results
+            });
 
             self.current = {
                 result: ko.observable(),
@@ -196,17 +192,7 @@ $(document).ready(function(){
 
             self.get.result();
 
-
-            return {
-                page: self.page,
-                user: self.user,
-                errors: self.errors,
-                actions: self.actions,
-                current: self.current,
-                mode: self.mode,
-                filter: self.filter,
-                events: self.events
-            };
+            return returnStandart.call(self);
         };
     };
 

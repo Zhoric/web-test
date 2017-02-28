@@ -2,13 +2,11 @@ $(document).ready(function () {
     var studyplanViewModel = function () {
         return new function () {
             var self = this;
-            self.page = ko.observable(menu.admin.main);
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
-            self.errors = new errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.mode = ko.observable(state.none);
+
+            initializeViewModel.call(self, {
+                page: menu.admin.main,
+                mode: true
+            });
 
 
             self.initial = {
@@ -227,17 +225,7 @@ $(document).ready(function () {
                 self.get.disciplines();
             });
 
-            return {
-                page: self.page,
-                user: self.user,
-                current: self.current,
-                initial: self.initial,
-                filter: self.filter,
-                mode: self.mode,
-                errors: self.errors,
-                actions: self.actions,
-                events: self.events
-            }
+            return returnStandart.call(self);
         };
     };
 

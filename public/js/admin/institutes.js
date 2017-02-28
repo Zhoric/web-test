@@ -2,10 +2,9 @@ $(document).ready(function(){
     var institutesViewModel = function(){
         return new function(){
             var self = this;
-            self.page = ko.observable(menu.admin.main);
-            self.errors = new errors();
-            self.user = new user();
-            self.user.read(self.errors);
+            initializeViewModel.call(self, {
+                page: menu.admin.main
+            });
 
             self.initial = {
                 institutes: ko.observableArray([]),
@@ -118,14 +117,7 @@ $(document).ready(function(){
 
             self.get.institutes();
 
-            return {
-                page: self.page,
-                user: self.user,
-                current: self.current,
-                initial: self.initial,
-                actions: self.actions,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
     ko.applyBindings(institutesViewModel());

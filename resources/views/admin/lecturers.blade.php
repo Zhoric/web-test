@@ -189,21 +189,6 @@
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="change-success-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Пароль успешно изменён</h3>
-            </div>
-            <div class="layer-body zero-margin">
-                <div class="details-row float-buttons">
-                    <button class="approve arcticmodal-close">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="g-hidden">
     <div class="box-modal removal-modal" id="remove-request-modal">
         <div class="layer zero-margin width-auto">
             <div class="layer-head">

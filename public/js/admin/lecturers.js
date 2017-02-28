@@ -3,19 +3,15 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.admin.lecturers);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.pagination = pagination();
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
-            self.pagination.pageSize(15);
-            self.mode = ko.observable(state.none);
-            self.multiselect = new multiselect({
-                dataTextField: 'name',
-                dataValueField: 'id',
-                valuePrimitive: false
+            initializeViewModel.call(self,{
+                page: menu.admin.lecturers,
+                pagination: 15,
+                mode: true,
+                multiselect: {
+                    dataTextField: 'name',
+                    dataValueField: 'id',
+                    valuePrimitive: false
+                }
             });
 
             self.initial = {
@@ -247,19 +243,7 @@ $(document).ready(function(){
             self.get.disciplines();
             self.get.lecturers();
 
-            return {
-                page: self.page,
-                user: self.user,
-                initial: self.initial,
-                filter: self.filter,
-                current: self.current,
-                actions: self.actions,
-                mode: self.mode,
-                pagination: self.pagination,
-                errors: self.errors,
-                events: self.events,
-                multiselect: self.multiselect
-            };
+            return returnStandart.call(self);
         };
     };
 

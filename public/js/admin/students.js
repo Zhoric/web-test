@@ -3,15 +3,11 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.admin.students);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
-            self.pagination = pagination();
-            self.pagination.pageSize(20);
-            self.mode = ko.observable(state.none);
+            initializeViewModel.call(self, {
+                page: menu.admin.students,
+                pagination: 20,
+                mode: true
+            });
 
             self.initial = {
                 groups: ko.observableArray([])
@@ -81,7 +77,6 @@ $(document).ready(function(){
                     update: function(data){
                         self.mode(state.update);
                         self.alter.fill(data);
-                        console.log(data);
                         self.alter.set.group(data.group().id());
                         commonHelper.buildValidationList(self.validation);
                     },
@@ -283,18 +278,7 @@ $(document).ready(function(){
                 self.get.students();
             });
 
-            return {
-                page: self.page,
-                user: self.user,
-                initial: self.initial,
-                filter: self.filter,
-                current: self.current,
-                actions: self.actions,
-                events: self.events,
-                mode: self.mode,
-                pagination: self.pagination,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
 

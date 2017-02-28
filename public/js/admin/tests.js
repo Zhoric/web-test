@@ -2,22 +2,19 @@ $(document).ready(function(){
     var testsViewModel = function(){
         return new function(){
             var self = this;
-            self.page = ko.observable(menu.admin.tests);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
+            initializeViewModel.call(self, {
+                page: menu.admin.tests,
+                mode: true,
+                pagination: 10,
+                multiselect: {
+                    dataTextField: 'name',
+                    dataValueField: 'id',
+                    valuePrimitive: false
+                }
+            });
             self.modals = {
                 removeTest: '#remove-test-modal'
             };
-            self.pagination = pagination();
-            self.multiselect = new multiselect({
-                dataTextField: 'name',
-                dataValueField: 'id',
-                valuePrimitive: false
-            });
-            self.mode = ko.observable(state.none);
 
             self.current = {
                 test: ko.validatedObservable({
@@ -278,19 +275,7 @@ $(document).ready(function(){
                 self.get.tests();
             });
 
-            return {
-                page: self.page,
-                user: self.user,
-                current: self.current,
-                pagination: self.pagination,
-                multiselect: self.multiselect,
-                alter: self.alter,
-                actions: self.actions,
-                mode: self.mode,
-                filter: self.filter,
-                events: self.events,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
 

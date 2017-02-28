@@ -3,11 +3,11 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.admin.results);
+            initializeViewModel.call(self, {
+                page: menu.admin.results
+            });
+
             self.theme = ko.observable({});
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
             self.settings = ko.observable(null);
 
             self.current = {
@@ -217,15 +217,7 @@ $(document).ready(function(){
             });
 
 
-            return {
-                page: self.page,
-                user: self.user,
-                current: self.current,
-                actions: self.actions,
-                filter: self.filter,
-                showResult: self.showResult,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
 

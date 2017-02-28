@@ -3,27 +3,22 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.admin.disciplines);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
-
-            self.pagination = pagination();
-            self.pagination.pageSize(10);
-            self.mode = ko.observable(state.none);
+            initializeViewModel.call(self, {
+                page: menu.admin.disciplines,
+                mode: true,
+                pagination: 10,
+                multiselect: {
+                    dataTextField: 'fullname',
+                    dataValueField: 'id',
+                    valuePrimitive: true
+                }
+            });
             self.modals = {
                 removeTheme: '#remove-theme-modal',
                 removeDiscipline: '#remove-discipline-modal',
                 section: '#sections-modal',
                 removeSection: '#remove-section-modal'
             };
-            self.multiselect = new multiselect({
-                dataTextField: 'fullname',
-                dataValueField: 'id',
-                valuePrimitive: true
-            });
 
             self.current = {
                 disciplines: ko.observableArray([]),
@@ -391,20 +386,7 @@ $(document).ready(function(){
                 self.get.disciplines();
             });
 
-            return {
-                page: self.page,
-                user: self.user,
-                pagination: self.pagination,
-                multiselect: self.multiselect,
-                current: self.current,
-                moveTo: self.moveTo,
-                mode: self.mode,
-                actions: self.actions,
-                csed: self.csed,
-                filter: self.filter,
-                errors: self.errors,
-                events: self.events
-            };
+            return returnStandart.call(self);
         };
     };
 

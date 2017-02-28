@@ -3,15 +3,11 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.admin.groups);
-            self.errors = new errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.validation = {};
-            self.events = new validationEvents(self.validation);
-            self.pagination = pagination();
-            self.pagination.pageSize(10);
-            self.mode = ko.observable(state.none);
+            initializeViewModel.call(self, {
+                page: menu.admin.groups,
+                pagination: 10,
+                mode: true
+            });
 
             self.initial = {
                 profileId: ko.observable(null),
@@ -303,17 +299,7 @@ $(document).ready(function(){
             self.initial.unUrlProfileId();
             self.get.institutes();
 
-            return {
-                page: self.page,
-                user: self.user,
-                current: self.current,
-                actions: self.actions,
-                filter: self.filter,
-                errors: self.errors,
-                events: self.events,
-                pagination: self.pagination,
-                mode: self.mode
-            };
+            return returnStandart.call(self);
         };
     };
 

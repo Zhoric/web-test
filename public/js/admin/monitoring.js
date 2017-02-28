@@ -2,10 +2,10 @@ $(document).ready(function(){
     var monitoringViewModel = function(){
         return new function(){
             var self = this;
-            self.page = ko.observable(menu.admin.results);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
+
+            initializeViewModel.call(self, {
+                page: menu.admin.results
+            });
 
             self.initial = {
                 settings: ko.observable(null)
@@ -278,14 +278,7 @@ $(document).ready(function(){
                 self.current.refreshTime(self.filter.interval());
             });
 
-            return {
-                page: self.page,
-                user: self.user,
-                current: self.current,
-                filter: self.filter,
-                actions: self.actions,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
 

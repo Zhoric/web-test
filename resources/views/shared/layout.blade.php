@@ -60,11 +60,13 @@
         <a  class="user" data-bind="text: $root.user.name()"></a>
         <div class="menu-dd">
             <a>Администрирование</a>
-            <a>Сменить пароль</a>
+            <a data-bind="click: $root.user.password.change.bind($root)">Сменить пароль</a>
             <a href="/logout">Выход</a>
         </div>
     </div>
     @yield('content')
+    @include('shared.error-modal')
+    @include('shared.password-modals')
     <div class="footer"></div>
 </body>
 </html>

@@ -49,7 +49,6 @@
             </div>
         </div>
     </div>
-    @include('admin.shared.error-modal')
 @endsection
 
 <script type="text/html" id="student-info">
@@ -183,21 +182,6 @@
                 <div class="details-row float-buttons">
                     <button data-bind="click: $root.actions.password.cancel" class="cancel arcticmodal-close">Отмена</button>
                     <button data-bind="click: $root.actions.password.approve" class="approve">Изменить пароль</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="g-hidden">
-    <div class="box-modal" id="change-success-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Пароль успешно изменён</h3>
-            </div>
-            <div class="layer-body zero-margin">
-                <div class="details-row float-buttons">
-                    <button class="approve arcticmodal-close">OK</button>
                 </div>
             </div>
         </div>
