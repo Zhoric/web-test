@@ -70,7 +70,7 @@ $(document).ready(function(){
                                 ids.push(self.current.singleAnswer());
                                 break;
                             case questionType.closedMultiple:
-                                self.current.answers().find(function(item){
+                                $.each(self.current.answers(), function(i, item){
                                     if (item.isRight() === true){
                                         ids.push(item.id());
                                     }

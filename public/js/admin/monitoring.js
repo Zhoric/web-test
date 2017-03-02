@@ -32,7 +32,7 @@ $(document).ready(function(){
                         if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_profile;
                         if (!id) return;
-                        self.filter.profiles().find(function(item){
+                        $.each(self.filter.profiles(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.profile(item);
                             }
@@ -42,7 +42,7 @@ $(document).ready(function(){
                         if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_discipline;
                         if (!id) return;
-                        self.filter.disciplines().find(function(item){
+                        $.each(self.filter.disciplines(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.discipline(item);
                             }
@@ -52,7 +52,7 @@ $(document).ready(function(){
                         if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_group;
                         if (!id) return;
-                        self.filter.groups().find(function(item){
+                        $.each(self.filter.groups(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.group(item);
                             }
@@ -62,7 +62,7 @@ $(document).ready(function(){
                         if (!self.initial.settings()) return;
                         var id = self.initial.settings().monitoring_test;
                         if (!id) return;
-                        self.filter.tests().find(function(item){
+                        $.each(self.filter.tests(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.test(item);
                             }

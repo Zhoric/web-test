@@ -24,10 +24,12 @@ var multiselect = function(init){
         return data[_text]();
     };
     self.select = function(data){
-        var item = self.tags().find(function(item){
-            return item[_value]() === data[_value]();
+        var elem = null;
+        $.each(self.tags(), function(i, item){
+            item[_value]() === data[_value]()
+                ? elem = item : null;
         });
-        if (!item) self.tags.push(data);
+        if (!elem) self.tags.push(data);
     };
     self.remove = function(data){
         self.tags.remove(data);
@@ -38,32 +40,43 @@ var multiselect = function(init){
 
     var getDataObject = {
         byObject: function(obj){
-            var item =  self.data().find(function(item){
-                return item[_value]() === obj[_value]();
+            var elem = null;
+            $.each(self.data(), function(i, item){
+                item[_value]() === obj[_value]()
+                    ? elem = item : null;
             });
-            return item;
+            return elem;
         },
         byId: function(id){
-            return self.data().find(function(item){
-                return item[_value]() === id;
+            var elem = null;
+            $.each(self.data(), function(i, item){
+                item[_value]() === id
+                    ? elem = item : null;
             });
+            return elem;
         }
     };
     var fill = {
         light: function(ids){
-            ids.find(function(id){
+            $.each(ids, function(i, id){
                 var tag = getDataObject.byId(id);
                 if (tag) self.select(tag);
             });
         },
         heavy: function(objs){
-            objs.find(function(obj){
+            $.each(objs, function(i, obj){
                 var tag = getDataObject.byObject(obj);
                 if(tag) self.select(tag);
             });
         }
     };
-
+    self.getTagsArray = function(){
+        var arr = [];
+        $.each(self.tags(), function(i, item){
+            arr.push(item.id());
+        });
+        return arr;
+    };
     self.multipleSelect = function(){
         self.empty();
         return _valuePrimitive ?  fill.light : fill.heavy;

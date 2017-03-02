@@ -125,22 +125,14 @@ $(document).ready(function(){
                 stringify: {
                     lecturer: function(){
                         var lecturer = ko.mapping.toJS(self.current.lecturer);
-                        var disciplines = [];
-                        console.log(self.current.lecturer());
 
                         self.mode() === state.create
                             ? delete lecturer.id
                             : delete lecturer.password;
 
-                        self.multiselect.tags().find(function(item){
-                            disciplines.push(item.id());
-                        });
-
-                        console.log(lecturer);
-
                         return JSON.stringify({
                             lecturer: lecturer,
-                            disciplineIds: disciplines
+                            disciplineIds: self.multiselect.getTagsArray()
                         });
                     },
                     password: function(){

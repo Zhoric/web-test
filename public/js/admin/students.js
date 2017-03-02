@@ -132,8 +132,9 @@ $(document).ready(function(){
             self.alter = {
                 set: {
                     group: function(id){
-                        var group = self.initial.groups().find(function(item){
-                            return item.id() === id;
+                        var group = null;
+                        $.each(self.initial.groups(), function(i, item){
+                            item.id() === id ? group = item : null;
                         });
                         self.current.student().group(group);
                     }

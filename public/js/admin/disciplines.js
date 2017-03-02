@@ -204,17 +204,17 @@ $(document).ready(function(){
                 },
                 stringify: function(){
                     var edit = self.current.discipline();
-                    var profiles = [];
                     var forpost = {
                         name: edit.name(),
                         abbreviation: edit.abbreviation(),
                         description: edit.description()
                     };
                     self.mode() === state.update ? forpost.id = edit.id() : null;
-                    self.multiselect.tags().find(function(item){
-                        profiles.push(item.id());
+
+                    return JSON.stringify({
+                        discipline: forpost,
+                        profileIds: self.multiselect.getTagsArray()
                     });
-                    return JSON.stringify({discipline: forpost, profileIds: profiles});
                 }
             };
 

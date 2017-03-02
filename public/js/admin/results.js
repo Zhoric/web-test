@@ -28,7 +28,7 @@ $(document).ready(function(){
                     profile: function(){
                         var id = self.settings().result_profile;
                         if (!id) return;
-                        self.filter.profiles().find(function(item){
+                        $.each(self.filter.profiles(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.profile(item);
                             }
@@ -37,7 +37,7 @@ $(document).ready(function(){
                     discipline: function(){
                         var id = self.settings().result_discipline;
                         if (!id) return;
-                        self.filter.disciplines().find(function(item){
+                        $.each(self.filter.disciplines(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.discipline(item);
                             }
@@ -46,7 +46,7 @@ $(document).ready(function(){
                     group: function(id){
                         var id = id || self.settings().result_group;
                         if (!id) return;
-                        self.filter.groups().find(function(item){
+                        $.each(self.filter.groups(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.group(item);
                             }
@@ -55,7 +55,7 @@ $(document).ready(function(){
                     test: function(){
                         var id = self.settings().result_test;
                         if (!id) return;
-                        self.filter.tests().find(function(item){
+                        $.each(self.filter.tests(), function(i, item){
                             if (item.id() == id()){
                                 self.filter.test(item);
                             }

@@ -442,7 +442,7 @@ $(document).ready(function(){
                     var program = JSON.stringify(editor.getValue());
                     var params = [];
 
-                    self.code.params.set().find(function(item){
+                    $.each(self.code.params.set(), function(i, item){
                         var param = {
                             input: item.input(),
                             expectedOutput: item.expectedOutput()
@@ -629,14 +629,14 @@ $(document).ready(function(){
                 self.current.question().isOpenMultiLine(false);
                 self.current.question().isCode(false);
                 if (value.id() === 1){
-                    self.current.answers().find(function(item){
+                    $.each(self.current.answers(), function(i, item){
                         item.isRight(false);
                     });
                     return;
                 }
                 if (value.id() === 3){
                     self.current.question().isOpenSingleLine(true);
-                    self.current.answers().find(function(item){
+                    $.each(self.current.answers(), function(i, item){
                         item.isRight(true);
                     });
                     return;

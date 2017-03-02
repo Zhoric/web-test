@@ -73,7 +73,6 @@ $(document).ready(function(){
                 },
                 stringify: function(){
                     var t = self.current.test();
-                    var themes = [];
                     t.timeTotal(+t.minutes() * 60 + +t.seconds());
 
                     var test = ko.mapping.toJS(self.current.test);
@@ -85,13 +84,9 @@ $(document).ready(function(){
                     test.type = test.type ? 1 : 2;
                     self.mode() === state.create ? delete test.id : null;
 
-                    self.multiselect.tags().find(function(item){
-                        themes.push(item.id());
-                    });
-
                     return JSON.stringify({
                         test: test,
-                        themeIds: themes,
+                        themeIds: self.multiselect.getTagsArray(),
                         disciplineId: self.filter.discipline().id()
                     });
                 },
