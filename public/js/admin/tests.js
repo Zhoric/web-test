@@ -83,7 +83,7 @@ $(document).ready(function(){
 
                     test.type = test.type ? 1 : 2;
                     self.mode() === state.create ? delete test.id : null;
-
+                    
                     return JSON.stringify({
                         test: test,
                         themeIds: self.multiselect.getTagsArray(),

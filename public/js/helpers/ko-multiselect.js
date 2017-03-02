@@ -37,6 +37,13 @@ var multiselect = function(init){
     self.empty = function(){
         self.tags([]);
     };
+    self.getTagsArray = function(){
+        var arr = [];
+        $.each(self.tags(), function(i, item){
+            arr.push(item.id());
+        });
+        return arr;
+    };
 
     var getDataObject = {
         byObject: function(obj){
@@ -70,13 +77,7 @@ var multiselect = function(init){
             });
         }
     };
-    self.getTagsArray = function(){
-        var arr = [];
-        $.each(self.tags(), function(i, item){
-            arr.push(item.id());
-        });
-        return arr;
-    };
+
     self.multipleSelect = function(){
         self.empty();
         return _valuePrimitive ?  fill.light : fill.heavy;
@@ -102,6 +103,7 @@ var multiselect = function(init){
         multipleSelect: self.multipleSelect,
         remove: self.remove,
         empty: self.empty,
-        text: self.text
+        text: self.text,
+        getTagsArray: self.getTagsArray
     }
 };
