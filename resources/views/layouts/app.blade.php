@@ -28,8 +28,8 @@
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-events.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-errors.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
+    <script src="{{ URL::asset('js/helpers/modals.js')}}"></script>
 
 @yield('javascript')
 
@@ -57,65 +57,20 @@
     </script>
 </head>
 <body>
-    {{--<nav class="navbar navbar-default navbar-static-top">--}}
-        {{--<div class="container">--}}
-            {{--<div class="navbar-header">--}}
-
-                {{--<!-- Collapsed Hamburger -->--}}
-                {{--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">--}}
-                    {{--<span class="sr-only">Toggle Navigation</span>--}}
-                    {{--<span class="icon-bar"></span>--}}
-                    {{--<span class="icon-bar"></span>--}}
-                    {{--<span class="icon-bar"></span>--}}
-                {{--</button>--}}
-
-                {{--<!-- Branding Image -->--}}
-                {{--<a class="navbar-brand" href="{{ url('/') }}">--}}
-                    {{--{{ config('app.name', 'Laravel') }}--}}
-                {{--</a>--}}
-            {{--</div>--}}
-
-            {{--<div class="collapse navbar-collapse" id="app-navbar-collapse">--}}
-                {{--<!-- Left Side Of Navbar -->--}}
-                {{--<ul class="nav navbar-nav">--}}
-                    {{--&nbsp;--}}
-                {{--</ul>--}}
-
-                {{--<!-- Right Side Of Navbar -->--}}
-                {{--<ul class="nav navbar-nav navbar-right">--}}
-                    {{--<!-- Authentication Links -->--}}
-                    {{--@if (Auth::guest())--}}
-                        {{--<li><a href="{{ url('/login') }}">Login</a></li>--}}
-                        {{--<li><a href="{{ url('/register') }}">Register</a></li>--}}
-                    {{--@else--}}
-                        {{--<li class="dropdown">--}}
-                            {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">--}}
-                                {{--{{ Auth::user()->login }} <span class="caret"></span>--}}
-                            {{--</a>--}}
-
-                            {{--<ul class="dropdown-menu" role="menu">--}}
-                                {{--<li>--}}
-                                    {{--<a href="{{ url('/logout') }}"--}}
-                                        {{--onclick="event.preventDefault();--}}
-                                                 {{--document.getElementById('logout-form').submit();">--}}
-                                        {{--Logout--}}
-                                    {{--</a>--}}
-
-                                    {{--<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">--}}
-                                        {{--{{ csrf_field() }}--}}
-                                    {{--</form>--}}
-                                {{--</li>--}}
-                            {{--</ul>--}}
-                        {{--</li>--}}
-                    {{--@endif--}}
-                {{--</ul>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</nav>--}}
-
     @yield('content')
-
-    <!-- Scripts -->
-    {{--<script src="/js/app.js"></script>--}}
+    <div class="g-hidden">
+        <div class="box-modal" id="errors-modal">
+            <div>
+                <div>
+                    <span class="fa">&#xf071;</span>
+                    <h3>Произошла ошибка</h3>
+                    <h4 data-bind="text: $root.errors.message"></h4>
+                </div>
+                <div class="button-holder">
+                    <button data-bind="click: $root.errors.accept">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

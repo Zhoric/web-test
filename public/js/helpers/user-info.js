@@ -82,7 +82,7 @@ var user = function(){
 
 
 var initializeViewModel = function(init){
-    this.page = ko.observable(init.page);
+    if (init.page) this.page = ko.observable(init.page);
     this.errors = modals('errors');
     this.confirm = modals('confirm');
     this.inform = modals();

@@ -7,7 +7,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.errors = new errors();
+            self.errors = modals('errors');
 
             self.user = {
                 email: ko.observable(''),

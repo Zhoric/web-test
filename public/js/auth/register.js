@@ -10,7 +10,7 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.errors = errors();
+            self.errors = modals('errors');
             self.validation = {};
             self.events = new validationEvents(self.validation);
 

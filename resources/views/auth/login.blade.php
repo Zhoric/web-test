@@ -29,5 +29,4 @@
             <a href="/register">Отправить&nbsp;заявку</a>
         </div>
     </div>
-    @include('shared.error-modal')
 @endsection
