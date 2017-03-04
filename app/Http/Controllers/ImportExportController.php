@@ -32,7 +32,7 @@ class ImportExportController extends Controller{
             $file = $request->json('file');
             $fileType = $request->json('fileType');
             $themeId = $request->json('themeId');
-            
+
             $importFilePath = ImportExportManager::$importPath.ImportExportManager::$importFileName;
             FileHelper::delete($importFilePath);
 

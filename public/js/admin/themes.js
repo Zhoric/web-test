@@ -418,7 +418,6 @@ $(document).ready(function(){
                     cancel: function(){
                         self.current.importFile().file(null)
                             .base64String(null).dataURL(null);
-                        commonHelper.modal.close(self.modals.importModal);
                     }
                 }
             };
@@ -621,6 +620,7 @@ $(document).ready(function(){
                         data: self.alter.stringify.importFile(),
                         errors: self.errors,
                         successCallback: function (data) {
+                            self.actions.importFile.cancel();
                             self.inform.show({
                                 message: 'Результат импорта вопроса:\n\n' +
                                 'Всего вопросов: ' + data.totalRows() + '\n' +
@@ -629,6 +629,9 @@ $(document).ready(function(){
                                 (data.errors().length ? '\nОшибки импорта: ' + data.errors().join(';\n') : ''),
                                 callback: function(){self.get.questions();}
                             });
+                        },
+                        errorCallback: function(){
+                            self.actions.importFile.cancel();
                         }
                     });
                 }
