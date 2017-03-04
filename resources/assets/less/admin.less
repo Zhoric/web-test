@@ -407,7 +407,6 @@ table.werewolf.questions{
 }
 
 .action-button{
-  width: 100%;
   background: @patronus-shade;
   color: @filch;
   cursor: pointer;
@@ -675,6 +674,16 @@ svg text[x][y]{
     white-space: pre-wrap;
   }
 }
+#import-modal{
+  width: 800px;
+  .image-uploader {
+    .file-input{width: 97%}
+    input {
+      width: 78% !important;
+      height: 32px;
+    }
+  }
+}
 
 .label(){
   font-size: 12px;
@@ -718,6 +727,11 @@ span{
       font-size: 15px;
       float: right;
     }
+  }
+}
+#information-modal{
+  h3{
+    white-space: pre-wrap;
   }
 }
 #code-editor-modal{

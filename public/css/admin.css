@@ -950,7 +950,6 @@ table.werewolf.questions tr:hover .actions {
   visibility: visible;
 }
 .action-button {
-  width: 100%;
   background: #EDEEF0;
   color: #6C7A89;
   cursor: pointer;
@@ -1200,6 +1199,16 @@ svg text[x][y] {
 #compile-modal h3 {
   white-space: pre-wrap;
 }
+#import-modal {
+  width: 800px;
+}
+#import-modal .image-uploader .file-input {
+  width: 97%;
+}
+#import-modal .image-uploader input {
+  width: 78% !important;
+  height: 32px;
+}
 .width100 {
   width: 100%;
 }
@@ -1232,6 +1241,9 @@ span.not-ok {
   height: 30px;
   font-size: 15px;
   float: right;
+}
+#information-modal h3 {
+  white-space: pre-wrap;
 }
 #code-editor-modal {
   width: 800px;

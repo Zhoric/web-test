@@ -16,7 +16,8 @@ $(document).ready(function(){
                 removeQuestion: '#remove-question-modal',
                 compile: '#compile-modal',
                 codeEditor: '#code-editor-modal',
-                saveCode: '#save-code-modal'
+                saveCode: '#save-code-modal',
+                importModal: '#import-modal'
             };
 
             self.theme = ko.observable({});
@@ -24,7 +25,6 @@ $(document).ready(function(){
                 types: ko.observableArray(ko.mapping.fromJS(array.question)()),
                 complexity: ko.observableArray(ko.mapping.fromJS(array.complexity)())
             };
-
 
             self.current = {
                 theme: {
@@ -66,6 +66,10 @@ $(document).ready(function(){
                 fileData: ko.observable({
                     file: ko.observable(),
                     dataURL: ko.observable(),
+                    base64String: ko.observable()
+                }),
+                importFile: ko.observable({
+                    file: ko.observable(),
                     base64String: ko.observable()
                 }),
                 answer: ko.validatedObservable({
@@ -200,6 +204,13 @@ $(document).ready(function(){
                             fileType: fileType,
                             program: program,
                             paramSets: params
+                        });
+                    },
+                    importFile: function(){
+                        return JSON.stringify({
+                            themeId: self.current.theme.id(),
+                            file: self.current.importFile().base64String(),
+                            type: self.current.importFile().file().type
                         });
                     }
                 },
@@ -396,6 +407,19 @@ $(document).ready(function(){
                     remove: function(){
                         self.current.question().showImage(null);
                     }
+                },
+                importFile: {
+                    start: function(){
+                        commonHelper.modal.open(self.modals.importModal);
+                    },
+                    end: function(){
+                        self.post.imported();
+                    },
+                    cancel: function(){
+                        self.current.importFile().file(null)
+                            .base64String(null).dataURL(null);
+                        commonHelper.modal.close(self.modals.importModal);
+                    }
                 }
             };
 
@@ -588,6 +612,23 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.code.result.show(data());
+                        }
+                    });
+                },
+                imported: function(){
+                    $ajaxpost({
+                        url: '/api/import/questions',
+                        data: self.alter.stringify.importFile(),
+                        errors: self.errors,
+                        successCallback: function (data) {
+                            self.inform.show({
+                                message: 'Результат импорта вопроса:\n\n' +
+                                'Всего вопросов: ' + data.totalRows() + '\n' +
+                                'Успешно импортировано: ' + data.imported() + '\n' +
+                                'Не импортированно: ' + data.failed() +
+                                (data.errors().length ? '\nОшибки импорта: ' + data.errors().join(';\n') : ''),
+                                callback: function(){self.get.questions();}
+                            });
                         }
                     });
                 }

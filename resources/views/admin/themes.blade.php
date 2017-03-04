@@ -41,14 +41,18 @@
             </div>
 
         </div>
-        <div class="details-row theme-head">
-            <div class="details-column width-98p">
+        <div class="details-row theme-head float-buttons">
+            <div class="details-column">
                 <label class="title">Дисциплина</label>
                 <span data-bind="text: $root.current.discipline().name"></span>
             </div>
-
+            <button class="action-button minw-100" data-bind="click: $root.actions.importFile.start">
+                <span class="fa">&#xf0f6;</span>&nbsp;Импорт
+            </button>
+        </div>
+        <div class="details-row theme-head">
             <div class="details-column width-98p">
-                <button class="action-button" data-bind="click: $root.actions.question.start.add">Добавить вопрос</button>
+                <button class="action-button width-100p" data-bind="click: $root.actions.question.start.add">Добавить вопрос</button>
             </div>
         </div>
     </div>
@@ -343,4 +347,38 @@
         </div>
     </div>
 </div>
+<div class="g-hidden">
+    <div class="box-modal" id="import-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Импорт вопросов</h3>
+            </div>
+            <div class="layer-body zero-margin">
+                <div class="details-row">
+                    <div class="details-column width-98p">
+                        <div class="image-uploader" data-bind="fileDrag: $root.current.importFile">
+                            <div class="row">
+                                <div class="file-input">
+                                    <input type="file"
+                                           data-bind="fileInput: $root.current.importFile,
+                                               customFileInput: {
+                                               buttonClass: 'upload-btn', fileNameClass: 'disabled',
+                                               buttonText: 'Выберите файл', changeButtonText: 'Изменить',
+                                               clearButtonText: 'Очистить', clearButtonClass: 'clean-btn',
+                                               noFileText: 'Файл не выбран'}">
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="details-row float-buttons minh-40">
+                    <button class="arcticmodal-close cancel" data-bind="click: $root.actions.importFile.cancel">Отмена</button>
+                    <button class="arcticmodal-close approve" data-bind="click: $root.actions.importFile.end">Загрузить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
