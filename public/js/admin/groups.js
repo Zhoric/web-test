@@ -86,6 +86,19 @@ $(document).ready(function(){
                 }
             };
             self.actions = {
+                show: function(data){
+                    if (self.mode() === state.update) {
+                        self.mode(state.info);
+                        return;
+                    }
+                    if (self.mode() === state.info && self.current.group().id() === data.id()){
+                        self.actions.cancel();
+                        return;
+                    }
+                    self.alter.fill(data);
+                    self.get.plan();
+                    self.mode(state.info);
+                },
                 start: {
                     create: function(){
                         self.mode() === state.create
@@ -95,14 +108,11 @@ $(document).ready(function(){
                         self.current.groupPlan(null);
                         commonHelper.buildValidationList(self.validation);
                     },
-                    update: function(data){
-                        self.alter.fill(data);
-                        self.get.plan();
+                    update: function(){
                         self.mode(state.update);
                         commonHelper.buildValidationList(self.validation);
                     },
-                    remove: function(data){
-                        self.alter.fill(data);
+                    remove: function(){
                         self.mode(state.remove);
                         commonHelper.modal.open('#remove-group-modal');
                     }
@@ -126,9 +136,9 @@ $(document).ready(function(){
                     }
                 },
                 cancel: function(){
+                    self.mode(state.none);
                     self.alter.empty();
                     self.current.groupPlan(null);
-                    self.mode(state.none);
                     self.current.isGenerated(false);
                 },
                 generate: function(){
@@ -166,6 +176,11 @@ $(document).ready(function(){
                     end: function(){
                         self.current.groupPlan.copy(self.current.plan);
                         self.actions.selectPlan.cancel();
+                    }
+                },
+                students: {
+                    start: function(){
+
                     }
                 }
             };

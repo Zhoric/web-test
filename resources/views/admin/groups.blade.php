@@ -15,15 +15,14 @@
         <div class="details" data-bind="template: {name: 'show-group-info', data: $root.current.group}"></div>
         <!-- /ko -->
         <div class="items-body" data-bind="foreach: $root.current.groups">
-            <div class="item">
+            <div class="item" data-bind="click: $root.actions.show, css: {'current' : $root.current.group().id() === id()}">
                 <span data-bind="text: name"></span>
-                <!-- ko if: $root.user.role() === role.admin.name -->
-                <span class="fa tag float-right" data-bind="click: $root.actions.start.remove" title="Удалить группу">&#xf1f8;</span>
-                <!-- /ko -->
-                <span class="fa tag float-right" data-bind="click: $root.actions.start.update" title="Редактировать">&#xf040;</span>
                 <span class="fa tag float-right" data-bind="click: $root.actions.moveTo.students" title="Перейти к учетным записям студентов">&#xf007;</span>
             </div>
             <!-- ko if: id() === $root.current.group().id() && $root.mode() === state.update -->
+            <div class="details" data-bind="template: {name: 'update-group-info', data: $root.current.group}"></div>
+            <!-- /ko -->
+            <!-- ko if: id() === $root.current.group().id() && ($root.mode() === state.info || $root.mode() === state.remove)  -->
             <div class="details" data-bind="template: {name: 'show-group-info', data: $root.current.group}"></div>
             <!-- /ko -->
         </div>
@@ -45,7 +44,7 @@
             <div><h3>Вы действительно хотите удалить выбранную группу?</h3></div>
             <div>
                 <button class="remove" data-bind="click: $root.actions.end.remove">Удалить</button>
-                <button class="cancel arcticmodal-close" data-bind="click: $root.actions.cancel">Отмена</button>
+                <button class="cancel arcticmodal-close">Отмена</button>
             </div>
         </div>
     </div>
@@ -89,7 +88,7 @@
 </div>
 @endsection
 
-<script type="text/html" id="show-group-info">
+<script type="text/html" id="update-group-info">
     <div class="details-row">
         <div class="details-column width-45p">
             <div class="details-row">
@@ -163,13 +162,41 @@
     </div>
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
-            <button data-bind="click: $root.actions.cancel" class="cancel">Отмена</button>
+            <button data-bind="click: $root.actions.show" class="cancel">Отмена</button>
             <button id="bUpdateGroup" accept-validation class="approve"
                     title="Проверьте правильность заполнения полей"
                     data-bind="click: $root.actions.end.update" >Сохранить</button>
         </div>
     </div>
 </script>
-<script type="text/html" id="update-group">
-
+<script type="text/html" id="show-group-info">
+    <div class="details-row">
+        <div class="details-column">
+            <label class="title">Курс</label>
+            <span class="info" data-bind="text: course"></span>
+        </div>
+        <div class="details-column">
+            <label class="title">Номер&nbsp;группы</label>
+            <span class="info" data-bind="text: number"></span>
+        </div>
+        <div class="details-column">
+            <label class="title">Форма&nbsp;обучения</label>
+            <span class="info" data-bind="text: isFulltime() ? 'Очная' : 'Заочная'"></span>
+        </div>
+        <!-- ko if: $root.current.groupPlan() -->
+        <div class="details-column">
+            <label class="title">Учебный&nbsp;план</label>
+            <span class="info" data-bind="text: $root.current.groupPlan().name"></span>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- ko if: $root.user.role() === role.admin.name -->
+    <div class="details-row float-buttons">
+        <div class="details-column width-100p">
+            <span class="info coloredin-patronus pointer bold" data-bind="click: $root.actions.students.start">Подтвердить учетные записи</span>
+            <button data-bind="click: $root.actions.start.remove" class="remove">Удалить</button>
+            <button data-bind="click: $root.actions.start.update" class="approve">Редактировать</button>
+        </div>
+    </div>
+    <!-- /ko -->
 </script>
