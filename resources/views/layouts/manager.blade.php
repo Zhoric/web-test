@@ -65,8 +65,7 @@
         </div>
     </div>
     @yield('content')
-    @include('shared.error-modal')
-    @include('shared.password-modals')
+    @include('shared.common-modals')
     <div class="footer"></div>
 </body>
 </html>

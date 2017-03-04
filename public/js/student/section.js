@@ -3,6 +3,8 @@ $(document).ready(function () {
         return new function () {
             var self = this;
 
+            initializeViewModel.call(self, {page: ''});
+
             self.section = ko.observable({
                 id: ko.observable(0),
                 theme: ko.observable(0),
@@ -10,16 +12,6 @@ $(document).ready(function () {
                 content: ko.observable('')
             });
 
-            self.errors = {
-                message: ko.observable(),
-                show: function(message){
-                    self.errors.message(message);
-                    self.toggleModal('#errors-modal', '');
-                },
-                accept: function(){
-                    self.toggleModal('#errors-modal', 'close');
-                }
-            };
             self.getSection = function () {
              var currentUrl = window.location.href;
              var sectionId = +currentUrl.substr(currentUrl.lastIndexOf('/')+1);
@@ -38,7 +30,6 @@ $(document).ready(function () {
              };
 
              self.getSection();
-
 
             return {
                 section : self.section,

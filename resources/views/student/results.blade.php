@@ -99,7 +99,6 @@
             </div>
         </div>
     </div>
-    @include('shared.error-modal')
 @endsection
 <div class="g-hidden">
     <div class="box-modal" id="question-details-modal">

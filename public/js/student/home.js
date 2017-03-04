@@ -2,8 +2,8 @@ $(document).ready(function(){
     var homeViewModel = function(){
         return new function(){
             var self = this;
-            self.page = ko.observable(menu.student.main);
-            self.errors = errors();
+            initializeViewModel.call(self, {page: menu.student.main});
+
             self.current = {
                 user: ko.observable(),
                 disciplines: ko.observableArray([])
@@ -43,13 +43,7 @@ $(document).ready(function(){
                 //self.get.disciplines();
             });
             // TODO: подумать о реализации фильтра
-            return {
-                page: self.page,
-                current: self.current,
-                filter: self.filter,
-                actions: self.actions,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
 

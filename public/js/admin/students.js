@@ -248,7 +248,9 @@ $(document).ready(function(){
                     var json = self.alter.stringify.password();
                     $post('/api/user/setPassword', json, self.errors, function(){
                         self.actions.password.cancel();
-                        commonHelper.modal.open('#change-success-modal');
+                        self.inform.show({
+                            message: 'Пароль успешно изменен'
+                        });
                     })();
                 }
             };

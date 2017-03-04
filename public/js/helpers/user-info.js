@@ -48,7 +48,9 @@ var user = function(){
                 errors: vm.errors,
                 successCallback: function(){
                     self.password.cancel();
-                    commonHelper.modal.open('#change-success-modal');
+                    vm.inform.show({
+                        message: 'Пароль успешно изменен'
+                    });
                 },
                 errorCallback: function(){
                     self.password.cancel();
@@ -116,6 +118,7 @@ var returnStandart = function(){
     if (self.mode) vm.mode = self.mode;
     if (self.code) vm.code = self.code;
     if (self.initial) vm.initial = self.initial;
+    if (self.timer) vm.timer = self.allowTimer;
 
     return vm;
 };

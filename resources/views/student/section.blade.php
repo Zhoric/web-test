@@ -10,5 +10,4 @@
     <div class="section">
         <div data-bind="html: $root.section().content"></div>
     </div>
-    @include('shared.error-modal')
 @endsection

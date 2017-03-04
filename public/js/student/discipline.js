@@ -3,8 +3,10 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.page = ko.observable(menu.student.main);
-            self.errors = errors();
+            initializeViewModel.call(self, {
+                page: menu.student.main
+            });
+
             self.modals = {
                 messageBox: '#confirm-test-start-modal'
             };
@@ -67,12 +69,7 @@ $(document).ready(function(){
             };
             self.get.discipline();
 
-            return {
-                page: self.page,
-                current: self.current,
-                actions: self.actions,
-                errors: self.errors
-            };
+            return returnStandart.call(self);
         };
     };
 

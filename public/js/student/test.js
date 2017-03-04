@@ -4,7 +4,10 @@ $(document).ready(function(){
         return new function(){
             var self = this;
 
-            self.errors = errors();
+            initializeViewModel.call(self,{
+                page: ''
+            });
+
             self.code = {
                 task: ko.observable(''),
                 text: ko.observable(''),
@@ -190,13 +193,7 @@ $(document).ready(function(){
                 self.actions.answer();
             });
 
-            return {
-                current: self.current,
-                actions: self.actions,
-                code: self.code,
-                errors: self.errors,
-                timer: self.allowTimer
-            };
+            return returnStandart.call(self);
         };
     };
 

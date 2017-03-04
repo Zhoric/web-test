@@ -49,5 +49,4 @@
             </div>
         </div>
     </div>
-    @include('shared.error-modal')
 @endsection
