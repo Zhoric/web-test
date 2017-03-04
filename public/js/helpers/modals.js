@@ -32,19 +32,27 @@ function errors(){
 function confirm() {
     var self = this;
     var defaultConfirmMessage = 'Вы действительно хотите выполнить действие?';
+    var approveCallback = function(){};
+    var cancelCallback = function(){};
     this.message = ko.observable(defaultConfirmMessage);
 
-    this.show = function(message){
-        self.message(message);
+
+    this.show = function(settings){
+        self.message(settings.message);
+        if (typeof settings.approve !== 'undefined')
+            approveCallback = settings.approve;
+        if (typeof settings.cancel !== 'undefined')
+            cancelCallback = settings.cancel;
+
         commonHelper.modal.open('#confirmation-modal');
     };
-    this.accept = function(callback){
-        if (typeof callback !== 'undefined') callback();
+    this.approve = function(){
+        approveCallback();
         commonHelper.modal.open('#confirmation-modal');
         return true;
     };
     this.cancel = function(){
-        if (typeof callback !== 'undefined') callback();
+        cancelCallback();
         commonHelper.modal.close('#confirmation-modal');
         setTimeout(function(){self.message(defaultConfirmMessage);}, 500);
         return false;
@@ -53,14 +61,17 @@ function confirm() {
 
 function info(){
     var self = this;
+    var callback = function(){};
     this.message = ko.observable(" ");
 
-    this.show = function(message){
-        self.message(message);
+    this.show = function(settings){
+        self.message(settings.message);
+        if (typeof settings.callback !== 'undefined')
+            callback = settings.callback;
         commonHelper.modal.open('#information-modal');
     };
-    this.accept = function(){
-        if (typeof callback !== 'undefined') callback();
+    this.approve = function(){
+        callback();
         commonHelper.modal.close('#information-modal');
         setTimeout(function(){self.message("");}, 500);
         return true;

@@ -190,13 +190,13 @@
         </div>
         <!-- /ko -->
     </div>
-    <!-- ko if: $root.user.role() === role.admin.name -->
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
-            <span class="info coloredin-patronus pointer bold" data-bind="click: $root.actions.students.start">Подтвердить учетные записи</span>
+            <span class="info coloredin-patronus pointer bold" data-bind="click: $root.actions.approveStudents">Подтвердить учетные записи</span>
+            <!-- ko if: $root.user.role() === role.admin.name -->
             <button data-bind="click: $root.actions.start.remove" class="remove">Удалить</button>
             <button data-bind="click: $root.actions.start.update" class="approve">Редактировать</button>
+            <!-- /ko -->
         </div>
     </div>
-    <!-- /ko -->
 </script>

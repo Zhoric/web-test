@@ -14,15 +14,15 @@
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="confirm-modal">
+    <div class="box-modal" id="confirmation-modal">
         <div class="layer zero-margin width-auto">
             <div class="layer-head">
-                <h3 data-bind="$root.confirm.message"></h3>
+                <h3 data-bind="text: $root.confirm.message"></h3>
             </div>
             <div class="layer-body zero-margin">
-                <div class="details-row float-buttons">
-                    <button class="approve arcticmodal-close" data-bind="$root.confirm.approve">ОК</button>
+                <div class="details-row float-buttons minh-40">
                     <button class="cancel" data-bind="click: $root.confirm.cancel">Отмена</button>
+                    <button class="approve arcticmodal-close" data-bind="click: $root.confirm.approve">ОК</button>
                 </div>
             </div>
         </div>
@@ -30,14 +30,14 @@
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="inform-modal">
+    <div class="box-modal" id="information-modal">
         <div class="layer zero-margin width-auto">
             <div class="layer-head">
-                <h3 data-bind="$root.inform.message"></h3>
+                <h3 data-bind="text: $root.inform.message"></h3>
             </div>
             <div class="layer-body zero-margin">
-                <div class="details-row float-buttons">
-                    <button class="approve arcticmodal-close" data-bind="$root.inform.approve">OK</button>
+                <div class="details-row float-buttons minh-40">
+                    <button class="approve arcticmodal-close" data-bind="click: $root.inform.approve">OK</button>
                 </div>
             </div>
         </div>

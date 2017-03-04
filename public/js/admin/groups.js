@@ -178,10 +178,12 @@ $(document).ready(function(){
                         self.actions.selectPlan.cancel();
                     }
                 },
-                students: {
-                    start: function(){
-
-                    }
+                approveStudents: function(){
+                    self.confirm.show({
+                        message: 'Вы действительно хотите принять все заявки студентов группы ' +
+                        self.current.group().name(),
+                        approve: function(){self.post.students();}
+                    });
                 }
             };
             self.get = {
@@ -262,6 +264,16 @@ $(document).ready(function(){
                         }
                     };
                     $ajaxpost(requestOptions);
+                },
+                students: function(){
+                    $ajaxpost({
+                        url: '/api/groups/acceptAll/' + self.current.group().id(),
+                        errors: self.errors,
+                        data: null,
+                        successCallback: function(){
+                            self.inform.show({message: 'Все заявки приняты'});
+                        }
+                    });
                 },
                 removal: function(){
                     var requestOptions = {

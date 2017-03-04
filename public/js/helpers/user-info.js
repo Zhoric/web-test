@@ -1,6 +1,6 @@
 var user = function(){
     var self = this;
-    this.id = ko.observable(),
+    this.id = ko.observable();
     this.email = ko.observable();
     this.lastname = ko.observable();
     this.firstname = ko.observable();
