@@ -81,7 +81,9 @@ var user = function(){
 
 var initializeViewModel = function(init){
     this.page = ko.observable(init.page);
-    this.errors = errors();
+    this.errors = modals('errors');
+    this.confirm = modals('confirm');
+    this.inform = modals();
     this.validation = {};
     this.events = new validationEvents(this.validation);
     this.user = new user();
@@ -99,6 +101,8 @@ var returnStandart = function(){
     var vm  = {
         page: self.page,
         errors: self.errors,
+        confirm: self.confirm,
+        inform: self.inform,
         validation: self.validation,
         events: self.events,
         user: self.user,

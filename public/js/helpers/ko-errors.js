@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 26.11.16.
- */
 function errors(){
     var self = this;
 
