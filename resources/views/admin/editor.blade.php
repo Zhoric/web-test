@@ -17,7 +17,6 @@
 
     </div>
     @ckeditor('editor', ['language' => 'ru', 'filebrowserBrowseUrl' => '/elfinder/ckeditor', 'extraPlugins' => 'oembed,video,html5audio'])
-    @include('shared.error-modal')
 @endsection
 <div class="g-hidden">
     <div class="box-modal" id="cancel-modal">

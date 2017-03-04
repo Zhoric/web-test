@@ -261,6 +261,4 @@
     </div>
 </div>
 <!-- /ko -->
-
-@include('shared.error-modal')
 @endsection

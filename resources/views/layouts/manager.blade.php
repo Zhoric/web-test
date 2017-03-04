@@ -59,7 +59,7 @@
         <a href="/admin/results" data-bind="css: {'current': $root.page() === menu.admin.results}">Результаты</a>
         <a  class="user" data-bind="text: $root.user.name()"></a>
         <div class="menu-dd">
-            <a>Администрирование</a>
+            <a href="/admin/setting">Администрирование</a>
             <a data-bind="click: $root.user.password.change.bind($root)">Сменить пароль</a>
             <a href="/logout">Выход</a>
         </div>

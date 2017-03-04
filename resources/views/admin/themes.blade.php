@@ -278,9 +278,7 @@
             <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
         </div>
     </div>
-
 </div>
-    @include('shared.error-modal')
 @endsection
 
 <div class="g-hidden">

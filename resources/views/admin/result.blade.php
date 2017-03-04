@@ -127,7 +127,6 @@
     </div>
     <!-- /ko -->
 </div>
-@include('shared.error-modal')
 @endsection
 
 <div class="g-hidden">

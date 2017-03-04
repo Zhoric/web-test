@@ -60,7 +60,7 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('overallresults', function(){return View('admin.overall');});
     Route::get('result/{id}', function(){return View('admin.result');});
     Route::get('monitoring', function(){return View('admin.monitoring');});
-
+    Route::get('setting', function(){return View('admin.setting');});
 });
 
 

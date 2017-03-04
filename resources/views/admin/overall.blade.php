@@ -85,6 +85,5 @@
             <span class="clear" data-bind="click: filter.clear">Очистить</span>
         </div>
     </div>
-    @include('shared.error-modal')
 </div>
 @endsection

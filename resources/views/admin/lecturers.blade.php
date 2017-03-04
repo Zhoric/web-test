@@ -44,7 +44,6 @@
             </div>
         </div>
     </div>
-    @include('shared.error-modal')
 @endsection
 
 <script type="text/html" id="lecturer-info">

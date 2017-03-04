@@ -165,7 +165,6 @@
 
     </div>
 </script>
-    @include('admin.shared.error-modal')
 @endsection
 
 <div class="g-hidden">
