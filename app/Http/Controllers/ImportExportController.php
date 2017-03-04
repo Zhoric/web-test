@@ -32,11 +32,7 @@ class ImportExportController extends Controller{
             $file = $request->json('file');
             $fileType = $request->json('fileType');
             $themeId = $request->json('themeId');
-
-            if (strpos($fileType, ImportExportManager::$importFileType) === false){
-                throw new Exception('Некорректный формат файла! Допустимым является только расширение .'
-                    .ImportExportManager::$importFileType);
-            }
+            
             $importFilePath = ImportExportManager::$importPath.ImportExportManager::$importFileName;
             FileHelper::delete($importFilePath);
 
