@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Группы')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/groups.js')}}"></script>

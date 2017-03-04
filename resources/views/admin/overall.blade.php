@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Результаты группы')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/datepicker.css')}}"/>

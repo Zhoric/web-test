@@ -1,4 +1,4 @@
-@extends('student.layout')
+@extends('layouts.student')
 @section('title', 'Тест')
 @section('style')
     <link rel="stylesheet" href="{{ URL::asset('css/test.css')}}"/>

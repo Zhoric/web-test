@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Учебные планы')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/studyplan.js')}}"></script>

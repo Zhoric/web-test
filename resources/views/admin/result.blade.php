@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Результат теста')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/result.js')}}"></script>
@@ -127,7 +127,7 @@
     </div>
     <!-- /ko -->
 </div>
-@include('admin.shared.error-modal')
+@include('shared.error-modal')
 @endsection
 
 <div class="g-hidden">

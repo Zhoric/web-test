@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Студенты')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/students.js')}}"></script>
@@ -24,7 +24,7 @@
                     <!-- /ko -->
                 <!-- /ko -->
             </div>
-            @include('admin.shared.pagination')
+            @include('shared.pagination')
         </div>
         <div class="filter" data-bind="with: $root.filter">
             <div class="filter-block">

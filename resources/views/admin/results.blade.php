@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Результаты')
 @section('javascript')
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>

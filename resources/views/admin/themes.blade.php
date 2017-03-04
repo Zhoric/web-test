@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Тема')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>

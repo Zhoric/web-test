@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Институты')
 @section('javascript')
     <script src="{{ URL::asset('js/admin/institutes.js')}}"></script>

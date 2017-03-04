@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Преподаватели')
 @section('javascript')
     <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>

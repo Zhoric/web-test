@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Дисциплины')
 @section('javascript')
     <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>

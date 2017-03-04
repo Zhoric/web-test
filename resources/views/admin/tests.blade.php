@@ -1,4 +1,4 @@
-@extends('shared.layout')
+@extends('layouts.manager')
 @section('title', 'Тесты')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
@@ -33,7 +33,7 @@
             <!-- /ko -->
         </div>
 
-        @include('admin.shared.pagination')
+        @include('shared.pagination')
     </div>
     <div class="filter">
         <div class="filter-block">
