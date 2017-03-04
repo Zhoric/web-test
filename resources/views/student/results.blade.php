@@ -60,19 +60,19 @@
                             </div>
                         </div>
                         <div class="details-column width-60p">
-                            <label class="title">Дата прохождения</label>
+                            <label class="title">Дата&nbsp;прохождения</label>
                             <span class="info" data-bind="text: commonHelper.parseDate(dateTime.date())"></span>
                         </div>
                     </div>
                     <!-- /ko -->
                 </div>
                 <!-- ko if: $root.current.details() && $root.current.id() === id() -->
-                <div class="details">
-                    <div class="details-row result-details" data-bind="with: $root.current.details">
+                <div class="details result-details">
+                    <div class="details-row" data-bind="with: $root.current.details">
                         <h3 class="text-center">Вопросы, на которые были даны неправильные ответы</h3>
                         <div class="" data-bind="foreach: answers">
                             <div class="item" data-bind="click: $root.actions.show.question">
-                                <span data-bind="text: question.text"></span>
+                                <span data-bind="text: question.text.cut(87)"></span>
                             </div>
                         </div>
                     </div>
@@ -102,18 +102,22 @@
 @endsection
 <div class="g-hidden">
     <div class="box-modal" id="question-details-modal">
-        <div class="box-modal_close arcticmodal-close">закрыть</div>
-        <div class="details-row" data-bind="if: $root.current.question">
-            <!-- ko with: $root.current.question -->
-            <div class="details-column width-98p">
-                <label class="title">Вопрос</label>
-                <span class="info" data-bind="text: question.text"></span>
+        <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
+        <div class="layer width-auto zero-margin">
+            <div class="layer-body">
+                <div class="details-row" data-bind="if: $root.current.question">
+                    <!-- ko with: $root.current.question -->
+                    <div class="details-column width-98p">
+                        <label class="title">Вопрос</label>
+                        <span class="info" data-bind="text: question.text"></span>
+                    </div>
+                    <div class="details-column width-98p">
+                        <label class="title">Ваш ответ</label>
+                        <span class="info" data-bind="text: answer.parseAnswer() "></span>
+                    </div>
+                    <!-- /ko -->
+                </div>
             </div>
-            <div class="details-column width-98p">
-                <label class="title">Ваш ответ</label>
-                <span class="info" data-bind="text: commonHelper.parseAnswers(answer()) "></span>
-            </div>
-            <!-- /ko -->
         </div>
     </div>
 </div>

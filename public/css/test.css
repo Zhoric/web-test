@@ -519,6 +519,12 @@ span.date-string {
 .zero-margin {
   margin: 0 !important;
 }
+.pre-line {
+  white-space: pre-line;
+}
+.pre-wrap {
+  white-space: pre-wrap;
+}
 .clear {
   clear: both;
 }

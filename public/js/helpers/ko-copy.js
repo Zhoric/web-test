@@ -1,7 +1,10 @@
 ko.observable.fn.copy = function(data){
     this(ko.mapping.fromJS(ko.mapping.toJS(data)));
 };
-
+ko.observable.fn.cut = function(length){
+    var dots = (this().length > length) ? ' ...' : '';
+    return this().substr(0, length) + dots;
+};
 ko.observable.fn.parseDate = function(){
     var date = new Date(this());
     var options = {
@@ -31,13 +34,11 @@ ko.observable.fn.parseDay = function(){
 
     return date;
 };
-
 ko.observable.fn.parseAnswer = function(){
     if (!this()) return;
     return this().replace(/<\/answer>/g, '\n\n')
         .slice(0, this().lastIndexOf('\n\n'));
 };
-
 ko.observableArray.fn.knot = function(startDate, endDate){
     return ko.pureComputed(function(){
         var initial = this();

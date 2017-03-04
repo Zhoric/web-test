@@ -2,8 +2,8 @@
 
 @mild-black: #666666;
 
-.details-row.result-details{
-  margin: -1px 0 1% 0;
+.details.result-details{
+  margin-top: -1%;
 }
 .details-row.float-buttons{
   min-height: 40px;
@@ -178,10 +178,17 @@
 
 // --------- MODALS ---------- //
 #question-details-modal{
-  max-height: 300px;
+  max-height: 450px;
   width: 700px;
+  .modal-close{
+    margin: 7px 6px 0 0;
+  }
+  .layer{
+    max-height: 400px;
+    overflow-y: auto;
+  }
   span.info{
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
 }
 

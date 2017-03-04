@@ -519,6 +519,12 @@ span.date-string {
 .zero-margin {
   margin: 0 !important;
 }
+.pre-line {
+  white-space: pre-line;
+}
+.pre-wrap {
+  white-space: pre-wrap;
+}
 .clear {
   clear: both;
 }
@@ -569,8 +575,8 @@ button.move:hover {
 .text-center {
   text-align: center;
 }
-.details-row.result-details {
-  margin: -1px 0 1% 0;
+.details.result-details {
+  margin-top: -1%;
 }
 .details-row.float-buttons {
   min-height: 40px;
@@ -739,11 +745,18 @@ button.move:hover {
   color: #666666;
 }
 #question-details-modal {
-  max-height: 300px;
+  max-height: 450px;
   width: 700px;
 }
+#question-details-modal .modal-close {
+  margin: 7px 6px 0 0;
+}
+#question-details-modal .layer {
+  max-height: 400px;
+  overflow-y: auto;
+}
 #question-details-modal span.info {
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 #confirm-test-start-modal {
   width: 450px;
