@@ -26,7 +26,7 @@
             <div class="layer-head">
                 <h3>Удаление результатов тестирования</h3>
             </div>
-            <div class="layer-body">
+            <div class="layer-body zero-margin">
                 <div class="details-row">
                     <div class="details-column width-98p">
                         <label class="title inline">Удалить все записи до</label>

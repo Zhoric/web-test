@@ -58,25 +58,3 @@
     <td data-bind="text: $parent.attemptsLeft"></td>
     <td><button data-bind="click: $root.actions.startTest, disable: !$parent.attemptsLeft(), css: {'attempts-mid': ($parent.attemptsLeft() > $parent.attemptsMade()) && $parent.attemptsMade(), 'attempts-all': !$parent.attemptsMade(), 'attempts-little': $parent.attemptsLeft() == 1}">Пройти тест</button></td>
 </script>
-
-<div class="g-hidden">
-    <div class="box-modal removal-modal" id="confirm-test-start-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Вы уверены, что хотите пройти выбранный тест?</h3>
-            </div>
-            <div class="layer-body">
-                <div class="details-row">
-                    <p><span class="bold">Предупреждение: </span>
-                        Во время прохождения теста перезагрузка или переход на другую страницу приведёт к тому, что
-                        текущая попытка прохождения теста будет считаться израсходованной.
-                    </p>
-                </div>
-                <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close zero-margin width-80">Отмена</button>
-                    <button class="approve arcticmodal-close width-80" data-bind="click: $root.actions.end">ОК</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

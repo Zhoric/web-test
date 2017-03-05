@@ -39,12 +39,16 @@
     </div>
 </div>
 <div class="g-hidden">
-    <div class="box-modal" id="remove-group-modal">
-        <div class="popup-delete">
-            <div><h3>Вы действительно хотите удалить выбранную группу?</h3></div>
-            <div>
-                <button class="remove" data-bind="click: $root.actions.end.remove">Удалить</button>
-                <button class="cancel arcticmodal-close">Отмена</button>
+    <div class="box-modal removal-modal" id="remove-group-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Вы действительно хотите удалить выбранную группу?</h3>
+            </div>
+            <div class="layer-body">
+                <div class="details-row float-buttons">
+                    <button class="cancel arcticmodal-close">Отмена</button>
+                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
@@ -52,7 +56,6 @@
 
 <div class="g-hidden">
     <div class="box-modal" id="select-plan-modal">
-        <div class="box-modal_close arcticmodal-close"><span class="fa modal-close">&#xf00d;</span></div>
         <div class="layer zero-margin width-auto">
             <h3>Учебный план</h3>
             <div class="details-row">
@@ -132,7 +135,7 @@
                 <div class="details-column width-70p">
                     <label class="title">
                         Полное&nbsp;наименование&nbsp;группы
-                        <span class="coloredin-patronus bold" data-bind="click: $root.actions.generate">(Сгенерировать)</span>
+                        <span class="coloredin-patronus bold pointer" data-bind="click: $root.actions.generate">(Сгенерировать)</span>
                         <span class="required">*</span>
                     </label>
                     <input id="iGroupNameGenerated" validate type="text"

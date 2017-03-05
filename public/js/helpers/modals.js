@@ -34,16 +34,17 @@ function confirm() {
     var defaultConfirmMessage = 'Вы действительно хотите выполнить действие?';
     var approveCallback = function(){};
     var cancelCallback = function(){};
+    this.additionalText = ko.observable(null);
+    this.additionalHtml = ko.observable(null);
     this.message = ko.observable(defaultConfirmMessage);
 
 
     this.show = function(settings){
         self.message(settings.message);
-        if (typeof settings.approve !== 'undefined')
-            approveCallback = settings.approve;
-        if (typeof settings.cancel !== 'undefined')
-            cancelCallback = settings.cancel;
-
+        if (settings.approve) approveCallback = settings.approve;
+        if (settings.cancel) cancelCallback = settings.cancel;
+        if (settings.additionalText) self.additionalText(settings.additionalText);
+        if (settings.additionalHtml) self.additionalHtml(settings.additionalHtml);
         commonHelper.modal.open('#confirmation-modal');
     };
     this.approve = function(){
@@ -63,17 +64,24 @@ function info(){
     var self = this;
     var callback = function(){};
     this.message = ko.observable(" ");
+    this.additionalText = ko.observable(null);
+    this.additionalHtml = ko.observable(null);
 
     this.show = function(settings){
         self.message(settings.message);
-        if (typeof settings.callback !== 'undefined')
-            callback = settings.callback;
+        if (settings.callback) callback = settings.callback;
+        if (settings.additionalText) self.additionalText(settings.additionalText);
+        if (settings.additionalHtml) self.additionalHtml(settings.additionalHtml);
         commonHelper.modal.open('#information-modal');
     };
     this.approve = function(){
         callback();
         commonHelper.modal.close('#information-modal');
-        setTimeout(function(){self.message("");}, 500);
+        setTimeout(function(){
+            self.message("");
+            self.additionalText(null);
+            self.additionalHtml(null);
+        }, 500);
         return true;
     };
 }

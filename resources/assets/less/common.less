@@ -461,7 +461,8 @@ span.date-string{
   &-80{width:80px !important;}
 }
 .height{
-  &-19{height: 19px}
+  &-19{height:19px}
+  &-30{height:30px}
   &-40{height:40px}
   &-100{height:100px}
 }
@@ -617,7 +618,48 @@ button.move{
 }
 
 
-
+#information-modal, #confirmation-modal{
+  max-width: 450px;
+  max-height: 300px;
+  h3{
+    white-space: pre-line;
+  }
+  button{
+    min-width: 90px;
+    margin: 0 0 0 1% !important;
+  }
+  p{
+    color: @unimportant;
+    font-size: 12px;
+    text-align: justify;
+    padding: 15px 0;
+    white-space: pre-line;
+  }
+}
+#errors-modal{
+  width: 300px;
+  max-height: 350px;
+  overflow-y: auto;
+  h3{
+    display: inline-block;
+  }
+  h4{
+    padding: 0 5px 5px;
+    margin: 0 5px 5px;
+    white-space: pre-line;
+  }
+  .fa{
+    padding-right:5px;
+    font-size: 20px;
+    color: @crimson-red;
+  }
+  button{
+    width: 70px;
+    height: 30px;
+    font-size: 15px;
+    float: right;
+  }
+}
 
 
 

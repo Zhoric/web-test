@@ -27,18 +27,21 @@ $(document).ready(function(){
 
             self.actions = {
                 start: function(data){
-                    self.current.test = data;
-                    commonHelper.modal.open(self.modals.messageBox);
-                },
-                end: function(){
-                    var data = self.current.test;
-                    commonHelper.cookies.create({
-                        testId: data.test.id(),
-                        testName: data.test.subject(),
-                        disciplineName: data.test.disciplineName(),
-                        testType: data.test.type()
+                    self.confirm.show({
+                        message: 'Вы уверены, что хотите пройти выбранный тест?',
+                        additionalHtml: '<p><span class="bold">Предупреждение: </span>' +
+                        'Во время прохождения теста перезагрузка или переход на другую страницу приведёт к тому, ' +
+                        'что текущая попытка прохождения теста будет считаться израсходованной.</p>',
+                        approve: function(){
+                            commonHelper.cookies.create({
+                                testId: data.test.id(),
+                                testName: data.test.subject(),
+                                disciplineName: data.test.disciplineName(),
+                                testType: data.test.type()
+                            });
+                            window.location.href = '/test';
+                        }
                     });
-                    window.location.href = '/test';
                 }
             };
 

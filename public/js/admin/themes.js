@@ -413,11 +413,12 @@ $(document).ready(function(){
                         commonHelper.modal.open(self.modals.importModal);
                     },
                     end: function(){
+                        if (!self.current.importFile().file()) return;
                         self.post.imported();
                     },
                     cancel: function(){
                         self.current.importFile().file(null)
-                            .base64String(null).dataURL(null);
+                            .base64String(null);
                     }
                 }
             };
@@ -622,8 +623,8 @@ $(document).ready(function(){
                         successCallback: function (data) {
                             self.actions.importFile.cancel();
                             self.inform.show({
-                                message: 'Результат импорта вопроса:\n\n' +
-                                'Всего вопросов: ' + data.totalRows() + '\n' +
+                                message: 'Результат импорта вопроса:',
+                                additionalText: 'Всего вопросов: ' + data.totalRows() + '\n' +
                                 'Успешно импортировано: ' + data.imported() + '\n' +
                                 'Не импортированно: ' + data.failed() +
                                 (data.errors().length ? '\nОшибки импорта: ' + data.errors().join(';\n') : ''),

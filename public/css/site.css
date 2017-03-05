@@ -483,6 +483,9 @@ span.date-string {
 .height-19 {
   height: 19px;
 }
+.height-30 {
+  height: 30px;
+}
 .height-40 {
   height: 40px;
 }
@@ -574,6 +577,52 @@ button.move:hover {
 }
 .text-center {
   text-align: center;
+}
+#information-modal,
+#confirmation-modal {
+  max-width: 450px;
+  max-height: 300px;
+}
+#information-modal h3,
+#confirmation-modal h3 {
+  white-space: pre-line;
+}
+#information-modal button,
+#confirmation-modal button {
+  min-width: 90px;
+  margin: 0 0 0 1% !important;
+}
+#information-modal p,
+#confirmation-modal p {
+  color: #7f8c8d;
+  font-size: 12px;
+  text-align: justify;
+  padding: 15px 0;
+  white-space: pre-line;
+}
+#errors-modal {
+  width: 300px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+#errors-modal h3 {
+  display: inline-block;
+}
+#errors-modal h4 {
+  padding: 0 5px 5px;
+  margin: 0 5px 5px;
+  white-space: pre-line;
+}
+#errors-modal .fa {
+  padding-right: 5px;
+  font-size: 20px;
+  color: #D24D57;
+}
+#errors-modal button {
+  width: 70px;
+  height: 30px;
+  font-size: 15px;
+  float: right;
 }
 .details.result-details {
   margin-top: -1%;

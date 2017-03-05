@@ -118,7 +118,7 @@ var returnStandart = function(){
     if (self.mode) vm.mode = self.mode;
     if (self.code) vm.code = self.code;
     if (self.initial) vm.initial = self.initial;
-    if (self.timer) vm.timer = self.allowTimer;
+    if (self.allowTimer) vm.timer = self.allowTimer;
 
     return vm;
 };

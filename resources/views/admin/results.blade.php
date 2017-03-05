@@ -51,7 +51,7 @@
 
     <div class="filter">
         <div class="filter-block">
-            <a href="/admin/monitoring"><button class="action-button">Мониторинг тестирования</button></a>
+            <a href="/admin/monitoring"><button class="action-button width-100p">Мониторинг тестирования</button></a>
         </div>
         <div class="filter-block">
             <label class="title">Направление</label>
