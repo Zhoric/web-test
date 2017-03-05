@@ -117,6 +117,8 @@ Route::group(['prefix' => 'api'], function() {
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::post('delete/{id}', 'UserController@deleteUser')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::post('activate/{id}', 'UserController@activate')
+            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('getStudent/{id}', 'UserController@getStudentInfo');
     });
 

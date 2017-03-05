@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Mockery\CountValidator\Exception;
 use Repositories\UnitOfWork;
 use Role;
+use User;
 use UserInfoViewModel;
 
 class UserManager
@@ -27,6 +28,18 @@ class UserManager
     public function getUser($id)
     {
         return $this->_unitOfWork->users()->find($id);
+    }
+
+    public function activate($userId){
+
+        /** @var User $user */
+        $user = $this->_unitOfWork->users()->find($userId);
+        if (!isset($user)){
+            throw new Exception('Пользователь не найден!');
+        }
+        $user->setActive(true);
+        $this->_unitOfWork->users()->update($user);
+        $this->_unitOfWork->commit();
     }
 
     public function getUserByRememberToken($id, $token)

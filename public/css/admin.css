@@ -741,6 +741,15 @@ button {
   margin: 0 8px;
   font-size: 23px;
 }
+.item.student .fa {
+  margin: 0 5px;
+}
+.item.student:hover .fa {
+  color: #fff;
+}
+.item.current > .fa {
+  color: #fff;
+}
 .items .result a,
 .items .result a:hover {
   margin: 0;

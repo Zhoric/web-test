@@ -49,6 +49,15 @@ class UserController extends Controller
         }
     }
 
+    public function activate($userId){
+        try{
+            $this->userManager->activate($userId);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     public function getStudentInfo($id){
         try{
             $studentInfo = $this->userManager->getStudentInfo($id);

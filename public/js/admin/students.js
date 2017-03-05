@@ -86,10 +86,6 @@ $(document).ready(function(){
                 },
                 end: {
                     update: function(){
-                        if (!self.current.student().active()){
-                            commonHelper.modal.open('#cancel-request-modal');
-                            return;
-                        }
                         self.current.student.isValid()
                             ? self.post.student()
                             : self.validation[$('[accept-validation]').attr('id')].open();
@@ -120,11 +116,23 @@ $(document).ready(function(){
                     }
                 },
                 switch: {
-                    on: function(data){
-                        data.active(true);
+                    on: function(data, e){
+                        self.confirm.show({
+                            message: 'Вы действительно хотите подтвердить заявку?',
+                            approve: function(){
+                                self.post.approval(data.id());
+                            }
+                        });
+                        e.stopPropagation();
                     },
-                    off: function(data){
-                        data.active(false);
+                    off: function(data, e){
+                        self.confirm.show({
+                            message: 'Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?',
+                            approve: function(){
+                                self.post.request(data.id());
+                            }
+                        });
+                        e.stopPropagation();
                     }
                 }
             };
@@ -193,6 +201,7 @@ $(document).ready(function(){
                         successCallback: function(data){
                             self.current.students(data.data());
                             self.pagination.itemsCount(data.count());
+                            commonHelper.tooltip({selector: '.item > .fa', side: 'top'});
                         }
                     });
                 },
@@ -227,31 +236,50 @@ $(document).ready(function(){
             self.get.groups();
 
             self.post = {
-                request: function(){
-                    var url = '/api/user/delete/' + self.current.student().id();
-                    var json = '';
-                    $post(url, json, self.errors, function(){
-                        self.actions.cancel();
-                        self.get.students();
-                    })();
+                request: function(studentId){
+                    var id = studentId ? studentId : self.current.student().id();
+                    $ajaxpost({
+                        url: '/api/user/delete/' + id,
+                        data: null,
+                        errors: self.errors,
+                        successCallback: function(){
+                            self.actions.cancel();
+                            self.get.students();
+                        }
+                    });
+                },
+                approval: function(id){
+                    $ajaxpost({
+                        url: '/api/user/activate/' + id,
+                        errors: self.errors,
+                        successCallback: function(){
+                            self.get.students();
+                        }
+                    })
                 },
                 student: function(){
-                    var json = self.alter.stringify.student();
-                    var url = '/api/groups/student/' + self.mode();
-
-                    $post(url, json, self.errors, function(){
-                        self.actions.cancel();
-                        self.get.students();
-                    })();
+                    $ajaxpost({
+                        url: '/api/groups/student/' + self.mode(),
+                        errors: self.errors,
+                        data: self.alter.stringify.student(),
+                        successCallback: function(){
+                            self.actions.cancel();
+                            self.get.students();
+                        }
+                    });
                 },
                 password: function(){
-                    var json = self.alter.stringify.password();
-                    $post('/api/user/setPassword', json, self.errors, function(){
-                        self.actions.password.cancel();
-                        self.inform.show({
-                            message: 'Пароль успешно изменен'
-                        });
-                    })();
+                    $ajaxpost({
+                        url: '/api/user/setPassword',
+                        errors: self.errors,
+                        data: self.alter.stringify.password(),
+                        successCallback: function(){
+                            self.actions.password.cancel();
+                            self.inform.show({
+                                message: 'Пароль успешно изменен'
+                            });
+                        }
+                    });
                 }
             };
 

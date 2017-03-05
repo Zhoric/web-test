@@ -16,7 +16,19 @@
             <!-- /ko -->
             <div class="items-body" data-bind="if: current.students().length">
                 <!-- ko foreach: current.students -->
-                <div class="item" data-bind="click: $root.actions.show, css: {'current': id() === $root.current.student().id()}">
+                <div class="item student" data-bind="click: $root.actions.show, css: {'current': id() === $root.current.student().id()}">
+                    <!-- ko if: !active() -->
+                    <span class="fa radio-important float-right"
+                          title="Отклонить заявку на регистрацию"
+                          data-bind="click: $root.actions.switch.off">
+                        &#xf00d;
+                    </span>
+                    <span class="fa radio-important float-right"
+                          title="Потвердить заявку на регистрацию"
+                          data-bind="click: $root.actions.switch.on">
+                        &#xf00c;
+                    </span>
+                    <!-- /ko -->
                     <span data-bind="text: lastname() + ' ' + firstname() + ' ' + patronymic()"></span>
                 </div>
                     <!-- ko if: $root.mode() !== state.none && $root.current.student().id() === id()  -->
@@ -150,12 +162,6 @@
     </div>
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
-            <!-- ko if: $root.mode() === state.update -->
-            <label class="title">Статус учётной записи</label>
-            <span class="radio" data-bind="click: $root.actions.switch.on, css: {'radio-important': active()}">Подтвердить</span>
-            <span>|</span>
-            <span class="radio" data-bind="click: $root.actions.switch.off, css: {'radio-negative': !active()}">Отклонить</span>
-            <!-- /ko -->
             <button class="cancel" data-bind="click: $root.actions.cancel">Отмена</button>
             <button id="bUpdateLecturer" accept-validation class="approve"
                     title="Проверьте правильность заполнения полей"
@@ -204,18 +210,18 @@
     </div>
 </div>
 
-<div class="g-hidden">
-    <div class="box-modal removal-modal" id="cancel-request-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>
-            </div>
-            <div class="layer-body">
-                <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close">Отмена</button>
-                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{{--<div class="g-hidden">--}}
+    {{--<div class="box-modal removal-modal" id="cancel-request-modal">--}}
+        {{--<div class="layer zero-margin width-auto">--}}
+            {{--<div class="layer-head">--}}
+                {{--<h3>Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>--}}
+            {{--</div>--}}
+            {{--<div class="layer-body">--}}
+                {{--<div class="details-row float-buttons">--}}
+                    {{--<button class="cancel arcticmodal-close">Отмена</button>--}}
+                    {{--<button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--</div>--}}

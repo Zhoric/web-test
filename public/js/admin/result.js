@@ -144,7 +144,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.results(data());
-                            commonHelper.tooltip({selector: '.tagged', side: 'left'})
+                            commonHelper.tooltip({selector: '.tagged', side: 'left'});
                         }
                     });
                 },
