@@ -1,6 +1,3 @@
-/**
- * Created by nyanjii on 10.11.16.
- */
 $(document).ready(function(){
 
     var loginViewModel = function(){
@@ -12,6 +9,10 @@ $(document).ready(function(){
             self.user = {
                 email: ko.observable(''),
                 password: ko.observable('')
+            };
+            self.enter = function(data, e){
+                if (e.which === 13)
+                    self.login();
             };
             self.login = function(){
                 var json = ko.mapping.toJSON(self.user);
@@ -34,6 +35,9 @@ $(document).ready(function(){
                                 break;
                         }
                         window.location.href = location;
+                    },
+                    errorCallback: function(){
+                        self.user.password("");
                     }
                 };
 
@@ -43,6 +47,7 @@ $(document).ready(function(){
             return {
                 user: self.user,
                 login: self.login,
+                enter: self.enter,
                 errors: self.errors
             };
         };

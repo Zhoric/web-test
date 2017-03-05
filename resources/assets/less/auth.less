@@ -16,6 +16,11 @@
   src: url('/fonts/Roboto-Regular.ttf');
 }
 
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/fonts/fontawesome-webfont.ttf');
+}
+
 body{
   background: @porcelain;
   font-family: "Roboto Regular" !important;
@@ -115,5 +120,57 @@ button{
     color: @patronus;
     font-weight: bold;
     font-size: 14px;
+  }
+}
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 20px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 19px;
+}
+
+
+#errors-modal{
+  width: 300px;
+  max-height: 350px;
+  overflow-y: auto;
+  h3{
+    display: inline-block;
+  }
+  h4{
+    padding: 0 5px 5px;
+    margin: 0 5px 5px;
+    white-space: pre-line;
+  }
+  .fa{
+    padding-right:5px;
+    font-size: 20px;
+    color: @crimson-red;
+  }
+  button{
+    width: 70px;
+    height: 30px;
+    font-size: 15px;
+    float: right;
+  }
+}
+
+#register-info{
+  width: 350px;
+  max-height: 300px;
+  overflow-y: auto;
+  .info-body{padding: 10px;}
+  .button-holder{
+    height: 40px;
+  }
+  h3{color:@filch;}
+  button{
+    float: right;
+    height: 40px;
+    width: 90px;
   }
 }

@@ -16,10 +16,10 @@
             <span>Система контроля знаний</span>
         </div>
         <div>
-            <input type="text" data-bind="value: user.email" placeholder="Логин">
+            <input type="text" data-bind="value: user.email, event: {keypress: $root.enter}" placeholder="Логин">
         </div>
         <div>
-            <input type="password" data-bind="value: user.password" placeholder="Пароль">
+            <input type="password" data-bind="value: user.password, event: {keypress: $root.enter}" placeholder="Пароль">
         </div>
         <div>
             <button data-bind="click: $root.login">Войти</button>

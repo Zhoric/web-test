@@ -66,8 +66,8 @@
                     <h3>Произошла ошибка</h3>
                     <h4 data-bind="text: $root.errors.message"></h4>
                 </div>
-                <div class="button-holder">
-                    <button data-bind="click: $root.errors.accept">OK</button>
+                <div class="height-30">
+                    <button class="approve" data-bind="click: $root.errors.accept">OK</button>
                 </div>
             </div>
         </div>

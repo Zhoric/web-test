@@ -64,12 +64,17 @@
         </div>
     </div>
 
-<div class="g-hidden">
-    <div class="box-modal" id="register-info">
-        <!-- ko if: $root.registerResult.success() -->
-        <h3 data-bind="text: $root.registerResult.message "></h3>
-        <button data-bind="click: acceptInformation">OK</button>
-        <!-- /ko -->
+
+    <div class="g-hidden">
+        <div class="box-modal" id="register-info">
+            <div class="info-body">
+                <!-- ko if: $root.registerResult.success() -->
+                <h3 data-bind="text: $root.registerResult.message "></h3>
+                <!-- /ko -->
+                <div class="button-holder">
+                    <button class="arcticmodal-close" data-bind="click: $root.acceptInformation">OK</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 @endsection
