@@ -85,6 +85,9 @@
                     <!-- ko if: rightPercentage() === null -->
                     <span title="Требуется проверка" class="tagged fa">&#xf06a;</span>
                     <!-- /ko -->
+                    <!-- ko if: rightPercentage() !== null -->
+                    <span class="tagged bold" data-bind="text: rightPercentage"></span>
+                    <!-- /ko -->
                     <span data-bind="text: $root.actions.answer.fit.question($data)"></span>
                 </div>
             </div>
