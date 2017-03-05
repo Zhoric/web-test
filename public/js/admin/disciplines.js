@@ -366,6 +366,11 @@ $(document).ready(function(){
                 }
             };
 
+            self.events.theme = function(data, e){
+                if (e.which === 13)
+                    self.actions.theme.end.add();
+            };
+
             // SUBSCRIPTIONS
             self.pagination.itemsCount.subscribe(function(value){
                 if (value){

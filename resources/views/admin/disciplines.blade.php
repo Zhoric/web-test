@@ -79,7 +79,9 @@
                     <!-- ko if: $root.current.theme().mode() === state.create -->
                     <tr class="input-row">
                         <td colspan="2">
-                            <input type="text" data-bind="value: $root.current.theme().name" placeholder="Название темы"/>
+                            <input type="text" placeholder="Название темы"
+                                   data-bind="value: $root.current.theme().name,
+                                   event: {keyup: $root.events.theme}"/>
                         </td>
                         <td class="action-holder">
                             <button data-bind="click: $root.actions.theme.end.add" class="fa approve mini">&#xf00c;</button>

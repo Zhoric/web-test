@@ -117,6 +117,11 @@ $(document).ready(function(){
 
             self.get.institutes();
 
+            self.events.plan = function(data, e){
+                if (e.which === 13)
+                    self.actions.plan.approve();
+            };
+
             return returnStandart.call(self);
         };
     };

@@ -43,9 +43,19 @@
                 <!-- /ko -->
                 <!-- ko if: $root.current.plan.mode() === state.create -->
                 <div class="item no-hover">
-                    <input type="text" data-bind="value: $root.current.plan.name"/>
-                    <button class="approve" data-bind="click: $root.actions.plan.approve">Сохранить</button>
-                    <button class="cancel" data-bind="click: $root.actions.plan.cancel">Отмена</button>
+                    <table>
+                        <tr>
+                            <td class="width-100p">
+                                <input type="text" class="height-40 width-95p"
+                                       data-bind="value: $root.current.plan.name,
+                                       event: {keyup: $root.events.plan}"/>
+                            </td>
+                            <td class="minw-185">
+                                <button class="approve" data-bind="click: $root.actions.plan.approve">Сохранить</button>
+                                <button class="cancel" data-bind="click: $root.actions.plan.cancel">Отмена</button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <!-- /ko -->
                 <!-- ko foreach: $root.current.plans -->
