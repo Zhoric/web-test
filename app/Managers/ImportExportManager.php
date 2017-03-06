@@ -36,20 +36,20 @@ class ImportExportManager
      * 3. Удаление временного файла.
      * @var string
      */
-    public static $importFileName = 'import.txt';
+    public static $importFileName = 'import.xml';
 
     /**
      * Имя временного файла, хранящего данные экспортированных вопросов.
      * $questionType
      * @var string
      */
-    private static $exportFileName = 'export.txt';
+    private static $exportFileName = 'export.xml';
 
     /**
      * Тип файлов для импорта вопросов.
      * @var string
      */
-    public static $importFileType = 'txt';
+    public static $importFileType = 'xml';
 
     private $_questionManager;
 
@@ -86,7 +86,8 @@ class ImportExportManager
     /**
      * Экспорт всех вопросов из заданной темы в текстовый файл.
      * @param $themeId
-     * @return ExportResultViewModel
+     * @return string
+     * @throws Exception
      */
     public function exportQuestions($themeId)
     {
@@ -95,7 +96,9 @@ class ImportExportManager
             FileHelper::delete($filePath);
             $exportFile = fopen($filePath, 'w');
             $exportResult = new ExportResultViewModel();
-            $exportContent = "";
+            $exportContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".PHP_EOL;
+            $exportContent .= "<questions-list>".PHP_EOL;
+
 
             $questions = $this->_questionManager->getByTheme($themeId);
             $exportResult->totalRows = count($questions);
@@ -105,8 +108,16 @@ class ImportExportManager
                 $exportContent .= $questionData;
             }
 
+            $exportContent .= "</questions-list>".PHP_EOL;
+
             fwrite($exportFile, $exportContent);
-            return $exportResult;
+
+            if ($exportResult->exported > 0){
+                return $filePath;
+            } else {
+                throw new Exception('Ни один из вопросов данной темы не может быть экспортирован.');
+            }
+
         } finally {
             fclose($exportFile);
         }

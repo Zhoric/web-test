@@ -20,8 +20,12 @@ class ImportExportController extends Controller{
 
     public function exportQuestions($themeId){
         try{
-            $result = $this->_importExportManager->exportQuestions($themeId);
-            return $this->successJSONResponse($result);
+            $exportFilePath = $this->_importExportManager->exportQuestions($themeId);
+
+            return response()
+                ->download($exportFilePath, 'questions_import_theme_'.$themeId)
+                ->deleteFileAfterSend(true);
+
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
@@ -30,7 +34,6 @@ class ImportExportController extends Controller{
     public function importQuestions(Request $request){
         try{
             $file = $request->json('file');
-            $fileType = $request->json('fileType');
             $themeId = $request->json('themeId');
 
             $importFilePath = ImportExportManager::$importPath.ImportExportManager::$importFileName;
