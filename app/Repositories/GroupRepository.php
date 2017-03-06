@@ -35,8 +35,6 @@ class GroupRepository extends BaseRepository
     }
 
 
-
-
     public function getByNameAndProfilePaginated($pageSize, $pageNum, $profileId = null, $name = null){
         $qb = $this->repo->createQueryBuilder('g');
         $query = $qb;
@@ -63,6 +61,7 @@ class GroupRepository extends BaseRepository
 
         return new PaginationResult($data, $count);
     }
+
 
 
 

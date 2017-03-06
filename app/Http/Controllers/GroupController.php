@@ -171,4 +171,13 @@ class GroupController extends Controller
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
+
+    public function hasUnactive($groupId){
+        try {
+            $result = $this->_groupManager->isContainUnactiveStudents($groupId);
+            return $this->successJSONResponse($result);
+        } catch (Exception $exception) {
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
 }

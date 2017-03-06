@@ -194,6 +194,7 @@ Route::group(['prefix' => 'api'], function() {
             Route::post('delete/{id}', 'GroupController@delete');
             Route::get('{id}/students', 'GroupController@getGroupStudents');
             Route::get('{id}/studyplan', 'GroupController@getGroupStudyPlan');
+            Route::get('{id}/hasUnactive', 'GroupController@hasUnactive');
             Route::post('acceptAll/{id}', 'GroupController@acceptAll');
 
             /*------------------------------------------------------------------------

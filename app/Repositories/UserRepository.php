@@ -63,6 +63,14 @@ class UserRepository extends BaseRepository implements IUserRepository
         return $query->getQuery()->execute();
     }
 
+    public function getGroupUnactiveStudentsIds($groupId){
+        $query = $this->repo->createQueryBuilder('u')
+            ->join(\StudentGroup::class, 'sg', Join::WITH,
+                "u.id = sg.student AND sg.group = $groupId AND u.active = false")
+            ->select('u.id');
+        return $query->getQuery()->execute();
+    }
+
     public function setUserRole($userId, $roleId){
         DB::table('role_user')
             ->insert(  array(

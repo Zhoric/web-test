@@ -174,4 +174,13 @@ class GroupManager
 
         $this->_unitOfWork->commit();
     }
+
+    /**
+     * Проверка факта наличия в группе студентов с неподтверждёнными учётными записями.
+     */
+    public function isContainUnactiveStudents($groupId){
+        $unactiveStudents = $this->_unitOfWork->users()->getGroupUnactiveStudentsIds($groupId);
+
+        return count($unactiveStudents) > 0;
+    }
 }
