@@ -110,11 +110,11 @@ class UserManager
         $this->_unitOfWork->commit();
     }
 
-    public function getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupName, $isActive)
+    public function getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupId, $isActive)
     {
         return $this->_unitOfWork
             ->users()
-            ->getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupName, $isActive);
+            ->getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupId, $isActive);
     }
 
 }

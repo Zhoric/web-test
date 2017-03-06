@@ -95,11 +95,11 @@ class UserController extends Controller
             $pageNum =  $request->query('page');
             $pageSize = $request->query('pageSize');
             $name = $request->query('name');
-            $groupName = $request->query('groupName');
+            $groupId = $request->query('groupId');
             $isActive = $request->query("isActive");
 
             $paginationResult = $this->userManager
-                ->getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupName, $isActive);
+                ->getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupId, $isActive);
 
             return $this->successJSONResponse($paginationResult);
         } catch (Exception $exception){
