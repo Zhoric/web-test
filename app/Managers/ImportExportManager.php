@@ -144,6 +144,7 @@ class ImportExportManager
             $questionData .= "\t<q-complexity>" . $question->getComplexity() . "</q-complexity>" . PHP_EOL;
             $questionData .= "\t<q-time>" . $question->getTime() . "</q-time>" . PHP_EOL;
             $questionData .= "\t<q-text>" . $question->getText() . "</q-text>" . PHP_EOL;
+            $questionData .= "\t<q-image>" . $question->getImage() . "</q-image>" . PHP_EOL;
 
             $answers = $this->_questionManager->getQuestionAnswers($question->getId());
             foreach ($answers as $answer) {
@@ -219,6 +220,9 @@ class ImportExportManager
             $text = $this->getTextBetweenTags($questionData, 'q-text', true);
             $this->validateQuestionText($text);
             $question->setText($text);
+
+            $image = $this->getTextBetweenTags($questionData, 'q-image', true);
+            isset($image) && !empty($image) ? $question->setImage($image) : null;
 
             $type = $this->getTextBetweenTags($questionData, 'q-type', true);
             $this->validateQuestionType($type, $text);
