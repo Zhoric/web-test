@@ -50,7 +50,8 @@ $(document).ready(function(){
                 plan: ko.observable(null),
 
                 groupPlan: ko.validatedObservable(null).extend({required: true}),
-                isGenerated: ko.observable(false)
+                isGenerated: ko.observable(false),
+                hasInactive: ko.observable(false)
             };
             self.filter = {
                 name: ko.observable(''),
@@ -78,11 +79,13 @@ $(document).ready(function(){
                     self.current.group().id(data.id()).isFulltime(data.isFulltime())
                         .name(data.name()).prefix(data.prefix())
                         .number(data.number()).course(data.course());
+                    self.get.inactive();
                 },
                 empty: function(){
                     self.current.group().id('').isFulltime(true)
                         .name('').prefix('')
                         .number('').course('');
+                    self.current.hasInactive(false);
                 }
             };
             self.actions = {
@@ -246,6 +249,15 @@ $(document).ready(function(){
                         }
                     };
                     $ajaxget(requestOptions);
+                },
+                inactive: function(){
+                    $ajaxget({
+                        url: '/api/groups/' + self.current.group().id() +'/hasUnactive',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.hasInactive(data());
+                        }
+                    })
                 }
             };
             self.post = {
