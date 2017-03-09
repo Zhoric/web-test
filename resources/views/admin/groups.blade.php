@@ -12,7 +12,7 @@
             <label class="adder" data-bind="click: $root.actions.start.create">Добавить</label>
         </div>
         <!-- ko if: $root.mode() === state.create -->
-        <div class="details" data-bind="template: {name: 'show-group-info', data: $root.current.group}"></div>
+        <div class="details" data-bind="template: {name: 'update-group-info', data: $root.current.group}"></div>
         <!-- /ko -->
         <div class="items-body" data-bind="foreach: $root.current.groups">
             <div class="item" data-bind="click: $root.actions.show, css: {'current' : $root.current.group().id() === id()}">
