@@ -420,6 +420,10 @@ $(document).ready(function(){
                         self.current.importFile().file(null)
                             .base64String(null);
                     }
+                },
+                exportFile: function(){
+                    var win = window.open('/api/export/questions/' + self.current.theme.id(), '_blank');
+                    win.focus();
                 }
             };
 

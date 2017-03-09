@@ -1,7 +1,3 @@
-/**
- * Created by nyanjii on 14.12.16.
- */
-
 $get = function(url, successCallback, errors, data){
     if (typeof data === 'undefined'){
         return function(){

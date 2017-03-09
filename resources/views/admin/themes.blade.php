@@ -46,8 +46,11 @@
                 <label class="title">Дисциплина</label>
                 <span data-bind="text: $root.current.discipline().name"></span>
             </div>
+            <button class="action-button minw-100" data-bind="click: $root.actions.exportFile">
+                <span class="fa">&#xf019;</span>&nbsp;Экспорт
+            </button>
             <button class="action-button minw-100" data-bind="click: $root.actions.importFile.start">
-                <span class="fa">&#xf0f6;</span>&nbsp;Импорт
+                <span class="fa">&#xf093;</span>&nbsp;Импорт
             </button>
         </div>
         <div class="details-row theme-head">
