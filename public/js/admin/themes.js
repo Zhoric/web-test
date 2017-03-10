@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     var editor = ace.edit("editor");
     editor.getSession().setMode("ace/mode/c_cpp");
 
@@ -402,7 +401,13 @@ $(document).ready(function(){
                 },
                 image: {
                     expand: function(){
-                        $('.image-expander').show();
+                        $('.image-expander').fadeIn();
+                        wheelzoom(document.querySelector('img.zoom'));
+                    },
+                    hide: function(){
+                        $('.image-expander').fadeOut();
+                        document.querySelector('img.zoom')
+                            .dispatchEvent(new CustomEvent('wheelzoom.destroy'));
                     },
                     remove: function(){
                         self.current.question().showImage(null);

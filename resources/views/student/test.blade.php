@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/test.css')}}"/>
 @endsection
 @section('javascript')
+    <script src="{{ URL::asset('js/wheelzoom.js') }}"></script>
     <script src="{{ URL::asset('js/ace.js') }}"></script>
     <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
     <script src="{{ URL::asset('js/student/test.js')}}"></script>
@@ -24,7 +25,7 @@
                     <span data-bind="text: current.question().text"></span>
                 </div>
                 <div class="question-image" data-bind="if: current.question().image()">
-                    <img data-bind="attr: {src: '/' + current.question().image()}, click: $root.actions.image.expand"/>
+                    <img class="pointer" data-bind="attr: {src: '/' + current.question().image()}, click: $root.actions.image.expand"/>
                 </div>
                 <div class="answers" data-bind="if: $root.current.answers().length && $root.current.question().type() === 1">
                     <!-- ko foreach: $root.current.answers-->
@@ -80,4 +81,11 @@
             </div>
         </div>
     </div>
+    <!-- ko if: $root.current.question() -->
+    <div class="image-expander" data-bind="click: $root.actions.image.hide">
+        <!-- ko if: current.question().image() -->
+        <img class="zoom" data-bind="attr: {src: '/' + current.question().image()}"/>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
 @endsection

@@ -377,8 +377,8 @@ span.date-string {
   display: none;
 }
 .image-expander img {
-  max-height: 90%;
-  max-width: 90%;
+  max-height: 95%;
+  max-width: 95%;
   margin: 0 auto;
   width: auto;
   height: auto;

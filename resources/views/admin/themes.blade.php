@@ -6,13 +6,14 @@
     <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
     <script src="{{ URL::asset('js/ace.js') }}"></script>
     <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
+    <script src="{{ URL::asset('js/wheelzoom.js') }}"></script>
     <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
 @endsection
 
 @section('content')
-<div class="image-expander" data-bind="click: function(){$('.image-expander').hide();}">
+<div class="image-expander" data-bind="click: $root.actions.image.hide">
     <!-- ko if: $root.current.question().showImage() -->
-    <img data-bind="attr: {src: '/' + $root.current.question().showImage()}, click: $root.actions.image.expand"/>
+    <img class="zoom" data-bind="attr: {src: '/' + $root.current.question().showImage()}"/>
     <!-- /ko -->
 </div>
 <div class="content">

@@ -52,10 +52,13 @@ $(document).ready(function(){
                 },
                 image: {
                     expand: function(){
-                        $('#image-expander').fadeIn();
+                        $('.image-expander').fadeIn();
+                        wheelzoom(document.querySelector('img.zoom'));
                     },
                     hide: function(){
-                        $('#image-expander').fadeOut();
+                        $('.image-expander').fadeOut();
+                        document.querySelector('img.zoom')
+                            .dispatchEvent(new CustomEvent('wheelzoom.destroy'));
                     }
                 }
             };
