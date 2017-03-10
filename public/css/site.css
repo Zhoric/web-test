@@ -582,6 +582,17 @@ button.move:hover {
 .text-center {
   text-align: center;
 }
+#change-user-password-modal {
+  width: 350px;
+}
+#change-user-password-modal input {
+  padding: 0;
+  text-indent: 10px;
+}
+#change-user-password-modal .float-buttons {
+  margin-top: 20px;
+  min-height: 40px;
+}
 #information-modal,
 #confirmation-modal {
   max-width: 450px;
@@ -819,6 +830,13 @@ button.move:hover {
   font-size: 12px;
   text-align: justify;
   padding: 15px 0;
+}
+#change-user-password-modal input {
+  background: #fff;
+  height: 30px;
+  font-size: 15px;
+  border: 1px solid #BFBFBF;
+  width: 100%;
 }
 
 /*# sourceMappingURL=site.css.map */

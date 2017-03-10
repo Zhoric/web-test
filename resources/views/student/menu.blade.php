@@ -3,7 +3,11 @@
     <a href="/results" data-bind="css: {'current': $root.page() === menu.student.results}">Результаты</a>
     <a href="/stats" data-bind="css: {'current': $root.page() === menu.student.stats}">Статистика</a>
     <a href="/faq" data-bind="css: {'current': $root.page() === menu.student.faq}">FAQ</a>
-    <a href="/logout" class="user">Выход</a>
+    <a class="user" data-bind="text: $root.user.name()"></a>
+    <div class="menu-dd">
+        <a data-bind="click: $root.user.password.change.bind($root)">Сменить пароль</a>
+        <a href="/logout">Выход</a>
+    </div>
 </div>
 
 
