@@ -45,7 +45,10 @@
             </div>
             <div class="filter-block">
                 <label class="title">Группа</label>
-                <input type="text" data-bind="value: group, valueUpdate: 'keyup'" placeholder="Название группы"/>
+                <select data-bind="options: $root.initial.groups,
+                       optionsText: 'name',
+                       value: $root.filter.group,
+                       optionsCaption: 'Выберите группу'"></select>
             </div>
             <div class="filter-block">
                 <label class="title">Статус учетной записи</label>

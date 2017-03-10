@@ -48,13 +48,20 @@ $(document).ready(function(){
 
             self.filter = {
                 name: ko.observable(''),
-                group: ko.observable(''),
+                group: ko.observable(),
                 request: ko.observable(filters.active.all),
                 clear: function(){
                     self.filter
                         .name('')
-                        .group('')
+                        .group(null)
                         .request(filters.active.all);
+                },
+                set: {
+                    group: function(id){
+                        $.each(self.initial.groups(), function(i, item){
+                            if (item.id() == id) self.filter.group(item);
+                        });
+                    }
                 }
             };
             self.actions = {
@@ -184,7 +191,7 @@ $(document).ready(function(){
             self.get = {
                 students: function(){
                     var name = self.filter.name() ? '&name=' + self.filter.name() : '';
-                    var group = self.filter.group() ? '&groupName=' + self.filter.group() : '';
+                    var group = self.filter.group() ? '&groupId=' + self.filter.group().id() : '';
 
                     var active = self.filter.request() === filters.active.all ? '' : '';
                     active = self.filter.request() === filters.active.inactive ? '&isActive=false' : active;
@@ -194,7 +201,6 @@ $(document).ready(function(){
                         '?page=' + self.pagination.currentPage() +
                         '&pageSize=' + self.pagination.pageSize()
                         + name + group + active;
-
                     $ajaxget({
                         url: url,
                         errors: self.errors,
@@ -223,8 +229,8 @@ $(document).ready(function(){
                         successCallback: function(data){
                             self.initial.groups(data());
                             var cookie = $.cookie();
-                            if (cookie){
-                                self.filter.group(cookie.groupName);
+                            if (!$.isEmptyObject(cookie)){
+                                self.filter.set.group(cookie.groupId);
                                 commonHelper.cookies.remove(cookie);
                                 return;
                             }

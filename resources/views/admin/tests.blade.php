@@ -37,7 +37,7 @@
     </div>
     <div class="filter">
         <div class="filter-block">
-            <label class="title">Дициплина</label>
+            <label class="title">Дисциплина</label>
             <select data-bind="options: $root.current.disciplines,
                        optionsText: 'name',
                        value: $root.filter.discipline,

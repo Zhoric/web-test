@@ -154,7 +154,7 @@ $(document).ready(function(){
                 moveTo: {
                     students: function(data){
                         commonHelper.cookies.create({
-                            groupName : data.name()
+                            groupId : data.id()
                         });
                         window.location.href = '/admin/students/' + data.id();
                     }
