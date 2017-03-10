@@ -4,22 +4,34 @@ $(document).ready(function(){
             var self = this;
             initializeViewModel.call(self, {page: menu.student.main});
 
-            self.current = {
-                user: ko.observable(),
+            self.initial = {
                 disciplines: ko.observableArray([])
             };
             self.filter = {
                 name: ko.observable(''),
+                type: ko.observable('all-disciplines'),
                 clear: function(){
-                    self.filter.name('');
+                    self.filter.name('')
+                        .type('all-disciplines');
                 }
             };
+            self.current = {
+                user: ko.observable(),
+                disciplines: ko.computed(function() {
+                    var initial = self.initial.disciplines();
+                    var name = self.filter.name().toLowerCase();
+                    var type = self.filter.type () === 'all-disciplines';
+                    return ko.utils.arrayFilter(initial, function(item) {
+                        return (!type ? (item.testsCount() - item.testsPassed()) > 0: true) &&
+                            (item.discipline.name().toLowerCase().includes(name) ||
+                            item.discipline.abbreviation().toLowerCase().includes(name));
+                    });
+                })
+            };
+
             self.actions = {
                 details: function(data){
                     window.location.href = '/discipline/' + data.discipline.id();
-                },
-                logout: function(){
-                    window.location.href = '/logout';
                 },
                 percentage: function(data){
                     var percent = data.testsPassed() /  data.testsCount() * 100;
@@ -32,17 +44,13 @@ $(document).ready(function(){
                         url: '/api/disciplines/actual',
                         errors: self.errors,
                         successCallback: function(data){
-                            self.current.disciplines(data());
+                            self.initial.disciplines(data());
                         }
                     });
                 }
             };
             self.get.disciplines();
 
-            self.filter.name.subscribe(function(){
-                //self.get.disciplines();
-            });
-            // TODO: подумать о реализации фильтра
             return returnStandart.call(self);
         };
     };

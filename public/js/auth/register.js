@@ -76,9 +76,6 @@ $(document).ready(function(){
             };
 
             self.check = {
-                email: function(){
-                    //TODO:[UI] добавить проверку занят ли такой email
-                },
                 user: function(){
                     if (!self.user.isValid()){
                         self.events.showTooltip.overall();
