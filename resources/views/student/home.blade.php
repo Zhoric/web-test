@@ -50,6 +50,10 @@
                 <label for="has-tests">Имеются не пройденные тесты</label>
             </div>
             <div class="filter-block">
+                <input class="custom-radio" type="radio" value="no-tests" id="no-tests" data-bind="checked: $root.filter.type"/>
+                <label for="no-tests">Все тесты пройдены</label>
+            </div>
+            <div class="filter-block">
                 <span class="clear" data-bind="click: filter.clear">Очистить</span>
             </div>
         </div>

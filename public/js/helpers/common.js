@@ -131,6 +131,12 @@ var criterion = {
     mark: 'maxMark'
 };
 
+var testStatus = {
+    all: 'all-disciplines',
+    left: 'has-tests',
+    none: 'no-tests'
+};
+
 var commonHelper = {
     parseDate: function(date){
         date = new Date(date);

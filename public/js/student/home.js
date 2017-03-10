@@ -9,10 +9,10 @@ $(document).ready(function(){
             };
             self.filter = {
                 name: ko.observable(''),
-                type: ko.observable('all-disciplines'),
+                type: ko.observable(testStatus.all),
                 clear: function(){
                     self.filter.name('')
-                        .type('all-disciplines');
+                        .type(testStatus.all);
                 }
             };
             self.current = {
@@ -20,9 +20,19 @@ $(document).ready(function(){
                 disciplines: ko.computed(function() {
                     var initial = self.initial.disciplines();
                     var name = self.filter.name().toLowerCase();
-                    var type = self.filter.type () === 'all-disciplines';
                     return ko.utils.arrayFilter(initial, function(item) {
-                        return (!type ? (item.testsCount() - item.testsPassed()) > 0: true) &&
+                        var type = false;
+                        switch(self.filter.type()){
+                            case testStatus.all:
+                                type = true;
+                                break;
+                            case testStatus.left:
+                                type = (item.testsCount() - item.testsPassed()) > 0;
+                                break;
+                            case testStatus.none:
+                                type = (item.testsCount() - item.testsPassed()) === 0;
+                        }
+                        return type &&
                             (item.discipline.name().toLowerCase().includes(name) ||
                             item.discipline.abbreviation().toLowerCase().includes(name));
                     });
