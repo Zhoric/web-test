@@ -17,7 +17,12 @@
             <div class="items-head">
                 <h1>Просмотр результатов</h1>
             </div>
-            <h3 data-bind="if: !$root.filter.discipline()" class="text-center">Пожалуйста, выберите дисциплину</h3>
+            <!-- ko if: $root.filter.discipline() &&  !$root.current.results().length -->
+            <h3 class="text-center">По данному запросу ничего не найдено</h3>
+            <!-- /ko -->
+            <!-- ko if: !$root.filter.discipline() -->
+            <h3 class="text-center">Пожалуйста, выберите дисциплину</h3>
+            <!-- /ko -->
             <div class="items-body" data-bind="foreach: $root.current.results">
                 <div class="result" data-bind="click: $root.actions.show.result, css: {'current': $root.current.id() === id() && $root.current.details()}">
                     <div class="details-row clear">
@@ -83,19 +88,28 @@
         <div class="filter">
             <div class="filter-block">
                 <label class="title">Дисциплина</label>
-                <select data-bind="options: $root.filter.disciplines,
+                <select data-bind="options: $root.initial.disciplines,
                        optionsText: 'name',
                        value: $root.filter.discipline,
                        optionsCaption: 'Выберите дисциплину'"></select>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="checked-tests"/><label for="checked-tests">Проверен</label>
+                <input class="custom-radio" type="radio" id="all-tests" value="all-tests"
+                       data-bind="checked: $root.filter.state"/>
+                <label for="all-tests">Все</label>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="unchecked-tests"/><label for="unchecked-tests">Ожидает проверки</label>
+                <input class="custom-radio" type="radio" id="checked-tests" value="checked-tests"
+                       data-bind="checked: $root.filter.state"/>
+                <label for="checked-tests">Проверен</label>
             </div>
             <div class="filter-block">
-                <span class="clear">Очистить</span>
+                <input class="custom-radio" type="radio" id="unchecked-tests" value="unchecked-tests"
+                       data-bind="checked: $root.filter.state"/>
+                <label for="unchecked-tests">Ожидает проверки</label>
+            </div>
+            <div class="filter-block">
+                <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
             </div>
         </div>
     </div>

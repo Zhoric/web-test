@@ -5,23 +5,46 @@ $(document).ready(function(){
             var self = this;
             initializeViewModel.call(self, {page: menu.student.results});
 
-            self.current = {
+            self.initial = {
                 results: ko.observableArray([]),
+                disciplines: ko.observableArray([])
+            };
+
+            self.filter = {
+                discipline: ko.observable(),
+                state: ko.observable(testCheckedStatus.all),
+
+                clear: function(){
+                    self.filter.discipline(null).state(testCheckedStatus.all);
+                }
+            };
+
+            self.current = {
+                results: ko.computed(function() {
+                    var initial = self.initial.results();
+                    return ko.utils.arrayFilter(initial, function(item) {
+                        switch(self.filter.state()){
+                            case testCheckedStatus.all:
+                                return true;
+                                break;
+                            case testCheckedStatus.done:
+                                return item.mark() !== null;
+                                break;
+                            case testCheckedStatus.not:
+                                return item.mark() === null;
+                                break;
+                            default:
+                                return true;
+                        }
+                    });
+                }),
                 id: ko.observable(0),
                 result: ko.observable(),
                 details: ko.observable(null),
                 question: ko.observable(null)
             };
 
-            self.filter = {
-                disciplines: ko.observableArray([]),
-                discipline: ko.observable(),
-                state: ko.observable(),
 
-                clear: function(){
-                    self.filter.discipline(null);
-                }
-            };
 
             self.actions = {
                 show: {
@@ -51,7 +74,7 @@ $(document).ready(function(){
                         url: '/api/disciplines/testresults',
                         errors: self.errors,
                         successCallback: function(data){
-                            self.filter.disciplines(data());
+                            self.initial.disciplines(data());
                         }
                     });
                 },
@@ -60,7 +83,7 @@ $(document).ready(function(){
                         url: '/api/results/discipline/' + self.filter.discipline().id(),
                         errors: self.errors,
                         successCallback: function(data){
-                            self.current.results(data());
+                            self.initial.results(data());
                         }
                     });
                 },
@@ -83,7 +106,7 @@ $(document).ready(function(){
                     self.get.results();
                 }
                 else{
-                    self.current.results([]);
+                    self.initial.results([]);
                 }
             });
 

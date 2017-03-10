@@ -143,6 +143,12 @@ var attemptsStatus = {
     none: 'finished'
 };
 
+var testCheckedStatus = {
+    all: 'all-tests',
+    done: 'checked-tests',
+    not: 'unchecked-tests'
+};
+
 var commonHelper = {
     parseDate: function(date){
         date = new Date(date);
