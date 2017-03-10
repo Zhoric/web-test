@@ -11,18 +11,49 @@ $(document).ready(function(){
                 messageBox: '#confirm-test-start-modal'
             };
 
+            self.initial = {
+                tests: ko.observableArray([])
+            };
+
+            self.filter = {
+                test: ko.observable(''),
+                type: ko.observable(attemptsStatus.all),
+                clear: function(){
+                    self.filter.test('')
+                        .type(attemptsStatus.all);
+                }
+            };
+
             self.current = {
                 discipline: {
                     id: ko.observable(),
                     name: ko.observable()
                 },
                 test: null,
-                tests: ko.observableArray([])
-            };
-
-            self.filter = {
-                test: ko.observable(''),
-                clear: function(){}
+                tests: ko.computed(function() {
+                    var initial = self.initial.tests();
+                    var name = self.filter.test().toLowerCase();
+                    console.log(name);
+                    return ko.utils.arrayFilter(initial, function(item) {
+                        var type = false;
+                        switch(self.filter.type()){
+                            case attemptsStatus.all:
+                                type = true;
+                                break;
+                            case attemptsStatus.some:
+                                type = (item.attemptsLeft() > 0) && (item.attemptsMade() > 0);
+                                break;
+                            case attemptsStatus.left:
+                                type = item.attemptsMade() === 0;
+                                break;
+                            case attemptsStatus.none:
+                                type = item.attemptsLeft() === 0;
+                                break;
+                        }
+                        console.log();
+                        return item.test.subject().toLowerCase().includes(name) && type;
+                    });
+                })
             };
 
             self.actions = {
@@ -65,7 +96,7 @@ $(document).ready(function(){
                         url: '/api/tests/showForStudent?discipline=' + self.current.discipline.id(),
                         errors: self.errors,
                         successCallback: function(data){
-                            self.current.tests(data());
+                            self.initial.tests(data());
                         }
                     });
                 }

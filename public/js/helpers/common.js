@@ -136,6 +136,12 @@ var testStatus = {
     left: 'has-tests',
     none: 'no-tests'
 };
+var attemptsStatus = {
+    all: 'all-tests',
+    some: 'started-not-finished',
+    left: 'not-started-yet',
+    none: 'finished'
+};
 
 var commonHelper = {
     parseDate: function(date){

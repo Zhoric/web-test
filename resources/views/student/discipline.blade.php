@@ -17,13 +17,16 @@
 
         <div class="items">
             <h1 data-bind="text: current.discipline.name"></h1>
+            <!-- ko if: !$root.current.tests().length -->
+            <h3 class="text-center">По данному запросу ничего не найдено</h3>
+            <!-- /ko -->
             <div class="progress-bar">
 
             </div>
             <div class="items-body" data-bind="foreach: current.tests">
                 <div class="item test" data-bind="click: $root.actions.start">
                     <span data-bind="text: test.subject"></span>
-                    <span class="attempts" data-bind="text: attemptsLeft() +'/' + (attemptsLeft() + attemptsMade()) + ' попыток'"></span>
+                    <span class="attempts" data-bind="text: 'Попыток осталось: ' + attemptsLeft()"></span>
                     <span class="start">Пройти тест</span>
                 </div>
             </div>
@@ -31,22 +34,31 @@
         <div class="filter">
             <div class="filter-block">
                 <label class="title">Тест</label>
-                <input class="height-35px" type="text" placeholder="Название"/>
+                <input class="height-35px" type="text" placeholder="Название теста"
+                       data-bind="value: $root.filter.test, valueUpdate: 'keyup'"/>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="all-tests"/><label for="all-tests">Все</label>
+                <input class="custom-radio" type="radio" id="all-tests" value="all-tests"
+                       data-bind="checked: $root.filter.type"/>
+                <label for="all-tests">Все</label>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="has-attempts-left"/><label for="has-attempts-left">Остались попытки</label>
+                <input class="custom-radio" type="radio" id="started-not-finished" value="started-not-finished"
+                       data-bind="checked: $root.filter.type"/>
+                <label for="started-not-finished">Остались попытки</label>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="no-attempt-used"/><label for="no-attempt-used">Ни одной попытки не использовано</label>
+                <input class="custom-radio" type="radio" id="not-started-yet" value="not-started-yet"
+                       data-bind="checked: $root.filter.type"/>
+                <label for="not-started-yet">Ни одной попытки не использовано</label>
             </div>
             <div class="filter-block">
-                <input class="custom-radio" type="radio" id="has-no-attempts"/><label for="has-no-attempts">Не осталось попыток</label>
+                <input class="custom-radio" type="radio" id="finished" value="finished"
+                       data-bind="checked: $root.filter.type"/>
+                <label for="finished">Не осталось попыток</label>
             </div>
             <div class="filter-block">
-                <span class="clear">Очистить</span>
+                <span class="clear" data-bind="click: $root.filter.clear">Очистить</span>
             </div>
         </div>
     </div>
