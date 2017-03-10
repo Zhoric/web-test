@@ -17,8 +17,8 @@ $(document).ready(function(){
                 profile: ko.observable(),
                 discipline: ko.observable(),
                 group: ko.observable(),
-                startDate: ko.observable(new Date()),
-                endDate: ko.observable(new Date()),
+                startDate: ko.observable(new Date(Date.now())),
+                endDate: ko.observable(new Date(Date.now())),
                 criterion: ko.observable(criterion.mark),
  
                 profiles: ko.observableArray([]),
@@ -57,14 +57,14 @@ $(document).ready(function(){
                         });
                     },
                     startDate: function(){
-                        self.filter.startDate(new Date());
+                        self.filter.startDate(new Date(Date.now()));
                         if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_start_date;
                         if (date && !isNaN(new Date(date()).valueOf()))
                             self.filter.startDate(new Date(date()));
                     },
                     endDate: function(){
-                        self.filter.endDate(new Date());
+                        self.filter.endDate(new Date(Date.now()));
                         if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_end_date;
                         if (date && !isNaN(new Date(date()).valueOf()))

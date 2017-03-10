@@ -33,7 +33,6 @@ $(document).ready(function(){
                 tests: ko.computed(function() {
                     var initial = self.initial.tests();
                     var name = self.filter.test().toLowerCase();
-                    console.log(name);
                     return ko.utils.arrayFilter(initial, function(item) {
                         var type = false;
                         switch(self.filter.type()){
@@ -50,7 +49,6 @@ $(document).ready(function(){
                                 type = item.attemptsLeft() === 0;
                                 break;
                         }
-                        console.log();
                         return item.test.subject().toLowerCase().includes(name) && type;
                     });
                 })

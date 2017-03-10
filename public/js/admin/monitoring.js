@@ -187,8 +187,8 @@ $(document).ready(function(){
                     });
                 },
                 results: function(){
-                    var test = '?testId=' + self.filter.test().id();
-                    var group = '&groupId=' + self.filter.group().id();
+                    var test = self.filter.test() ? '?testId=' + self.filter.test().id() : '';
+                    var group = self.filter.group() ? '&groupId=' + self.filter.group().id() : '';
                     var state = self.filter.get.state() ? '&state=' + self.filter.get.state() : '';
 
                     $ajaxget({
@@ -258,6 +258,7 @@ $(document).ready(function(){
             });
             self.filter.state.subscribe(function(){
                 self.post.settings({'monitoring_state': self.filter.state()});
+                self.get.results();
             });
 
             //TIMER

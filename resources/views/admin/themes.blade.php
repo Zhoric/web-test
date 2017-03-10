@@ -185,7 +185,7 @@
         <!-- /ko -->
         <div class="details-row">
             <div class="details-column width-98p">
-                <button data-bind="click: $root.code.open" class="action-button">
+                <button data-bind="click: $root.code.open" class="action-button width-100p">
                     <span class="fa">&#xf121;</span>&nbsp;Отладка программы
                 </button>
             </div>

@@ -393,16 +393,19 @@ span.date-string {
   top: 0;
   left: 0;
   position: fixed;
-  padding: 1%;
   display: none;
 }
 .image-expander img {
   max-height: 95%;
   max-width: 95%;
-  margin: 0 auto;
   width: auto;
   height: auto;
-  display: table;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 a {
   color: #000;
@@ -762,7 +765,7 @@ label.title {
 }
 .answers textarea {
   border: 1px solid #BFBFBF;
-  padding-top: 10px;
+  padding: 10px 0 0 0;
   text-indent: 10px;
   max-width: 100%;
   min-width: 100%;
