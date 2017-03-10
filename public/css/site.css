@@ -639,6 +639,9 @@ button.move:hover {
   font-size: 15px;
   float: right;
 }
+h1 {
+  line-height: 25px;
+}
 .details.result-details {
   margin-top: -1%;
 }
