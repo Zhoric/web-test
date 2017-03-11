@@ -81,6 +81,17 @@ class UserController extends Controller
         }
     }
 
+    public function setCurrentUserPassword(Request $request){
+        try{
+            $oldPassword = $request->json('oldPass');
+            $newPassword = $request->json('newPass');
+            $this->userManager->setPassword($oldPassword, $newPassword);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     public function deleteUser($id){
         try{
             $this->userManager->deleteUser($id);

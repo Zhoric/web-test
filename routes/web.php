@@ -111,6 +111,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'user'], function () {
 
         Route::get('role', 'UserController@getRoleByUser');
+        Route::post('setCurrentUserPassword', 'UserController@setCurrentUserPassword');
         Route::get('show', 'UserController@getByNameAndGroupPaginated');
         Route::get('current', 'UserController@getCurrentUserInfo');
         Route::post('setPassword', 'UserController@setUserPassword')

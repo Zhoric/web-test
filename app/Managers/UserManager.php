@@ -3,6 +3,7 @@
 namespace Managers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Mockery\CountValidator\Exception;
 use Repositories\UnitOfWork;
 use Role;
@@ -115,6 +116,28 @@ class UserManager
         return $this->_unitOfWork
             ->users()
             ->getByNameAndGroupPaginated($pageSize, $pageNum, $name, $groupId, $isActive);
+    }
+
+    /**
+     * @param $oldPassword
+     * @param $newPassword
+     */
+    public function setPassword($oldPassword, $newPassword){
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        if (!isset($currentUser)){
+            throw new Exception("Действие доступно только для авторизованных пользователей.");
+        }
+
+        $currentPasswordHash = $currentUser->getPassword();
+        if (!Hash::check($oldPassword,$currentPasswordHash)){
+            throw new Exception("Текущий пароль указан неверно!");
+        }
+
+        $currentUser->setPassword(bcrypt($newPassword));
+        $this->_unitOfWork->users()->update($currentUser);
+
+        $this->_unitOfWork->commit();
     }
 
 }
