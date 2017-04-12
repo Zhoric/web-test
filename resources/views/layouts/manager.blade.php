@@ -41,7 +41,12 @@
         <a href="/admin/results" data-bind="css: {'current': $root.page() === menu.admin.results}">Результаты</a>
         <a  class="user" data-bind="text: $root.user.name()"></a>
         <div class="menu-dd">
+            <!-- ko if: $root.user.role() === role.admin.name -->
             <a href="/admin/setting">Администрирование</a>
+            <!-- /ko -->
+            <!-- ko if: $root.user.role() === role.lecturer.name -->
+            <a href="/admin/help/navigation">Помощь</a>
+            <!-- /ko -->
             <a data-bind="click: $root.user.password.change.bind($root)">Сменить пароль</a>
             <a href="/logout">Выход</a>
         </div>

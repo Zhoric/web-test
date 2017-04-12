@@ -61,6 +61,14 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('result/{id}', function(){return View('admin.result');});
     Route::get('monitoring', function(){return View('admin.monitoring');});
     Route::get('setting', function(){return View('admin.setting');});
+
+        Route::group(['prefix' => 'help'], function (){
+            Route::get('navigation', function(){return View('help.main');});
+            Route::get('test', function(){return View('help.test');});
+            Route::get('types', function(){return View('help.testtypes');});
+            Route::get('notest', function(){return View('help.notest');});
+            Route::get('results', function(){return View('help.results');});
+        });
 });
 
 

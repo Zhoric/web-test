@@ -222,6 +222,7 @@ $(document).ready(function () {
                 self.current.discipline().discipline('');
             });
             self.filter.discipline.subscribe(function(){
+                self.mode(state.none);
                 self.get.disciplines();
             });
 

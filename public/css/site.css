@@ -42,7 +42,11 @@
   font-weight: 600;
   margin: 0 -2px;
 }
+.menu a:first-child {
+  margin-left: 0;
+}
 .menu a.user {
+  margin-right: 0;
   float: right;
   padding: 0 15px;
   line-height: 57px;
@@ -65,6 +69,7 @@
   position: absolute;
   background: #fff;
   right: 0;
+  padding: 0 2px;
   border-radius: 0 0px 0px 3px;
   text-align: center;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
@@ -75,6 +80,7 @@
 .menu .menu-dd a {
   display: block;
   line-height: 25px;
+  margin-right: 0;
 }
 .menu .menu-dd:hover {
   display: block;
