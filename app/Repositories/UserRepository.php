@@ -30,9 +30,6 @@ class UserRepository extends BaseRepository implements IUserRepository
         if (empty($credentials)) {
             return array();
         }
-
-
-
         return  $this->repo->findOneBy(['email' => $credentials['email']]);
     }
 

@@ -19,6 +19,10 @@ class TestManager
 
     public function create(Test $test, array $themeIds, $disciplineId){
         $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+        if (!isset($discipline)){
+            throw new \Exception('Дисциплина не найдена!');
+        }
+
         $test->setDiscipline($discipline);
 
         $this->_unitOfWork->tests()->create($test);

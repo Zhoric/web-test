@@ -376,10 +376,12 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'import'], function () {
         Route::post('questions', 'ImportExportController@importQuestions')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+
+        Route::get('all', 'ImportExportController@importAll')
+            ->middleware('checkRole:'.UserRole::Admin);
     });
     Route::group(['prefix' => 'export'], function () {
         Route::get('questions/{themeId}', 'ImportExportController@exportQuestions')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
-
 });

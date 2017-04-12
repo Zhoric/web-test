@@ -134,5 +134,15 @@ class Discipline extends BaseEntity implements JsonSerializable
             'description' => $this->description,
         );
     }
+
+    /**
+     * @param int $id
+     * @return Discipline
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 }
 

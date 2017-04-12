@@ -10,11 +10,10 @@ class UserTableSeeder extends Seeder
         DB::table('user')->delete();
 
         DB::table('user')->insert(array(
-            'firstname' => 'Админ',
-            'lastname' => 'Админов',
-            'patronymic' => 'Админович',
-            'email' => 'ivan@gmail.com',
-            'password' => bcrypt('123456'),
+            'firstname' => '',
+            'lastname' => 'Администратор',
+            'email' => 'admin@admin.ru',
+            'password' => bcrypt('ssutestsadmin'),
             'active' => true));
 
         DB::table('user')->insert(array(

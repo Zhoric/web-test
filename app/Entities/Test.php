@@ -243,5 +243,15 @@ class Test extends BaseEntity implements JsonSerializable
     {
         $this->isRandom = $isRandom;
     }
+
+    /**
+     * @param int $id
+     * @return Test
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 }
 

@@ -105,5 +105,15 @@ class Theme extends BaseEntity implements JsonSerializable
             'discipline' => $this->discipline->getId()
         );
     }
+
+    /**
+     * @param int $id
+     * @return Theme
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 }
 
