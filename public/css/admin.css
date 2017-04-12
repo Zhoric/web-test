@@ -1177,7 +1177,7 @@ table.werewolf.questions tr:hover .actions {
 }
 .multiselect-wrap .multiselect {
   background: #fff;
-  border: 1px solid #e3e3e3;
+  border: 1px solid #BFBFBF;
   border-bottom: none;
   padding: 10px;
   margin: 0;
@@ -1208,7 +1208,7 @@ table.werewolf.questions tr:hover .actions {
   display: block;
   top: -4px;
   position: relative;
-  border: 1px solid #e3e3e3;
+  border: 1px solid #BFBFBF;
 }
 .multiselect-wrap input:focus {
   outline: none;
@@ -1219,6 +1219,26 @@ table.werewolf.questions tr:hover .actions {
 .multiselect-wrap.theme input {
   width: 98%;
   padding: 0px 7px;
+}
+.multiselect-list {
+  background-color: #fff;
+  height: auto;
+  width: 100%;
+  max-height: 100px;
+  overflow-y: auto;
+  border: 1px solid #BFBFBF;
+  border-bottom: 0;
+  z-index: 10;
+}
+.multiselect-list .exact-item {
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #BFBFBF;
+  color: #6C7A89;
+}
+.multiselect-list .exact-item:hover {
+  background: #5D8CAE;
+  color: #fff;
 }
 .knockout-autocomplete.menu {
   background-color: #fff;

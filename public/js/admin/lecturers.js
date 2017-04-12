@@ -7,11 +7,7 @@ $(document).ready(function(){
                 page: menu.admin.lecturers,
                 pagination: 15,
                 mode: true,
-                multiselect: {
-                    dataTextField: 'name',
-                    dataValueField: 'id',
-                    valuePrimitive: false
-                }
+                multiselect: true
             });
 
             self.initial = {
@@ -64,7 +60,7 @@ $(document).ready(function(){
                     if (self.mode() === state.none || self.current.lecturer().id() !== data.lecturer.id()){
                         self.alter.fill(data.lecturer);
                         self.current.disciplines(data.disciplines());
-                        self.multiselect.multipleSelect()(self.current.disciplines());
+                        self.multiselect.tags(data.disciplines());
                         self.mode(state.info);
                         return;
                     }
@@ -101,7 +97,6 @@ $(document).ready(function(){
                     self.mode(state.none);
                     self.alter.empty();
                     self.current.disciplines([]);
-                    self.multiselect.empty();
                     self.current.password(null);
                 },
                 password: {
@@ -132,7 +127,7 @@ $(document).ready(function(){
 
                         return JSON.stringify({
                             lecturer: lecturer,
-                            disciplineIds: self.multiselect.getTagsArray()
+                            disciplineIds: self.multiselect.tagIds.call(self)
                         });
                     },
                     password: function(){
@@ -178,7 +173,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.initial.disciplines(data());
-                            self.multiselect.setDataSource(self.initial.disciplines());
+                            self.multiselect.data(data());
                         }
                     });
                 }

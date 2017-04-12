@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Преподаватели')
 @section('javascript')
-    <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.multiselect.js')}}"></script>
     <script src="{{ URL::asset('js/admin/lecturers.js')}}"></script>
 @endsection
 
@@ -130,27 +129,9 @@
         </div>
     </div>
     <div class="details-row">
-        <div class="details-column width-98p">
+        <div class="details-column width-98p" data-bind="with: $root.multiselect">
             <label class="title">Дисциплины</label>
-            <div class="multiselect-wrap">
-                <!-- ko if: $root.multiselect.tags().length -->
-                <div class="multiselect">
-                    <ul data-bind="foreach: $root.multiselect.tags">
-                        <li>
-                            <span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span>
-                            <span data-bind="text: name"></span>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /ko -->
-                <input placeholder="Начните вводить"
-                       data-bind="autocomplete: {
-                       data: $root.multiselect.source,
-                       format: $root.multiselect.text,
-                       onSelect: $root.multiselect.select},
-                       css: {'full': $root.multiselect.tags().length }"
-                       value/>
-            </div>
+            <multiselect params="{source: data, tags: tags, textField: 'name'}"></multiselect>
         </div>
     </div>
     <div class="details-row float-buttons">

@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Дисциплины')
 @section('javascript')
-    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.multiselect.js') }}"></script>
     <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
 @endsection
 
@@ -144,26 +143,11 @@
                            event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
         </div>
-        <div class="details-row">
-            <div class="details-column width-99p">
+        <div class="details-row" data-bind="with: $root.multiselect">
+            <div class="details-column width-99p" id="dProfiles" validate special
+                 title="Пожалуйста, укажите хотя бы один профиль">
                 <label class="title">Профили&nbsp;<span class="required">*</span></label>
-                <div class="multiselect-wrap theme" id="dProfiles" validate special
-                     title="Пожалуйста, укажите хотя бы один профиль">
-                    <!-- ko if: $root.multiselect.tags().length -->
-                    <div class="multiselect">
-                        <ul data-bind="foreach: $root.multiselect.tags">
-                            <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: fullname"></span></li>
-                        </ul>
-                    </div>
-                    <!-- /ko -->
-                    <input placeholder="Начните вводить название направления"
-                            data-bind="autocomplete: {
-                            data: $root.multiselect.source,
-                            format: $root.multiselect.text,
-                            onSelect: $root.multiselect.select},
-                            css: {'full': $root.multiselect.tags().length}"
-                            type="text" value=""/>
-                </div>
+                <multiselect params="source: data, tags: tags, textField: 'fullname'"></multiselect>
             </div>
         </div>
         <div class="details-row float-buttons">

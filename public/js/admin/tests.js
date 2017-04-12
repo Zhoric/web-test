@@ -6,11 +6,7 @@ $(document).ready(function(){
                 page: menu.admin.tests,
                 mode: true,
                 pagination: 10,
-                multiselect: {
-                    dataTextField: 'name',
-                    dataValueField: 'id',
-                    valuePrimitive: false
-                }
+                multiselect: true
             });
             self.modals = {
                 removeTest: '#remove-test-modal'
@@ -69,7 +65,6 @@ $(document).ready(function(){
                         .isActive(true)
                         .isRandom(true)
                         .themes([]);
-                    self.multiselect.empty();
                 },
                 stringify: function(){
                     var t = self.current.test();
@@ -86,7 +81,7 @@ $(document).ready(function(){
                     
                     return JSON.stringify({
                         test: test,
-                        themeIds: self.multiselect.getTagsArray(),
+                        themeIds: self.multiselect.tagIds.call(self),
                         disciplineId: self.filter.discipline().id()
                     });
                 },
@@ -137,6 +132,7 @@ $(document).ready(function(){
                             ? self.mode(state.none)
                             : self.mode(state.create);
                         self.alter.empty();
+                        self.multiselect.tags([]);
                         commonHelper.buildValidationList(self.validation);
                     },
                     update: function(){
@@ -206,7 +202,7 @@ $(document).ready(function(){
                         url: '/api/disciplines/' + self.filter.discipline().id() + '/themes',
                         errors: self.errors,
                         successCallback: function(data){
-                            self.multiselect.setDataSource(data());
+                            self.multiselect.data(data());
                         }
                     });
                 },
@@ -216,7 +212,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.test().themes(data());
-                            self.multiselect.multipleSelect()(self.current.test().themes());
+                            self.multiselect.tags(data());
                         }
                     });
                 }

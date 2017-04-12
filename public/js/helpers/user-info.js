@@ -90,12 +90,22 @@ var initializeViewModel = function(init){
     this.events = new validationEvents(this.validation);
     this.user = new user();
     this.user.read(this.errors);
-    if (init.multiselect) this.multiselect = new multiselect(init.multiselect);
     if (init.mode) this.mode = ko.observable(state.none);
     if (init.pagination){
         this.pagination = pagination();
         this.pagination.pageSize(init.pagination);
     }
+    if (init.multiselect) this.multiselect = {
+        data: ko.observableArray([]),
+        tags: ko.observableArray([]),
+        tagIds: function(){
+            var ids = [];
+            $.each(this.multiselect.tags(), function(i, tag){
+                ids.push(tag.id());
+            });
+            return ids;
+        }
+    };
 };
 
 var returnStandart = function(){

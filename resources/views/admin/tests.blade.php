@@ -4,8 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.autocomplete.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-multiselect.js')}}"></script>
+    <script src="{{ URL::asset('js/knockout.multiselect.js')}}"></script>
     <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
 @endsection
 
@@ -131,26 +130,11 @@
             </div>
         </div>
         <div class="details-row">
-            <div class="details-column width-98p">
+            <div id="dTestThemesMulti" class="details-column width-98p"
+                 title="Пожалуйста, укажите хотя бы одну тему" validate special
+                 data-bind="with: $root.multiselect">
                 <label class="title">Темы&nbsp;<span class="required">*</span></label>
-                <div class="multiselect-wrap" id="dTestThemesMulti"
-                     title="Пожалуйста, укажите хотя бы одну тему" validate special>
-                    <!-- ko if: $root.multiselect.tags().length -->
-                    <div class="multiselect">
-                        <ul data-bind="foreach: $root.multiselect.tags">
-                            <li><span data-bind="click: $root.multiselect.remove" class="fa">&#xf00d;</span><span data-bind="text: name"></span></li>
-                        </ul>
-                    </div>
-                    <!-- /ko -->
-                    <input placeholder="Начните вводить название темы"
-                           data-bind="autocomplete: {
-                           data: $root.multiselect.source,
-                           format: $root.multiselect.text,
-                           onSelect: $root.multiselect.select,
-                           after: true},
-                           css: {'full': $root.multiselect.tags().length}"
-                           type="text" value=""/>
-                </div>
+                <multiselect params="{source: data, tags: tags, textField: 'name'}"></multiselect>
             </div>
         </div>
         <div class="details-row float-buttons">

@@ -7,11 +7,7 @@ $(document).ready(function(){
                 page: menu.admin.disciplines,
                 mode: true,
                 pagination: 10,
-                multiselect: {
-                    dataTextField: 'fullname',
-                    dataValueField: 'id',
-                    valuePrimitive: true
-                }
+                multiselect: true
             });
             self.modals = {
                 removeTheme: '#remove-theme-modal',
@@ -86,6 +82,7 @@ $(document).ready(function(){
                         self.current.theme()
                             .id(0).name('')
                             .mode(state.none);
+                        self.multiselect.tags([]);
                     },
                     move: function(data){
                         window.location.href = '/admin/theme/' + data.id();
@@ -109,6 +106,7 @@ $(document).ready(function(){
                                 ? self.mode(state.none)
                                 : self.mode(state.create);
                             self.alter.empty();
+                            self.multiselect.tags([]);
                             commonHelper.buildValidationList(self.validation);
                         },
                         update: function(){
@@ -200,7 +198,6 @@ $(document).ready(function(){
                         .name('')
                         .abbreviation('')
                         .description('');
-                    self.multiselect.empty();
                 },
                 stringify: function(){
                     var edit = self.current.discipline();
@@ -213,7 +210,7 @@ $(document).ready(function(){
 
                     return JSON.stringify({
                         discipline: forpost,
-                        profileIds: self.multiselect.getTagsArray()
+                        profileIds: self.multiselect.tagIds.call(self)
                     });
                 }
             };
@@ -240,15 +237,17 @@ $(document).ready(function(){
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();
                     if (!id) return;
+                    self.multiselect.tags([]);
                     $ajaxget({
                         url: '/api/disciplines/' + id + '/profiles',
                         errors: self.errors,
                         successCallback: function(data){
-                            var profiles = [];
-                            $.each(data(), function(i, item){
-                                profiles.push(+item.profile_id());
+                            $.each(self.multiselect.data(), function(i, profile){
+                                $.each(data(), function(i, elem){
+                                    if (elem.profile_id() == profile.id())
+                                        self.multiselect.tags.push(profile);
+                                });
                             });
-                            self.multiselect.multipleSelect()(profiles);
                         }
                     });
                 },
@@ -257,7 +256,7 @@ $(document).ready(function(){
                         url: '/api/profiles',
                         errors: self.errors,
                         successCallback: function(data){
-                            self.multiselect.setDataSource(data());
+                            self.multiselect.data(data());
                         }
                     });
                 },
