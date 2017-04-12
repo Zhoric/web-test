@@ -65,8 +65,12 @@ class TestSessionTracker
      * @param $sessionId - Идентификатор сессии, используется для формирования ключа.
      */
     public function trackSession($sessionId){
+        $testSessionMonitoringCacheExpirationTime = TestSessionExpirationSettings::getInstance()
+            ->getTestSessionMonitoringExpirationTime();
+
         $this->redisClient->set($this->generateSessionTrackingKey($sessionId), TestSessionStatus::InProgress);
-        $this->redisClient->expireat($sessionId, strtotime(GlobalTestSettings::testSessionTrackingCacheExpiration));
+        $this->redisClient->expireat($this->generateSessionTrackingKey($sessionId),
+            strtotime($testSessionMonitoringCacheExpirationTime));
     }
 
     /**
@@ -74,8 +78,12 @@ class TestSessionTracker
      * @param $sessionId - Идентификатор сессии, используется для формирования ключа.
      */
     public function finalizeSession($sessionId){
+        $testSessionMonitoringCacheExpirationTime = TestSessionExpirationSettings::getInstance()
+            ->getTestSessionMonitoringExpirationTime();
+
         $this->redisClient->set($this->generateSessionTrackingKey($sessionId), TestSessionStatus::Done);
-        $this->redisClient->expireat($sessionId, strtotime(GlobalTestSettings::testSessionTrackingCacheExpiration));
+        $this->redisClient->expireat($this->generateSessionTrackingKey($sessionId),
+            strtotime($testSessionMonitoringCacheExpirationTime));
     }
 
     /**

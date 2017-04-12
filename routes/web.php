@@ -361,6 +361,18 @@ Route::group(['prefix' => 'api'], function() {
     });
 
     /*-----------------------------------------------------------------------------
+    *                     НАСТРОЙКИ СИСТЕМЫ ТЕСТИРОВАНИЯ
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'settings'], function () {
+        Route::get('get/{key}', 'SettingsController@get');
+        Route::get('getDefaults', 'SettingsController@getDefaults');
+        Route::get('getAll', 'SettingsController@getAll');
+        Route::post('set', 'SettingsController@set')
+            ->middleware('checkRole:'.UserRole::Admin);
+    });
+
+    /*-----------------------------------------------------------------------------
     *                             НАСТРОЙКИ ДЛЯ UI
     *------------------------------------------------------------------------------
     */

@@ -15,7 +15,8 @@ abstract class GlobalTestSettings
     const defaultComplexity = QuestionComplexity::Low;
 
     /**
-     * Максимальная оценка за тест.
+     * Максимальная оценка, которая может быть получена за тест.
+     * По умолчанию используется 100-балльная система.
      */
     const maxMarkValueKey = 'maxMarkValue';
     const maxMarkValue = 100;
@@ -49,7 +50,7 @@ abstract class GlobalTestSettings
     /**
      * Номер месяца, с которого отсчитывается второй семестр.
      */
-    const secondSemesterMounthKey = 'secondSemesterMounthKey';
+    const secondSemesterMounthKey = 'secondSemesterMounth';
     const secondSemesterMounth = 1;
 
     /**
@@ -85,10 +86,11 @@ abstract class GlobalTestSettings
 
     /**
      * Время хранения записей о существовании сессий тестирования на текущий момент времени.
-     * Используется для отслеживания процесса прохождения тестов в реальном времени.
+     * Используется для отслеживания процесса прохождения тестов в реальном времени (Мониторинг тестирования)
      * Желательно, чтобы значение параметра было меньше, чем время хранения самой тестовой сессии.
      * Иначе информация о существовании сессии будет храниться дольше, чем сама сессия, что приведёт к конфликтам.
      */
+    const testSessionTrackingCacheExpirationKey = 'testSessionTrackingCacheExpiration';
     const testSessionTrackingCacheExpiration = '+ 5 hours';
 
 }

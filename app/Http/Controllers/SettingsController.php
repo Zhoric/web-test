@@ -19,26 +19,52 @@ class SettingsController extends Controller
     }
 
     /***
-     * Установка значения настройки по ключу.
+     * Получение значения настройки.
      */
-    public function setValue(Request $response){
+    public function get($key){
         try{
-            $key = $response->json('key');
-            $value = $response->json('value');
-            $this->_settingsManager->set($key, $value);
+            $value = $this->_settingsManager->get($key);
+            return $this->successJSONResponse(['value' => $value]);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    /**
+     * Установка настроек. Пример тела запроса:
+     * {"settings": {"maxMarkValue":"100","firstSemesterMounth":"8","secondSemesterMounth":"1",
+     * "questionEndTolerance":"5","testEndTolerance":"30","cacheExpiration":"+ 1 day",
+     * "testSessionTrackingCacheExpiration":"+ 5 hours"}}
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     */
+    public function set(Request $request){
+        try{
+            $settings = $request->json('settings');
+            $this->_settingsManager->setValues($settings);
+
             return $this->successJSONResponse();
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
-    /***
-     * Получение значения настройки.
-     */
-    public function getValue($key){
+    public function getAll(Request $request){
         try{
-            $value = $this->_settingsManager->get($key);
-            return $this->successJSONResponse(['value' => $value]);
+            $settings = $this->_settingsManager->getAll();
+
+            return $this->successJSONResponse($settings);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    public function getDefaults(){
+        try{
+            $settings = $this->_settingsManager->getDefaults();
+
+            return $this->successJSONResponse($settings);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }

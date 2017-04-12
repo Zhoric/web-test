@@ -23,13 +23,14 @@ class TestSession implements JsonSerializable
     const allQuestionsIdsPrefix = 'q';          //   - ИДЕНТИФИКАТОРЫ ВСЕХ ВОПРОСОВ ТЕСТА
     const questionEndTimePrefix = 'qend';       //   - ВРЕМЯ ОКОНЧАНИЯ ТЕКУЩЕГО ВОПРОСА ТЕСТА
 
+
+    /** ========================================================================== **/
+
     /**
      * @var Database
      * Клиент хранилища Redis Cache.
      */
     private $_redisClient;
-
-    /** ========================================================================== **/
 
     /**
      * Идентификатор сессии.
@@ -166,9 +167,11 @@ class TestSession implements JsonSerializable
      * @param $value - Задаваемое значение.
      */
     private function setWithDefaultExpiration($prefix, $value){
+        $testSessionCacheExpirationTime = TestSessionExpirationSettings::getInstance()->getTestSessionExpirationTime();
+
         $fullKey = $prefix.$this->sessionId;
         $this->_redisClient->set($fullKey, $value);
-        $this->_redisClient->expireat($fullKey, strtotime(GlobalTestSettings::testSessionCacheExpiration));
+        $this->_redisClient->expireat($fullKey, strtotime($testSessionCacheExpirationTime));
     }
 
     /**

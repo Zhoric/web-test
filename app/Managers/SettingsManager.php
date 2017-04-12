@@ -4,6 +4,7 @@ namespace Managers;
 
 use Repositories\UnitOfWork;
 use Section;
+use TestEngine\GlobalTestSettings;
 
 class SettingsManager
 {
@@ -18,7 +19,7 @@ class SettingsManager
         $setting = $this->_unitOfWork->settings()->getByKey($key);
 
         if (!isset($setting)){
-            throw new \Exception('Настройки с заданным ключом не существует!');
+            throw new \Exception("Настройка с заданным ключом [$key] отсутствует в базе данных!");
         }
         else {
             return $setting->getValue();
@@ -26,20 +27,63 @@ class SettingsManager
     }
 
     public function set($key, $value){
+
+        /** @var \TestSetting $setting */
         $setting = $this->_unitOfWork->settings()->getByKey($key);
 
         if (!isset($setting)){
-            $newSetting = new \TestSetting();
-            $newSetting->setKey($key);
-            $newSetting->setValue($value);
-
-            $this->_unitOfWork->settings()->create($setting);
+            throw new \Exception("Настройка с заданным ключом [$key] отсутствует в базе данных!");
         }
         else {
+            $setting->setValue($value);
             $this->_unitOfWork->settings()->update($setting);
         }
 
         $this->_unitOfWork->commit();
     }
+
+    /**
+     * Получение всех настроек, конфигурируемых на странице администрирования.
+     */
+    public function getAll(){
+        $settingsKeys = [
+            GlobalTestSettings::maxMarkValueKey,
+            GlobalTestSettings::firstSemesterMounthKey,
+            GlobalTestSettings::secondSemesterMounthKey,
+            GlobalTestSettings::questionEndToleranceKey,
+            GlobalTestSettings::testEndToleranceKey,
+            GlobalTestSettings::testSessionCacheExpirationKey,
+            GlobalTestSettings::testSessionTrackingCacheExpirationKey,
+        ];
+        $settingsValues = [];
+
+        foreach ($settingsKeys as $key){
+            array_push($settingsValues, $this->get($key));
+        }
+
+        return array_combine($settingsKeys, $settingsValues);
+    }
+
+    /**
+     * Получение значений по умолчанию всех настроек, конфигурируемых на странице администрирования.
+     */
+    public function getDefaults(){
+        return [
+            GlobalTestSettings::maxMarkValueKey => GlobalTestSettings::maxMarkValue,
+            GlobalTestSettings::firstSemesterMounthKey => GlobalTestSettings::firstSemesterMounth,
+            GlobalTestSettings::secondSemesterMounthKey => GlobalTestSettings::secondSemesterMounth,
+            GlobalTestSettings::questionEndToleranceKey => GlobalTestSettings::questionEndTolerance,
+            GlobalTestSettings::testEndToleranceKey => GlobalTestSettings::testEndTolerance,
+            GlobalTestSettings::testSessionCacheExpirationKey => GlobalTestSettings::testSessionCacheExpiration,
+            GlobalTestSettings::testSessionTrackingCacheExpirationKey => GlobalTestSettings::testSessionTrackingCacheExpiration,
+        ];
+    }
+
+    public function setValues($settings){
+        foreach ($settings as $key => $value){
+            $this->set($key, $value);
+        }
+    }
+
 
 }

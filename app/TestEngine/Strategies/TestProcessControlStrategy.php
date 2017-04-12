@@ -29,8 +29,7 @@ class TestProcessControlStrategy extends BaseTestProcessStrategy implements ITes
 
     public function init($userId, $testId)
     {
-        //TODO[NZ]: Расскомментировать после отладки.
-        //$this->validateAttemptNumber($userId, $testId);
+        $this->validateAttemptNumber($userId, $testId);
         $session = $this->_sessionFactory->getInitialized($userId, $testId);
         $sessionId = $session->getSessionId();
         $this->_testSessionTracker->trackSession($sessionId);

@@ -39,5 +39,14 @@ class SettingsTableSeeder extends Seeder
             'value' => GlobalTestSettings::questionEndTolerance
         ));
 
+        DB::table('test_settings')->insert(array(
+            'key' => GlobalTestSettings::testSessionCacheExpirationKey,
+            'value' => GlobalTestSettings::testSessionCacheExpiration
+        ));
+
+        DB::table('test_settings')->insert(array(
+            'key' => GlobalTestSettings::testSessionTrackingCacheExpirationKey,
+            'value' => GlobalTestSettings::testSessionTrackingCacheExpiration
+        ));
     }
 }
