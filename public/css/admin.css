@@ -137,6 +137,9 @@ span.required {
   content: '*';
   color: #D24D57;
 }
+input[disabled] {
+  background-color: #F2F1EF;
+}
 .pointer {
   cursor: pointer;
 }
@@ -589,18 +592,6 @@ button {
 }
 textarea {
   font-family: 'Roboto Regular';
-}
-button.danger {
-  background: #e74c3c;
-}
-button.danger:hover {
-  background: #c0392b;
-}
-button.move {
-  background: #3498db;
-}
-button.move:hover {
-  background: #2980b9;
 }
 .fa {
   display: inline-block;
@@ -1356,13 +1347,6 @@ button.add-section {
 }
 button.add-section:hover {
   background: #2980b9;
-}
-button {
-  background: #2ABB9B;
-  width: 50px;
-}
-button:hover {
-  background: #5D8CAE;
 }
 .tyle-btn {
   color: #ecf0f1;
