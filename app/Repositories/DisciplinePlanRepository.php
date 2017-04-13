@@ -32,7 +32,7 @@ class DisciplinePlanRepository extends BaseRepository
         }
 
         $countQuery = clone $query;
-        $data =  $this->paginate($pageSize, $pageNum, $query, 'd.name');
+        $data =  $this->paginate($pageSize, $pageNum, $query, 'dp.startSemester');
 
         $count = $countQuery->select(
             $qb->expr()

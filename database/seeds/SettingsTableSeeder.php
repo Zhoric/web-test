@@ -10,13 +10,13 @@ class SettingsTableSeeder extends Seeder
         DB::table('test_settings')->delete();
 
         DB::table('test_settings')->insert(array(
-            'key' => GlobalTestSettings::firstSemesterMounthKey,
-            'value' => GlobalTestSettings::firstSemesterMounth
+            'key' => GlobalTestSettings::firstSemesterMonthKey,
+            'value' => GlobalTestSettings::firstSemesterMonth
         ));
 
         DB::table('test_settings')->insert(array(
-            'key' => GlobalTestSettings::secondSemesterMounthKey,
-            'value' => GlobalTestSettings::secondSemesterMounth
+            'key' => GlobalTestSettings::secondSemesterMonthKey,
+            'value' => GlobalTestSettings::secondSemesterMonth
         ));
 
         DB::table('test_settings')->insert(array(

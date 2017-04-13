@@ -34,9 +34,9 @@ class ScheduleManager
         $groupStudyYear = $group->getCourse();
         $now = new DateTime();
 
-        $currentMounthNumber = date("n", $now->getTimestamp()) + 1;
-        $currentYearSemester = ($currentMounthNumber >= GlobalTestSettings::secondSemesterMounth
-            && $currentMounthNumber < GlobalTestSettings::firstSemesterMounth) ? 2 : 1;
+        $currentMonthNumber = date("n", $now->getTimestamp()) + 1;
+        $currentYearSemester = ($currentMonthNumber >= GlobalTestSettings::secondSemesterMonth
+            && $currentMonthNumber < GlobalTestSettings::firstSemesterMonth) ? 2 : 1;
 
         return ($groupStudyYear - 1) * $this->semestersCount + $currentYearSemester;
     }

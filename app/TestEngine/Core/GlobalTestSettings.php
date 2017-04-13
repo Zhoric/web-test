@@ -44,14 +44,14 @@ abstract class GlobalTestSettings
     /**
      * Номер месяца, с которого отсчитывается первый семестр.
      */
-    const firstSemesterMounthKey = 'firstSemesterMounth';
-    const firstSemesterMounth = 8;
+    const firstSemesterMonthKey = 'firstSemesterMonth';
+    const firstSemesterMonth = 8;
 
     /**
      * Номер месяца, с которого отсчитывается второй семестр.
      */
-    const secondSemesterMounthKey = 'secondSemesterMounth';
-    const secondSemesterMounth = 1;
+    const secondSemesterMonthKey = 'secondSemesterMonth';
+    const secondSemesterMonth = 1;
 
     /**
      * Формат сериализации даты.

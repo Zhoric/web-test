@@ -32,7 +32,7 @@ class SettingsController extends Controller
 
     /**
      * Установка настроек. Пример тела запроса:
-     * {"settings": {"maxMarkValue":"100","firstSemesterMounth":"8","secondSemesterMounth":"1",
+     * {"settings": {"maxMarkValue":"100","firstSemesterMonth":"8","secondSemesterMonth":"1",
      * "questionEndTolerance":"5","testEndTolerance":"30","cacheExpiration":"+ 1 day",
      * "testSessionTrackingCacheExpiration":"+ 5 hours"}}
      * @param Request $request
