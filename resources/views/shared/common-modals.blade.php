@@ -70,6 +70,13 @@
             <div class="layer-body">
                 <div class="details-row">
                     <div class="details-column width-98p">
+                        <label class="title">Старый пароль</label>
+                        <input type="password" id="old-password" validate
+                               data-bind="value: $root.user.password.old,
+                                   validationElement: $root.user.password.old,
+                                   event: {focusout: $root.events.focusout, focusin: $root.events.focusin}" />
+                    </div>
+                    <div class="details-column width-98p">
                         <label class="title">Новый пароль</label>
                         <input type="password" id="new-password" validate
                                data-bind="value: $root.user.password.new,

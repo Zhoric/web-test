@@ -15,6 +15,11 @@ var user = function(){
         return result ? result : 'Аноним';
     });
     this.password = {
+        old: ko.observable().extend({
+            required: true,
+            minLength: 6,
+            maxLength: 16
+        }),
         new: ko.observable().extend({
             required: true,
             minLength: 6,
@@ -40,10 +45,10 @@ var user = function(){
                 return;
             }
             $ajaxpost({
-                url: '/api/user/setPassword',
+                url: '/api/user/setCurrentUserPassword',
                 data: JSON.stringify({
-                    userId: self.id(),
-                    password: self.password.new()
+                    oldPass: self.password.old(),
+                    newPass: self.password.new()
                 }),
                 errors: vm.errors,
                 successCallback: function(){
@@ -58,7 +63,7 @@ var user = function(){
             });
         },
         cancel: function(){
-            self.password.new(null).repeat(null);
+            self.password.old(null).new(null).repeat(null);
             commonHelper.modal.close('#change-user-password-modal');
         }
     };
