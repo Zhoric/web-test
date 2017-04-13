@@ -546,6 +546,9 @@ a:hover {
 .minw-100 {
   min-width: 100px;
 }
+.minw-130 {
+  min-width: 130px;
+}
 .minw-185 {
   min-width: 185px;
 }

@@ -131,7 +131,7 @@
     <div class="details-row">
         <div class="details-column width-98p" data-bind="with: $root.multiselect">
             <label class="title">Дисциплины</label>
-            <multiselect params="{source: data, tags: tags, textField: 'name'}"></multiselect>
+            <multiselect params="{source: data, tags: tags}"></multiselect>
         </div>
     </div>
     <div class="details-row float-buttons">

@@ -99,7 +99,7 @@
             </div>
         </div>
         <div class="details-row">
-            <div class="details-column width-20p">
+            <div class="details-column minw-130">
                 <label class="title">Дительность&nbsp;теста&nbsp;<span class="required">*</span></label>
                 <input class="time" type="text" id="iTestMinutes"
                        data-bind="value: minutes, valueUpdate: 'keyup',
@@ -114,13 +114,7 @@
                        event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
                        placeholder="сек." validate>
             </div>
-            <div class="details-column width-40p">
-                <label class="title">Тип&nbsp;теста</label>
-                <span class="radio" data-bind="css: {'radio-important': type()}, click: $root.alter.set.type.asTrue">Контроль знаний</span>
-                <span>|</span>
-                <span class="radio" data-bind="css: {'radio-important': !type()}, click: $root.alter.set.type.asFalse">Обучающий</span>
-            </div>
-            <div class="details-column attempts width-19p">
+            <div class="details-column attempts minw-130 width-20p">
                 <label class="title">Количество&nbsp;попыток&nbsp;<span class="required">*</span></label>
                 <input class="attempts" type="text" id="iTestAttempts" validate
                        data-bind="value: attempts,
@@ -128,18 +122,28 @@
                        validationElement: attempts,
                        event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
             </div>
+            <div class="details-column minw-220">
+                <label class="title">Тип&nbsp;теста</label>
+                <span class="radio form-heights" data-bind="css: {'radio-important': type()}, click: $root.alter.set.type.asTrue">Контроль знаний</span>
+                <span>|</span>
+                <span class="radio form-heights" data-bind="css: {'radio-important': !type()}, click: $root.alter.set.type.asFalse">Обучающий</span>
+            </div>
         </div>
         <div class="details-row">
             <div id="dTestThemesMulti" class="details-column width-98p"
                  title="Пожалуйста, укажите хотя бы одну тему" validate special
                  data-bind="with: $root.multiselect">
                 <label class="title">Темы&nbsp;<span class="required">*</span></label>
-                <multiselect params="{source: data, tags: tags, textField: 'name'}"></multiselect>
+                <multiselect params="{source: data, tags: tags}"></multiselect>
             </div>
         </div>
         <div class="details-row float-buttons">
-            <div class="details-column width-100p">
-                <input class="custom-checkbox" id="test-is-active" type="checkbox" data-bind="checked: isActive"><label for="test-is-active">Активный</label>
+            <div class="details-column width-99p">
+                <span class="float-left">
+                    <input class="custom-checkbox" id="test-is-active" type="checkbox" data-bind="checked: isActive">
+                    <label for="test-is-active">Активный</label>
+                </span>
+
                 <button data-bind="click: $root.actions.cancel" class="cancel">Отмена</button>
                 <button id="bUpdateLecturer" accept-validation class="approve"
                         title="Проверьте правильность заполнения полей"
