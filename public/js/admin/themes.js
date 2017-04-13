@@ -632,7 +632,7 @@ $(document).ready(function(){
                         successCallback: function (data) {
                             self.actions.importFile.cancel();
                             self.inform.show({
-                                message: 'Результат импорта вопроса:',
+                                message: 'Результат импорта вопросов:',
                                 additionalText: 'Всего вопросов: ' + data.totalRows() + '\n' +
                                 'Успешно импортировано: ' + data.imported() + '\n' +
                                 'Не импортированно: ' + data.failed() +

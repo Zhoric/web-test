@@ -12,12 +12,16 @@ $(document).ready(function(){
             self.initial = {
                 profileId: ko.observable(null),
                 unUrlProfileId: function(){
+                    if (self.initial.profileId()) return '&profileId=' + self.initial.profileId();
+
                     var url = window.location.href;
-                    var id = +url.substring(url.lastIndexOf('/'));
+                    var id = +url.substring(url.lastIndexOf('/')+1);
                     if ($.isNumeric(id)){
                         self.initial.profileId(id);
+                        return '&profileId=' + id;
                     }
-                    self.get.groups();
+                    
+                    return '';
                 }
             };
 
@@ -191,16 +195,13 @@ $(document).ready(function(){
             };
             self.get = {
                 groups: function(){
-                    var profileId = self.initial.profileId() ? 'profileId=' + self.initial.profileId() : '';
+                    var page = '?page=' + self.pagination.currentPage();
+                    var pageSize = '&pageSize=' + self.pagination.pageSize();
                     var name =  self.filter.name() ? '&name=' + self.filter.name() : '';
-
-                    var url = '/api/groups/show' +
-                        '?page=' + self.pagination.currentPage() +
-                        '&pageSize=' + self.pagination.pageSize() +
-                        name +  profileId;
+                    var profile = self.initial.unUrlProfileId();
 
                     var requestOptions = {
-                        url: url,
+                        url: '/api/groups/show' + page + pageSize + name + profile,
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.groups(data.data());
@@ -335,8 +336,8 @@ $(document).ready(function(){
                 self.get.groups();
             });
 
-            self.initial.unUrlProfileId();
             self.get.institutes();
+            self.get.groups();
 
             return returnStandart.call(self);
         };

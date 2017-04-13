@@ -87,7 +87,7 @@
         </div>
         <div class="filter-block">
             <label class="title">Направление</label>
-            <select data-bind="options: $root.multiselect.source,
+            <select data-bind="options: $root.multiselect.data,
                        optionsText: 'fullname',
                        value: $root.filter.profile,
                        optionsCaption: 'Выберите профиль'"></select>
