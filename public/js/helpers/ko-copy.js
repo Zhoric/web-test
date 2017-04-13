@@ -43,6 +43,11 @@ ko.observableArray.fn.knot = function(startDate, endDate){
     return ko.pureComputed(function(){
         var initial = this();
         var timeline = [];
+        var endDatePoint = new Date(endDate);
+        Date.prototype.addDays = function(days) {
+            this.setDate(this.getDate() + parseInt(days));
+            return this;
+        };
         var item = null;
         timeline.push({
             name: 'Начало периода',
@@ -59,7 +64,7 @@ ko.observableArray.fn.knot = function(startDate, endDate){
         }
         timeline.push({
             name: 'Конец периода',
-            date: new Date(endDate),
+            date: endDatePoint.addDays(1),
             radius: 2
         });
         return timeline;

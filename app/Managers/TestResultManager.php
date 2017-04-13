@@ -213,6 +213,8 @@ class TestResultManager
 
     public function getByUserAndDisciplineBetweenDates($userId, $disciplineId, $startDate, $endDate, $selectionCriterion)
     {
+        $endDate = DateHelper::addDaysToDate($endDate, 1);
+
         $testResults = $this
             ->_unitOfWork
             ->testResults()

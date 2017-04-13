@@ -21,4 +21,9 @@ class DateHelper
 
         return $now;
     }
+
+    public static function addDaysToDate($date,$days){
+        $date = strtotime("+".$days." days", strtotime($date));
+        return date('Y-m-d', $date);
+    }
 }
