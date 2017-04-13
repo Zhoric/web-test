@@ -36,7 +36,7 @@
                                 <div class="details-row">
                                     <div class="details-column width-100p">
                                         <!-- ko if: mark() !== null -->
-                                        <span class="radio-important" data-bind="text: mark() + '/100'"></span>
+                                        <span class="radio-important" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                                         <!-- /ko -->
                                         <span class="radio-negative" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
                                     </div>

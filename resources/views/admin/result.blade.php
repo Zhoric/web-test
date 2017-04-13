@@ -68,7 +68,7 @@
                     <div class="details-column width-99p">
                         <label class="title">Оценка</label>
                         <!-- ko if: mark() !== null -->
-                        <span class="coloredin-patronus info" data-bind="text: mark() + '/100'"></span>
+                        <span class="coloredin-patronus info" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                         <!-- /ko -->
                         <span class="coloredin-crimson info" data-bind="if: mark() === null">Требуется проверка</span>
                     </div>
@@ -142,7 +142,7 @@
                 <span data-bind="text: attempt() + ')'"></span>
                 <span data-bind="if: mark() !== null">
                         <span data-bind="text: mark"></span>
-                        <span>/100</span>
+                        <span data-bind="text: $root.current.markScale"></span>
                     </span>
                 <span data-bind="if: mark() === null">Требуется&nbsp;проверка</span>
                 <span class="float-right date-string" data-bind="text: dateTime.date.parseDate()"></span>

@@ -37,7 +37,7 @@
                     <td data-bind="text: dateTime.date.parseDate()"></td>
                     <td>
                         <!-- ko if: mark() !== null -->
-                        <span class="coloredin-patronus" data-bind="text: mark() +'/100'"></span>
+                        <span class="coloredin-patronus" data-bind="text: mark() +'/' + $root.current.markScale()"></span>
                         <!-- /ko -->
                         <span class="coloredin-crimson" data-bind="if: mark() === null">Требуется проверка</span>
                     </td>

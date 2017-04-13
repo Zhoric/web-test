@@ -11,7 +11,8 @@ $(document).ready(function(){
             self.settings = ko.observable(null);
 
             self.current = {
-                results: ko.observableArray([])
+                results: ko.observableArray([]),
+                markScale: ko.observable(100)
             };
             self.filter = {
                 profile: ko.observable(),
@@ -162,6 +163,15 @@ $(document).ready(function(){
                             self.current.results(data());
                         }
                     });
+                },
+                markScale: function(){
+                    $ajaxget({
+                        url: '/api/settings/get/maxMarkValue',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.markScale(data.value());
+                        }
+                    });
                 }
             };
             self.post = {
@@ -175,6 +185,7 @@ $(document).ready(function(){
             };
 
             self.get.settings();
+            self.get.markScale();
 
             //SUBSCRIPTIONS
 

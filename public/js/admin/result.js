@@ -39,7 +39,8 @@ $(document).ready(function(){
                         min: 0,
                         max: 100
                     })
-                }
+                },
+                markScale: ko.observable(100)
             };
             self.actions = {
                 answer: {
@@ -159,6 +160,15 @@ $(document).ready(function(){
                             self.current.extraAttempts.count(data());
                         }
                     });
+                },
+                markScale: function(){
+                    $ajaxget({
+                        url: '/api/settings/get/maxMarkValue',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.markScale(data.value());
+                        }
+                    });
                 }
             };
             self.post = {
@@ -191,6 +201,7 @@ $(document).ready(function(){
             };
 
             self.get.result();
+            self.get.markScale();
 
             return returnStandart.call(self);
         };

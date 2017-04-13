@@ -41,7 +41,8 @@ $(document).ready(function(){
                 id: ko.observable(0),
                 result: ko.observable(),
                 details: ko.observable(null),
-                question: ko.observable(null)
+                question: ko.observable(null),
+                markScale: ko.observable(100)
             };
 
 
@@ -97,9 +98,19 @@ $(document).ready(function(){
                             }
                         }
                     });
+                },
+                markScale: function(){
+                    $ajaxget({
+                        url: '/api/settings/get/maxMarkValue',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.markScale(data.value());
+                        }
+                    });
                 }
             };
             self.get.disciplines();
+            self.get.markScale();
 
             self.filter.discipline.subscribe(function(value){
                 if (value){

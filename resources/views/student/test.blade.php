@@ -68,7 +68,7 @@
                             как преподаватель проверит ваши ответы на открытые вопросы.</span>
                         <!-- /ko -->
                         <!-- ko if: mark() !== null-->
-                        <span data-bind="text: mark() + '/100'"></span>
+                        <span data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                         <!-- /ko -->
                     </div>
                     <div class="date">

@@ -40,7 +40,8 @@ $(document).ready(function(){
                 answerText: ko.observable(''),
                 singleAnswer: ko.observable(0),
                 timeLeft : ko.observable(-1),
-                testResult: ko.observable(null)
+                testResult: ko.observable(null),
+                markScale: ko.observable(100)
             };
 
             self.actions = {
@@ -152,6 +153,15 @@ $(document).ready(function(){
                             self.code.fill(data);
                         }
                     });
+                },
+                markScale: function(){
+                    $ajaxget({
+                        url: '/api/settings/get/maxMarkValue',
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.markScale(data.value());
+                        }
+                    });
                 }
             };
             self.post = {
@@ -182,6 +192,7 @@ $(document).ready(function(){
             };
 
             self.get.description();
+            self.get.markScale();
 
             // TIMER
             self.allowTimer.subscribe(function(value){
