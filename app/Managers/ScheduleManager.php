@@ -17,11 +17,14 @@ class ScheduleManager
 {
     private $_unitOfWork;
 
+    private $_settingsManager;
+
     private $semestersCount = 2;
 
-    public function __construct(UnitOfWork $unitOfWork)
+    public function __construct(UnitOfWork $unitOfWork, SettingsManager $settingsManager)
     {
         $this->_unitOfWork = $unitOfWork;
+        $this->_settingsManager = $settingsManager;
     }
 
     /**
@@ -34,9 +37,14 @@ class ScheduleManager
         $groupStudyYear = $group->getCourse();
         $now = new DateTime();
 
+        // +1, т.к. нумерация месяцев в этом формате даты идёт с нуля.
         $currentMonthNumber = date("n", $now->getTimestamp()) + 1;
-        $currentYearSemester = ($currentMonthNumber >= GlobalTestSettings::secondSemesterMonth
-            && $currentMonthNumber < GlobalTestSettings::firstSemesterMonth) ? 2 : 1;
+
+        $firstSemesterStartMonth = $this->_settingsManager->get(GlobalTestSettings::firstSemesterMonthKey);
+        $secondSemesterStartMonth = $this->_settingsManager->get(GlobalTestSettings::secondSemesterMonthKey);
+
+        $currentYearSemester = ($currentMonthNumber >= $secondSemesterStartMonth
+            && $currentMonthNumber < $firstSemesterStartMonth) ? 2 : 1;
 
         return ($groupStudyYear - 1) * $this->semestersCount + $currentYearSemester;
     }
