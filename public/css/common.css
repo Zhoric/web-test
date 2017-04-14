@@ -118,10 +118,18 @@ button.remove {
 button.approve {
   background: #5D8CAE;
 }
+button.approve:hover {
+  background: #4F7794;
+}
 button.cancel,
 button.cancel:hover,
 button.remove {
   background: #BFBFBF;
+}
+button.cancel:hover,
+button.cancel:hover:hover,
+button.remove:hover {
+  background: #ACACAC;
 }
 button.remove:hover {
   background: #D24D57;

@@ -39,11 +39,13 @@
 
 
 @patronus: #5D8CAE;
+@hover-patronus: #4F7794;
 @porcelain: #F2F1EF;
 @patronus-shade: #EDEEF0;
 @filch: #6C7A89;
 @unimportant: #7f8c8d;
 @akcio : #BFBFBF;
+@hover-akcio: #ACACAC;
 @crimson-red: #D24D57;
 @silver: #BDC3C7;
 @jungle: #2ABB9B;
@@ -158,9 +160,15 @@ button{
   }
   &.approve{
     background: @patronus;
+    &:hover{
+      background: @hover-patronus;
+    }
   }
   &.cancel, &.cancel:hover, &.remove{
     background: @akcio;
+    &:hover{
+      background: @hover-akcio;
+    }
   }
   &.remove:hover{
     background: @crimson-red;
