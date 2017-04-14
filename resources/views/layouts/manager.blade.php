@@ -29,6 +29,7 @@
 </head>
 <body>
 @include('shared.common-script')
+<div class="page-wrap">
     <div class="menu">
         <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>
         <!-- ko if: $root.user.role() === role.admin.name -->
@@ -53,6 +54,14 @@
     </div>
     @yield('content')
     @include('shared.common-modals')
-    <div class="footer"></div>
+</div>
+<div class="footer">
+    <div class="footer-content"></div>
+    <div class="footer-copyright">
+        <span>&#x24B8;&nbsp;2017</span>
+        <span class="float-right mr-30">Разработчики:&nbsp;Жихарев Н.Е.?&nbsp;Хивренко Н.А.,&nbsp;Сухоруких К.В.</span>
+    </div>
+</div>
+
 </body>
 </html>

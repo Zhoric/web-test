@@ -20,7 +20,7 @@ $(document).ready(function(){
                         self.initial.profileId(id);
                         return '&profileId=' + id;
                     }
-                    
+
                     return '';
                 }
             };

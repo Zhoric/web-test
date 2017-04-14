@@ -6,6 +6,48 @@
   font-family: 'FontAwesome';
   src: url('/fonts/fontawesome-webfont.ttf');
 }
+html,
+body {
+  position: relative;
+  height: 100%;
+  margin: 0!important;
+}
+body {
+  background: #F2F1EF;
+  position: relative;
+  font-family: 'Roboto Regular' !important;
+}
+.page-wrap {
+  min-height: 100%;
+  margin-bottom: -200px;
+}
+.page-wrap:after {
+  content: "";
+  display: block;
+  height: 200px;
+}
+.content {
+  width: 90%;
+  margin: 3% auto;
+}
+.footer {
+  height: 200px;
+  background: #666666;
+  opacity: 0.8;
+  color: #666666;
+}
+.footer-content {
+  height: 150px;
+  color: #fff;
+}
+.footer-copyright {
+  background: #5D8CAE;
+  color: #fff;
+  line-height: 50px;
+  text-indent: 40px;
+  font-size: 12px !important;
+  font-weight: 200;
+}
 .loading {
   position: absolute;
   top: 0;
@@ -93,6 +135,9 @@ h3 {
 }
 .text-center {
   text-align: center;
+}
+.text-right {
+  text-align: right !important;
 }
 label.title {
   display: block;
@@ -251,15 +296,6 @@ input[type=checkbox].custom-checkbox:checked + label:after {
 }
 .clear {
   clear: both;
-}
-body {
-  background: #F2F1EF;
-  font-family: 'Roboto Regular' !important;
-  margin: 0;
-}
-.content {
-  width: 90%;
-  margin: 3% auto;
 }
 .items,
 .layer {
@@ -574,6 +610,9 @@ a:hover {
 }
 .mr-5 {
   margin-right: 5px;
+}
+.mr-30 {
+  margin-right: 30px;
 }
 .zero-margin {
   margin: 0 !important;

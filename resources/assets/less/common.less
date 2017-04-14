@@ -26,7 +26,7 @@
 @wetasphalt: #34495e;
 @midnightblue: #2c3e50;
 @indigo: #264348;
-@missnorris: #8D9899;
+
 
 @font-face {
   font-family: 'Roboto Regular';
@@ -49,8 +49,52 @@
 @crimson-red: #D24D57;
 @silver: #BDC3C7;
 @jungle: #2ABB9B;
+@missnorris: #8D9899;
 @mild-black: #666666;
 
+html, body{
+  position: relative;
+  height: 100%;
+  margin: 0!important;
+}
+body{
+  background: @porcelain;
+  position: relative;
+  font-family: 'Roboto Regular' !important;
+}
+
+.page-wrap{
+  min-height: 100%;
+  margin-bottom: -200px;
+  &:after {
+    content: "";
+    display: block;
+    height: 200px;
+  }
+}
+
+.content{
+  width: 90%;
+  margin: 3% auto;
+}
+.footer {
+  height: 200px;
+  background: @mild-black;
+  opacity: 0.8;
+  color: @mild-black;
+  &-content{
+    height: 150px;
+    color: @white;
+  }
+  &-copyright{
+    background: @patronus;
+    color: @white;
+    line-height: 50px;
+    text-indent: 40px;
+    font-size: 12px !important;
+    font-weight: 200;
+  }
+}
 .loading{
   position: absolute;
   top: 0;
@@ -129,6 +173,7 @@
 }
 
 
+
 .form-heights{
   line-height: 27px;
 }
@@ -137,6 +182,9 @@ h3{
 }
 .text-center{
   text-align: center;
+}
+.text-right{
+  text-align: right !important;
 }
 label.title{
   display: block;
@@ -288,17 +336,6 @@ input[type=checkbox].custom-checkbox{
 .float-left{float:left}
 .clear{clear:both}
 
-
-body{
-  background: @porcelain;
-  font-family: 'Roboto Regular' !important;
-  margin:0;
-}
-
-.content{
-  width: 90%;
-  margin: 3% auto;
-}
 
 .items, .layer{
   display: inline-block;
@@ -537,6 +574,7 @@ a{
 
 .mr{
   &-5{margin-right: 5px}
+  &-30{margin-right: 30px}
 }
 .zero-margin{
   margin: 0 !important;

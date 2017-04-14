@@ -6,27 +6,25 @@
 
 @section('content')
     <div class="content">
-        <div class="content">
-            <div class="layer">
-                <div class="layer-head">
-                    <h1>Институты</h1>
+        <div class="layer">
+            <div class="layer-head">
+                <h1>Институты</h1>
+            </div>
+            <div class="layer-body" data-bind="foreach: $root.initial.institutes">
+                <div class="item" data-bind="click: $root.actions.show.institute, css: {'current': id() === $root.current.institute().id()}">
+                    <span data-bind="text: name"></span>
                 </div>
-                <div class="layer-body" data-bind="foreach: $root.initial.institutes">
-                    <div class="item" data-bind="click: $root.actions.show.institute, css: {'current': id() === $root.current.institute().id()}">
-                        <span data-bind="text: name"></span>
-                    </div>
-                    <!-- ko if: id() === $root.current.institute().id() -->
-                    <div class="details">
-                        <div class="details-row" data-bind="foreach: $root.current.profiles">
-                            <div class="details-column tile-boredom text-center">
-                                <h3 data-bind="text: name, attr: {title: code() + ' ' + fullname()}"></h3>
-                                <span data-bind="click: $root.actions.moveTo.group">Перейти к группам</span>
-                                <span data-bind="click: $root.actions.show.plans">Учебные планы</span>
-                            </div>
+                <!-- ko if: id() === $root.current.institute().id() -->
+                <div class="details">
+                    <div class="details-row" data-bind="foreach: $root.current.profiles">
+                        <div class="details-column tile-boredom text-center">
+                            <h3 data-bind="text: name, attr: {title: code() + ' ' + fullname()}"></h3>
+                            <span data-bind="click: $root.actions.moveTo.group">Перейти к группам</span>
+                            <span data-bind="click: $root.actions.show.plans">Учебные планы</span>
                         </div>
                     </div>
-                    <!-- /ko -->
                 </div>
+                <!-- /ko -->
             </div>
         </div>
     </div>
