@@ -141,7 +141,10 @@ $(document).ready(function(){
                     },
                     move: function(data, e){
                         e.stopPropagation();
-                        window.location.href = '/admin/tests/' + data.id();
+                        commonHelper.cookies.create({
+                            testsDisciplineId: data.id()
+                        });
+                        window.location.href = '/admin/tests';
                     }
                 },
                 section: {
@@ -379,13 +382,16 @@ $(document).ready(function(){
                 }
             });
             self.pagination.currentPage.subscribe(function(){
+                self.mode(state.none);
                 self.get.disciplines();
             });
             self.filter.discipline.subscribe(function(){
+                self.mode(state.none);
                 self.pagination.currentPage(1);
                 self.get.disciplines();
             });
             self.filter.profile.subscribe(function(){
+                self.mode(state.none);
                 self.pagination.currentPage(1);
                 self.get.disciplines();
             });

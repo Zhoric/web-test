@@ -60,14 +60,14 @@ $(document).ready(function(){
                         self.filter.startDate(new Date(Date.now()));
                         if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_start_date;
-                        if (date && !isNaN(new Date(date()).valueOf()))
+                        if (date && date() && !isNaN(new Date(date()).valueOf()))
                             self.filter.startDate(new Date(date()));
                     },
                     endDate: function(){
                         self.filter.endDate(new Date(Date.now()));
                         if (!self.initial.settings()) return;
                         var date = self.initial.settings().overall_end_date;
-                        if (date && !isNaN(new Date(date()).valueOf()))
+                        if (date && date() && !isNaN(new Date(date()).valueOf()))
                             self.filter.endDate(new Date(date()));
                     },
                     criterion: function(){

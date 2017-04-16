@@ -31,6 +31,19 @@ $(document).ready(function(){
             self.filter = {
                 name: ko.observable(''),
                 discipline: ko.observable(),
+                set: function(){
+                    var cookie = $.cookie();
+                    if (!cookie.testsDisciplineId){
+                        self.get.tests();
+                        return;
+                    }
+                    $.each(self.current.disciplines(), function(i, item){
+                        if (item.id() == cookie.testsDisciplineId)
+                            self.filter.discipline(item);
+                    });
+                    self.get.tests();
+                    commonHelper.cookies.remove(cookie);
+                },
                 clear: function(){
                     self.filter
                         .discipline(null).name('');
@@ -173,6 +186,7 @@ $(document).ready(function(){
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.disciplines(data());
+                            self.filter.set();
                         }
                     });
                 },
