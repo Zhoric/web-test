@@ -156,11 +156,12 @@ $(document).ready(function(){
                     self.current.isGenerated(true);
                 },
                 moveTo: {
-                    students: function(data){
+                    students: function(data, e){
                         commonHelper.cookies.create({
                             groupId : data.id()
                         });
                         window.location.href = '/admin/students/' + data.id();
+                        e.stopPropagation();
                     }
                 },
                 switchForm: {

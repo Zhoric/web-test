@@ -73,6 +73,7 @@ $(document).ready(function(){
                             : self.mode(state.create);
                         self.alter.empty();
                         self.current.disciplines([]);
+                        self.multiselect.tags([]);
                         commonHelper.buildValidationList(self.validation);
                     },
                     update: function(){

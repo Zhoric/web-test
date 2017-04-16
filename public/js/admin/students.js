@@ -75,16 +75,15 @@ $(document).ready(function(){
                 },
                 start: {
                     create: function(){
+                        self.alter.empty();
                         self.mode() === state.create
                             ? self.mode(state.none)
                             : self.mode(state.create);
-                        self.alter.empty();
                         commonHelper.buildValidationList(self.validation);
                     },
                     update: function(data){
                         self.mode(state.update);
                         self.alter.fill(data);
-                        self.alter.set.group(data.group().id());
                         commonHelper.buildValidationList(self.validation);
                     },
                     remove: function(){
@@ -147,11 +146,10 @@ $(document).ready(function(){
             self.alter = {
                 set: {
                     group: function(id){
-                        var group = null;
                         $.each(self.initial.groups(), function(i, item){
-                            item.id() === id ? group = item : null;
+                            if (item.id() === id)
+                                self.current.student().group(item);
                         });
-                        self.current.student().group(group);
                     }
                 },
                 stringify: {
@@ -183,9 +181,9 @@ $(document).ready(function(){
                         .password('password');
                 },
                 empty: function(){
-                    self.current.student().id('')
+                    self.current.student().id('').group(null)
                         .firstname('').lastname('').patronymic('')
-                        .group(null).email('').active(true).password('');
+                        .email('').active(true).password('');
                 }
             };
             self.get = {
