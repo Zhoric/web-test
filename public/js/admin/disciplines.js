@@ -227,6 +227,7 @@ $(document).ready(function(){
                     var pageSize = 'pageSize=' + self.pagination.pageSize();
                     var url = '/api/disciplines/show?' + page + '&' + pageSize + '&' + name + '&' + profile;
 
+
                     $ajaxget({
                         url: url,
                         errors: self.errors,

@@ -249,7 +249,8 @@ var menu = {
         students: 'students',
         disciplines: 'disciplines',
         tests: 'tests',
-        results: 'results'
+        results: 'results',
+        materials: 'materials'
     },
     student: {
         main: 'home',

@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('result/{id}', function(){return View('admin.result');});
     Route::get('monitoring', function(){return View('admin.monitoring');});
     Route::get('setting', function(){return View('admin.setting');});
+    Route::get('materials', function(){return View('admin.materials');});
 
         Route::group(['prefix' => 'help'], function (){
             Route::get('navigation', function(){return View('help.main');});
@@ -280,6 +281,16 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'SectionController@update');
         Route::post('delete/{id}', 'SectionController@delete');
         Route::get('{id}', 'SectionController@getSection');
+    });
+
+    /*-----------------------------------------------------------------------------
+    *                             МЕДИЯ
+    *-----------------------------------------------------------------------------
+   */
+    Route::group(['prefix' => 'media'], function () {
+        Route::post('create', 'MediaController@create');
+        Route::post('update', 'MediaController@update');
+        Route::post('delete/{id}', 'MediaController@delete');
     });
 
 

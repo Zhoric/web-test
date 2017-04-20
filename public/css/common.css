@@ -238,7 +238,6 @@ input[type=radio].custom-radio:not(checked) + label:after {
   border-radius: 50%;
   background: #5D8CAE;
   opacity: 0;
-  -webkit-transition: all .2s;
   transition: all .2s;
 }
 input[type=radio].custom-radio:checked + label:after {
@@ -283,7 +282,6 @@ input[type=checkbox].custom-checkbox:not(checked) + label:after {
   left: 2px;
   top: -2px;
   opacity: 0;
-  -webkit-transition: all .2s;
   transition: all .2s;
 }
 input[type=checkbox].custom-checkbox:checked + label:after {

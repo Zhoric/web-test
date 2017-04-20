@@ -1,5 +1,7 @@
 <?php
 
+//dd("path" . public_path() . '/upload' .  'URL'  . 'http://' . $_SERVER['HTTP_HOST'] . '/upload');
+
 return array(
 
     /*

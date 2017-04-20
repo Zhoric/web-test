@@ -45,6 +45,8 @@ class UnitOfWork
     private $_settingsRepo;
     private $_paramsSetRepo;
     private $_programRepo;
+    private $_mediaRepo;
+    private $_mediableRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -212,6 +214,20 @@ class UnitOfWork
             $this->_programRepo = new ProgramRepository($this->_em);
         }
         return $this->_programRepo;
+    }
+
+    public function medias(){
+        if ($this->_mediaRepo == null){
+            $this->_mediaRepo = new MediaRepository($this->_em);
+        }
+        return $this->_mediaRepo;
+    }
+
+    public function mediables(){
+        if ($this->_mediableRepo == null){
+            $this->_mediableRepo = new MediableRepository($this->_em);
+        }
+        return $this->_mediableRepo;
     }
 
     public function commit(){

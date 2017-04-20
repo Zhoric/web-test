@@ -40,6 +40,7 @@
         <a href="/admin/disciplines" data-bind="css: {'current': $root.page() === menu.admin.disciplines}">Дисциплины</a>
         <a href="/admin/tests" data-bind="css: {'current': $root.page() === menu.admin.tests}">Тесты</a>
         <a href="/admin/results" data-bind="css: {'current': $root.page() === menu.admin.results}">Результаты</a>
+        <a href="/admin/materials" data-bind="css: {'current': $root.page() === menu.admin.materials}">Материалы</a>
         <a  class="user" data-bind="text: $root.user.name()"></a>
         <div class="menu-dd">
             <!-- ko if: $root.user.role() === role.admin.name -->
