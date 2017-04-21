@@ -1,7 +1,5 @@
 <?php
 
-//dd("path" . public_path() . '/upload' .  'URL'  . 'http://' . $_SERVER['HTTP_HOST'] . '/upload');
-
 return array(
 
     /*
@@ -84,7 +82,7 @@ return array(
                 'driver' => 'LocalFileSystem',
                 'path'   => public_path().'/upload',
                 'URL'    => 'http://'. $_SERVER['HTTP_HOST']. '/upload'
-            ),
+            )
         )
     ),
     

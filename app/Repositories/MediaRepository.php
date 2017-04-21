@@ -11,4 +11,8 @@ class MediaRepository extends BaseRepository
     {
         parent::__construct($em, Media::class);
     }
+
+    public function findByHash($hash){
+        return $this->repo->findBy(['md5' => $hash]);
+    }
 }

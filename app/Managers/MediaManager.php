@@ -18,6 +18,10 @@ class MediaManager
         return $this->_unitOfWork->medias()->find($id);
     }
 
+    public function getMediaByHash($hash){
+        return $this->_unitOfWork->medias()->findByHash($hash);
+    }
+
     public function addMedia(Media $media){
         $this->_unitOfWork->medias()->create($media);
         $this->_unitOfWork->commit();

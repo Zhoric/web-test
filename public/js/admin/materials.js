@@ -10,10 +10,6 @@ $(document).ready(function(){
                 multiselect: true
             });
 
-            self.modal = {
-                elfinderModal: '#elfinder'
-            };
-
             self.current = {
                 disciplines: ko.observableArray([]),
                 discipline: ko.validatedObservable({
@@ -93,66 +89,88 @@ $(document).ready(function(){
                         }
                     },
                     addMedia: function (data) {
-                            $('#elfinder').elfinder({
-                                customData: {
-                                    _token: ''
-                                },
-                                url: 'http://' + window.location.host + '/elfinder/connector',
-                                lang: 'ru',
-                                resizable: false,
-                                commandsOptions: {
-                                    getfile: { multiple: false }
-                                },
-                                getFileCallback : function(file) {
-                                    var media = {
-                                            name: file.name,
-                                            type: file.mime.split('/')[0],
-                                            path: file.path
-                                        };
 
-                                    var json = JSON.stringify({media: media});
+                        var elf = $('#elfinder').elfinder({
+                            customData: {
+                                _token: ''
+                            },
+                            url: 'http://' + window.location.host + '/elfinder/connector',
+                            lang: 'ru',
+                            resizable: false,
+                            commands : [
+                                'back', 'chmod', 'colwidth', 'copy', 'cut', 'download',
+                                'edit', 'forward', 'fullscreen', 'getfile', 'help', 'home', 'info',
+                                'mkdir', 'mkfile', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
+                                'quicklook', 'rename', 'resize', 'rm', 'search', 'sort', 'up', 'upload', 'view'
+                            ],
+                            commandsOptions: {
+                                getfile: { multiple: false }
+                            },
+                            getFileCallback : function(file) {
+                                self.media.add(file.hash, data.id(), null);
+                            }
 
+                        });
 
-                                    $.ajax({
-                                        type: "POST",
-                                        url: '/api/media/create',
-                                        data: json,
-                                        dataType: "json",
-                                        success: function (data) {
-                                            console.log(data);
-                                        },
-                                        error: function (data) {
-                                            console.log(data);
-                                        }
-                                    });
+                        elf.dialog({
+                            modal: true,
+                            width : 1300,
+                            resizable: true,
+                            position: { my: "center top-70%", at: "center", of: window }
+                        });
 
-                                   /*    $.post('/api/media/create', mediaJSON,
-                                        function(data, status){
-                                            alert("Data: " + data + "\nStatus: " + status);
-                                        }); */
-
-                                    /*$ajaxpost({
-                                        url: '/api/media/create',
-                                        errors: function(XMLHttpRequest, textStatus, errorThrown) {
-                                            console.log(XMLHttpRequest);
-                                        },
-                                        data: mediaJSON,
-                                        successCallback: function(){
-                                            console.log('success');
-                                        }
-                                    }); */
-                                }
-
-                            }).dialog({
-                                modal: true,
-                                width : 1300,
-                                resizable: true,
-                                position: { my: "center top-70%", at: "center", of: window }
-                            });
+                        var elfinder = elf.elfinder('instance');
+                        self.handlers.upload(elfinder);
                     }
 
                 }
 
+            };
+
+            self.handlers = {
+                upload: function (elfinder) {
+                    elfinder.bind('upload', function(event) {
+                        $.each(event.data.added, function(file) {
+                            var media = {
+                                name: file.name,
+                                type: file.mime.split('/')[0],
+                                path: file.url,
+                                md5: file.hash
+                            };
+                            var json = JSON.stringify({media: media});
+                            $ajaxpost({
+                                url: '/api/media/create',
+                                error: self.errors,
+                                data: json
+                            });
+                        });
+                    });
+                }
+            };
+
+            self.media = {
+                add: function (hash, disciplineId, themeId) {
+                    $ajaxget({
+                        url: '/api/media/hash/' + hash,
+                        errors: self.errors,
+                        successCallback: function(retData){
+                            var mediaId = retData()[0].id();
+                            var mediable = {
+                                start: null,
+                                stop: null
+                            };
+                            var json = JSON.stringify({mediable: mediable, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
+                            $ajaxpost({
+                                url: '/api/mediable/create',
+                                error: self.errors,
+                                data: json,
+                                successCallback: function(){
+
+                                }
+                            });
+                        }
+                    });
+                }
             };
 
             self.alter = {

@@ -291,7 +291,19 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('create', 'MediaController@create');
         Route::post('update', 'MediaController@update');
         Route::post('delete/{id}', 'MediaController@delete');
+        Route::get('hash/{id}', 'MediaController@getMediaByHash');
     });
+
+    /*-----------------------------------------------------------------------------
+   *                             СВЯЗИ МЕДИИ
+   *-----------------------------------------------------------------------------
+  */
+    Route::group(['prefix' => 'mediable'], function () {
+        Route::post('create', 'MediableController@create');
+        Route::post('update', 'MediableController@update');
+        Route::post('delete/{id}', 'MediableController@delete');
+    });
+
 
 
     /*-----------------------------------------------------------------------------
