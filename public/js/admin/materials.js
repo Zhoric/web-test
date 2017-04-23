@@ -10,6 +10,10 @@ $(document).ready(function(){
                 multiselect: true
             });
 
+            self.modals = {
+                removeMedia: '#remove-media-modal'
+            };
+
             self.current = {
                 disciplines: ko.observableArray([]),
                 discipline: ko.validatedObservable({
@@ -29,6 +33,25 @@ $(document).ready(function(){
                     id: ko.observable(0),
                     name: ko.observable(''),
                     mode: ko.observable(state.none)
+                }),
+                disciplineMedias: ko.observableArray([]),
+                disciplineMedia: ko.observable({
+                    id: ko.observable(0),
+                    type: ko.observable(''),
+                    content: ko.observable(''),
+                    path: ko.observable(''),
+                    name: ko.observable(''),
+                    hash: ko.observable(''),
+                    mediableId: ko.observable(0)
+                }),
+                disciplineMediables: ko.observableArray([]),
+                disciplineMediable: ko.observable({
+                    id: ko.observable(0),
+                    media: ko.observable(0),
+                    theme: ko.observable(0),
+                    discipline: ko.observable(0),
+                    start: ko.observable(''),
+                    stop: ko.observable('')
                 })
             };
 
@@ -46,50 +69,41 @@ $(document).ready(function(){
                         if (self.mode() === state.none ||
                             self.current.discipline().id() !== data.id()){
                             self.mode(state.info);
-                            self.alter.fill(data);
+                            self.alter.discipline.fill(data);
                             self.get.disciplineProfiles();
                             self.get.themes();
+                            self.get.disciplineMedias(data.id());
                             return;
                         }
                         self.actions.discipline.cancel();
                     },
                     start: {
-                        add: function(){
-                            self.mode() === state.create
-                                ? self.mode(state.none)
-                                : self.mode(state.create);
-                            self.alter.empty();
-                            self.multiselect.tags([]);
-                            commonHelper.buildValidationList(self.validation);
-                        },
-                        update: function(){
-                            self.mode(state.update);
-                            commonHelper.buildValidationList(self.validation);
-                        },
-                        remove: function(){
-                            self.mode(state.remove);
-                            commonHelper.modal.open(self.modals.removeDiscipline);
+                        removeMedia: function (data) {
+                            self.alter.media.fill(data);
+                            console.log(self.current.disciplineMedia().mediableId());
+                            commonHelper.modal.open(self.modals.removeMedia);
                         }
                     },
                     end: {
-                        update: function(){
-                            if (!self.current.discipline.isValid()){
-                                self.validation[$('[accept-validation]').attr('id')].open();
-                                return;
-                            }
-                            if (!self.multiselect.tags().length){
-                                self.validation[$('[special]').attr('id')].open();
-                                return;
-                            }
-                            self.post.discipline();
-                        },
-                        remove: function(){
-                            commonHelper.modal.close(self.modals.removeDiscipline);
-                            self.post.removal.discipline();
+                        removeMedia: function () {
+                            $ajaxpost({
+                                url: '/api/mediable/delete/' + self.current.disciplineMedia().mediableId(),
+                                data: null,
+                                errors: self.errors,
+                                successCallback: function(){
+                                    self.get.disciplineMedias(self.current.discipline().id());
+                                    commonHelper.modal.close(self.modals.removeMedia);
+                                }
+                            });
                         }
                     },
+                    cancel: function(){
+                        self.current.theme()
+                            .id(0).name('')
+                            .mode(state.none);
+                        self.multiselect.tags([]);
+                    },
                     addMedia: function (data) {
-
                         var elf = $('#elfinder').elfinder({
                             customData: {
                                 _token: ''
@@ -109,7 +123,6 @@ $(document).ready(function(){
                             getFileCallback : function(file) {
                                 self.media.add(file.hash, data.id(), null);
                             }
-
                         });
 
                         elf.dialog({
@@ -130,12 +143,12 @@ $(document).ready(function(){
             self.handlers = {
                 upload: function (elfinder) {
                     elfinder.bind('upload', function(event) {
-                        $.each(event.data.added, function(file) {
+                        ko.utils.arrayForEach(event.data.added, function(file) {
                             var media = {
                                 name: file.name,
                                 type: file.mime.split('/')[0],
                                 path: file.url,
-                                md5: file.hash
+                                hash: file.hash
                             };
                             var json = JSON.stringify({media: media});
                             $ajaxpost({
@@ -165,7 +178,7 @@ $(document).ready(function(){
                                 error: self.errors,
                                 data: json,
                                 successCallback: function(){
-
+                                    self.get.disciplineMedias(self.current.discipline().id());
                                 }
                             });
                         }
@@ -174,20 +187,66 @@ $(document).ready(function(){
             };
 
             self.alter = {
-                fill: function(data){
-                    self.current.discipline()
-                        .id(data.id())
-                        .name(data.name())
-                        .abbreviation(data.abbreviation())
-                        .description(data.description());
+                discipline: {
+                    fill: function(data){
+                        self.current.discipline()
+                            .id(data.id())
+                            .name(data.name())
+                            .abbreviation(data.abbreviation())
+                            .description(data.description());
+                    },
+                    empty: function(){
+                        self.current.discipline()
+                            .id(0)
+                            .name('')
+                            .abbreviation('')
+                            .description('');
+                    }
                 },
-                empty: function(){
-                    self.current.discipline()
-                        .id(0)
-                        .name('')
-                        .abbreviation('')
-                        .description('');
+                mediable: {
+                    fill: function (data) {
+                        self.current.disciplineMediable()
+                            .id(data.id())
+                            .media(data.media())
+                            .theme(data.theme())
+                            .discipline(data.discipline())
+                            .start(data.start())
+                            .stop(data.stop());
+                    },
+                    empty: function () {
+                        self.current.disciplineMediable()
+                            .id(0)
+                            .media('')
+                            .theme('')
+                            .discipline('')
+                            .start('')
+                            .stop('');
+                    }
+
+                },
+                media: {
+                    fill: function (data) {
+                        self.current.disciplineMedia()
+                            .id(data.id())
+                            .type(data.type())
+                            .content(data.content())
+                            .path(data.path())
+                            .name(data.name())
+                            .hash(data.hash())
+                            .mediableId(data.mediableId());
+                    },
+                    empty: function () {
+                        self.current.disciplineMedia()
+                            .id(0)
+                            .type('')
+                            .content('')
+                            .path('')
+                            .name('')
+                            .hash('')
+                            .mediableId(0);
+                    }
                 }
+
             };
 
 
@@ -209,6 +268,20 @@ $(document).ready(function(){
                         }
                     });
 
+                },
+                disciplineMedias: function (disciplineId) {
+                    self.current.disciplineMedias.removeAll();
+                    $ajaxget({
+                        url: '/api/mediable/discipline/' + disciplineId,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.disciplineMediables(data());
+                            ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
+                                mediable.media.mediableId = mediable.id;
+                               self.current.disciplineMedias.push(mediable.media);
+                            });
+                        }
+                    });
                 },
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();

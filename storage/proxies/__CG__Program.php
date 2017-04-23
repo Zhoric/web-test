@@ -254,4 +254,26 @@ class Program extends \Program implements \Doctrine\ORM\Proxy\Proxy
         return parent::getQuestion();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+
+        return parent::jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillFromJson($json)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fillFromJson', [$json]);
+
+        return parent::fillFromJson($json);
+    }
+
 }

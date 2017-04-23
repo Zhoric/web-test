@@ -312,12 +312,12 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function isIsActive()
+    public function IsActive()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isIsActive', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'IsActive', []);
 
-        return parent::isIsActive();
+        return parent::IsActive();
     }
 
     /**
@@ -351,6 +351,17 @@ class Test extends \Test implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsRandom', [$isRandom]);
 
         return parent::setIsRandom($isRandom);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setId($id)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setId', [$id]);
+
+        return parent::setId($id);
     }
 
     /**

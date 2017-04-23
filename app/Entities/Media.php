@@ -52,9 +52,9 @@ class Media extends BaseEntity implements JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="md5", type="string", length=255, nullable=true)
+     * @ORM\Column(name="hash", type="string", length=255, nullable=true)
      */
-    protected $md5;
+    protected $hash;
 
     /**
      * Get id
@@ -155,27 +155,27 @@ class Media extends BaseEntity implements JsonSerializable
     }
 
     /**
-     * Set md5
+     * Set hash
      *
-     * @param string $md5
+     * @param string $hash
      *
      * @return Media
      */
-    public function setMd5($md5)
+    public function setHash($hash)
     {
-        $this->md5 = $md5;
+        $this->hash = $hash;
 
         return $this;
     }
 
     /**
-     * Get md5
+     * Get hash
      *
      * @return string
      */
-    public function getMd5()
+    public function getHash()
     {
-        return $this->md5;
+        return $this->hash;
     }
 
 
@@ -188,7 +188,7 @@ class Media extends BaseEntity implements JsonSerializable
             'content' => $this->content,
             'path' => $this->path,
             'name' => $this->name,
-            'md5' => $this->md5
+            'hash' => $this->hash
         );
     }
 }

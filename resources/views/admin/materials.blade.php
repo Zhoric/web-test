@@ -2,10 +2,6 @@
 @section('title', 'Материалы')
 @section('javascript')
 
-
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <!-- elFinder CSS (REQUIRED) -->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/theme.css') }}">
@@ -42,34 +38,24 @@
                                     <span class="fa">&#xf067;</span>&nbsp;Добавить материал
                                 </td>
                             </tr>
+                            <!-- ko if:  $root.current.disciplineMedias().length > 0-->
+                            <!-- ko foreach: $root.current.disciplineMedias-->
                             <tr>
                                 <td data-bind="text: $index()+1"></td>
-                                <td><span class="fa approve mini material-type">&#xf008;</span></td>
-                                <td><a>Видео</a></td>
+                                <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
+                                <td data-bind="text: name"></td>
                                 <td class="action-holder">
-                                    <button class="fa approve mini actions">&#xf0f6;</button>
-                                    <button class="fa remove mini actions">&#xf014;</button>
+                                    <button class="fa approve mini actions">&#xf0ec;</button>
+                                    <button data-bind="click: $root.actions.discipline.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
                                 </td>
                             </tr>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                            <!-- ko if:  $root.current.disciplineMedias().length == 0-->
                             <tr>
-                                <td data-bind="text: $index()+1"></td>
-                                <td><span class="fa approve mini material-type">&#xf001;</span></td>
-                                <td><a>Аудио</a></td>
-                                <td class="action-holder">
-                                    <button class="fa approve mini actions">&#xf0f6;</button>
-                                    <button class="fa remove mini actions">&#xf014;</button>
-                                </td>
+                                <td class="empty" colspan="4"> Для данной дисциплины материалы отсутствуют</td>
                             </tr>
-                            <tr>
-                                <td data-bind="text: $index()+1"></td>
-                                <td><span class="fa approve mini material-type">&#xf15c;</span></td>
-                                <td><a>Текст</a></td>
-                                <td class="action-holder">
-                                    <button class="fa approve mini actions">&#xf0f6;</button>
-                                    <button class="fa remove mini actions">&#xf014;</button>
-                                </td>
-                            </tr>
-
+                            <!-- /ko -->
                             </tbody>
                         </table>
                     </div>
@@ -98,8 +84,23 @@
         </div>
     </div>
 
-        <div id="elfinder">
+    <div id="elfinder"></div>
+
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="remove-media-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Удалить выбранный материал для данной дисциплины?</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button data-bind="click: $root.actions.discipline.end.removeMedia" class="remove arcticmodal-close">Удалить</button>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
 
 @endsection

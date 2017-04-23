@@ -1107,8 +1107,24 @@ table.werewolf.materials tr {
 table.werewolf.materials tr .material-type {
   color: #747272;
 }
+table.werewolf.materials tr .video:before {
+  content: "\f008";
+}
+table.werewolf.materials tr .text:before {
+  content: "\f15c";
+}
+table.werewolf.materials tr .audio:before {
+  content: "\f001";
+}
+table.werewolf.materials tr .image:before {
+  content: "\f03e";
+}
 table.werewolf.materials tr .actions {
   visibility: hidden;
+}
+table.werewolf.materials tr .empty {
+  height: 50px;
+  font-size: 15px;
 }
 table.werewolf.materials tr.adder-row {
   height: 40px;

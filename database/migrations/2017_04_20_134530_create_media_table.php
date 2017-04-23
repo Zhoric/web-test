@@ -19,7 +19,7 @@ class CreateMediaTable extends Migration
             $table->text('content')->nullable()->default(NULL);
             $table->string('path', 255)->nullable()->default(NULL);
             $table->string('name', 255)->nullable()->default(NULL);
-            $table->string('md5', 255)->nullable()->default(NULL);
+            $table->string('hash', 255)->nullable()->default(NULL);
         });
     }
 

@@ -292,6 +292,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('update', 'MediaController@update');
         Route::post('delete/{id}', 'MediaController@delete');
         Route::get('hash/{id}', 'MediaController@getMediaByHash');
+        Route::get('{id}', 'MediaController@getMedia');
     });
 
     /*-----------------------------------------------------------------------------
@@ -302,6 +303,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('create', 'MediableController@create');
         Route::post('update', 'MediableController@update');
         Route::post('delete/{id}', 'MediableController@delete');
+        Route::get('media/{id}', 'MediableController@getAllMediablesByMedia');
+        Route::get('discipline/{id}', 'MediableController@getAllMediablesByDiscipline');
+        Route::get('theme/{id}', 'MediableController@getAllMediablesByTheme');
+        Route::get('{id}', 'MediableController@getMediable');
     });
 
 

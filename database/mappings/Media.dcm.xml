@@ -24,7 +24,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="md5" type="string" column="md5" length="255" nullable="true">
+    <field name="hash" type="string" column="hash" length="255" nullable="true">
       <options>
         <option name="fixed"/>
       </options>

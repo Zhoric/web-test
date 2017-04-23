@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/simple.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/admin.css')}}" />
+    <link rel="stylesheet" href="{{ URL::asset('css/jquery-ui.css')}}" />
     <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.cookie.js')}}"></script>
     <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
@@ -17,6 +18,8 @@
     <script src="{{ URL::asset('js/ru-RU.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
     <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery.min.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery-ui.min.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>

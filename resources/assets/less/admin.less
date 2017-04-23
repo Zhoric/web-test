@@ -423,8 +423,24 @@ table.werewolf.materials{
     .material-type{
       color: @dark-gray;
     }
+    .video:before{
+      content: "\f008";
+    }
+    .text:before{
+      content: "\f15c";
+    }
+    .audio:before{
+      content: "\f001";
+    }
+    .image:before{
+      content: "\f03e";
+    }
     .actions{
       visibility: hidden;
+    }
+    .empty{
+      height: 50px;
+      font-size: 15px;
     }
     &.adder-row {
       height: 40px;
@@ -917,4 +933,6 @@ button.add-section{
 .ui-widget-overlay{
   background: none !important;
 }
+
+
 
