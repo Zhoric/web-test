@@ -1,14 +1,9 @@
 @extends('layouts.manager')
 @section('title', 'Материалы')
 @section('javascript')
-
-    <!-- elFinder CSS (REQUIRED) -->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/theme.css') }}">
-
-    <!-- elFinder JS (REQUIRED) -->
     <script src="{{ URL::asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
-
     <script src="{{ URL::asset('js/knockout.multiselect.js') }}"></script>
     <script src="{{ URL::asset('js/admin/materials.js')}}"></script>
 @endsection
@@ -27,37 +22,22 @@
                 <!-- ko if: $root.mode() !== state.none && $data.id() === $root.current.discipline().id()-->
 
                 <div class="details discipline">
-                    <div class="details-row">
-                        <table class="werewolf materials">
-                            <thead>
-                            <tr><th>№</th><th>Вид</th><th>Материалы</th><th>Действия</th></tr>
-                            </thead>
-                            <tbody>
-                            <tr class="adder-row">
-                                <td data-bind="click: $root.actions.discipline.addMedia" colspan="4">
-                                    <span class="fa">&#xf067;</span>&nbsp;Добавить материал
-                                </td>
-                            </tr>
-                            <!-- ko if:  $root.current.disciplineMedias().length > 0-->
-                            <!-- ko foreach: $root.current.disciplineMedias-->
-                            <tr>
-                                <td data-bind="text: $index()+1"></td>
-                                <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
-                                <td data-bind="text: name"></td>
-                                <td class="action-holder">
-                                    <button class="fa approve mini actions">&#xf0ec;</button>
-                                    <button data-bind="click: $root.actions.discipline.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
-                                </td>
-                            </tr>
-                            <!-- /ko -->
-                            <!-- /ko -->
-                            <!-- ko if:  $root.current.disciplineMedias().length == 0-->
-                            <tr>
-                                <td class="empty" colspan="4"> Для данной дисциплины материалы отсутствуют</td>
-                            </tr>
-                            <!-- /ko -->
-                            </tbody>
-                        </table>
+                    <div class="details-row materials-details">
+                        <div class="details-row materials-link">
+                            <div class="details-column">
+                                <label class="adder" data-bind="click: $root.actions.discipline.themes, css: {'current': $root.mode() === state.themes || $root.mode() === state.materials}">Темы</label>
+                            </div>
+                            <div class="details-column">
+                                <label class="adder" data-bind="click: $root.actions.discipline.overall, css: {'current': $root.mode() === state.overall}">Общие материалы</label>
+                            </div>
+
+                        </div>
+                        <!-- ko if: $root.mode() === state.overall -->
+                        <div class="details" data-bind="template: {name: 'overall-mode', data: $data}"></div>
+                        <!-- /ko -->
+                        <!-- ko if: $root.mode() === state.themes || $root.mode() === state.materials -->
+                        <div class="details" data-bind="template: {name: 'themes-mode', data: $data}"></div>
+                        <!-- /ko -->
                     </div>
                 </div>
                 <!-- /ko -->
@@ -87,7 +67,7 @@
     <div id="elfinder"></div>
 
     <div class="g-hidden">
-        <div class="box-modal removal-modal" id="remove-media-modal">
+        <div class="box-modal removal-modal" id="remove-discipline-media-modal">
             <div class="layer zero-margin width-auto">
                 <div class="layer-head">
                     <h3>Удалить выбранный материал для данной дисциплины?</h3>
@@ -102,5 +82,132 @@
         </div>
     </div>
 
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="remove-theme-media-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Удалить выбранный материал для данной темы?</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button data-bind="click: $root.actions.theme.end.removeMedia" class="remove arcticmodal-close">Удалить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="repeat-add-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Прикрепление выбранного материала уже сделано!</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">ОК</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="last-delete-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Данный материал больше ни к чему не прикреплен. Удалить его из файловой системы?</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button data-bind="click: $root.actions.media.remove" class="remove arcticmodal-close">Удалить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection
+
+<script type="text/html" id="overall-mode">
+    <table class="werewolf materials">
+        <thead>
+        <tr><th>№</th><th>Вид</th><th>Материалы</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+        <tr class="adder-row">
+            <td data-bind="click: $root.actions.discipline.addMedia" colspan="4">
+                <span class="fa">&#xf067;</span>&nbsp;Добавить материал
+            </td>
+        </tr>
+        <!-- ko if:  $root.current.medias().length > 0-->
+        <!-- ko foreach: $root.current.medias-->
+        <tr>
+            <td data-bind="text: $index()+1"></td>
+            <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
+            <td data-bind="text: name"></td>
+            <td class="action-holder">
+                <button class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.discipline.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
+            </td>
+        </tr>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if:  $root.current.medias().length == 0-->
+        <tr>
+            <td class="empty" colspan="4"> Для данной дисциплины материалы отсутствуют</td>
+        </tr>
+        <!-- /ko -->
+        </tbody>
+    </table>
+</script>
+
+<script type="text/html" id="themes-mode">
+    <div class="themes">
+        <!-- ko foreach: $root.current.themes-->
+        <div class="details-row" data-bind="click: $root.actions.theme.materials">
+            <div class="details-column" data-bind="text: $index()+1"></div>
+            <div class="details-column" data-bind="text: name"><a data-bind="text: name, click: $root.actions.theme.materials"></a></div>
+        </div>
+        <!-- ko if: $root.mode() === state.materials &&  $data.id() === $root.current.theme().id()-->
+        <div class="details" data-bind="template: {name: 'materials-mode', data: $data}"></div>
+        <!-- /ko -->
+        <!-- /ko -->
+    </div>
+</script>
+
+<script type="text/html" id="materials-mode">
+    <table class="werewolf materials">
+        <thead>
+        <tr><th>№</th><th>Вид</th><th>Материалы</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+        <tr class="adder-row">
+            <td data-bind="click: $root.actions.theme.addMedia" colspan="4">
+                <span class="fa">&#xf067;</span>&nbsp;Добавить материал
+            </td>
+        </tr>
+        <!-- ko if:  $root.current.medias().length > 0-->
+        <!-- ko foreach: $root.current.medias-->
+        <tr>
+            <td data-bind="text: $index()+1"></td>
+            <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
+            <td data-bind="text: name"></td>
+            <td class="action-holder">
+                <button class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.theme.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
+            </td>
+        </tr>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if:  $root.current.medias().length == 0-->
+        <tr>
+            <td class="empty" colspan="4"> Для данной темы материалы отсутствуют</td>
+        </tr>
+        <!-- /ko -->
+        </tbody>
+    </table>
+</script>

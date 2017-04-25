@@ -11,7 +11,10 @@ $(document).ready(function(){
             });
 
             self.modals = {
-                removeMedia: '#remove-media-modal'
+                removeDisciplineMedia: '#remove-discipline-media-modal',
+                removeThemeMedia: '#remove-theme-media-modal',
+                repeatAdd: '#repeat-add-modal',
+                lastDelete: '#last-delete-modal'
             };
 
             self.current = {
@@ -34,8 +37,8 @@ $(document).ready(function(){
                     name: ko.observable(''),
                     mode: ko.observable(state.none)
                 }),
-                disciplineMedias: ko.observableArray([]),
-                disciplineMedia: ko.observable({
+                medias: ko.observableArray([]),
+                media: ko.observable({
                     id: ko.observable(0),
                     type: ko.observable(''),
                     content: ko.observable(''),
@@ -45,14 +48,7 @@ $(document).ready(function(){
                     mediableId: ko.observable(0)
                 }),
                 disciplineMediables: ko.observableArray([]),
-                disciplineMediable: ko.observable({
-                    id: ko.observable(0),
-                    media: ko.observable(0),
-                    theme: ko.observable(0),
-                    discipline: ko.observable(0),
-                    start: ko.observable(''),
-                    stop: ko.observable('')
-                })
+                themeMediables: ko.observableArray([])
             };
 
             self.filter = {
@@ -68,121 +64,223 @@ $(document).ready(function(){
                     show: function(data){
                         if (self.mode() === state.none ||
                             self.current.discipline().id() !== data.id()){
-                            self.mode(state.info);
+                            self.mode(state.overall);
                             self.alter.discipline.fill(data);
                             self.get.disciplineProfiles();
-                            self.get.themes();
                             self.get.disciplineMedias(data.id());
                             return;
                         }
                         self.actions.discipline.cancel();
                     },
+                    overall: function (data) {
+                        if (self.mode() != state.overall){
+                            self.mode(state.overall);
+                            self.get.disciplineMedias(data.id());
+                        }
+                    },
+                    themes: function (data) {
+                        if (self.mode() != state.themes){
+                            self.mode(state.themes);
+                            self.get.themes();
+                        }
+                    },
                     start: {
                         removeMedia: function (data) {
                             self.alter.media.fill(data);
-                            console.log(self.current.disciplineMedia().mediableId());
-                            commonHelper.modal.open(self.modals.removeMedia);
+                            commonHelper.modal.open(self.modals.removeDisciplineMedia);
                         }
                     },
                     end: {
                         removeMedia: function () {
                             $ajaxpost({
-                                url: '/api/mediable/delete/' + self.current.disciplineMedia().mediableId(),
+                                url: '/api/mediable/delete/' + self.current.media().mediableId(),
                                 data: null,
                                 errors: self.errors,
                                 successCallback: function(){
                                     self.get.disciplineMedias(self.current.discipline().id());
-                                    commonHelper.modal.close(self.modals.removeMedia);
+                                    commonHelper.modal.close(self.modals.removeDisciplineMedia);
+                                    self.check.lastDelete(self.current.media().id());
                                 }
                             });
                         }
                     },
                     cancel: function(){
-                        self.current.theme()
-                            .id(0).name('')
-                            .mode(state.none);
-                        self.multiselect.tags([]);
+                        self.mode(state.none);
+                        self.alter.discipline.empty();
                     },
                     addMedia: function (data) {
-                        var elf = $('#elfinder').elfinder({
-                            customData: {
-                                _token: ''
-                            },
-                            url: 'http://' + window.location.host + '/elfinder/connector',
-                            lang: 'ru',
-                            resizable: false,
-                            commands : [
-                                'back', 'chmod', 'colwidth', 'copy', 'cut', 'download',
-                                'edit', 'forward', 'fullscreen', 'getfile', 'help', 'home', 'info',
-                                'mkdir', 'mkfile', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
-                                'quicklook', 'rename', 'resize', 'rm', 'search', 'sort', 'up', 'upload', 'view'
-                            ],
-                            commandsOptions: {
-                                getfile: { multiple: false }
-                            },
-                            getFileCallback : function(file) {
-                                self.media.add(file.hash, data.id(), null);
-                            }
-                        });
-
-                        elf.dialog({
-                            modal: true,
-                            width : 1300,
-                            resizable: true,
-                            position: { my: "center top-70%", at: "center", of: window }
-                        });
-
-                        var elfinder = elf.elfinder('instance');
-                        self.handlers.upload(elfinder);
+                        self.elfinder.open(data.id(), null);
                     }
 
-                }
-
-            };
-
-            self.handlers = {
-                upload: function (elfinder) {
-                    elfinder.bind('upload', function(event) {
-                        ko.utils.arrayForEach(event.data.added, function(file) {
-                            var media = {
-                                name: file.name,
-                                type: file.mime.split('/')[0],
-                                path: file.url,
-                                hash: file.hash
-                            };
-                            var json = JSON.stringify({media: media});
+                },
+                theme: {
+                    cancel: function(){
+                        self.current.theme()
+                            .id(0);
+                        self.multiselect.tags([]);
+                    },
+                    materials: function (data) {
+                        if (self.current.theme().id() !== data.id()){
+                            self.mode(state.materials);
+                            self.current.theme().id(data.id());
+                            self.get.themeMedias(data.id());
+                            return;
+                        }
+                        self.actions.theme.cancel();
+                    },
+                    addMedia: function (data) {
+                        self.elfinder.open(self.current.discipline().id(), data.id());
+                    },
+                    start: {
+                        removeMedia: function (data) {
+                            self.alter.media.fill(data);
+                            commonHelper.modal.open(self.modals.removeThemeMedia);
+                        }
+                    },
+                    end: {
+                        removeMedia: function () {
                             $ajaxpost({
-                                url: '/api/media/create',
-                                error: self.errors,
-                                data: json
-                            });
-                        });
-                    });
-                }
-            };
-
-            self.media = {
-                add: function (hash, disciplineId, themeId) {
-                    $ajaxget({
-                        url: '/api/media/hash/' + hash,
-                        errors: self.errors,
-                        successCallback: function(retData){
-                            var mediaId = retData()[0].id();
-                            var mediable = {
-                                start: null,
-                                stop: null
-                            };
-                            var json = JSON.stringify({mediable: mediable, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
-                            $ajaxpost({
-                                url: '/api/mediable/create',
-                                error: self.errors,
-                                data: json,
+                                url: '/api/mediable/delete/' + self.current.media().mediableId(),
+                                data: null,
+                                errors: self.errors,
                                 successCallback: function(){
-                                    self.get.disciplineMedias(self.current.discipline().id());
+                                    self.get.themeMedias(self.current.theme().id());
+                                    commonHelper.modal.close(self.modals.removeThemeMedia);
+                                    self.check.lastDelete(self.current.media().id());
                                 }
                             });
                         }
+                    }
+                },
+                media: {
+                    addToDiscipline: function (hash, disciplineId, themeId) {
+                        $ajaxget({
+                            url: '/api/media/hash/' + hash,
+                            errors: self.errors,
+                            successCallback: function(retData){
+                                var mediaId = retData()[0].id();
+                                if (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true) return;
+                                var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
+                                $ajaxpost({
+                                    url: '/api/mediable/create',
+                                    error: self.errors,
+                                    data: json,
+                                    successCallback: function () {
+                                        self.get.disciplineMedias(self.current.discipline().id());
+                                    }
+                                });
+                            }
+
+                        });
+                    },
+                    addToTheme : function (hash, disciplineId, themeId) {
+                        $ajaxget({
+                            url: '/api/media/hash/' + hash,
+                            errors: self.errors,
+                            successCallback: function(retData){
+                                var mediaId = retData()[0].id();
+                                if (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true) return;
+                                var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
+                                $ajaxpost({
+                                    url: '/api/mediable/create',
+                                    error: self.errors,
+                                    data: json,
+                                    successCallback: function(){
+                                        self.get.themeMedias(self.current.theme().id());
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    remove: function () {
+                        $ajaxpost({
+                            url: '/api/media/delete/' + self.current.media().id(),
+                            data: null,
+                            errors: self.errors,
+                            successCallback: function(){
+                                commonHelper.modal.close(self.modals.lastDelete);
+                            }
+                        });
+                    }
+                }
+
+            };
+
+            self.elfinder = {
+                open: function (disciplineId, themeId) {
+                    var elf = $('#elfinder').elfinder({
+                        customData: {
+                            _token: ''
+                        },
+                        url: 'http://' + window.location.host + '/elfinder/connector',
+                        lang: 'ru',
+                        resizable: false,
+                        commands : [
+                            'back', 'chmod', 'colwidth', 'copy', 'cut', 'download',
+                            'edit', 'forward', 'fullscreen', 'getfile', 'help', 'home', 'info',
+                            'mkdir', 'mkfile', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
+                            'quicklook', 'rename', 'resize', 'rm', 'search', 'sort', 'up', 'upload', 'view'
+                        ],
+                        commandsOptions: {
+                            getfile: { multiple: false }
+                        },
+                        getFileCallback : function(file) {
+                            themeId == null? self.actions.media.addToDiscipline(file.hash, disciplineId, themeId) : self.actions.media.addToTheme(file.hash, disciplineId, themeId);
+                        }
                     });
+
+                    elf.dialog({
+                        modal: true,
+                        width : 1300,
+                        resizable: true,
+                        position: { my: "center top-70%", at: "center", of: window }
+                    });
+
+                    var elfinder = elf.elfinder('instance');
+                    self.elfinder.handlers.upload(elfinder);
+                },
+                handlers: {
+                    upload: function (elfinder) {
+                        elfinder.bind('upload', function(event) {
+                            ko.utils.arrayForEach(event.data.added, function(file) {
+                                var media = {
+                                    name: file.name,
+                                    type: file.mime.split('/')[0],
+                                    path: file.url,
+                                    hash: file.hash
+                                };
+                                var json = JSON.stringify({media: media});
+                                $ajaxpost({
+                                    url: '/api/media/create',
+                                    error: self.errors,
+                                    data: json
+                                });
+                            });
+                        });
+                    }
+                }
+            };
+
+            self.check = {
+                repeatAdd : function (mediables, mediaId) {
+                    var repeat = false;
+                    ko.utils.arrayForEach(mediables, function (mediable) {
+                        if (mediaId == mediable.media.id()) {
+                            commonHelper.modal.open(self.modals.repeatAdd);
+                            repeat = true;
+                        }
+                    });
+                    return repeat;
+                },
+                lastDelete: function (mediaId) {
+                    $ajaxget({
+                        url: '/api/mediable/media/' + mediaId,
+                        error: self.errors,
+                        successCallback: function (data) {
+                            if (data().length == 0)
+                                commonHelper.modal.open(self.modals.lastDelete);
+                        }
+                    })
                 }
             };
 
@@ -203,30 +301,9 @@ $(document).ready(function(){
                             .description('');
                     }
                 },
-                mediable: {
-                    fill: function (data) {
-                        self.current.disciplineMediable()
-                            .id(data.id())
-                            .media(data.media())
-                            .theme(data.theme())
-                            .discipline(data.discipline())
-                            .start(data.start())
-                            .stop(data.stop());
-                    },
-                    empty: function () {
-                        self.current.disciplineMediable()
-                            .id(0)
-                            .media('')
-                            .theme('')
-                            .discipline('')
-                            .start('')
-                            .stop('');
-                    }
-
-                },
                 media: {
                     fill: function (data) {
-                        self.current.disciplineMedia()
+                        self.current.media()
                             .id(data.id())
                             .type(data.type())
                             .content(data.content())
@@ -236,7 +313,7 @@ $(document).ready(function(){
                             .mediableId(data.mediableId());
                     },
                     empty: function () {
-                        self.current.disciplineMedia()
+                        self.current.media()
                             .id(0)
                             .type('')
                             .content('')
@@ -248,7 +325,6 @@ $(document).ready(function(){
                 }
 
             };
-
 
             self.get = {
                 disciplines: function(profileId){
@@ -270,7 +346,7 @@ $(document).ready(function(){
 
                 },
                 disciplineMedias: function (disciplineId) {
-                    self.current.disciplineMedias.removeAll();
+                    self.current.medias.removeAll();
                     $ajaxget({
                         url: '/api/mediable/discipline/' + disciplineId,
                         errors: self.errors,
@@ -278,7 +354,7 @@ $(document).ready(function(){
                             self.current.disciplineMediables(data());
                             ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
-                               self.current.disciplineMedias.push(mediable.media);
+                               self.current.medias.push(mediable.media);
                             });
                         }
                     });
@@ -318,6 +394,20 @@ $(document).ready(function(){
                             return;
                         }
                         self.errors.show(result.Message());
+                    });
+                },
+                themeMedias: function (themeId) {
+                    self.current.medias.removeAll();
+                    $ajaxget({
+                        url: '/api/mediable/theme/' + themeId,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.themeMediables(data());
+                            ko.utils.arrayForEach(self.current.themeMediables(), function (mediable) {
+                                mediable.media.mediableId = mediable.id;
+                                self.current.medias.push(mediable.media);
+                            });
+                        }
                     });
                 }
             };

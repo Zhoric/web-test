@@ -1155,6 +1155,7 @@ table.werewolf.materials tr:hover .actions {
 table.werewolf.materials tr > td:last-child {
   width: 100px;
   text-align: center;
+  padding: 3px 15px;
 }
 table.werewolf.materials tr > td:first-child {
   width: 15px;
@@ -1566,6 +1567,42 @@ button.add-section:hover {
 }
 .ui-widget-overlay {
   background: none !important;
+}
+.materials-details .materials-link {
+  overflow: auto;
+}
+.materials-details .materials-link .details-column {
+  margin: 2% 2% 3% 2%;
+  float: right;
+}
+.materials-details .materials-link .adder {
+  color: #8D9899;
+}
+.materials-details .materials-link .current {
+  color: #5D8CAE;
+  border-bottom: 2px solid #5D8CAE;
+}
+.materials-details .themes {
+  margin-top: -2px;
+}
+.materials-details .themes .details-row {
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #EDEEF0;
+  padding: 5px;
+}
+.materials-details .themes .details-row:hover {
+  background: #EDEEF0;
+}
+.materials-details .themes .materials {
+  margin: 30px auto;
+  width: 95%;
+}
+.materials-details .themes .materials thead tr th:first-child {
+  border-radius: 10px 0 0 0;
+}
+.materials-details .themes .materials thead tr th:last-child {
+  border-radius: 0 10px 0 0;
 }
 
 /*# sourceMappingURL=admin.css.map */

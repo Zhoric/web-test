@@ -3,7 +3,10 @@ var state = {
     update: 'update',
     remove: 'remove',
     create: 'create',
-    info: 'info'
+    info: 'info',
+    overall: 'overall',
+    themes: 'themes',
+    materials: 'materials'
 };
 
 var filters = {
