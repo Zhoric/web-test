@@ -71,11 +71,13 @@ class CodeQuestionManager
             $cases_count = $this->fileManager->createTestCasesFiles($programId,$dirPath);
 
             $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
+            $this->fileManager->createLogFile($dirPath);
 
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
             $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
-           $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
+            $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
+            $this->fileManager->putLogInfo($dirPath,$result);
 
         return $result;
 
@@ -100,7 +102,7 @@ class CodeQuestionManager
             $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($paramSets,$dirPath);
 
             $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
-
+            $this->fileManager->createLogFile($dirPath);
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
             $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
@@ -111,6 +113,8 @@ class CodeQuestionManager
             $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
             $result.="\n";
             $result.= $this->fileManager->getResultsForCompare($dirPath,$cases_count);
+
+            $this->fileManager->putLogInfo($dirPath,$result);
 
         return $result;
 

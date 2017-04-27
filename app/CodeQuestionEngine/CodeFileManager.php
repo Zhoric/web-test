@@ -63,6 +63,21 @@ class CodeFileManager
 
     }
 
+    /**
+     * Создает пустой файл, в котором хранится лог
+     * @param $dirPath
+     */
+    public function createLogFile($dirPath){
+        $fp = fopen("$dirPath/log.txt", "w");
+        fclose($fp);
+    }
+
+    public function putLogInfo($dirPath,$info){
+        $fp = fopen("$dirPath/log.txt", "w");
+        fwrite($fp,$info);
+        fclose($fp);
+    }
+
     public function getErrors($dirPath){
         $errors = file_get_contents("$dirPath/errors.txt");
         return $errors;
@@ -296,6 +311,8 @@ class CodeFileManager
 
 
     }
+
+
 
 
     public function utf8_urldecode($str) {
