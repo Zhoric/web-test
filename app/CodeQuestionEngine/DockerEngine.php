@@ -47,6 +47,11 @@ class DockerEngine
         return $output;
     }
 
+    public function runAsync($command){
+        $stdout = popen("docker run -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet $command",'r');
+        return $stdout;
+    }
+
 
 
 

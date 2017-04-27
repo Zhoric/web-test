@@ -8,6 +8,7 @@ use App\Process;
 
 
 use CodeQuestionEngine\CodeFileManager;
+use CodeQuestionEngine\DockerEngine;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Managers\ProfileManager;
@@ -15,6 +16,7 @@ use Managers\UISettingsCacheManager;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
+use CodeQuestionEngine\EngineGlobalSettings;
 
 class DemoController extends BaseController
 {
@@ -22,14 +24,16 @@ class DemoController extends BaseController
     private $app_path;
     private $manager;
     private $fileManager;
+    private $dockerEngine;
 
 
-    public function __construct(UnitOfWork $uow, CodeFileManager $fileManager, CodeQuestionManager $manager)
+    public function __construct(UnitOfWork $uow,DockerEngine $dockerEngine, CodeFileManager $fileManager, CodeQuestionManager $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = $fileManager;
         $this->manager = $manager;
         $this->app_path = app_path();
+        $this->dockerEngine = $dockerEngine;
     }
 
     public function auth(){
@@ -38,12 +42,26 @@ class DemoController extends BaseController
     }
 
     public function docker(){
-        error_reporting(E_ALL);
-        ini_set('display_errors',1);
-        $command_pattern = 'docker run -v $PWD/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet';
-        $command = 'echo hello wold';
-        $result =  exec("$command_pattern $command",$output);
-        dd($result,$output);
+
+        $app_path = app_path();
+        $cache_dir = EngineGlobalSettings::CACHE_DIR;
+
+        $dirPath = "$app_path/$cache_dir/code";
+        file_get_contents("$dirPath/test.c");
+
+        $stdout = $this->dockerEngine->runAsync("sh /opt/temp_cache/code/run.sh");
+
+        dd($stdout);
+
+
+
+        $output = array();
+        while (!feof($stdout)) {
+            $output[] = fgets($stdout);
+        }
+        pclose($stdout);
+
+        dd($output);
         return;
 
     }
@@ -83,6 +101,9 @@ class DemoController extends BaseController
         $settMan = app()->make(UISettingsCacheManager::class);
         $settMan->setValues($userId, $settings);
     }
+
+
+
 
     /**
      * Получение настроек. Пример тела запроса:
