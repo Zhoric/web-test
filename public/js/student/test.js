@@ -92,11 +92,11 @@ $(document).ready(function(){
                                 answer.answerText = self.current.answerText();
                                 break;
                             case questionType.code:
+                                self.code.approve();
                                 answer.answerText = self.code.text();
                                 break;
                         }
                         answer.answerIds = ids;
-
                         return JSON.stringify(answer);
                     }
                 },
