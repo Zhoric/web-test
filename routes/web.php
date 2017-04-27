@@ -291,6 +291,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('create', 'MediaController@create');
         Route::post('update', 'MediaController@update');
         Route::post('delete', 'MediaController@delete');
+        Route::post('deletefile', 'MediaController@deleteFile');
         Route::get('hash/{id}', 'MediaController@getMediaByHash');
         Route::get('{id}', 'MediaController@getMedia');
     });

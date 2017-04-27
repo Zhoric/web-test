@@ -70,6 +70,16 @@ class MediaController extends Controller
         }
     }
 
+    public function deleteFile(Request $request){
+        try{
+            $path = $request->json('path');
+            $this->_mediaManager->deleteFile($path);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
 
 
 }

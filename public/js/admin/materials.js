@@ -15,7 +15,8 @@ $(document).ready(function(){
                 removeThemeMedia: '#remove-theme-media-modal',
                 repeatAdd: '#repeat-add-modal',
                 lastDelete: '#last-delete-modal',
-                changeDisciplineMedia: '#change-discipline-media-modal'
+                changeDisciplineMedia: '#change-discipline-media-modal',
+                haveMediables: '#have-mediables-modal'
             };
 
             self.current = {
@@ -49,7 +50,9 @@ $(document).ready(function(){
                     mediableId: ko.observable(0)
                 }),
                 disciplineMediables: ko.observableArray([]),
-                themeMediables: ko.observableArray([])
+                themeMediables: ko.observableArray([]),
+                changeMode: ko.observable(false),
+                isChangeable: ko.observable(false)
             };
 
             self.filter = {
@@ -109,7 +112,10 @@ $(document).ready(function(){
                             });
                         },
                         changeMedia: function () {
-                           // self.elfinder.openForChange(self.current.discipline().id(), null, self.current.media().hash());
+                            self.current.changeMode(true);
+                            //self.media.deleteFile(self.current.media().path());
+                            //self.get.disciplineMedias(self.current.discipline().id());
+                            self.elfinder.open();
                         }
                     },
                     cancel: function(){
@@ -165,11 +171,7 @@ $(document).ready(function(){
                         var json = JSON.stringify({
                             media: {
                                 id: self.current.media().id(),
-                                type: self.current.media().type(),
-                                content: self.current.media().content(),
                                 path: self.current.media().path(),
-                                name: self.current.media().name(),
-                                hash: self.current.media().hash()
                             }
                         });
                         $ajaxpost({
@@ -219,33 +221,37 @@ $(document).ready(function(){
                         commandsOptions: {
                             getfile : {
                                 onlyURL  : false, // send only URL or URL+path if false
-                                multiple : true, // allow to return multiple files info
+                                multiple : !self.current.changeMode(), // allow to return multiple files info
                                 folders  : false, // allow to return folders info
                                 oncomplete : 'close' // action after callback (close/destroy)
                             }
                         },
                         getFileCallback : function(files) {
                             ko.utils.arrayForEach(files, function (file) {
-                                self.elfinder.getFile(file.hash);
+                                self.elfinder.getFile(file);
                             });
                             elf.dialog("close");
                         }
                     });
-
                     elf.dialog({
                         modal: true,
                         width : 1300,
                         resizable: true,
                         position: { my: "center top-70%", at: "center", of: window }
                     });
-
                     var elfinder = elf.elfinder('instance');
                     self.elfinder.handlers.upload(elfinder);
                 },
-                getFile: function (hash) {
+                getFile: function (file) {
+                    if(self.current.changeMode()) {
+                        console.log('change');
+                        self.media.change(file);
+                        self.current.changeMode(false);
+                        return;
+                    }
                     if (self.current.theme().id() == 0)
-                        self.media.addToDiscipline(hash, self.current.discipline().id(), null);
-                    else self.media.addToTheme(hash, self.current.discipline().id(), self.current.theme().id());
+                        self.media.addToDiscipline(file.hash, self.current.discipline().id(), null);
+                    else self.media.addToTheme(file.hash, self.current.discipline().id(), self.current.theme().id());
                 },
                 handlers: {
                     upload: function (elfinder) {
@@ -312,17 +318,75 @@ $(document).ready(function(){
                     });
                 },
                 change: function (file) {
-                    var media = {
-                        name: file.name,
-                        type: file.mime.split('/')[0],
-                        path: file.url,
-                        hash: file.hash
-                    };
-                    var json = JSON.stringify({media: media});
+                    $ajaxget({
+                        url: '/api/media/hash/' + file.hash,
+                        errors: self.errors,
+                        successCallback: function(retData){
+                            var mediaId = retData()[0].id();
+                            $ajaxget({
+                                url: '/api/mediable/media/' + mediaId,
+                                error: self.errors,
+                                successCallback: function (data) {
+                                    if (data().length == 0){
+                                        self.media.update(file);
+                                        self.media.removeAfterUpdate(mediaId, file.url.substring(file.url.search('upload'),file.url.length));
+                                    }
+                                    else {
+                                        commonHelper.modal.open(self.modals.haveMediables);
+                                    }
+                                }
+                            })
+                        }
+                    });
+                },
+                update: function (file) {
+                    var url = file.url;
+                    var path = url.substring(url.search('upload'),url.length);
+                    var json = JSON.stringify({
+                        media: {
+                            id: self.current.media().id(),
+                            type: file.mime.split('/')[0],
+                            path: path,
+                            name: file.name,
+                            hash: file.hash
+                        },
+                        oldPath: self.current.media().path()
+                    });
                     $ajaxpost({
                         url: '/api/media/update',
                         error: self.errors,
-                        data: json
+                        data: json,
+                        successCallback: function(){
+                            self.get.disciplineMedias(self.current.discipline().id());
+                            $('#elfinder').elfinder('instance').exec('reload');
+                        }
+                    });
+                },
+                removeAfterUpdate: function (mediaId, path) {
+                    var json = JSON.stringify({
+                        media: {
+                            id: mediaId,
+                            path: path
+                        }
+                    });
+                    $ajaxpost({
+                        url: '/api/media/delete',
+                        data: json,
+                        errors: self.errors
+                    });
+
+                },
+                deleteFile: function (path) {
+                    var json = JSON.stringify({
+                        path: path
+                    });
+                    $ajaxpost({
+                        url: '/api/media/deletefile',
+                        data: json,
+                        errors: self.errors,
+                        successCallback: function(){
+                            $('#elfinder').elfinder('instance').exec('reload');
+                        }
                     });
                 }
             };

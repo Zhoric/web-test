@@ -115,6 +115,21 @@
     </div>
 
     <div class="g-hidden">
+        <div class="box-modal removal-modal" id="have-mediables-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Данный материал уже к чему-то прикреплен!</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">ОК</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-hidden">
         <div class="box-modal removal-modal" id="last-delete-modal">
             <div class="layer zero-margin width-auto">
                 <div class="layer-head">
