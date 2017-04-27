@@ -162,12 +162,23 @@ $(document).ready(function(){
                 },
                 media: {
                     remove: function () {
+                        var json = JSON.stringify({
+                            media: {
+                                id: self.current.media().id(),
+                                type: self.current.media().type(),
+                                content: self.current.media().content(),
+                                path: self.current.media().path(),
+                                name: self.current.media().name(),
+                                hash: self.current.media().hash()
+                            }
+                        });
                         $ajaxpost({
-                            url: '/api/media/delete/' + self.current.media().id(),
-                            data: null,
+                            url: '/api/media/delete',
+                            data: json,
                             errors: self.errors,
                             successCallback: function(){
                                 commonHelper.modal.close(self.modals.lastDelete);
+                                $('#elfinder').elfinder('instance').exec('reload');
                             }
                         });
                     }
@@ -240,10 +251,12 @@ $(document).ready(function(){
                     upload: function (elfinder) {
                         elfinder.bind('upload', function(event) {
                             ko.utils.arrayForEach(event.data.added, function(file) {
+                                var url = file.url;
+                                var path = url.substring(url.search('upload'),url.length);
                                 var media = {
                                     name: file.name,
                                     type: file.mime.split('/')[0],
-                                    path: file.url,
+                                    path: path,
                                     hash: file.hash
                                 };
                                 var json = JSON.stringify({media: media});

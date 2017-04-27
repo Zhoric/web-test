@@ -290,7 +290,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'media'], function () {
         Route::post('create', 'MediaController@create');
         Route::post('update', 'MediaController@update');
-        Route::post('delete/{id}', 'MediaController@delete');
+        Route::post('delete', 'MediaController@delete');
         Route::get('hash/{id}', 'MediaController@getMediaByHash');
         Route::get('{id}', 'MediaController@getMedia');
     });

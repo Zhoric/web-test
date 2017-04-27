@@ -32,9 +32,10 @@ class MediaManager
         $this->_unitOfWork->commit();
     }
 
-    public function deleteMedia($mediaId){
+    public function deleteMedia($mediaId, $mediaPath){
         $media = $this->_unitOfWork->medias()->find($mediaId);
         if ($media != null){
+            unlink(public_path($mediaPath));
             $this->_unitOfWork->medias()->delete($media);
             $this->_unitOfWork->commit();
         }
