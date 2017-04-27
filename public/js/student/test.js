@@ -16,7 +16,11 @@ $(document).ready(function(){
                 },
                 fill: function(data){
                     self.code.task(self.current.question().text());
-                    editor.setValue(data.program.template());
+                    var template = data.program.template();
+                    if(template === null){
+                        template = "";
+                    }
+                    editor.setValue(template);
                 },
                 empty: function(){
                     self.code
