@@ -1604,5 +1604,11 @@ button.add-section:hover {
 .materials-details .themes .materials thead tr th:last-child {
   border-radius: 0 10px 0 0;
 }
+.elfinder-button-icon-getfile {
+  background-position: 0 -736px !important;
+}
+.elfinder-button-icon-getfile + .elfinder-button-text {
+  display: inline-block !important;
+}
 
 /*# sourceMappingURL=admin.css.map */

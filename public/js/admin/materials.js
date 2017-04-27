@@ -14,7 +14,8 @@ $(document).ready(function(){
                 removeDisciplineMedia: '#remove-discipline-media-modal',
                 removeThemeMedia: '#remove-theme-media-modal',
                 repeatAdd: '#repeat-add-modal',
-                lastDelete: '#last-delete-modal'
+                lastDelete: '#last-delete-modal',
+                changeDisciplineMedia: '#change-discipline-media-modal'
             };
 
             self.current = {
@@ -88,6 +89,10 @@ $(document).ready(function(){
                         removeMedia: function (data) {
                             self.alter.media.fill(data);
                             commonHelper.modal.open(self.modals.removeDisciplineMedia);
+                        },
+                        changeMedia: function (data) {
+                            self.alter.media.fill(data);
+                            commonHelper.modal.open(self.modals.changeDisciplineMedia);
                         }
                     },
                     end: {
@@ -102,14 +107,17 @@ $(document).ready(function(){
                                     self.check.lastDelete(self.current.media().id());
                                 }
                             });
+                        },
+                        changeMedia: function () {
+                           // self.elfinder.openForChange(self.current.discipline().id(), null, self.current.media().hash());
                         }
                     },
                     cancel: function(){
                         self.mode(state.none);
                         self.alter.discipline.empty();
                     },
-                    addMedia: function (data) {
-                        self.elfinder.open(data.id(), null);
+                    addMedia: function () {
+                        self.elfinder.open();
                     }
 
                 },
@@ -128,8 +136,8 @@ $(document).ready(function(){
                         }
                         self.actions.theme.cancel();
                     },
-                    addMedia: function (data) {
-                        self.elfinder.open(self.current.discipline().id(), data.id());
+                    addMedia: function () {
+                        self.elfinder.open();
                     },
                     start: {
                         removeMedia: function (data) {
@@ -153,45 +161,6 @@ $(document).ready(function(){
                     }
                 },
                 media: {
-                    addToDiscipline: function (hash, disciplineId, themeId) {
-                        $ajaxget({
-                            url: '/api/media/hash/' + hash,
-                            errors: self.errors,
-                            successCallback: function(retData){
-                                var mediaId = retData()[0].id();
-                                if (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true) return;
-                                var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
-                                $ajaxpost({
-                                    url: '/api/mediable/create',
-                                    error: self.errors,
-                                    data: json,
-                                    successCallback: function () {
-                                        self.get.disciplineMedias(self.current.discipline().id());
-                                    }
-                                });
-                            }
-
-                        });
-                    },
-                    addToTheme : function (hash, disciplineId, themeId) {
-                        $ajaxget({
-                            url: '/api/media/hash/' + hash,
-                            errors: self.errors,
-                            successCallback: function(retData){
-                                var mediaId = retData()[0].id();
-                                if (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true) return;
-                                var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
-                                $ajaxpost({
-                                    url: '/api/mediable/create',
-                                    error: self.errors,
-                                    data: json,
-                                    successCallback: function(){
-                                        self.get.themeMedias(self.current.theme().id());
-                                    }
-                                });
-                            }
-                        });
-                    },
                     remove: function () {
                         $ajaxpost({
                             url: '/api/media/delete/' + self.current.media().id(),
@@ -207,7 +176,7 @@ $(document).ready(function(){
             };
 
             self.elfinder = {
-                open: function (disciplineId, themeId) {
+                open: function () {
                     var elf = $('#elfinder').elfinder({
                         customData: {
                             _token: ''
@@ -216,16 +185,39 @@ $(document).ready(function(){
                         lang: 'ru',
                         resizable: false,
                         commands : [
-                            'back', 'chmod', 'colwidth', 'copy', 'cut', 'download',
-                            'edit', 'forward', 'fullscreen', 'getfile', 'help', 'home', 'info',
+                            'getfile', 'back', 'chmod', 'colwidth', 'copy', 'cut', 'download',
+                            'edit', 'forward', 'fullscreen', 'help', 'home', 'info',
                             'mkdir', 'mkfile', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
                             'quicklook', 'rename', 'resize', 'rm', 'search', 'sort', 'up', 'upload', 'view'
                         ],
-                        commandsOptions: {
-                            getfile: { multiple: false }
+                        uiOptions: {
+                             toolbar: [
+                                 ['back', 'forward'],
+                                 ['mkdir', 'mkfile', 'upload'],
+                                 ['open', 'opendir'],
+                                 ['copy', 'cut', 'paste']
+                                 ['info'],
+                                 ['quicklook'],
+                                 ['rename', 'edit', 'resize'],
+                                 ['search'],
+                                 ['view'],
+                                 ['help'],
+                                 ['getfile']
+                            ]
                         },
-                        getFileCallback : function(file) {
-                            themeId == null? self.actions.media.addToDiscipline(file.hash, disciplineId, themeId) : self.actions.media.addToTheme(file.hash, disciplineId, themeId);
+                        commandsOptions: {
+                            getfile : {
+                                onlyURL  : false, // send only URL or URL+path if false
+                                multiple : true, // allow to return multiple files info
+                                folders  : false, // allow to return folders info
+                                oncomplete : 'close' // action after callback (close/destroy)
+                            }
+                        },
+                        getFileCallback : function(files) {
+                            ko.utils.arrayForEach(files, function (file) {
+                                self.elfinder.getFile(file.hash);
+                            });
+                            elf.dialog("close");
                         }
                     });
 
@@ -238,6 +230,11 @@ $(document).ready(function(){
 
                     var elfinder = elf.elfinder('instance');
                     self.elfinder.handlers.upload(elfinder);
+                },
+                getFile: function (hash) {
+                    if (self.current.theme().id() == 0)
+                        self.media.addToDiscipline(hash, self.current.discipline().id(), null);
+                    else self.media.addToTheme(hash, self.current.discipline().id(), self.current.theme().id());
                 },
                 handlers: {
                     upload: function (elfinder) {
@@ -258,6 +255,62 @@ $(document).ready(function(){
                             });
                         });
                     }
+                }
+            };
+
+            self.media = {
+                addToDiscipline: function (hash, disciplineId, themeId) {
+                    $ajaxget({
+                        url: '/api/media/hash/' + hash,
+                        errors: self.errors,
+                        successCallback: function(retData){
+                            var mediaId = retData()[0].id();
+                            if (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true) return;
+                            var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
+                            $ajaxpost({
+                                url: '/api/mediable/create',
+                                error: self.errors,
+                                data: json,
+                                successCallback: function () {
+                                    self.get.disciplineMedias(self.current.discipline().id());
+                                }
+                            });
+                        }
+
+                    });
+                },
+                addToTheme : function (hash, disciplineId, themeId) {
+                    $ajaxget({
+                        url: '/api/media/hash/' + hash,
+                        errors: self.errors,
+                        successCallback: function(retData){
+                            var mediaId = retData()[0].id();
+                            if (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true) return;
+                            var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
+                            $ajaxpost({
+                                url: '/api/mediable/create',
+                                error: self.errors,
+                                data: json,
+                                successCallback: function(){
+                                    self.get.themeMedias(self.current.theme().id());
+                                }
+                            });
+                        }
+                    });
+                },
+                change: function (file) {
+                    var media = {
+                        name: file.name,
+                        type: file.mime.split('/')[0],
+                        path: file.url,
+                        hash: file.hash
+                    };
+                    var json = JSON.stringify({media: media});
+                    $ajaxpost({
+                        url: '/api/media/update',
+                        error: self.errors,
+                        data: json
+                    });
                 }
             };
 
@@ -346,11 +399,11 @@ $(document).ready(function(){
 
                 },
                 disciplineMedias: function (disciplineId) {
-                    self.current.medias.removeAll();
                     $ajaxget({
                         url: '/api/mediable/discipline/' + disciplineId,
                         errors: self.errors,
                         successCallback: function(data){
+                            self.current.medias.removeAll();
                             self.current.disciplineMediables(data());
                             ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
@@ -397,11 +450,11 @@ $(document).ready(function(){
                     });
                 },
                 themeMedias: function (themeId) {
-                    self.current.medias.removeAll();
                     $ajaxget({
                         url: '/api/mediable/theme/' + themeId,
                         errors: self.errors,
                         successCallback: function(data){
+                            self.current.medias.removeAll();
                             self.current.themeMediables(data());
                             ko.utils.arrayForEach(self.current.themeMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
@@ -442,10 +495,6 @@ $(document).ready(function(){
                 self.pagination.currentPage(1);
                 self.get.disciplines();
             });
-
-
-
-
 
             return returnStandart.call(self);
         };

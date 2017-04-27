@@ -1,9 +1,10 @@
-@extends('layouts.manager')
+@extends('layouts.managerElf')
 @section('title', 'Материалы')
 @section('javascript')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/theme.css') }}">
     <script src="{{ URL::asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
+    <script src="{{ URL::asset('packages/barryvdh/elfinder/js/i18n/elfinder.ru.js') }}"></script>
     <script src="{{ URL::asset('js/knockout.multiselect.js') }}"></script>
     <script src="{{ URL::asset('js/admin/materials.js')}}"></script>
 @endsection
@@ -129,6 +130,22 @@
         </div>
     </div>
 
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="change-discipline-media-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Заменить данный материал во всех вхождениях (старая версия материала будет удалена)?</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button data-bind="click: $root.actions.discipline.end.changeMedia" class="remove arcticmodal-close">Заменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection
 
@@ -150,7 +167,7 @@
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
             <td data-bind="text: name"></td>
             <td class="action-holder">
-                <button class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.discipline.start.changeMedia" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.discipline.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
@@ -197,7 +214,7 @@
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
             <td data-bind="text: name"></td>
             <td class="action-holder">
-                <button class="fa approve mini actions">&#xf0ec;</button>
+                <button  class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.theme.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
