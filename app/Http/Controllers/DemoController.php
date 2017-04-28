@@ -54,37 +54,86 @@ class DemoController extends BaseController
 
         $start_time = microtime(true);
 
-        $process = $this->dockerEngine->runAsync("sh /opt/temp_cache/code/run.sh");
+        $command_pattern = "docker run -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init";
+
+
+        $container_id =  exec("$command_pattern",$output);
+
+
+        $command_pattern = "sh /opt/temp_cache/code/run.sh";
+
+        $descriptorspec = array(
+            0 => array('pipe', 'r'),
+        );
+
+        $process = proc_open("docker exec $container_id $command_pattern",
+            $descriptorspec,$pipes);
 
 
         $current_time = microtime(true);
 
-        $overtime = true;
+
         while($current_time - $start_time < 10){
             $metainfo = proc_get_status($process);
 
-            if($metainfo["running"] == "false"){
-                $overtime = false;
+            if($metainfo["running"] === false){
+
+                return "no overtime";
                 break;
             }
             sleep(1);
 
             $current_time = microtime(true);
         }
-        if($overtime){
-            $metainfo = proc_get_status($process);
-            $pid = $metainfo['pid'];
-            $sigterm = 15;
-            posix_kill ( $pid, $sigterm );
 
-            return "overtime";
-        }
+        $command_pattern = "docker stop $container_id";
 
-        return "success";
+        exec($command_pattern,$output);
+
+        return "overtime";
+
+
 
     }
 
-    
+
+    public function connect(){
+
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command_pattern = "docker run -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init";
+        $command = 'echo hello world';
+
+        $container_id =  exec("$command_pattern",$output);
+
+        $container_id = substr($container_id,0,7);
+
+        $command_pattern = "docker stop $container_id";
+
+        $res = exec($command_pattern,$output);
+
+
+        dd($res,$output);
+        //$command_pattern = "docker restart -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M $container_id /sbin/my_init";
+
+
+
+        $container_id = substr($container_id, 0, 5);
+        $command_pattern = "docker exec $container_id $command";
+
+
+        $result = exec($command_pattern,$external);
+
+        dd($result,$external);
+
+
+
+    }
+
+
+    public function docker_test(){
+
+    }
 
 
     public function editor(){

@@ -56,6 +56,8 @@ class DockerEngine
         $process = proc_open("docker run -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet $command",
                    $descriptorspec,$pipes);
 
+
+
         return $process;
 
     }
