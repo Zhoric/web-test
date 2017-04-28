@@ -9,7 +9,7 @@ Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
 Route::get('auth', 'DemoController@auth');
-Route::post('receiveCode','DemoController@receiveCode');
+Route::get('receiveCode','DemoController@receiveCode');
 Route::get('compile','DemoController@compileOnDocker');
 Route::post('register/checkEmail', 'Auth\RegisterController@checkIfEmailExists');
 Route::get('role','UserController@getRoleByUser');

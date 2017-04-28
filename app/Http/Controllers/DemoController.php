@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 
+use App\Jobs\TestJob;
 use App\Process;
 
 
@@ -13,6 +14,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Managers\ProfileManager;
 use Managers\UISettingsCacheManager;
+use Queue;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
@@ -41,6 +43,7 @@ class DemoController extends BaseController
 
     }
 
+
     public function docker(){
 
         $app_path = app_path();
@@ -49,20 +52,35 @@ class DemoController extends BaseController
         $dirPath = "$app_path/$cache_dir/code";
         file_get_contents("$dirPath/test.c");
 
-        $stdout = $this->dockerEngine->runAsync("sh /opt/temp_cache/code/run.sh");
+        $start_time = microtime(true);
 
-        dd($stdout);
+        $process = $this->dockerEngine->runAsync("sh /opt/temp_cache/code/run.sh");
 
 
+        $current_time = microtime(true);
 
-        $output = array();
-        while (!feof($stdout)) {
-            $output[] = fgets($stdout);
+        $overtime = true;
+        while($current_time - $start_time < 10){
+            $metainfo = proc_get_status($process);
+
+            if($metainfo["running"] == "false"){
+                $overtime = false;
+                break;
+            }
+            sleep(1);
+
+            $current_time = microtime(true);
         }
-        pclose($stdout);
+        if($overtime){
+            $metainfo = proc_get_status($process);
+            $pid = $metainfo['pid'];
+            $sigterm = 15;
+            posix_kill ( $pid, $sigterm );
 
-        dd($output);
-        return;
+            return "overtime";
+        }
+
+        return "success";
 
     }
 
@@ -73,13 +91,10 @@ class DemoController extends BaseController
         return view('editor');
     }
 
-    public function receiveCode(Request $request){
-        $code = $request->input('code');
+    public function receiveCode(){
 
-      //  $result = $this->manager->runQuestionProgram($code,1);
-
-        $result = $this->manager->run($code);
-        return $result;
+        $queue = Queue::push(new TestJob());
+        return $queue;
 
     }
 
