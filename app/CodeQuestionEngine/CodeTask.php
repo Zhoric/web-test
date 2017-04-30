@@ -25,6 +25,18 @@ class CodeTask
 
     public $state;
 
+    /**
+     * максимальное время выполнения программы в секундах
+     */
+
+    public $timeout;
+
+    /**
+     * лимит памяти на задачу в килобайтах
+     */
+    public $memoryLimit;
+
+
     public $testCaseNumber;
 
     /**
@@ -39,11 +51,15 @@ class CodeTask
      * @param $processName
      * @param $state
      * @param $key
+     * @param $timeout
+     * @param $memoryLimit
      * @param string $testCaseNumber
      */
-    public function __construct($questionId, $processName, $state, $testCaseNumber = "", $key = "")
+    public function __construct($questionId, $processName, $state, $timeout, $memoryLimit, $testCaseNumber = "", $key = "")
     {
         $this->questionId   = $questionId;
+        $this->timeout = $timeout;
+        $this->memoryLimit = $memoryLimit;
         $this->processName   = $processName;
         $this->state = $state;
         $this->testCaseNumber = $testCaseNumber == "" ? 1 : $testCaseNumber;
@@ -64,6 +80,8 @@ class CodeTask
             'questionId'    => $this->questionId,
             'processName'   => $this->processName,
             'state' => $this->state,
+            'timeout' => $this->timeout,
+            'memoryLimit' => $this->memoryLimit,
             'testCaseNumber' => $this->testCaseNumber,
         ]);
     }
@@ -77,6 +95,8 @@ class CodeTask
                   $stored['questionId']
                 , $stored['processName']
                 , $stored['state']
+                , $stored['timeout']
+                , $stored['memoryLimit']
                 , $stored['testCaseNumber']
                 , $stored['key']);
         }
@@ -94,6 +114,8 @@ class CodeTask
                 $stored['questionId']
                 , $stored['processName']
                 , $stored['state']
+                , $stored['timeout']
+                , $stored['memoryLimit']
                 , $stored['testCaseNumber']
                 , $stored['key']);
 

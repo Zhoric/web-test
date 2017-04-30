@@ -13,6 +13,7 @@ Route::get('receiveCode','DemoController@receiveCode');
 Route::get('compile','DemoController@compileOnDocker');
 Route::post('register/checkEmail', 'Auth\RegisterController@checkIfEmailExists');
 Route::get('role','UserController@getRoleByUser');
+Route::get('cachetest','DemoController@test');
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');

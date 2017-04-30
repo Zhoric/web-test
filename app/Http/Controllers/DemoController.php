@@ -8,13 +8,14 @@ use App\Jobs\TestJob;
 use App\Process;
 
 
-use CodeQuestionEngine\CodeFileManager;
+use CodeQuestionEngine\CCodeFileManager;
 use CodeQuestionEngine\DockerEngine;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Managers\ProfileManager;
 use Managers\UISettingsCacheManager;
 use Queue;
+use CodeQuestionEngine\CodeTask;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
@@ -29,7 +30,7 @@ class DemoController extends BaseController
     private $dockerEngine;
 
 
-    public function __construct(UnitOfWork $uow,DockerEngine $dockerEngine, CodeFileManager $fileManager, CodeQuestionManager $manager)
+    public function __construct(UnitOfWork $uow, DockerEngine $dockerEngine, CCodeFileManager $fileManager, CodeQuestionManager $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = $fileManager;
@@ -44,6 +45,10 @@ class DemoController extends BaseController
     }
 
 
+    public function test(){
+
+    }
+
     public function docker(){
 
         $app_path = app_path();
@@ -56,6 +61,7 @@ class DemoController extends BaseController
 
         $command_pattern = "docker run -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init";
 
+        dd($command_pattern);
 
         $container_id =  exec("$command_pattern",$output);
 
@@ -68,6 +74,7 @@ class DemoController extends BaseController
 
         $process = proc_open("docker exec $container_id $command_pattern",
             $descriptorspec,$pipes);
+        dd($process);
 
 
         $current_time = microtime(true);
@@ -85,10 +92,14 @@ class DemoController extends BaseController
 
             $current_time = microtime(true);
         }
+        $metainfo = proc_get_status($process);
+                   $pid = $metainfo['pid'];
+                  $sigterm = 9;
+                   posix_kill ( $pid, $sigterm );
 
-        $command_pattern = "docker stop $container_id";
+       // $command_pattern = "docker stop $container_id";
 
-        exec($command_pattern,$output);
+       // exec($command_pattern,$output);
 
         return "overtime";
 
@@ -110,21 +121,13 @@ class DemoController extends BaseController
 
         $command_pattern = "docker stop $container_id";
 
-        $res = exec($command_pattern,$output);
-
-
-        dd($res,$output);
-        //$command_pattern = "docker restart -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M $container_id /sbin/my_init";
-
-
+        exec($command_pattern,$output);
 
         $container_id = substr($container_id, 0, 5);
         $command_pattern = "docker exec $container_id $command";
 
 
         $result = exec($command_pattern,$external);
-
-        dd($result,$external);
 
 
 
@@ -142,9 +145,14 @@ class DemoController extends BaseController
 
     public function receiveCode(){
 
-        $queue = Queue::push(new TestJob());
-        return $queue;
 
+        for($i = 0; $i < 1; $i ++) {
+
+            $queue = Queue::push(new TestJob());
+
+
+        }
+        return $queue;
     }
 
     /**

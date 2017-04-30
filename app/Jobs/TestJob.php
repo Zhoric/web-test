@@ -32,7 +32,54 @@ class TestJob implements ShouldQueue
     public function handle(DockerEngine $dockerEngine)
     {
 
+        $container_id =  "41b78207d68b";
 
+
+        $command_pattern = "sh /opt/temp_cache/code/run.sh";
+
+        $descriptorspec = array(
+            0 => array('pipe', 'r'),
+        );
+
+        $start_time = microtime(true);
+
+        $process = proc_open("docker exec $container_id $command_pattern",
+            $descriptorspec,$pipes);
+
+        return;
+
+        $current_time = microtime(true);
+
+
+        while($current_time - $start_time < 1){
+            $metainfo = proc_get_status($process);
+
+
+
+            if($metainfo["running"] === false){
+
+                return;
+
+            }
+            sleep(0.2);
+
+            $current_time = microtime(true);
+        }
+
+
+
+         $command_pattern = "docker stop $container_id";
+
+         exec($command_pattern,$output);
+
+
+
+
+
+    }
+
+
+    private function oldHandle(DockerEngine $dockerEngine){
         $this->dockerEngine = $dockerEngine;
         $app_path = app_path();
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
@@ -41,6 +88,5 @@ class TestJob implements ShouldQueue
         file_get_contents("$dirPath/test.c");
 
         $this->dockerEngine->runAsync("sh /opt/temp_cache/code/run.sh");
-
     }
 }
