@@ -1610,5 +1610,8 @@ button.add-section:hover {
 .elfinder-button-icon-getfile + .elfinder-button-text {
   display: inline-block !important;
 }
+#elfinder {
+  display: none;
+}
 
 /*# sourceMappingURL=admin.css.map */

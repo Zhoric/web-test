@@ -52,7 +52,7 @@ $(document).ready(function(){
                 disciplineMediables: ko.observableArray([]),
                 themeMediables: ko.observableArray([]),
                 changeMode: ko.observable(false),
-                isChangeable: ko.observable(false)
+                elf: ko.observable()
             };
 
             self.filter = {
@@ -88,6 +88,13 @@ $(document).ready(function(){
                             self.get.themes();
                         }
                     },
+                    cancel: function(){
+                        self.mode(state.none);
+                        self.alter.discipline.empty();
+                    },
+                    addMedia: function () {
+                        self.elfinder.open();
+                    },
                     start: {
                         removeMedia: function (data) {
                             self.alter.media.fill(data);
@@ -113,17 +120,8 @@ $(document).ready(function(){
                         },
                         changeMedia: function () {
                             self.current.changeMode(true);
-                            //self.media.deleteFile(self.current.media().path());
-                            //self.get.disciplineMedias(self.current.discipline().id());
                             self.elfinder.open();
                         }
-                    },
-                    cancel: function(){
-                        self.mode(state.none);
-                        self.alter.discipline.empty();
-                    },
-                    addMedia: function () {
-                        self.elfinder.open();
                     }
 
                 },
@@ -168,29 +166,29 @@ $(document).ready(function(){
                 },
                 media: {
                     remove: function () {
-                        var json = JSON.stringify({
-                            media: {
-                                id: self.current.media().id(),
-                                path: self.current.media().path(),
-                            }
-                        });
                         $ajaxpost({
-                            url: '/api/media/delete',
-                            data: json,
+                            url: '/api/media/delete/' + self.current.media().id(),
+                            data: null,
                             errors: self.errors,
                             successCallback: function(){
-                                commonHelper.modal.close(self.modals.lastDelete);
-                                $('#elfinder').elfinder('instance').exec('reload');
+                                $ajaxpost({
+                                    url: '/api/media/deletefile',
+                                    data: JSON.stringify({path: self.current.media().path()}),
+                                    errors: self.errors,
+                                    successCallback: function () {
+                                        commonHelper.modal.close(self.modals.lastDelete);
+                                        $('#elfinder').elfinder('instance').exec('reload');
+                                    }
+                                });
                             }
                         });
                     }
                 }
-
             };
 
             self.elfinder = {
-                open: function () {
-                    var elf = $('#elfinder').elfinder({
+                initialize: function () {
+                    var elfOptions = {
                         customData: {
                             _token: ''
                         },
@@ -198,30 +196,31 @@ $(document).ready(function(){
                         lang: 'ru',
                         resizable: false,
                         commands : [
-                            'getfile', 'back', 'chmod', 'colwidth', 'copy', 'cut', 'download',
-                            'edit', 'forward', 'fullscreen', 'help', 'home', 'info',
+                            'getfile', 'back', 'chmod', 'colwidth', 'copy', 'cut',
+                            'edit', 'forward',  'help', 'home', 'info', 'reload',
                             'mkdir', 'mkfile', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
                             'quicklook', 'rename', 'resize', 'rm', 'search', 'sort', 'up', 'upload', 'view'
                         ],
                         uiOptions: {
-                             toolbar: [
-                                 ['back', 'forward'],
-                                 ['mkdir', 'mkfile', 'upload'],
-                                 ['open', 'opendir'],
-                                 ['copy', 'cut', 'paste']
-                                 ['info'],
-                                 ['quicklook'],
-                                 ['rename', 'edit', 'resize'],
-                                 ['search'],
-                                 ['view'],
-                                 ['help'],
-                                 ['getfile']
+                            toolbar: [
+                                ['back', 'forward'],
+                                ['reload'],
+                                ['mkdir', 'mkfile', 'upload'],
+                                ['open', 'opendir'],
+                                ['copy', 'cut', 'paste']
+                                    ['info'],
+                                ['quicklook'],
+                                ['rename', 'edit', 'resize'],
+                                ['search'],
+                                ['view'],
+                                ['help'],
+                                ['getfile']
                             ]
                         },
                         commandsOptions: {
                             getfile : {
                                 onlyURL  : false, // send only URL or URL+path if false
-                                multiple : !self.current.changeMode(), // allow to return multiple files info
+                                multiple : true, // allow to return multiple files info
                                 folders  : false, // allow to return folders info
                                 oncomplete : 'close' // action after callback (close/destroy)
                             }
@@ -232,19 +231,23 @@ $(document).ready(function(){
                             });
                             elf.dialog("close");
                         }
-                    });
+                    };
+                    var elf = $('#elfinder').elfinder(elfOptions);
+                    self.elfinder.handlers.upload(elf.elfinder('instance'));
                     elf.dialog({
                         modal: true,
+                        autoOpen: false,
                         width : 1300,
                         resizable: true,
                         position: { my: "center top-70%", at: "center", of: window }
                     });
-                    var elfinder = elf.elfinder('instance');
-                    self.elfinder.handlers.upload(elfinder);
+                    self.current.elf(elf);
+                },
+                open: function () {
+                    self.current.elf().dialog('open');
                 },
                 getFile: function (file) {
                     if(self.current.changeMode()) {
-                        console.log('change');
                         self.media.change(file);
                         self.current.changeMode(false);
                         return;
@@ -329,7 +332,7 @@ $(document).ready(function(){
                                 successCallback: function (data) {
                                     if (data().length == 0){
                                         self.media.update(file);
-                                        self.media.removeAfterUpdate(mediaId, file.url.substring(file.url.search('upload'),file.url.length));
+                                        self.media.removeAfterUpdate(mediaId, self.current.media().path());
                                     }
                                     else {
                                         commonHelper.modal.open(self.modals.haveMediables);
@@ -363,26 +366,22 @@ $(document).ready(function(){
                     });
                 },
                 removeAfterUpdate: function (mediaId, path) {
-                    var json = JSON.stringify({
-                        media: {
-                            id: mediaId,
-                            path: path
-                        }
+                    $ajaxpost({
+                        url: '/api/media/deletefile',
+                        data: JSON.stringify({path: path}),
+                        errors: self.errors
                     });
                     $ajaxpost({
-                        url: '/api/media/delete',
-                        data: json,
+                        url: '/api/media/delete/' + mediaId,
+                        data: null,
                         errors: self.errors
                     });
 
                 },
                 deleteFile: function (path) {
-                    var json = JSON.stringify({
-                        path: path
-                    });
                     $ajaxpost({
                         url: '/api/media/deletefile',
-                        data: json,
+                        data: JSON.stringify({path: path}),
                         errors: self.errors,
                         successCallback: function(){
                             $('#elfinder').elfinder('instance').exec('reload');
@@ -390,7 +389,6 @@ $(document).ready(function(){
                     });
                 }
             };
-
             self.check = {
                 repeatAdd : function (mediables, mediaId) {
                     var repeat = false;
@@ -413,7 +411,6 @@ $(document).ready(function(){
                     })
                 }
             };
-
             self.alter = {
                 discipline: {
                     fill: function(data){
@@ -543,7 +540,7 @@ $(document).ready(function(){
             };
             self.get.disciplines();
             self.get.profiles();
-
+            self.elfinder.initialize();
 
             self.events.theme = function(data, e){
                 if (e.which === 13)

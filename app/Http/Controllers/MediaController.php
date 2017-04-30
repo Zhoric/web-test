@@ -58,12 +58,9 @@ class MediaController extends Controller
         }
     }
 
-    public function delete(Request $request){
+    public function delete($mediaId){
         try{
-            $mediaData = $request->json('media');
-            $media = new Media();
-            $media->fillFromJson($mediaData);
-            $this->_mediaManager->deleteMedia($media->getId(), $media->getPath());
+            $this->_mediaManager->deleteMedia($mediaId);
             return $this->successJSONResponse();
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
