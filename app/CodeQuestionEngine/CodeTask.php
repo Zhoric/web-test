@@ -46,14 +46,15 @@ class CodeTask
         $this->questionId   = $questionId;
         $this->processName   = $processName;
         $this->state = $state;
-        $this->testCaseNumber = empty($testCaseNumber) ? 1 : $testCaseNumber;
+        $this->testCaseNumber = $testCaseNumber == "" ? 1 : $testCaseNumber;
 
-        if(empty($key)) {
-            $this->key = self::prefix . '-' . $questionId . '-' . $testCaseNumber;
+        if($key == "") {
+            $this->key = self::prefix . '-' . $questionId . '-' . $this->testCaseNumber;
         }
         else {
             $this->key = $key;
         }
+
     }
 
     public function store(){
@@ -85,8 +86,8 @@ class CodeTask
     public static function getAll()
     {
         $prefix = self::prefix;
-        $keys = Redis::keys("$prefix:*");
-        $clients = [];
+        $keys = Redis::keys("$prefix-*");
+        $tasks = [];
         foreach ($keys as $key) {
             $stored = Redis::hgetall($key);
             $task = new CodeTask(
@@ -98,7 +99,15 @@ class CodeTask
 
             $tasks[] = $task;
         }
-        return $clients;
+        return $tasks;
+    }
+
+    public static function flush(){
+        $prefix = self::prefix;
+        $keys = Redis::keys("$prefix-*");
+        foreach ($keys as $key) {
+            Redis::del($key);
+        }
     }
 
     public function delete(){
