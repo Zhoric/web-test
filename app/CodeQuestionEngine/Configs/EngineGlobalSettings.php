@@ -1,11 +1,7 @@
 <?php
 namespace CodeQuestionEngine;
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 22.11.16
- * Time: 14:49
- */
+
+
 class EngineGlobalSettings
 {
     /**

@@ -10,7 +10,7 @@ class CodeQuestionManager
 {
 
 
-    private $dockerEngine;
+    private $dockerInstance;
 
     /**
      * @var \CodeFileManagerBase
@@ -19,9 +19,9 @@ class CodeQuestionManager
     private $_uow;
 
 
-    public function __construct(DockerEngine $dockerEngine, UnitOfWork $uow)
+    public function __construct(DockerInstance $dockerEngine, UnitOfWork $uow)
     {
-        $this->dockerEngine = $dockerEngine;
+        $this->dockerInstance = $dockerEngine;
         $this->_uow = $uow;
     }
 
@@ -42,7 +42,7 @@ class CodeQuestionManager
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
-            $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
+            $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
             $errors = $this->fileManager->getErrors($dirPath);
             $result = $this->fileManager->getStudentResult($dirPath);
 
@@ -79,7 +79,7 @@ class CodeQuestionManager
         $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
-        $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
+        $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
         $result = $this->fileManager->calculateMark($dirPath, $cases_count);
         $this->fileManager->putLogInfo($dirPath, $result);
 
@@ -115,7 +115,7 @@ class CodeQuestionManager
             $this->fileManager->createLogFile($dirPath);
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
-            $this->dockerEngine->run("sh /opt/$cache_dir/$dirName/$script_name");
+            $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
             $errors = $this->fileManager->getErrors($dirPath);
             if($errors != ''){
                 throw new \Exception($errors);

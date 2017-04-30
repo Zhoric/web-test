@@ -7,13 +7,13 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use CodeQuestionEngine\EngineGlobalSettings;
-use CodeQuestionEngine\DockerEngine;
+use CodeQuestionEngine\DockerInstance;
 class TestJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
 
-    private $dockerEngine;
+    private $dockerInstance;
     /**
      * Create a new job instance.
      *
@@ -29,7 +29,7 @@ class TestJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(DockerEngine $dockerEngine)
+    public function handle()
     {
 
         $container_id =  "41b78207d68b";
@@ -79,14 +79,14 @@ class TestJob implements ShouldQueue
     }
 
 
-    private function oldHandle(DockerEngine $dockerEngine){
-        $this->dockerEngine = $dockerEngine;
+    private function oldHandle(DockerInstance $dockerInstance){
+        $this->dockerInstance = $dockerInstance;
         $app_path = app_path();
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
         $dirPath = "$app_path/$cache_dir/code";
         file_get_contents("$dirPath/test.c");
 
-        $this->dockerEngine->runAsync("sh /opt/temp_cache/code/run.sh");
+        $this->dockerInstance->runAsync("sh /opt/temp_cache/code/run.sh");
     }
 }

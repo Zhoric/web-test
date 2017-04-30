@@ -45,6 +45,7 @@ class UnitOfWork
     private $_settingsRepo;
     private $_paramsSetRepo;
     private $_programRepo;
+    private $_dockerInfoRepo;
 
     public function users(){
         if ($this->_userRepo == null){
@@ -212,6 +213,13 @@ class UnitOfWork
             $this->_programRepo = new ProgramRepository($this->_em);
         }
         return $this->_programRepo;
+    }
+
+    public function dockerInfos(){
+        if($this->_dockerInfoRepo == null){
+            $this->_dockerInfoRepo = new DockerInfoRepository($this->_em);
+        }
+        return $this->_dockerInfoRepo;
     }
 
     public function commit(){

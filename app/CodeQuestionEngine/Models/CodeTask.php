@@ -5,7 +5,7 @@ namespace CodeQuestionEngine;
 use Illuminate\Support\Facades\Redis;
 
 /**
- * Класс, инкапсулирующий информацию о задаче с кодом,
+ * Модель, инкапсулирующая информацию о задаче с кодом,
  * хранящейся в Redis Cache.
  * @package СodeQuestionEngine
  */

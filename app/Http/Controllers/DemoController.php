@@ -9,13 +9,14 @@ use App\Process;
 
 
 use CodeQuestionEngine\CCodeFileManager;
-use CodeQuestionEngine\DockerEngine;
+use CodeQuestionEngine\DockerInstance;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Managers\ProfileManager;
 use Managers\UISettingsCacheManager;
 use Queue;
 use CodeQuestionEngine\CodeTask;
+use Repositories\DockerInfoRepository;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
@@ -27,16 +28,17 @@ class DemoController extends BaseController
     private $app_path;
     private $manager;
     private $fileManager;
-    private $dockerEngine;
+    private $dockerInstance;
 
 
-    public function __construct(UnitOfWork $uow, DockerEngine $dockerEngine, CCodeFileManager $fileManager, CodeQuestionManager $manager)
+
+    public function __construct(UnitOfWork $uow, DockerInstance $dockerEngine, CCodeFileManager $fileManager, CodeQuestionManager $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = $fileManager;
         $this->manager = $manager;
         $this->app_path = app_path();
-        $this->dockerEngine = $dockerEngine;
+        $this->dockerInstance = $dockerEngine;
     }
 
     public function auth(){
