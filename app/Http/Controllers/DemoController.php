@@ -10,6 +10,7 @@ use App\Process;
 
 use CodeQuestionEngine\CCodeFileManager;
 use CodeQuestionEngine\DockerInstance;
+use CodeQuestionEngine\DockerManager;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Managers\ProfileManager;
@@ -28,17 +29,17 @@ class DemoController extends BaseController
     private $app_path;
     private $manager;
     private $fileManager;
-    private $dockerInstance;
+    private $dockerManager;
 
 
 
-    public function __construct(UnitOfWork $uow, DockerInstance $dockerEngine, CCodeFileManager $fileManager, CodeQuestionManager $manager)
+    public function __construct(UnitOfWork $uow, DockerManager $dockerManager, CCodeFileManager $fileManager, CodeQuestionManager $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = $fileManager;
         $this->manager = $manager;
         $this->app_path = app_path();
-        $this->dockerInstance = $dockerEngine;
+        $this->dockerManager = $dockerManager;
     }
 
     public function auth(){
@@ -53,6 +54,10 @@ class DemoController extends BaseController
 
     public function docker(){
 
+        $instance = $this->dockerManager->getInstance(\Language::C);
+
+        $result =  $instance->run("echo hello world");
+        dd($result);
         $app_path = app_path();
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
 

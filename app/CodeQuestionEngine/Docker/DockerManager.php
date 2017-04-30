@@ -3,6 +3,7 @@
 
 namespace CodeQuestionEngine;
 use Language;
+use MtHaml\Exception;
 use Repositories\UnitOfWork;
 use DockerInfo;
 
@@ -40,8 +41,10 @@ class DockerManager
         else{
 
             $this->dockerInfo = $array_result[0];
+
             $container_id = $this->dockerInfo->getContainerId();
-            $instance = new DockerInstance($container_id);
+            $instance = new DockerInstance();
+            $instance->setContainerId($container_id);
 
             $instance = $this->createNewInstanceIfOldFalls($instance,$lang);
 
@@ -50,7 +53,10 @@ class DockerManager
 
         }
 
-        return new DockerInstance($this->dockerInfo->getContainerId());
+        $instance = new DockerInstance();
+        $instance->setContainerId($this->dockerInfo->getContainerId());
+
+        return $instance;
     }
 
     /**
@@ -64,13 +70,19 @@ class DockerManager
 
         $test_command = "echo test";
 
-        $result = $instance->run($test_command);
+        $result_array = $instance->run($test_command);
 
-        if($result != "hello"){
+        $result = "";
+        if(count($result_array) > 0){
+            $result = $result_array[0];
+        }
+        
+        if($result != "test"){
 
-            $drop_command = "docker $this->dockerInfo stop";
+            $container_id = $this->dockerInfo->getContainerId();
+            $drop_command = "docker stop $container_id";
 
-            $instance->run($drop_command);
+            exec($drop_command);
             $this->_uow->dockerInfos()->delete($this->dockerInfo);
             $this->_uow->commit();
 
@@ -78,7 +90,8 @@ class DockerManager
 
             $docker_info = $this->pushDockerInfo($container_id,$lang);
             $this->dockerInfo = $docker_info;
-            $instance = new DockerInstance($this->dockerInfo->getContainerId());
+            $instance = new DockerInstance();
+            $instance->setContainerId($this->dockerInfo->getContainerId());
 
         }
         return $instance;
@@ -89,7 +102,27 @@ class DockerManager
 
         exec("docker run -d -v $this->appPath/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init",$output);
 
-        return $output;
+        if(count($output) > 0 )
+        {
+            return $output[0];
+        }
+        else throw new Exception("Не удалось создать экземпляр виртуальной машины");
+    }
+
+
+    /**
+     * убивает всех докеров
+     */
+    public function dropAllInstances(){
+
+        $instances = $this->_uow->dockerInfos()->all();
+        foreach($instances as $instance){
+
+           $container_id =  $instance->getContainerId();
+           $command = "docker stop $container_id";
+           exec($command);
+        }
+
     }
 
     private function pushDockerInfo($container_id, $lang){

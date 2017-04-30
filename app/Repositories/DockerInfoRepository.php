@@ -16,6 +16,6 @@ class DockerInfoRepository extends BaseRepository
 
         $query = $this->repo->createQueryBuilder($this->model)->where("DockerInfo.lang = $lang");
 
-        return $query->getQuery()->getArrayResult();
+        return $query->getQuery()->execute();
     }
 }

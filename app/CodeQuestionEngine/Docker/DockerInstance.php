@@ -14,11 +14,29 @@ class DockerInstance
      */
     private $container_id;
 
-    public function __construct($container_id)
+    /**
+     * @return mixed
+     */
+    public function getContainerId()
+    {
+        return $this->container_id;
+    }
+
+    /**
+     * @param mixed $container_id
+     */
+    public function setContainerId($container_id)
     {
         $this->container_id = $container_id;
+    }
+
+    public function __construct()
+    {
+
         $this->app_path = app_path();
     }
+
+
 
     /**
      * Запуск консольной команды на виртуальной машине.
