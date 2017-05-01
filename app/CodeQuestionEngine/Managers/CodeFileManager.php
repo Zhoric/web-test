@@ -137,6 +137,11 @@ class CodeFileManager
         $this->cacheDirName = $cacheDirName;
     }
 
+    public function createInputFile(){
+        $fp = fopen("$this->dirPath/$this->inputFileName", "w");
+        fclose($fp);
+    }
+
 
     /**
      * @return mixed
@@ -182,6 +187,8 @@ class CodeFileManager
         $this->keyWordToPutObjectFile = EngineGlobalSettings::OBJECT_FILE_KEY_WORD;
         $this->expecedOutputFileName = EngineGlobalSettings::OUTPUT_FILE_FOR_EXPECTED_RESULT;
         $this->errorsFileName = EngineGlobalSettings::ERRORS_FILE;
+        $this->inputFileName = EngineGlobalSettings::INPUT_FILE_NAME;
+        $this->outputFileName = EngineGlobalSettings::OUTPUT_FILE_NAME;
     }
 
     /**
@@ -479,11 +486,14 @@ class CodeFileManager
             $filePath =  $this->putBaseShellScriptInfoIntoExecuteShellScript($this->getBaseShellScriptName()
                 , $this->executeFileName);
             $testShellScriptText = file_get_contents($filePath);
+
             $command = $this->CreateCommandStringToExecute($this->executeFileName
                 ,$this->inputFileName
                 , $this->outputFileName);
             $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
             file_put_contents($filePath, $text);
+
+            return ["scriptName" => $this->getBaseShellScriptName(), "executeFileName" => $this->executeFileName];
         }
         catch (\Exception $e)
         {
@@ -498,7 +508,7 @@ class CodeFileManager
      * @param $programId
      * @throws \Exception
      * @param $testCaseNum
-     * @return string
+     * @return array
      */
     public function CreateShellScriptForTestCase($programId,$testCaseNum)
     {
@@ -513,7 +523,7 @@ class CodeFileManager
             $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
             file_put_contents($filePath, $text);
 
-            return $scriptName;
+            return ["scriptName" => $scriptName, "executeFileName" => $executeFileName];
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             throw new \Exception("Ошибка при создании скрипта: $msg");

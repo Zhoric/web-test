@@ -19,7 +19,7 @@ class CodeTask
      */
     public $key;
 
-    public $questionId;
+    public $programId;
 
     public $processName;
 
@@ -47,7 +47,7 @@ class CodeTask
 
     /**
      * CodeTask constructor.
-     * @param $questionId
+     * @param $programId
      * @param $processName
      * @param $state
      * @param $key
@@ -55,9 +55,9 @@ class CodeTask
      * @param $memoryLimit
      * @param string $testCaseNumber
      */
-    public function __construct($questionId, $processName, $state, $timeout, $memoryLimit, $testCaseNumber = "", $key = "")
+    public function __construct($programId, $processName, $state, $timeout, $memoryLimit, $testCaseNumber = "", $key = "")
     {
-        $this->questionId   = $questionId;
+        $this->programId   = $programId;
         $this->timeout = $timeout;
         $this->memoryLimit = $memoryLimit;
         $this->processName   = $processName;
@@ -65,7 +65,7 @@ class CodeTask
         $this->testCaseNumber = $testCaseNumber == "" ? 1 : $testCaseNumber;
 
         if($key == "") {
-            $this->key = self::prefix . '-' . $questionId . '-' . $this->testCaseNumber;
+            $this->key = self::prefix . '-' . $programId . '-' . $this->testCaseNumber;
         }
         else {
             $this->key = $key;
@@ -77,7 +77,7 @@ class CodeTask
 
         Redis::hmset($this->key, [
             'key'      => $this->key,
-            'questionId'    => $this->questionId,
+            'programId'    => $this->programId,
             'processName'   => $this->processName,
             'state' => $this->state,
             'timeout' => $this->timeout,
@@ -92,7 +92,7 @@ class CodeTask
         $stored = Redis::hgetall($key);
         if (!empty($stored)) {
             return new CodeTask(
-                  $stored['questionId']
+                  $stored['programId']
                 , $stored['processName']
                 , $stored['state']
                 , $stored['timeout']
@@ -111,7 +111,7 @@ class CodeTask
         foreach ($keys as $key) {
             $stored = Redis::hgetall($key);
             $task = new CodeTask(
-                $stored['questionId']
+                $stored['programId']
                 , $stored['processName']
                 , $stored['state']
                 , $stored['timeout']

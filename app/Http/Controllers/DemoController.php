@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 
 
-use App\Jobs\TestJob;
+use App\Jobs\RunProgramJob;
 use App\Process;
 
 
@@ -52,10 +52,11 @@ class DemoController extends BaseController
     public function docker(){
 
         $this->manager->setProgramLanguage(\Language::C);
-        $program = $this->_uow->programs()->find(1);
-        $this->manager->runQuestionProgram($program->getTemplate(), $program->getId());
+        $program =  $this->_uow->programs()->find(1);
 
-        $this->dockerManager->dropAllInstances();
+
+            $result = $this->manager->runQuestionProgram($program->getTemplate(), $program->getId());
+            echo $result."\n";
         dd();
 
 
@@ -154,9 +155,10 @@ class DemoController extends BaseController
     public function receiveCode(){
 
 
-        for($i = 0; $i < 1; $i ++) {
+        $command = 'sh /opt/temp_cache/Петр_Петров_Перович_1493669336/run0.sh';
+        for($i = 0; $i < 100; $i ++) {
 
-            $queue = Queue::push(new TestJob());
+            $queue = Queue::push(new RunProgramJob(\Language::C,$command));
 
 
         }

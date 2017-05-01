@@ -3,6 +3,8 @@ namespace CodeQuestionEngine;
 
 use Auth;
 use Repositories\UnitOfWork;
+use App\Jobs\RunProgramJob;
+use Queue;
 
 class CodeQuestionManager
 {
@@ -22,15 +24,16 @@ class CodeQuestionManager
      */
     private $_uow;
 
+
+
     /**
-     * @var DockerManager
+     * @var \Language язык программирования
      */
-    private $dockerManager;
+    private $language;
 
 
-    public function __construct(UnitOfWork $uow, DockerManager $dockerManager)
+    public function __construct(UnitOfWork $uow)
     {
-        $this->dockerManager = $dockerManager;
         $this->_uow = $uow;
     }
 
@@ -39,10 +42,8 @@ class CodeQuestionManager
      * Инстанциирует необходимые зависимости для работы с конкретным языком программирования
      */
     public function setProgramLanguage($lang){
-
+        $this->language = $lang;
         $this->fileManager = CodeFileManagerFactory::getCodeFileManager($lang);
-        $this->dockerManager->setLanguage($lang);
-        $this->dockerInstance = $this->dockerManager->getOrCreateInstance();
     }
 
     /**
@@ -57,8 +58,10 @@ class CodeQuestionManager
         $this->prepareForRunning($code);
         $cases_count = $this->fileManager->createTestCasesFiles($programId);
         $this->run($cases_count,$programId);
-        $result = $this->fileManager->calculateMark($cases_count);
-        $this->fileManager->putLogInfo($result);
+
+       // $result = $this->fileManager->calculateMark($cases_count);
+        //$this->fileManager->putLogInfo($result);
+        $result = "finished";
         return $result;
 
     }
@@ -73,19 +76,27 @@ class CodeQuestionManager
     public function runQuestionProgramWithParamSets($code,array $paramSets){
 
             $this->prepareForRunning($code);
+
             $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($paramSets);
+
+
             //метод для админа, поэтому programId 0. Это значение несущественно
             $this->run($cases_count,0);
-            $errors = $this->fileManager->getErrors();
+
+            $result = 'finished';
+
+            /*$errors = $this->fileManager->getErrors();
             if($errors != ''){
                 throw new \Exception($errors);
             }
-            $result =  $this->fileManager->calculateMark($cases_count);
+
+
+           $result =  $this->fileManager->calculateMark($cases_count);
             $result.="\n";
             $result.= $this->fileManager->getResultsForCompare($cases_count);
 
             $this->fileManager->putLogInfo($result);
-
+           */
             return $result;
     }
 
@@ -93,11 +104,44 @@ class CodeQuestionManager
     private function run($cases_count, $programId){
         $dirName = $this->fileManager->getDirNameFromFullPath();
         $cache_dir = $this->fileManager->getCacheDirName();
-        for($i = 0; $i < $cases_count; $i++) {
-            $script_name = $this->fileManager->createShellScriptForTestCase($programId, $i);
-            $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
+
+        if($cases_count == 0){
+            $this->fileManager->createInputFile();
+            $result = $this->fileManager->createShellScript();
+            $script_name = $result["scriptName"];
+            $executeFileName = $result["executeFileName"];
+            $command = "sh /opt/$cache_dir/$dirName/$script_name";
+
+            $codeTask = new CodeTask($programId
+                ,$executeFileName
+                ,\CodeTaskStatus::QueuedToExecute
+                ,1,1);
+            $codeTask->store();
+
+            Queue::push(new RunProgramJob($this->language,$command));
+            return;
         }
+
+        for($i = 0; $i < $cases_count; $i++) {
+            $result = $this->fileManager->createShellScriptForTestCase($programId, $i);
+
+            $script_name = $result["scriptName"];
+            $executeFileName = $result["executeFileName"];
+
+            $command = "sh /opt/$cache_dir/$dirName/$script_name";
+
+            $codeTask = new CodeTask($programId
+                ,$executeFileName
+                ,\CodeTaskStatus::QueuedToExecute
+                ,1,1,$i);
+            $codeTask->store();
+
+            Queue::push(new RunProgramJob($this->language,$command));
+        }
+
+
     }
+
     private function prepareForRunning($code){
         $dirPath = $this->fileManager->createDir(Auth::user());
         $this->fileManager->setDirPath($dirPath);
