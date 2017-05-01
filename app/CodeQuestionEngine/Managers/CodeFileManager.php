@@ -159,8 +159,6 @@ class CodeFileManager
         $this->dirPath = $dirPath;
     }
 
-
-
     public function __construct(UnitOfWork $uow)
     {
         $this->app_path = app_path();
@@ -174,14 +172,6 @@ class CodeFileManager
         $this->keyWordToRun = EngineGlobalSettings::KEY_WORD_TO_PUT_RUN_INFO;
         $this->keyWordToPutObjectFile = EngineGlobalSettings::OBJECT_FILE_KEY_WORD;
     }
-
-
-
-
-
-
-
-
 
     /**
      * Создает директорию cо следующим именем: ФИО юзера и текущий unix_time
@@ -430,7 +420,8 @@ class CodeFileManager
     }
 
     protected function renameFile($old,$new){
-        rename($old,$new);
+        rename($this->dirPath."/".$old
+            ,$this->dirPath."/".$new);
     }
 
     protected function putBaseShellScriptInfoIntoExecuteShellScript($executeShellScriptName, $executeFileName){
@@ -447,13 +438,14 @@ class CodeFileManager
 
         $text = $this->getBaseShellScriptText();
         $text = str_replace($this->keyWordToPutObjectFile, $executeFileName,$text);
-
-        $command = $command . $text;
-
+            
         }
         else{
             $this->renameFile($alreadyExistedExecutionFile, $executeFileName);
+            $text = $this->keyWordToRun;
         }
+
+        $command = $command . $text;
 
         fwrite($uniqueScript, $command);
         fclose($uniqueScript);
@@ -507,8 +499,6 @@ class CodeFileManager
     public function createShellScript(){
 
         try {
-
-
             $filePath =  $this->putBaseShellScriptInfoIntoExecuteShellScript($this->getBaseShellScriptName()
                 , $this->executeFileName);
             $testShellScriptText = file_get_contents($filePath);
@@ -525,7 +515,6 @@ class CodeFileManager
         }
 
     }
-
 
     /**
      * Создает шелл-скрипт для для запуска программы для тестовых случаев

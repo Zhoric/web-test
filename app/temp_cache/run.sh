@@ -1,3 +1,3 @@
-gcc code.c 2> errors.txt
+gcc code.c 2> errors.txt -o
 run
 

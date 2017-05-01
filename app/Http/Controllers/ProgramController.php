@@ -7,7 +7,7 @@
  */
 
 namespace App\Http\Controllers;
-use CodeQuestionEngine\CCodeFileManager;
+use CodeFileManager;
 use CodeQuestionEngine\CodeQuestionManager;
 use Illuminate\Http\Request;
 use Exception;
@@ -22,7 +22,7 @@ class ProgramController extends Controller
     private $unitOfWork;
     private $codeManager;
     private $fileManager;
-    public function __construct(UnitOfWork $unitOfWork, CodeQuestionManager $codeManager, CCodeFileManager $fileManager)
+    public function __construct(UnitOfWork $unitOfWork, CodeQuestionManager $codeManager, CodeFileManager $fileManager)
     {
         $this->unitOfWork = $unitOfWork;
         $this->codeManager = $codeManager;
