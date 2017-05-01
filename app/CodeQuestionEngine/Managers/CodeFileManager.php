@@ -83,6 +83,11 @@ class CodeFileManager
      */
     protected $expecedOutputFileName;
 
+    /**
+     * файл с ошибками времени компиляции
+     */
+    protected $errorsFileName;
+
 
     /**
      * @return mixed
@@ -170,14 +175,13 @@ class CodeFileManager
         $this->app_path = app_path();
         $this->_uow = $uow;
         $this->baseShellScriptDir = EngineGlobalSettings::BASE_SHELL_SCRIPT_DIR_NAME;
-        $this->inputFileName  = EngineGlobalSettings::INPUT_FILE_NAME;
-        $this->outputFileName = EngineGlobalSettings::OUTPUT_FILE_NAME;
         $this->inputFileNamePatternForTestCase = EngineGlobalSettings::INPUT_FILE_NAME_FOR_TEST_CASE;
         $this->outputFileNamePatternForTestCase = EngineGlobalSettings::OUTPUT_FILE_NAME_FOR_TEST_CASE;
         $this->codeFileName = EngineGlobalSettings::CODE_FILE_NAME;
         $this->keyWordToRun = EngineGlobalSettings::KEY_WORD_TO_PUT_RUN_INFO;
         $this->keyWordToPutObjectFile = EngineGlobalSettings::OBJECT_FILE_KEY_WORD;
         $this->expecedOutputFileName = EngineGlobalSettings::OUTPUT_FILE_FOR_EXPECTED_RESULT;
+        $this->errorsFileName = EngineGlobalSettings::ERRORS_FILE;
     }
 
     /**
@@ -206,14 +210,7 @@ class CodeFileManager
         return $dirPath;
     }
 
-    /**
-     * Создает пустой файл для входных параметров
-     */
-    public function createEmptyInputFile()
-    {
-        $fp = fopen("$this->dirPath/input.txt", "w");
-        fclose($fp);
-    }
+
 
     public function getDirNameFromFullPath()
     {
@@ -241,19 +238,10 @@ class CodeFileManager
 
     public function getErrors()
     {
-        $errors = file_get_contents("$this->dirPath/errors.txt");
+        $errors = file_get_contents("$this->dirPath/$this->errorsFileName");
         return $errors;
     }
 
-    public function getStudentResult()
-    {
-        try {
-            $result = file_get_contents("$this->dirPath/result.txt");
-            return $result;
-        } catch (Exception $exception) {
-            return 0;
-        }
-    }
 
 
     public function putCodeInFile($code){
@@ -344,8 +332,6 @@ class CodeFileManager
                 $right_count++;
             }
         }
-
-
         return floor(($right_count / $casesCount) * 100);
     }
 

@@ -11,6 +11,7 @@ use CodeFileManager;
 use CodeQuestionEngine\CodeQuestionManager;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Lang;
 use ParamsSet;
 use ProgramViewModel;
 use Repositories\UnitOfWork;
@@ -40,6 +41,8 @@ class ProgramController extends Controller
      */
     public function run(Request $request){
         try{
+
+            $this->codeManager->setProgramLanguage(\Language::C);
 
             $program = $request->json('program');
             $program = json_decode($program);

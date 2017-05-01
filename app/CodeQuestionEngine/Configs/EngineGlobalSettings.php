@@ -58,13 +58,10 @@ class EngineGlobalSettings
     const KEY_WORD_TO_PUT_RUN_INFO = "run";
 
     /**
-     * Имя входного файла для входных данных задачи
+     * Файл с ошибками времени компиляции
+     *
      */
-    const INPUT_FILE_NAME = "input.txt";
-    /**
-     * Имя выходного файла для результатов программы
-     */
-    const OUTPUT_FILE_NAME = "output.txt";
+    const ERRORS_FILE = "errors.txt";
 
     /**
      * Имя входного файла для тестового набора параметров. Вместо звездочки подставляется номер кейса
