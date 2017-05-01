@@ -11,31 +11,41 @@ class DockerManager
 
     private $_uow;
 
+    /**
+     * @var DockerInfo
+     */
     private $dockerInfo;
 
     private $appPath;
+
+    /**
+     * @var \Language
+     */
+    private $lang;
+
     public function __construct(UnitOfWork $_uow)
     {
         $this->appPath = app_path();
         $this->_uow = $_uow;
     }
 
+    public function setLanguage($lang){
+        $this->lang = $lang;
+    }
+
     /**
      * Метод возвращает инстанс докера для конкретного языка
      * Если инстанса не существует, то он создается
-     *
-     * @param $lang
      * @return DockerInstance
      */
-    public function getOrCreateInstance($lang){
+    public function getOrCreateInstance(){
 
-        $array_result = $this->_uow->dockerInfos()->findByLang($lang);
+        $array_result = $this->_uow->dockerInfos()->findByLang($this->lang);
 
         if(count($array_result) == 0){
 
             $container_id  = $this->runDocker();
-            $docker_info = $this->pushDockerInfo($container_id,$lang);
-            $this->dockerInfo = $docker_info;
+            $this->pushDockerInfo($container_id);
         }
         else{
 
@@ -45,7 +55,7 @@ class DockerManager
             $instance = new DockerInstance();
             $instance->setContainerId($container_id);
 
-            $instance = $this->createNewInstanceIfOldFalls($instance,$lang);
+            $instance = $this->createNewInstanceIfOldFalls($instance);
 
 
             return $instance;
@@ -60,12 +70,11 @@ class DockerManager
 
     /**
      * @param DockerInstance $instance
-     * @param $lang
      * @return DockerInstance
      * Создает новый докер, если старый по какой-то причине упал
      *
      */
-    private function createNewInstanceIfOldFalls(DockerInstance $instance,$lang){
+    private function createNewInstanceIfOldFalls(DockerInstance $instance){
 
         $test_command = "echo test";
 
@@ -87,7 +96,7 @@ class DockerManager
 
             $container_id = $this->runDocker();
 
-            $docker_info = $this->pushDockerInfo($container_id,$lang);
+            $docker_info = $this->pushDockerInfo($container_id);
             $this->dockerInfo = $docker_info;
             $instance = new DockerInstance();
             $instance->setContainerId($this->dockerInfo->getContainerId());
@@ -127,9 +136,9 @@ class DockerManager
 
     }
 
-    private function pushDockerInfo($container_id, $lang){
+    private function pushDockerInfo($container_id){
         $docker_info = new DockerInfo();
-        $docker_info->setLang($lang);
+        $docker_info->setLang($this->lang);
         $docker_info->setContainerId($container_id);
         $this->_uow->dockerInfos()->create($docker_info);
         $this->_uow->commit();

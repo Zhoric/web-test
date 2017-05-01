@@ -4,19 +4,29 @@ namespace CodeQuestionEngine;
 use Auth;
 use Repositories\UnitOfWork;
 use Language;
-
+use CodeFileManagerBase;
 
 class CodeQuestionManager
 {
 
 
+    /**
+     * @var DockerInstance
+     */
     private $dockerInstance;
 
     /**
      * @var \CodeFileManagerBase
      */
     private $fileManager;
+    /**
+     * @var UnitOfWork
+     */
     private $_uow;
+
+    /**
+     * @var DockerManager
+     */
     private $dockerManager;
 
 
@@ -32,10 +42,11 @@ class CodeQuestionManager
      */
     public function setProgramLanguage($lang){
 
-        $this->fileManager = $this->getFileManagerInstanceByLanguage($lang);
-        $this->dockerInstance = $this->dockerManager->getOrCreateInstance($lang);
+        $this->fileManager = CodeFileManagerFactory::getCodeFileManager($lang);
+        $this->dockerManager->setLanguage($lang);
+        $this->dockerInstance = $this->dockerManager->getOrCreateInstance();
     }
-
+    
     /**
      * Запускает код на выполнение, возвращает результаты выполнения.
      * @param string $code
@@ -53,12 +64,12 @@ class CodeQuestionManager
             $this->fileManager->createEmptyInputFile();
             $this->fileManager->createShellScript();
 
-            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
+            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME_ARRAY[Language::C];
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
             $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
-            $errors = $this->fileManager->getErrors($dirPath);
-            $result = $this->fileManager->getStudentResult($dirPath);
+            $errors = $this->fileManager->getErrors();
+            $result = $this->fileManager->getStudentResult();
 
             $msg = $errors . ' ' . $result;
 
@@ -101,14 +112,7 @@ class CodeQuestionManager
 
     }
 
-    private function getFileManagerInstanceByLanguage($lang){
 
-        switch($lang){
-            case Language::C: {
-                return new CCodeFileManager($this->_uow);
-            }break;
-        }
-    }
 
     /**
      * Запускает код на выполнение с входными параметрами, которые передаются в виде массива. Возвращает результат работы программы

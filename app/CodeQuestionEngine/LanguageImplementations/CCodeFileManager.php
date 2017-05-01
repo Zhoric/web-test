@@ -8,14 +8,14 @@ class CCodeFileManager extends \CodeFileManagerBase
 {
 
 
-    public function putCodeInFile($code,$dirPath){
-        $fp = fopen("$dirPath/code.c", "w");
+    public function putCodeInFile($code){
+        $fp = fopen("$this->dirPath/code.c", "w");
         fwrite($fp, $code);
         fclose($fp);
     }
 
 
-    public function createShellScript($dirPath){
+    public function createShellScript(){
 
         try {
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
@@ -25,7 +25,7 @@ class CCodeFileManager extends \CodeFileManagerBase
             $baseShellScript = fopen($shPath, "r"); // открываем для чтения
             $text = fread($baseShellScript, filesize($shPath)); //читаем
             fclose($baseShellScript);
-            $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
+            $uniqueDirName = $this->getDirNameFromFullPath();
             $command = "cd /opt/$cache_dir/$uniqueDirName/\n";
             $filePath = "$this->app_path/$cache_dir/$uniqueDirName/run.sh";
             $uniqueScript = fopen($filePath, "w");
@@ -45,7 +45,7 @@ class CCodeFileManager extends \CodeFileManagerBase
     }
 
 
-    public function createShellScriptForTestCases($dirPath, $programId, $casesCount){
+    public function createShellScriptForTestCases($programId, $casesCount){
         try {
 
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
@@ -55,7 +55,7 @@ class CCodeFileManager extends \CodeFileManagerBase
             $baseShellScript = fopen($shPath, "r"); // открываем для чтения
             $text = fread($baseShellScript, filesize($shPath)); //читаем
             fclose($baseShellScript);
-            $uniqueDirName = $this->getDirNameFromFullPath($dirPath);
+            $uniqueDirName = $this->getDirNameFromFullPath();
 
             for($i = 0; $i < $casesCount ; $i++) {
 

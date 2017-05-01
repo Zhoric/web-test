@@ -1,13 +1,58 @@
 <?php
 use Repositories\UnitOfWork;
 use CodeQuestionEngine\EngineGlobalSettings;
+use CodeQuestionEngine\CCodeFileManager;
 
 
 abstract class CodeFileManagerBase
 {
     protected $app_path;
+
     protected $_uow;
+
     protected $dirPath;
+
+    /**
+     * Путь к шаблонному скрипту для конкретного языка
+     */
+    protected $scriptName;
+    /**
+     * Путь к кеш-папке
+     */
+    protected $cacheDirName;
+
+    /**
+     * @return mixed
+     */
+    public function getCacheDirName()
+    {
+        return $this->cacheDirName;
+    }
+
+    /**
+     * @param mixed $cacheDirName
+     */
+    public function setCacheDirName($cacheDirName)
+    {
+        $this->cacheDirName = $cacheDirName;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getScriptName()
+    {
+        return $this->scriptName;
+    }
+
+    /**
+     * @param mixed $scriptName
+     */
+    public function setScriptName($scriptName)
+    {
+        $this->scriptName = $scriptName;
+    }
 
 
 
@@ -173,7 +218,6 @@ abstract class CodeFileManagerBase
     /**
      * Метод, который создает в уникальной папке пользователя файлы для всех тестовых случаев определенной задачи
      * @param $programId
-     * @param $dirPath - путь к уникальной папке пользователя
      * @return int $count - число полученных тестовых случаев
      */
     public function createTestCasesFiles($programId)
@@ -271,5 +315,9 @@ abstract class CodeFileManagerBase
         $str = preg_replace("/%u([0-9a-f]{3,4})/i", "&#x\\1;", urldecode($str));
         return html_entity_decode($str, null, 'UTF-8');
     }
+
+
+
+
 
 }

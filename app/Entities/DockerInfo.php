@@ -76,7 +76,7 @@ class DockerInfo extends BaseEntity
     }
 
     /**
-     * @param int $lang
+     * @param Language $lang
      */
     public function setLang($lang)
     {
