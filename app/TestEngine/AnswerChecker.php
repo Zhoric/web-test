@@ -27,12 +27,14 @@ class AnswerChecker
     /**
      * Получение менеджера вопросов с программным кодом для подсчёта оценки за ответ на
      * вопрос с кодом.
+     * @param $lang - язык программирования, который используется при запуске программы на выполнение
      * @return CodeQuestionManager
      */
-    private static function getCodeQuestionManager(){
+    private static function getCodeQuestionManager($lang){
         if (self::$_codeQuestionManager == null){
             self::$_codeQuestionManager = app()->make(CodeQuestionManager::class);
         }
+        self::$_codeQuestionManager->setLanguage($lang);
         return self::$_codeQuestionManager;
     }
 
@@ -91,7 +93,7 @@ class AnswerChecker
             return 0;
         }
 
-        $rightPercentage = self::getCodeQuestionManager()->runQuestionProgram($studentCode, $programId,$lang);
+        $rightPercentage = self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $programId);
 
         return $rightPercentage;
     }

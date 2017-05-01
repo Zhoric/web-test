@@ -2,7 +2,6 @@
 
 
 namespace CodeQuestionEngine;
-use Language;
 use MtHaml\Exception;
 use Repositories\UnitOfWork;
 use DockerInfo;
@@ -28,7 +27,7 @@ class DockerManager
      * @param $lang
      * @return DockerInstance
      */
-    public function getInstance($lang){
+    public function getOrCreateInstance($lang){
 
         $array_result = $this->_uow->dockerInfos()->findByLang($lang);
 
@@ -121,7 +120,10 @@ class DockerManager
            $container_id =  $instance->getContainerId();
            $command = "docker stop $container_id";
            exec($command);
+           $this->_uow->dockerInfos()->delete($instance);
+
         }
+        $this->_uow->commit();
 
     }
 

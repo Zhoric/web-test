@@ -17,12 +17,23 @@ class CodeQuestionManager
      */
     private $fileManager;
     private $_uow;
+    private $dockerManager;
 
 
-    public function __construct(DockerInstance $dockerEngine, UnitOfWork $uow)
+    public function __construct(UnitOfWork $uow, DockerManager $dockerManager)
     {
-        $this->dockerInstance = $dockerEngine;
+        $this->dockerManager = $dockerManager;
         $this->_uow = $uow;
+    }
+
+    /**
+     * @param $lang - Устанавливает язык программирования, за который отвечает данный менеджер
+     * Инстанциирует необходимые зависимости для работы с конкретным языком программирования
+     */
+    public function setProgramLanguage($lang){
+
+        $this->fileManager = $this->getFileManagerInstanceByLanguage($lang);
+        $this->dockerInstance = $this->dockerManager->getOrCreateInstance($lang);
     }
 
     /**
@@ -32,12 +43,15 @@ class CodeQuestionManager
      */
     public function run($code){
         try {
-            $dirPath = $this->fileManager->createDir(Auth::user());
-            $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
 
-            $this->fileManager->putCodeInFile($code, $dirPath);
-            $this->fileManager->createEmptyInputFile($dirPath);
-            $this->fileManager->createShellScript($dirPath);
+            $dirPath = $this->fileManager->createDir(Auth::user());
+
+            $this->fileManager->setDirPath($dirPath);
+            $dirName = $this->fileManager->getDirNameFromFullPath();
+
+            $this->fileManager->putCodeInFile($code);
+            $this->fileManager->createEmptyInputFile();
+            $this->fileManager->createShellScript();
 
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
@@ -47,6 +61,7 @@ class CodeQuestionManager
             $result = $this->fileManager->getStudentResult($dirPath);
 
             $msg = $errors . ' ' . $result;
+
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -59,29 +74,28 @@ class CodeQuestionManager
      * добавлении вопроса. Возвращает оценку студента
      * @param $code
      * @param $programId
-     * @param $lang - язык программирования
      * @return mixed
      */
-    public function runQuestionProgram($code,$programId,$lang)
+    public function runQuestionProgram($code,$programId)
     {
 
-        $this->fileManager = $this->getFileManagerInstanceByLanguage($lang);
-
         $dirPath = $this->fileManager->createDir(Auth::user());
-        $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
+        $this->fileManager->setDirPath($dirPath);
+        $dirName = $this->fileManager->getDirNameFromFullPath();
 
-        $this->fileManager->putCodeInFile($code, $dirPath);
-        $cases_count = $this->fileManager->createTestCasesFiles($programId, $dirPath);
+        $this->fileManager->putCodeInFile($code);
+        $cases_count = $this->fileManager->createTestCasesFiles($programId);
 
-        $this->fileManager->createShellScriptForTestCases($dirPath,$programId, $cases_count);
-        $this->fileManager->createLogFile($dirPath);
+        $this->fileManager->createShellScriptForTestCases($programId, $cases_count);
+        $this->fileManager->createLogFile();
 
         $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
         $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
-        $result = $this->fileManager->calculateMark($dirPath, $cases_count);
-        $this->fileManager->putLogInfo($dirPath, $result);
+
+        $result = $this->fileManager->calculateMark($cases_count);
+        $this->fileManager->putLogInfo($result);
 
         return $result;
 
@@ -106,25 +120,27 @@ class CodeQuestionManager
     public function runQuestionProgramWithParamSets($code,array $paramSets){
 
             $dirPath = $this->fileManager->createDir(Auth::user());
-            $dirName = $this->fileManager->getDirNameFromFullPath($dirPath);
+            $this->fileManager->setDirPath($dirPath);
 
-            $this->fileManager->putCodeInFile($code, $dirPath);
-            $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($paramSets,$dirPath);
+            $dirName = $this->fileManager->getDirNameFromFullPath();
+
+            $this->fileManager->putCodeInFile($code);
+            $cases_count = $this->fileManager->createTestCasesFilesByParamsSetsArray($paramSets);
 
            // $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
-            $this->fileManager->createLogFile($dirPath);
+            $this->fileManager->createLogFile();
             $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
             $cache_dir = EngineGlobalSettings::CACHE_DIR;
             $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
-            $errors = $this->fileManager->getErrors($dirPath);
+            $errors = $this->fileManager->getErrors();
             if($errors != ''){
                 throw new \Exception($errors);
             }
-            $result =  $this->fileManager->calculateMark($dirPath,$cases_count);
+            $result =  $this->fileManager->calculateMark($cases_count);
             $result.="\n";
-            $result.= $this->fileManager->getResultsForCompare($dirPath,$cases_count);
+            $result.= $this->fileManager->getResultsForCompare($cases_count);
 
-            $this->fileManager->putLogInfo($dirPath,$result);
+            $this->fileManager->putLogInfo($result);
 
         return $result;
 

@@ -54,10 +54,10 @@ class DemoController extends BaseController
 
     public function docker(){
 
-        $instance = $this->dockerManager->getInstance(\Language::C);
+        //$instance = $this->dockerManager->getInstance(\Language::C);
 
-        $result =  $instance->run("echo hello world");
-        dd($result);
+        $this->dockerManager->dropAllInstances();
+        dd();
         $app_path = app_path();
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
 
