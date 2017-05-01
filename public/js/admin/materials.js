@@ -15,7 +15,7 @@ $(document).ready(function(){
                 removeThemeMedia: '#remove-theme-media-modal',
                 repeatAdd: '#repeat-add-modal',
                 lastDelete: '#last-delete-modal',
-                changeDisciplineMedia: '#change-discipline-media-modal',
+                changeMedia: '#change-media-modal',
                 haveMediables: '#have-mediables-modal'
             };
 
@@ -99,10 +99,6 @@ $(document).ready(function(){
                         removeMedia: function (data) {
                             self.alter.media.fill(data);
                             commonHelper.modal.open(self.modals.removeDisciplineMedia);
-                        },
-                        changeMedia: function (data) {
-                            self.alter.media.fill(data);
-                            commonHelper.modal.open(self.modals.changeDisciplineMedia);
                         }
                     },
                     end: {
@@ -117,10 +113,6 @@ $(document).ready(function(){
                                     self.check.lastDelete(self.current.media().id());
                                 }
                             });
-                        },
-                        changeMedia: function () {
-                            self.current.changeMode(true);
-                            self.elfinder.open();
                         }
                     }
 
@@ -182,6 +174,23 @@ $(document).ready(function(){
                                 });
                             }
                         });
+                    },
+                    move: function (data) {
+                        var index = data.path().indexOf(data.name());
+                        var path = data.path().substring(0,index);
+                        window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
+                    },
+                    start: {
+                        change: function (data) {
+                            self.alter.media.fill(data);
+                            commonHelper.modal.open(self.modals.changeMedia);
+                        }
+                    },
+                    end: {
+                        change: function () {
+                            self.current.changeMode(true);
+                            self.elfinder.open();
+                        }
                     }
                 }
             };
@@ -234,17 +243,16 @@ $(document).ready(function(){
                     };
                     var elf = $('#elfinder').elfinder(elfOptions);
                     self.elfinder.handlers.upload(elf.elfinder('instance'));
-                    elf.dialog({
+                    self.elfinder.handlers.rename(elf.elfinder('instance'));
+                    self.current.elf(elf);
+                },
+                open: function () {
+                    self.current.elf().dialog({
                         modal: true,
-                        autoOpen: false,
                         width : 1300,
                         resizable: true,
                         position: { my: "center top-70%", at: "center", of: window }
                     });
-                    self.current.elf(elf);
-                },
-                open: function () {
-                    self.current.elf().dialog('open');
                 },
                 getFile: function (file) {
                     if(self.current.changeMode()) {
@@ -274,6 +282,39 @@ $(document).ready(function(){
                                     error: self.errors,
                                     data: json
                                 });
+                            });
+                        });
+                    },
+                    rename: function (elfinder) {
+                        elfinder.bind('rename', function (event) {
+                            $ajaxget({
+                                url: '/api/media/hash/' + event.data.removed[0],
+                                errors: self.errors,
+                                successCallback: function(data){
+                                    var mediaId = data()[0].id();
+                                    var index = data()[0].path().indexOf(data()[0].name());
+                                    var newPath = data()[0].path().substring(0,index) + event.data.added[0].name;
+                                    var json = JSON.stringify({
+                                        media: {
+                                            id: mediaId,
+                                            type: data()[0].type(),
+                                            path: newPath,
+                                            name: event.data.added[0].name,
+                                            hash: event.data.added[0].hash
+                                        }
+                                    });
+                                    $ajaxpost({
+                                        url: '/api/media/update',
+                                        error: self.errors,
+                                        data: json,
+                                        successCallback: function(){
+                                            if(self.current.theme().id() == 0)
+                                            self.get.disciplineMedias(self.current.discipline().id());
+                                            else self.get.themeMedias(self.current.theme().id());
+                                            $('#elfinder').elfinder('instance').exec('reload');
+                                        }
+                                    });
+                                }
                             });
                         });
                     }
@@ -352,8 +393,7 @@ $(document).ready(function(){
                             path: path,
                             name: file.name,
                             hash: file.hash
-                        },
-                        oldPath: self.current.media().path()
+                        }
                     });
                     $ajaxpost({
                         url: '/api/media/update',

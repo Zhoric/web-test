@@ -41,8 +41,8 @@ class MediaManager
     }
 
     public function deleteFile($path){
-        unlink(public_path($path));
+        if (file_exists($path))
+            unlink(public_path($path));
     }
-
 
 }

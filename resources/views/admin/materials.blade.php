@@ -146,7 +146,7 @@
     </div>
 
     <div class="g-hidden">
-        <div class="box-modal removal-modal" id="change-discipline-media-modal">
+        <div class="box-modal removal-modal" id="change-media-modal">
             <div class="layer zero-margin width-auto">
                 <div class="layer-head">
                     <h3>Заменить данный материал во всех вхождениях (старая версия материала будет удалена)?</h3>
@@ -154,7 +154,7 @@
                 <div class="layer-body">
                     <div class="details-row float-buttons">
                         <button class="cancel arcticmodal-close">Отмена</button>
-                        <button data-bind="click: $root.actions.discipline.end.changeMedia" class="remove arcticmodal-close">Заменить</button>
+                        <button data-bind="click: $root.actions.media.end.change" class="remove arcticmodal-close">Заменить</button>
                     </div>
                 </div>
             </div>
@@ -180,9 +180,9 @@
         <tr>
             <td data-bind="text: $index()+1"></td>
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
-            <td data-bind="text: name"></td>
+            <td data-bind="text: name, click: $root.actions.media.move"></td>
             <td class="action-holder">
-                <button data-bind="click: $root.actions.discipline.start.changeMedia" class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.media.start.change" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.discipline.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
@@ -227,9 +227,9 @@
         <tr>
             <td data-bind="text: $index()+1"></td>
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
-            <td data-bind="text: name"></td>
+            <td data-bind="text: name, click: $root.actions.media.move"></td>
             <td class="action-holder">
-                <button  class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.media.start.change" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.theme.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
