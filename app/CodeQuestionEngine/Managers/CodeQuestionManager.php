@@ -4,7 +4,6 @@ namespace CodeQuestionEngine;
 use Auth;
 use Repositories\UnitOfWork;
 use Language;
-use CodeFileManagerBase;
 
 class CodeQuestionManager
 {
@@ -46,7 +45,7 @@ class CodeQuestionManager
         $this->dockerManager->setLanguage($lang);
         $this->dockerInstance = $this->dockerManager->getOrCreateInstance();
     }
-    
+
     /**
      * Запускает код на выполнение, возвращает результаты выполнения.
      * @param string $code
@@ -91,6 +90,7 @@ class CodeQuestionManager
     {
 
         $dirPath = $this->fileManager->createDir(Auth::user());
+
         $this->fileManager->setDirPath($dirPath);
         $dirName = $this->fileManager->getDirNameFromFullPath();
 
@@ -100,8 +100,8 @@ class CodeQuestionManager
         $this->fileManager->createShellScriptForTestCases($programId, $cases_count);
         $this->fileManager->createLogFile();
 
-        $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
-        $cache_dir = EngineGlobalSettings::CACHE_DIR;
+        $script_name = $this->fileManager->getBaseShellScriptName();
+        $cache_dir = $this->fileManager->getCacheDirName();
 
         $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
 
@@ -133,8 +133,9 @@ class CodeQuestionManager
 
            // $this->fileManager->createShellScriptForTestCases($dirPath,$cases_count);
             $this->fileManager->createLogFile();
-            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME;
-            $cache_dir = EngineGlobalSettings::CACHE_DIR;
+            $script_name = $this->fileManager->getBaseShellScriptName();
+            $cache_dir = $this->fileManager->getCacheDirName();
+
             $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
             $errors = $this->fileManager->getErrors();
             if($errors != ''){

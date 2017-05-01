@@ -27,6 +27,9 @@ class CodeFileManagerFactory
         if(isset($fileManager)) {
             $fileManager->setCacheDirName(EngineGlobalSettings::CACHE_DIR);
             $fileManager->setScriptName(EngineGlobalSettings::SHELL_SCRIPT_NAME_ARRAY[$lang]);
+            $fileManager->setCodeFileExtension(EngineGlobalSettings::CODE_FILE_EXTENSIONS_ARRAY[$lang]);
+            $fileManager->setExecuteFileName(EngineGlobalSettings::EXECUTE_FILE_NAME[$lang]);
+
         }
         else throw new Exception("Не реализован класс файлового менеджера для нового языка программирования");
 
