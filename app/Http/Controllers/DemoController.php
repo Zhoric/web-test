@@ -8,16 +8,13 @@ use App\Jobs\TestJob;
 use App\Process;
 
 
-use CodeQuestionEngine\CCodeFileManager;
-use CodeQuestionEngine\DockerInstance;
+
 use CodeQuestionEngine\DockerManager;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
-use Managers\ProfileManager;
 use Managers\UISettingsCacheManager;
 use Queue;
-use CodeQuestionEngine\CodeTask;
-use Repositories\DockerInfoRepository;
+use CodeQuestionEngine\CodeFileManagerFactory;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
@@ -33,10 +30,10 @@ class DemoController extends BaseController
 
 
 
-    public function __construct(UnitOfWork $uow, DockerManager $dockerManager, CCodeFileManager $fileManager, CodeQuestionManager $manager)
+    public function __construct(UnitOfWork $uow, DockerManager $dockerManager, CodeQuestionManager $manager)
     {
         $this->_uow = $uow;
-        $this->fileManager = $fileManager;
+        $this->fileManager = CodeFileManagerFactory::getCodeFileManager(\Language::C);
         $this->manager = $manager;
         $this->app_path = app_path();
         $this->dockerManager = $dockerManager;
@@ -54,10 +51,14 @@ class DemoController extends BaseController
 
     public function docker(){
 
-        //$instance = $this->dockerManager->getInstance(\Language::C);
+        $this->manager->setProgramLanguage(\Language::C);
+        $program = $this->_uow->programs()->find(1);
+        $this->manager->runQuestionProgram($program->getTemplate(), $program->getId());
 
         $this->dockerManager->dropAllInstances();
         dd();
+
+
         $app_path = app_path();
         $cache_dir = EngineGlobalSettings::CACHE_DIR;
 

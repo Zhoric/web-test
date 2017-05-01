@@ -15,7 +15,7 @@ class CodeQuestionManager
     private $dockerInstance;
 
     /**
-     * @var \CodeFileManagerBase
+     * @var \CodeFileManager
      */
     private $fileManager;
     /**
@@ -57,14 +57,15 @@ class CodeQuestionManager
             $dirPath = $this->fileManager->createDir(Auth::user());
 
             $this->fileManager->setDirPath($dirPath);
+
             $dirName = $this->fileManager->getDirNameFromFullPath();
 
             $this->fileManager->putCodeInFile($code);
             $this->fileManager->createEmptyInputFile();
             $this->fileManager->createShellScript();
 
-            $script_name = EngineGlobalSettings::SHELL_SCRIPT_NAME_ARRAY[Language::C];
-            $cache_dir = EngineGlobalSettings::CACHE_DIR;
+            $script_name = $this->fileManager->getBaseShellScriptName();
+            $cache_dir = $this->fileManager->getCacheDirName();
 
             $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
             $errors = $this->fileManager->getErrors();
@@ -84,7 +85,6 @@ class CodeQuestionManager
      * добавлении вопроса. Возвращает оценку студента
      * @param $code
      * @param $programId
-     * @return mixed
      */
     public function runQuestionProgram($code,$programId)
     {
@@ -96,19 +96,19 @@ class CodeQuestionManager
 
         $this->fileManager->putCodeInFile($code);
         $cases_count = $this->fileManager->createTestCasesFiles($programId);
-
-        $this->fileManager->createShellScriptForTestCases($programId, $cases_count);
         $this->fileManager->createLogFile();
 
-        $script_name = $this->fileManager->getBaseShellScriptName();
         $cache_dir = $this->fileManager->getCacheDirName();
 
-        $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
+        for($i = 0; $i < $cases_count; $i++) {
+            $script_name = $this->fileManager->createShellScriptForTestCase($programId, $i);
+            $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
+        }
 
-        $result = $this->fileManager->calculateMark($cases_count);
-        $this->fileManager->putLogInfo($result);
+        //$result = $this->fileManager->calculateMark($cases_count);
+        //$this->fileManager->putLogInfo($result);
 
-        return $result;
+        //return $result;
 
     }
 

@@ -45,7 +45,7 @@ class DockerManager
         if(count($array_result) == 0){
 
             $container_id  = $this->runDocker();
-            $this->pushDockerInfo($container_id);
+            $this->dockerInfo = $this->pushDockerInfo($container_id);
         }
         else{
 

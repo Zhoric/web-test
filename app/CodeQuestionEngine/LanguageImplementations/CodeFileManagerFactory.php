@@ -2,7 +2,7 @@
 
 
 namespace CodeQuestionEngine;
-use CodeFileManagerBase;
+use CodeFileManager;
 use Language;
 use Exception;
 
@@ -13,20 +13,16 @@ class CodeFileManagerFactory
      * Получение менеджера вопросов с программным кодом для подсчёта оценки за ответ на
      * вопрос с кодом.
      * @param $lang - язык программирования, который используется при запуске программы на выполнение
-     * @return CodeFileManagerBase
+     * @return CodeFileManager
      * @throws Exception
      */
     public static function getCodeFileManager($lang){
 
-        switch($lang){
-            case Language::C: {
-                $fileManager = app()->make(CCodeFileManager::class);
-            }break;
-        }
+        $fileManager = app()->make(CodeFileManager::class);
 
         if(isset($fileManager)) {
             $fileManager->setCacheDirName(EngineGlobalSettings::CACHE_DIR);
-            $fileManager->setScriptName(EngineGlobalSettings::SHELL_SCRIPT_NAME_ARRAY[$lang]);
+            $fileManager->setBaseShellScriptName(EngineGlobalSettings::SHELL_SCRIPT_NAME_ARRAY[$lang]);
             $fileManager->setCodeFileExtension(EngineGlobalSettings::CODE_FILE_EXTENSIONS_ARRAY[$lang]);
             $fileManager->setExecuteFileName(EngineGlobalSettings::EXECUTE_FILE_NAME[$lang]);
 

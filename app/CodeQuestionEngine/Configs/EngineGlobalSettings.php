@@ -44,10 +44,11 @@ class EngineGlobalSettings
 
     /**
      * имя исполняемого файла для конкретного языка
+     *
      */
     const EXECUTE_FILE_NAME = [
 
-        \Language::C => 'a.out',
+        \Language::C => 'c_output.out',
     ];
 
     /**
@@ -68,12 +69,12 @@ class EngineGlobalSettings
     /**
      * Имя входного файла для тестового набора параметров. Вместо звездочки подставляется номер кейса
      */
-    const INPUT_FILE_NAME_FOR_TEST_CASE = "student_input_*.txt";
+    const INPUT_FILE_NAME_FOR_TEST_CASE = "test_input_*.txt";
 
     /**
      * Имя выходного файла для тестового набора параметров. Вместо звездочки подставляется номер кейса
      */
-    const OUTPUT_FILE_NAME_FOR_TEST_CASE = "test_output_*.txt";
+    const OUTPUT_FILE_NAME_FOR_TEST_CASE = "student_output_*.txt";
 
     /**
      * Имя исходника с кодом. Вместо звездочки подставляется расширение для конкретного языка
@@ -87,5 +88,19 @@ class EngineGlobalSettings
      * Вместо $3 - имя входного файла, куда перенаправляется входной поток программы
      */
     const EXECUTE_PATTERN = "./$1 1> $2 < $3";
+
+    /**
+     * Имя папки, где лежает шаблонные шелл-скрипты
+     */
+    const BASE_SHELL_SCRIPT_DIR_NAME = "ExecutionScripts";
+
+    /**
+     * Ключевое слово в шаблонном шелл-скрипте, вместо которого подставляется имя exe файла или выполняемого скрипта
+     * для скриптовых языков.
+     * Для С это a.out
+     * Для пхп это name.php
+     */
+    const OBJECT_FILE_KEY_WORD = "exe";
+
 
 }

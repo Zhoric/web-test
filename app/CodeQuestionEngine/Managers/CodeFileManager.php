@@ -3,7 +3,7 @@ use Repositories\UnitOfWork;
 use CodeQuestionEngine\EngineGlobalSettings;
 
 
-abstract class CodeFileManagerBase
+class CodeFileManager
 {
     protected $app_path;
 
@@ -12,7 +12,7 @@ abstract class CodeFileManagerBase
     protected $dirPath;
 
     /**
-     * Путь к шаблонному скрипту для конкретного языка
+     * Имя шаблонного скрипта для конкретного языка
      */
     protected $baseShellScriptName;
     /**
@@ -67,6 +67,18 @@ abstract class CodeFileManagerBase
     protected $executeFileName;
 
     /**
+     * Директория, где хранятся базовые шелл-скрипты
+     */
+    protected $baseShellScriptDir;
+
+
+    /**
+     * Ключевое слово в шаблонном шелл-скрипте, вместо которого подставляется имя exe файла или выполняемого скрипта
+     */
+    protected $keyWordToPutObjectFile;
+
+
+    /**
      * @return mixed
      */
     public function getExecuteFileName()
@@ -81,9 +93,6 @@ abstract class CodeFileManagerBase
     {
         $this->executeFileName = $executeFileName;
     }
-
-
-
 
     /**
      * @return mixed
@@ -134,20 +143,6 @@ abstract class CodeFileManagerBase
         $this->baseShellScriptName = $baseShellScriptName;
     }
 
-
-
-    public function __construct(UnitOfWork $uow)
-    {
-        $this->app_path = app_path();
-        $this->_uow = $uow;
-        $this->inputFileName  = EngineGlobalSettings::INPUT_FILE_NAME;
-        $this->outputFileName = EngineGlobalSettings::OUTPUT_FILE_NAME;
-        $this->inputFileNamePatternForTestCase = EngineGlobalSettings::INPUT_FILE_NAME_FOR_TEST_CASE;
-        $this->outputFileNamePatternForTestCase = EngineGlobalSettings::OUTPUT_FILE_NAME_FOR_TEST_CASE;
-        $this->codeFileName = EngineGlobalSettings::CODE_FILE_NAME;
-        $this->keyWordToRun = EngineGlobalSettings::KEY_WORD_TO_PUT_RUN_INFO;
-    }
-
     /**
      * @return mixed
      */
@@ -163,6 +158,30 @@ abstract class CodeFileManagerBase
     {
         $this->dirPath = $dirPath;
     }
+
+
+
+    public function __construct(UnitOfWork $uow)
+    {
+        $this->app_path = app_path();
+        $this->_uow = $uow;
+        $this->baseShellScriptDir = EngineGlobalSettings::BASE_SHELL_SCRIPT_DIR_NAME;
+        $this->inputFileName  = EngineGlobalSettings::INPUT_FILE_NAME;
+        $this->outputFileName = EngineGlobalSettings::OUTPUT_FILE_NAME;
+        $this->inputFileNamePatternForTestCase = EngineGlobalSettings::INPUT_FILE_NAME_FOR_TEST_CASE;
+        $this->outputFileNamePatternForTestCase = EngineGlobalSettings::OUTPUT_FILE_NAME_FOR_TEST_CASE;
+        $this->codeFileName = EngineGlobalSettings::CODE_FILE_NAME;
+        $this->keyWordToRun = EngineGlobalSettings::KEY_WORD_TO_PUT_RUN_INFO;
+        $this->keyWordToPutObjectFile = EngineGlobalSettings::OBJECT_FILE_KEY_WORD;
+    }
+
+
+
+
+
+
+
+
 
     /**
      * Создает директорию cо следующим именем: ФИО юзера и текущий unix_time
@@ -274,21 +293,6 @@ abstract class CodeFileManagerBase
     }
 
     /**
-     * Метод берет базовый шелл-скрипт и создает на его основе скрипт,который запускает
-     * на выполнение код, лежащий в уникальной папке пользователя.
-     * @throws \Exception
-     */
-    public abstract function createShellScript();
-
-    /**
-     * Создает шелл скрипт для прогона тестовых случаев
-     * @param $casesCount - количество тестовых случаев
-     * @param  $programId - id программы
-     * @throws
-     */
-    public abstract function createShellScriptForTestCases($programId, $casesCount);
-
-    /**
      * Метод, который создает в уникальной папке пользователя пару файлов с тестовыми случаями для определенной задачи
      *
      * @param $input - входные данные (например, 2+2)
@@ -398,7 +402,9 @@ abstract class CodeFileManagerBase
     }
 
     protected function getBaseShellScriptText(){
-        $cache_dir = $this->getCacheDirName();
+
+        $cache_dir = $this->baseShellScriptDir;
+
         $sh_name = $this->getBaseShellScriptName();
         $shPath = "$this->app_path/$cache_dir/$sh_name";
 
@@ -411,19 +417,45 @@ abstract class CodeFileManagerBase
     }
 
 
-    protected function putBaseShellScriptInfoIntoTestCaseShellScript($testCaseNumber){
+    protected function getExecutionFileNameIfExist(){
 
+        $dir_items  = scandir($this->dirPath);
+        $name = explode(".",$this->executeFileName)[0];
+        foreach($dir_items as $item){
+            if(strstr($item,$name)){
+                return $item;
+            }
+        }
+        return "";
+    }
 
-        $shellScriptNameForTestCase = $this->createShellScriptNameForTestCase($testCaseNumber);
+    protected function renameFile($old,$new){
+        rename($old,$new);
+    }
 
-        $filePath = "$this->app_path/$this->cacheDirName/$this->uniqueDirName/$shellScriptNameForTestCase";
+    protected function putBaseShellScriptInfoIntoExecuteShellScript($executeShellScriptName, $executeFileName){
+
+        $filePath = "$this->app_path/$this->cacheDirName/$this->uniqueDirName/$executeShellScriptName";
 
         $uniqueScript = fopen($filePath, "w");
 
         $command = "cd /opt/$this->cacheDirName/$this->uniqueDirName/\n";
-        $text = $this->getBaseShellScriptText();
 
-        fwrite($uniqueScript, $command . $text);
+        $alreadyExistedExecutionFile = $this->getExecutionFileNameIfExist();
+
+        if($alreadyExistedExecutionFile == ""){
+
+        $text = $this->getBaseShellScriptText();
+        $text = str_replace($this->keyWordToPutObjectFile, $executeFileName,$text);
+
+        $command = $command . $text;
+
+        }
+        else{
+            $this->renameFile($alreadyExistedExecutionFile, $executeFileName);
+        }
+
+        fwrite($uniqueScript, $command);
         fclose($uniqueScript);
 
         return $filePath;
@@ -457,9 +489,10 @@ abstract class CodeFileManagerBase
         return $executeFileNameForTestCase;
     }
 
-    protected function CreateCommandStringToExecuteTestCase($programId,$testCaseNum,$inputFileName,$outputFileName){
+
+    protected function CreateCommandStringToExecute($executeFileName,$inputFileName,$outputFileName){
+
         $executeCommand = EngineGlobalSettings::EXECUTE_PATTERN;
-        $executeFileName = $this->getExecuteFileNameForTestCase($programId,$testCaseNum);
         $executeCommand = str_replace("$1", $executeFileName, $executeCommand);
         $executeCommand = str_replace("$2", $outputFileName, $executeCommand);
         $executeCommand = str_replace("$3", $inputFileName,$executeCommand);
@@ -467,17 +500,58 @@ abstract class CodeFileManagerBase
         return $executeCommand;
     }
 
-    protected function CreateShellScriptForTestCase($programId,$testCaseNum){
+    /**
+     * Создает шелл скрипт для запуска программы на выполнение
+     * @throws Exception
+     */
+    public function createShellScript(){
 
-        $filePath =  $this->putBaseShellScriptInfoIntoTestCaseShellScript($testCaseNum);
-        $testShellScriptText = file_get_contents($filePath);
+        try {
 
-        $outputFileName = $this->getOutputFileNameForTestCase($testCaseNum);
-        $inputFileName  = $this->getInputFileNameForTestCase($testCaseNum);
-        $command = $this->CreateCommandStringToExecuteTestCase($programId,$testCaseNum,$inputFileName,$outputFileName);
 
-        $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
-        file_put_contents($filePath, $text);
+            $filePath =  $this->putBaseShellScriptInfoIntoExecuteShellScript($this->getBaseShellScriptName()
+                , $this->executeFileName);
+            $testShellScriptText = file_get_contents($filePath);
+            $command = $this->CreateCommandStringToExecute($this->executeFileName
+                ,$this->inputFileName
+                , $this->outputFileName);
+            $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
+            file_put_contents($filePath, $text);
+        }
+        catch (\Exception $e)
+        {
+            $msg = $e->getMessage();
+            throw new \Exception("Ошибка при создании скрипта: $msg");
+        }
+
+    }
+
+
+    /**
+     * Создает шелл-скрипт для для запуска программы для тестовых случаев
+     * @param $programId
+     * @throws \Exception
+     * @param $testCaseNum
+     * @return string
+     */
+    public function CreateShellScriptForTestCase($programId,$testCaseNum)
+    {
+        try {
+            $scriptName = $this->createShellScriptNameForTestCase($testCaseNum);
+            $executeFileName = $this->getExecuteFileNameForTestCase($programId, $testCaseNum);
+            $filePath = $this->putBaseShellScriptInfoIntoExecuteShellScript($scriptName, $executeFileName);
+            $testShellScriptText = file_get_contents($filePath);
+            $outputFileName = $this->getOutputFileNameForTestCase($testCaseNum);
+            $inputFileName = $this->getInputFileNameForTestCase($testCaseNum);
+            $command = $this->CreateCommandStringToExecute($executeFileName, $inputFileName, $outputFileName);
+            $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
+            file_put_contents($filePath, $text);
+
+            return $scriptName;
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            throw new \Exception("Ошибка при создании скрипта: $msg");
+        }
     }
 
 
