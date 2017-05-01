@@ -79,6 +79,12 @@ class CodeFileManager
 
 
     /**
+     * имя файла с ожидаемым результатом
+     */
+    protected $expecedOutputFileName;
+
+
+    /**
      * @return mixed
      */
     public function getExecuteFileName()
@@ -171,6 +177,7 @@ class CodeFileManager
         $this->codeFileName = EngineGlobalSettings::CODE_FILE_NAME;
         $this->keyWordToRun = EngineGlobalSettings::KEY_WORD_TO_PUT_RUN_INFO;
         $this->keyWordToPutObjectFile = EngineGlobalSettings::OBJECT_FILE_KEY_WORD;
+        $this->expecedOutputFileName = EngineGlobalSettings::OUTPUT_FILE_FOR_EXPECTED_RESULT;
     }
 
     /**
@@ -248,32 +255,6 @@ class CodeFileManager
         }
     }
 
-    /**
-     * Возвращает результат тестового случая под номером $testCaseNum
-     * Результат лежит в папке $dirPath
-     * @param $testCaseNum
-     * @return string
-     */
-
-    public function getCorrectResult($testCaseNum)
-    {
-        $result = file_get_contents("$this->dirPath/testCase$testCaseNum.txt");
-        return $result;
-    }
-
-    /**
-     * Создает файл с результатами работы программы студента для тестого прогона с номером $number.
-     *
-     * @param $number - номер тестового прогона
-     * @param $result - результат работы программы студента
-     */
-    public function createResultFile($result, $number)
-    {
-        $fp = fopen("$this->dirPath/student_result_$number.txt", "w");
-        fwrite($fp, $result);
-        fclose($fp);
-    }
-
 
     public function putCodeInFile($code){
         $fileName = str_replace("*",$this->codeFileExtension, $this->codeFileName);
@@ -289,13 +270,15 @@ class CodeFileManager
      * @param $output - выходные данные (4)
      * @param $number - номер тестового случая
      */
-    public function putTestCaseInFiles($input, $output, $number)
-    {
-        $fp = fopen("$this->dirPath/test_input_$number.txt", "w");
+    public function putTestCaseInFiles($input, $output, $number){
+
+        $inputFileName = str_replace("*",$number,$this->getInputFileNameForTestCase($number));
+        $fp = fopen("$this->dirPath/$inputFileName", "w");
         fwrite($fp, $input);
         fclose($fp);
 
-        $fp = fopen("$this->dirPath/test_output_$number.txt", "w");
+        $outputFileName = str_replace("*",$number,$this->expecedOutputFileName);
+        $fp = fopen("$this->dirPath/$outputFileName", "w");
         fwrite($fp, $output);
         fclose($fp);
 
@@ -351,8 +334,13 @@ class CodeFileManager
             throw new Exception('Отсутствует тестовые параметры');
         }
         $right_count = 0;
+
+
         for ($i = 0; $i < $casesCount; $i++) {
-            if ($this->compareOutputs("test_output_$i.txt", "student_result_$i.txt")) {
+            $expectedOutputFileName = str_replace("*",$i,$this->expecedOutputFileName);
+            $outputFileName = str_replace("*",$i,$this->getOutputFileNameForTestCase($i));
+
+            if ($this->compareOutputs($expectedOutputFileName, $outputFileName)) {
                 $right_count++;
             }
         }
@@ -376,9 +364,12 @@ class CodeFileManager
         $info = '';
 
         for ($i = 0; $i < $casesCount; $i++) {
-            $input = file_get_contents("$this->dirPath/test_input_$i.txt");
-            $expected = file_get_contents("$this->dirPath/test_output_$i.txt");
-            $student_output = file_get_contents("$this->dirPath/student_result_$i.txt");
+            $inputFileName = str_replace("*",$i,$this->inputFileName);
+            $expectedOutputFileName = str_replace("*",$i,$this->expecedOutputFileName);
+            $outputFileName = str_replace("*",$i,$this->outputFileName);
+            $input = file_get_contents("$this->dirPath/$inputFileName");
+            $expected = file_get_contents("$this->dirPath/$expectedOutputFileName");
+            $student_output = file_get_contents("$this->dirPath/$outputFileName");
 
             $info .= "Тестовый случай №:$i\n";
             $info .= "Входные параметры:\n$input\n";
@@ -438,7 +429,7 @@ class CodeFileManager
 
         $text = $this->getBaseShellScriptText();
         $text = str_replace($this->keyWordToPutObjectFile, $executeFileName,$text);
-            
+
         }
         else{
             $this->renameFile($alreadyExistedExecutionFile, $executeFileName);

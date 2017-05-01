@@ -72,6 +72,11 @@ class EngineGlobalSettings
     const INPUT_FILE_NAME_FOR_TEST_CASE = "test_input_*.txt";
 
     /**
+     * Имя выходного файла с ожидаемым результатом для конкретного тестового случая
+     */
+    const OUTPUT_FILE_FOR_EXPECTED_RESULT = "test_output_*.txt";
+
+    /**
      * Имя выходного файла для тестового набора параметров. Вместо звездочки подставляется номер кейса
      */
     const OUTPUT_FILE_NAME_FOR_TEST_CASE = "student_output_*.txt";

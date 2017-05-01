@@ -85,6 +85,7 @@ class CodeQuestionManager
      * добавлении вопроса. Возвращает оценку студента
      * @param $code
      * @param $programId
+     * @return string оценка
      */
     public function runQuestionProgram($code,$programId)
     {
@@ -105,10 +106,10 @@ class CodeQuestionManager
             $this->dockerInstance->run("sh /opt/$cache_dir/$dirName/$script_name");
         }
 
-        //$result = $this->fileManager->calculateMark($cases_count);
-        //$this->fileManager->putLogInfo($result);
+        $result = $this->fileManager->calculateMark($cases_count);
+        $this->fileManager->putLogInfo($result);
 
-        //return $result;
+        return $result;
 
     }
 
