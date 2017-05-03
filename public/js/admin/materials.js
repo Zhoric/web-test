@@ -11,8 +11,7 @@ $(document).ready(function(){
             });
 
             self.modals = {
-                removeDisciplineMedia: '#remove-discipline-media-modal',
-                removeThemeMedia: '#remove-theme-media-modal',
+                removeMedia: '#remove-media-modal',
                 repeatAdd: '#repeat-add-modal',
                 lastDelete: '#last-delete-modal',
                 changeMedia: '#change-media-modal',
@@ -76,46 +75,24 @@ $(document).ready(function(){
                         }
                         self.actions.discipline.cancel();
                     },
+                    cancel: function(){
+                        self.mode(state.none);
+                        self.alter.discipline.empty();
+                    },
+                    // вывод всех файлов дисциплины
                     overall: function (data) {
                         if (self.mode() != state.overall){
                             self.mode(state.overall);
                             self.get.disciplineMedias(data.id());
                         }
                     },
-                    themes: function (data) {
+                    // вывод всех тем дисциплины
+                    themes: function () {
                         if (self.mode() != state.themes){
                             self.mode(state.themes);
                             self.get.themes();
                         }
-                    },
-                    cancel: function(){
-                        self.mode(state.none);
-                        self.alter.discipline.empty();
-                    },
-                    addMedia: function () {
-                        self.elfinder.open();
-                    },
-                    start: {
-                        removeMedia: function (data) {
-                            self.alter.media.fill(data);
-                            commonHelper.modal.open(self.modals.removeDisciplineMedia);
-                        }
-                    },
-                    end: {
-                        removeMedia: function () {
-                            $ajaxpost({
-                                url: '/api/mediable/delete/' + self.current.media().mediableId(),
-                                data: null,
-                                errors: self.errors,
-                                successCallback: function(){
-                                    self.get.disciplineMedias(self.current.discipline().id());
-                                    commonHelper.modal.close(self.modals.removeDisciplineMedia);
-                                    self.check.lastDelete(self.current.media().id());
-                                }
-                            });
-                        }
                     }
-
                 },
                 theme: {
                     cancel: function(){
@@ -123,6 +100,7 @@ $(document).ready(function(){
                             .id(0);
                         self.multiselect.tags([]);
                     },
+                    // вывод файлов темы
                     materials: function (data) {
                         if (self.current.theme().id() !== data.id()){
                             self.mode(state.materials);
@@ -131,32 +109,12 @@ $(document).ready(function(){
                             return;
                         }
                         self.actions.theme.cancel();
-                    },
-                    addMedia: function () {
-                        self.elfinder.open();
-                    },
-                    start: {
-                        removeMedia: function (data) {
-                            self.alter.media.fill(data);
-                            commonHelper.modal.open(self.modals.removeThemeMedia);
-                        }
-                    },
-                    end: {
-                        removeMedia: function () {
-                            $ajaxpost({
-                                url: '/api/mediable/delete/' + self.current.media().mediableId(),
-                                data: null,
-                                errors: self.errors,
-                                successCallback: function(){
-                                    self.get.themeMedias(self.current.theme().id());
-                                    commonHelper.modal.close(self.modals.removeThemeMedia);
-                                    self.check.lastDelete(self.current.media().id());
-                                }
-                            });
-                        }
                     }
                 },
                 media: {
+                    add: function () {
+                        self.elfinder.open();
+                    },
                     remove: function () {
                         $ajaxpost({
                             url: '/api/media/delete/' + self.current.media().id(),
@@ -176,6 +134,11 @@ $(document).ready(function(){
                         });
                     },
                     move: function (data) {
+                        if (data.type() == 'text') {
+                            var newWindow = window.open();
+                            newWindow.document.write(data.content());
+                            return;
+                        }
                         var index = data.path().indexOf(data.name());
                         var path = data.path().substring(0,index);
                         window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
@@ -184,12 +147,28 @@ $(document).ready(function(){
                         change: function (data) {
                             self.alter.media.fill(data);
                             commonHelper.modal.open(self.modals.changeMedia);
+                        },
+                        remove: function (data) {
+                            self.alter.media.fill(data);
+                            commonHelper.modal.open(self.modals.removeMedia);
                         }
                     },
                     end: {
                         change: function () {
                             self.current.changeMode(true);
                             self.elfinder.open();
+                        },
+                        remove: function () {
+                            $ajaxpost({
+                                url: '/api/mediable/delete/' + self.current.media().mediableId(),
+                                data: null,
+                                errors: self.errors,
+                                successCallback: function(){
+                                    self.get.currentMedias();
+                                    commonHelper.modal.close(self.modals.removeMedia);
+                                    self.check.lastDelete(self.current.media().id());
+                                }
+                            });
                         }
                     }
                 }
@@ -244,6 +223,7 @@ $(document).ready(function(){
                     var elf = $('#elfinder').elfinder(elfOptions);
                     self.elfinder.handlers.upload(elf.elfinder('instance'));
                     self.elfinder.handlers.rename(elf.elfinder('instance'));
+                    self.elfinder.handlers.open(elf.elfinder('instance'));
                     self.current.elf(elf);
                 },
                 open: function () {
@@ -260,57 +240,62 @@ $(document).ready(function(){
                         self.current.changeMode(false);
                         return;
                     }
-                    if (self.current.theme().id() == 0)
-                        self.media.addToDiscipline(file.hash, self.current.discipline().id(), null);
-                    else self.media.addToTheme(file.hash, self.current.discipline().id(), self.current.theme().id());
+                    self.media.add(file.hash, self.current.discipline().id(), self.current.theme().id());
                 },
                 handlers: {
                     upload: function (elfinder) {
                         elfinder.bind('upload', function(event) {
                             ko.utils.arrayForEach(event.data.added, function(file) {
-                                var url = file.url;
-                                var path = url.substring(url.search('upload'),url.length);
                                 var media = {
                                     name: file.name,
-                                    type: file.mime.split('/')[0],
-                                    path: path,
+                                    path: file.url.substring(file.url.search('upload'),file.url.length),
                                     hash: file.hash
                                 };
-                                var json = JSON.stringify({media: media});
-                                $ajaxpost({
-                                    url: '/api/media/create',
-                                    error: self.errors,
-                                    data: json
-                                });
+                                var type = file.mime.split('/')[0];
+                                if (type == 'audio' || type == 'video' || type == 'image'){
+                                    media.type = type;
+                                    self.media.createSimple(media);
+                                }
+                                else if (type == 'application' || type == 'text') {
+                                    media.type = 'text';
+                                    self.media.createDocx(media);
+                                }
+                                else {
+                                    media.type = 'text';
+                                    self.media.createPdf(media);
+                                }
                             });
+                        });
+                    },
+                    open: function (elfinder) {
+                        elfinder.bind('open', function (event) {
+                            console.log(event);
+
                         });
                     },
                     rename: function (elfinder) {
                         elfinder.bind('rename', function (event) {
                             $ajaxget({
-                                url: '/api/media/hash/' + event.data.removed[0],
+                                url: '/api/media/hash/' + event.data.removed[0], // получение переименованного файла
                                 errors: self.errors,
                                 successCallback: function(data){
-                                    var mediaId = data()[0].id();
-                                    var index = data()[0].path().indexOf(data()[0].name());
-                                    var newPath = data()[0].path().substring(0,index) + event.data.added[0].name;
-                                    var json = JSON.stringify({
-                                        media: {
-                                            id: mediaId,
-                                            type: data()[0].type(),
-                                            path: newPath,
-                                            name: event.data.added[0].name,
-                                            hash: event.data.added[0].hash
-                                        }
-                                    });
+                                    var media = data()[0];
+                                    // новый путь к файлу - старый путь + новое название файла
+                                    var index = media.path().indexOf(media.name());
+                                    var newPath = media.path().substring(0, index) + event.data.added[0].name;
+                                    var mediaJSON = {
+                                        id: media.id(),
+                                        type: media.type(),
+                                        path: newPath,
+                                        name: event.data.added[0].name,
+                                        hash: event.data.added[0].hash
+                                    };
                                     $ajaxpost({
                                         url: '/api/media/update',
                                         error: self.errors,
-                                        data: json,
+                                        data: JSON.stringify({media: mediaJSON}),
                                         successCallback: function(){
-                                            if(self.current.theme().id() == 0)
-                                            self.get.disciplineMedias(self.current.discipline().id());
-                                            else self.get.themeMedias(self.current.theme().id());
+                                            self.get.currentMedias();
                                             $('#elfinder').elfinder('instance').exec('reload');
                                         }
                                     });
@@ -322,58 +307,63 @@ $(document).ready(function(){
             };
 
             self.media = {
-                addToDiscipline: function (hash, disciplineId, themeId) {
+                add : function (hash, disciplineId, themeId) {
                     $ajaxget({
                         url: '/api/media/hash/' + hash,
                         errors: self.errors,
-                        successCallback: function(retData){
-                            var mediaId = retData()[0].id();
-                            if (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true) return;
-                            var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
+                        successCallback: function(data){
+                            var mediaId = data()[0].id();
+                            //проверка повторного добавления данного файла к текущей теме или дисциплине
+                            if((self.current.theme().id() != 0 && (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true)) ||
+                                (self.current.theme().id() == 0 && (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true))) return;
+
                             $ajaxpost({
                                 url: '/api/mediable/create',
                                 error: self.errors,
-                                data: json,
+                                data: JSON.stringify({
+                                    mediable: {start: null, stop: null},
+                                    disciplineId: disciplineId,
+                                    mediaId: mediaId,
+                                    themeId: themeId == 0 ? null : themeId}),
                                 successCallback: function () {
-                                    self.get.disciplineMedias(self.current.discipline().id());
+                                    self.get.currentMedias();
                                 }
                             });
                         }
 
                     });
                 },
-                addToTheme : function (hash, disciplineId, themeId) {
-                    $ajaxget({
-                        url: '/api/media/hash/' + hash,
-                        errors: self.errors,
-                        successCallback: function(retData){
-                            var mediaId = retData()[0].id();
-                            if (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true) return;
-                            var json = JSON.stringify({mediable: {start: null, stop: null}, disciplineId: disciplineId, mediaId: mediaId, themeId: themeId});
-                            $ajaxpost({
-                                url: '/api/mediable/create',
-                                error: self.errors,
-                                data: json,
-                                successCallback: function(){
-                                    self.get.themeMedias(self.current.theme().id());
-                                }
-                            });
-                        }
+                createSimple: function (media) {
+                    $ajaxpost({
+                        url: '/api/media/create',
+                        error: self.errors,
+                        data: JSON.stringify({media: media})
                     });
+                },
+                createDocx: function (media) {
+                    $ajaxpost({
+                        url: '/api/media/createdocx',
+                        error: self.errors,
+                        data: JSON.stringify({media: media})
+                    });
+                },
+                createPdf: function (media) {
+
                 },
                 change: function (file) {
                     $ajaxget({
                         url: '/api/media/hash/' + file.hash,
                         errors: self.errors,
-                        successCallback: function(retData){
-                            var mediaId = retData()[0].id();
+                        successCallback: function(media){
+                            var mediaId = media()[0].id();
                             $ajaxget({
                                 url: '/api/mediable/media/' + mediaId,
                                 error: self.errors,
                                 successCallback: function (data) {
-                                    if (data().length == 0){
-                                        self.media.update(file);
-                                        self.media.removeAfterUpdate(mediaId, self.current.media().path());
+                                    if (data().length == 0){ // если заменяющий файл ни к чему не привязан
+                                        self.media.update(file); // поменять заменяемый файл
+                                        self.media.removeAfterUpdate(mediaId, self.current.media().path()); // удалить старый заменяемый файл
+                                        self.get.currentMedias();
                                     }
                                     else {
                                         commonHelper.modal.open(self.modals.haveMediables);
@@ -384,52 +374,41 @@ $(document).ready(function(){
                     });
                 },
                 update: function (file) {
-                    var url = file.url;
-                    var path = url.substring(url.search('upload'),url.length);
-                    var json = JSON.stringify({
-                        media: {
-                            id: self.current.media().id(),
-                            type: file.mime.split('/')[0],
-                            path: path,
-                            name: file.name,
-                            hash: file.hash
-                        }
-                    });
+                    var mediaJSON = {
+                        id: self.current.media().id(),
+                        type: file.mime.split('/')[0],
+                        path: decodeURIComponent(file.url.substring(file.url.search('upload'), file.url.length)),
+                        name: file.name,
+                        hash: file.hash
+                    };
                     $ajaxpost({
                         url: '/api/media/update',
                         error: self.errors,
-                        data: json,
+                        data: JSON.stringify({media: mediaJSON}),
                         successCallback: function(){
-                            self.get.disciplineMedias(self.current.discipline().id());
+                            self.get.currentMedias();
                             $('#elfinder').elfinder('instance').exec('reload');
                         }
                     });
                 },
                 removeAfterUpdate: function (mediaId, path) {
+                    // удаление старого файла из директории
                     $ajaxpost({
                         url: '/api/media/deletefile',
                         data: JSON.stringify({path: path}),
                         errors: self.errors
                     });
+                    // удаление из БД нового файла
                     $ajaxpost({
                         url: '/api/media/delete/' + mediaId,
                         data: null,
                         errors: self.errors
                     });
 
-                },
-                deleteFile: function (path) {
-                    $ajaxpost({
-                        url: '/api/media/deletefile',
-                        data: JSON.stringify({path: path}),
-                        errors: self.errors,
-                        successCallback: function(){
-                            $('#elfinder').elfinder('instance').exec('reload');
-                        }
-                    });
                 }
             };
             self.check = {
+                // проверка повторного привязывания файла
                 repeatAdd : function (mediables, mediaId) {
                     var repeat = false;
                     ko.utils.arrayForEach(mediables, function (mediable) {
@@ -440,6 +419,7 @@ $(document).ready(function(){
                     });
                     return repeat;
                 },
+                // проверка на последнее удаление файла
                 lastDelete: function (mediaId) {
                     $ajaxget({
                         url: '/api/mediable/media/' + mediaId,
@@ -451,6 +431,7 @@ $(document).ready(function(){
                     })
                 }
             };
+
             self.alter = {
                 discipline: {
                     fill: function(data){
@@ -512,20 +493,6 @@ $(document).ready(function(){
                     });
 
                 },
-                disciplineMedias: function (disciplineId) {
-                    $ajaxget({
-                        url: '/api/mediable/discipline/' + disciplineId,
-                        errors: self.errors,
-                        successCallback: function(data){
-                            self.current.medias.removeAll();
-                            self.current.disciplineMediables(data());
-                            ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
-                                mediable.media.mediableId = mediable.id;
-                               self.current.medias.push(mediable.media);
-                            });
-                        }
-                    });
-                },
                 disciplineProfiles: function(){
                     var id = self.current.discipline().id();
                     if (!id) return;
@@ -563,6 +530,20 @@ $(document).ready(function(){
                         self.errors.show(result.Message());
                     });
                 },
+                disciplineMedias: function (disciplineId) {
+                    $ajaxget({
+                        url: '/api/mediable/discipline/' + disciplineId,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.medias.removeAll();
+                            self.current.disciplineMediables(data());
+                            ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
+                                mediable.media.mediableId = mediable.id;
+                                self.current.medias.push(mediable.media);
+                            });
+                        }
+                    });
+                },
                 themeMedias: function (themeId) {
                     $ajaxget({
                         url: '/api/mediable/theme/' + themeId,
@@ -576,6 +557,11 @@ $(document).ready(function(){
                             });
                         }
                     });
+                },
+                currentMedias: function () {
+                    if(self.current.theme().id() == 0)
+                        self.get.disciplineMedias(self.current.discipline().id());
+                    else self.get.themeMedias(self.current.theme().id());
                 }
             };
             self.get.disciplines();

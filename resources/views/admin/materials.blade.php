@@ -68,36 +68,21 @@
     <div id="elfinder"></div>
 
     <div class="g-hidden">
-        <div class="box-modal removal-modal" id="remove-discipline-media-modal">
+        <div class="box-modal removal-modal" id="remove-media-modal">
             <div class="layer zero-margin width-auto">
                 <div class="layer-head">
-                    <h3>Удалить выбранный материал для данной дисциплины?</h3>
+                    <h3>Удалить выбранный материал?</h3>
                 </div>
                 <div class="layer-body">
                     <div class="details-row float-buttons">
                         <button class="cancel arcticmodal-close">Отмена</button>
-                        <button data-bind="click: $root.actions.discipline.end.removeMedia" class="remove arcticmodal-close">Удалить</button>
+                        <button data-bind="click: $root.actions.media.end.remove" class="remove arcticmodal-close">Удалить</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="g-hidden">
-        <div class="box-modal removal-modal" id="remove-theme-media-modal">
-            <div class="layer zero-margin width-auto">
-                <div class="layer-head">
-                    <h3>Удалить выбранный материал для данной темы?</h3>
-                </div>
-                <div class="layer-body">
-                    <div class="details-row float-buttons">
-                        <button class="cancel arcticmodal-close">Отмена</button>
-                        <button data-bind="click: $root.actions.theme.end.removeMedia" class="remove arcticmodal-close">Удалить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="g-hidden">
         <div class="box-modal removal-modal" id="repeat-add-modal">
@@ -171,7 +156,7 @@
         </thead>
         <tbody>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.discipline.addMedia" colspan="4">
+            <td data-bind="click: $root.actions.media.add" colspan="4">
                 <span class="fa">&#xf067;</span>&nbsp;Добавить материал
             </td>
         </tr>
@@ -183,7 +168,7 @@
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <td class="action-holder">
                 <button data-bind="click: $root.actions.media.start.change" class="fa approve mini actions">&#xf0ec;</button>
-                <button data-bind="click: $root.actions.discipline.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
+                <button data-bind="click: $root.actions.media.start.remove" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
         <!-- /ko -->
@@ -218,7 +203,7 @@
         </thead>
         <tbody>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.theme.addMedia" colspan="4">
+            <td data-bind="click: $root.actions.media.add" colspan="4">
                 <span class="fa">&#xf067;</span>&nbsp;Добавить материал
             </td>
         </tr>
@@ -230,7 +215,7 @@
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <td class="action-holder">
                 <button data-bind="click: $root.actions.media.start.change" class="fa approve mini actions">&#xf0ec;</button>
-                <button data-bind="click: $root.actions.theme.start.removeMedia" class="fa remove mini actions">&#xf014;</button>
+                <button data-bind="click: $root.actions.media.start.remove" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
         <!-- /ko -->

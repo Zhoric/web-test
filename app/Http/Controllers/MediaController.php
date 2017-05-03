@@ -77,5 +77,17 @@ class MediaController extends Controller
         }
     }
 
+    public function createDocx(Request $request){
+        try{
+            $mediaData = $request->json('media');
+            $media = new Media();
+            $media->fillFromJson($mediaData);
+            $this->_mediaManager->addDocx($media);
+            return $this->successJSONResponse();
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
 
 }

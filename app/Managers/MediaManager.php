@@ -4,6 +4,7 @@ namespace Managers;
 
 use Repositories\UnitOfWork;
 use Media;
+use DocxReader;
 
 class MediaManager
 {
@@ -43,6 +44,17 @@ class MediaManager
     public function deleteFile($path){
         if (file_exists($path))
             unlink(public_path($path));
+    }
+
+    public function addDocx(Media $media){
+        $doc = new DocxReader();
+        $doc->setFile($media->getPath());
+        if(!$doc->get_errors()) {
+            $html = $doc->toHtml();
+            $media->setContent($html);
+            $this->_unitOfWork->medias()->create($media);
+            $this->_unitOfWork->commit();
+        }
     }
 
 }

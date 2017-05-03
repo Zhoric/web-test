@@ -81,7 +81,9 @@ return array(
             array(
                 'driver' => 'LocalFileSystem',
                 'path'   => public_path().'/upload',
-                'URL'    => 'http://'. $_SERVER['HTTP_HOST']. '/upload'
+                'URL'    => 'http://'. $_SERVER['HTTP_HOST']. '/upload',
+                'uploadAllow' => array('audio', 'video', 'image', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/pdf', 'text/plain')
             )
         )
     ),
