@@ -51,13 +51,22 @@ class DemoController extends BaseController
 
     public function docker(){
 
-        $this->manager->setProgramLanguage(\Language::C);
-        $program =  $this->_uow->programs()->find(1);
+        $command = "ps aux";
+        $this->dockerManager->setLanguage(\Language::C);
+        $dockerInstance = $this->dockerManager->getOrCreateInstance();
+        $result = $dockerInstance->run($command);
+
+        $result = $dockerInstance->getProcessInfo("c_output_1_0.out");
 
 
-            $result = $this->manager->runQuestionProgram($program->getTemplate(), $program->getId());
-            echo $result."\n";
-        dd();
+        dd($result);
+
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command = "ps aux";
+        exec("docker exec b178c3393937f51af504a6f1d13d49784f24d8875c65346ff70d5f962e346569 $command", $output);
+
+        dd($output);
 
 
         $app_path = app_path();
@@ -156,7 +165,7 @@ class DemoController extends BaseController
 
 
         $command = 'sh /opt/temp_cache/Петр_Петров_Перович_1493669336/run0.sh';
-        for($i = 0; $i < 100; $i ++) {
+        for($i = 0; $i < 1; $i ++) {
 
             $queue = Queue::push(new RunProgramJob(\Language::C,$command));
 

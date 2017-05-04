@@ -40,9 +40,11 @@ class RunProgramJob implements ShouldQueue
         $dockerManager->setLanguage($this->lang);
         $dockerInstance = $dockerManager->getOrCreateInstance();
         $dockerInstance->runAsync($this->command);
+        //$result = $dockerInstance->getProcessInfo("c_output_1_0.out");
 
 
-        echo "finished";
+
+       // echo $result;
         return;
     }
 

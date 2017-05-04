@@ -114,5 +114,10 @@ class EngineGlobalSettings
      */
     const OBJECT_FILE_KEY_WORD = "exe";
 
+    /**
+     * Стандартный размер потребляемой памяти пустого процесса
+     */
+    const STANDART_MEMORY_USAGE = 4224;
+
 
 }

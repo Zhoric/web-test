@@ -36,8 +36,6 @@ class DockerInstance
         $this->app_path = app_path();
     }
 
-
-
     /**
      * Запуск консольной команды на виртуальной машине.
      * @param $command - текст команды
@@ -66,6 +64,43 @@ class DockerInstance
         return $process;
 
     }
+
+    public function getProcessInfo($name){
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command = "ps aux";
+        exec("docker exec $this->container_id $command", $output);
+        $proc_info = $this->getProcessInfoStringFromCommand($output,$name);
+
+        $result = explode(" ",$proc_info);
+
+        return $this->getMemoryAndTimeUsageOfProcess($result);
+
+    }
+
+    private function getProcessInfoStringFromCommand(array $command_result,$name){
+        foreach($command_result as $proc_info) {
+            if (strstr($proc_info, $name)) {
+                return $proc_info;
+            }
+        }
+        return "";
+    }
+
+    private function getMemoryAndTimeUsageOfProcess($processInfo){
+        $new_res = [];
+        foreach($processInfo as $item){
+            if($item != ""){
+                $new_res[] = $item;
+            }
+        }
+        $time = $new_res[9];
+        $time = explode(":" , $time);
+        $time = ["minutes" => $time[0], "seconds" => $time[1]];
+        return ["memory" => $new_res[4], "time" => $time];
+    }
+
+
 
 
 
