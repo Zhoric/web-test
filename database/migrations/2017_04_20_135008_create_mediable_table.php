@@ -20,6 +20,8 @@ class CreateMediableTable extends Migration
             $table->integer('theme_id')->unsigned()->nullable()->default(NULL);
             $table->text('start')->nullable()->default(NULL);
             $table->text('stop')->nullable()->default(NULL);
+
+            $table->foreign('media_id')->references('id')->on('media')->onDelete('cascade');
         });
     }
 
@@ -30,6 +32,10 @@ class CreateMediableTable extends Migration
      */
     public function down()
     {
+        Schema::table('mediable', function (Blueprint $table) {
+            $table->dropForeign(['media_id']);
+        });
+
         Schema::drop('mediable');
     }
 }

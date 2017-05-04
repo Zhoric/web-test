@@ -31,7 +31,7 @@ class Media extends BaseEntity implements JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="content", type="text", length=4294967295, nullable=true)
      */
     protected $content;
 

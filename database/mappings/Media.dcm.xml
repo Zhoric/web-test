@@ -9,7 +9,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="content" type="text" column="content" length="65535" nullable="true">
+    <field name="content" type="text" column="content" length="4294967295" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
