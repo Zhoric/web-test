@@ -5,6 +5,8 @@ namespace Managers;
 use Repositories\UnitOfWork;
 use Media;
 use DocxReader;
+use \RecursiveDirectoryIterator;
+use \RecursiveIteratorIterator;
 
 class MediaManager
 {
@@ -36,6 +38,19 @@ class MediaManager
     public function deleteMedia($mediaId){
         $media = $this->_unitOfWork->medias()->find($mediaId);
         if ($media != null){
+            if ($media->getType() == 'text' && file_exists('upload/.wordImage/' . $media->getHash())){
+                $dir = 'upload/.wordImage/' . $media->getHash();
+                $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+                $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+                foreach($files as $file) {
+                    if ($file->isDir()){
+                        rmdir($file->getRealPath());
+                    } else {
+                        unlink($file->getRealPath());
+                    }
+                }
+                rmdir($dir);
+            }
             $this->_unitOfWork->medias()->delete($media);
             $this->_unitOfWork->commit();
         }
@@ -49,7 +64,13 @@ class MediaManager
     public function addDocx(Media $media){
         $doc = new DocxReader();
         $doc->setFile($media->getPath());
-        if(!$doc->get_errors()) {
+        if(!$doc->getErrors()) {
+            $path = 'upload/.wordImage/' . $media->getHash();
+            $oldmask = umask(0);
+            mkdir($path, 0777);
+            umask($oldmask);
+
+            $doc->loadImages($media->getPath(), $path);
             $html = $doc->toHtml();
             $media->setContent($html);
             $this->_unitOfWork->medias()->create($media);
