@@ -32,7 +32,7 @@ Route::get('/results', function(){return View('student.results');})
     ->middleware('checkRole:'.UserRole::Student);
 Route::get('/discipline/{id}', function(){return View('student.discipline');})
     ->middleware('checkRole:'.UserRole::Student);
-Route::get('/section/{id}', function(){return View('student.section');})
+Route::get('/media/{id}', function(){return View('student.media');})
     ->middleware('checkRole:'.UserRole::Student);
 
 
@@ -62,6 +62,7 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('monitoring', function(){return View('admin.monitoring');});
     Route::get('setting', function(){return View('admin.setting');});
     Route::get('materials', function(){return View('admin.materials');});
+    Route::get('media/{id}', function(){return View('admin.media');});
 
         Route::group(['prefix' => 'help'], function (){
             Route::get('navigation', function(){return View('help.main');});

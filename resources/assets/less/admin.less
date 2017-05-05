@@ -420,20 +420,20 @@ table.werewolf.materials{
   margin-top: -2px;
   tr{
     cursor: pointer;
-    .material-type{
+    .material-type {
       color: @dark-gray;
-    }
-    .video:before{
-      content: "\f008";
-    }
-    .text:before{
-      content: "\f15c";
-    }
-    .audio:before{
-      content: "\f001";
-    }
-    .image:before{
-      content: "\f03e";
+      &.video:before {
+        content: "\f008";
+      }
+      &.text:before {
+        content: "\f15c";
+      }
+      &.audio:before {
+        content: "\f001";
+      }
+      &.image:before {
+        content: "\f03e";
+      }
     }
     .actions{
       visibility: hidden;
@@ -441,6 +441,14 @@ table.werewolf.materials{
     .empty{
       height: 50px;
       font-size: 15px;
+    }
+    .action-holder {
+      .editor {
+        display: none;
+        &.text {
+          display: inline-block;
+        }
+      }
     }
     &.adder-row {
       height: 40px;
@@ -471,7 +479,7 @@ table.werewolf.materials{
   }
   tr > td{
     &:last-child{
-      width: 100px;
+      width: 160px;
       text-align: center;
       padding: 3px 15px;
     }
@@ -854,7 +862,7 @@ button.add-section{
   }
 }
 
-.section-name{
+.editor-name{
   padding: 20px;
   input{
     width: 85%;
@@ -865,12 +873,22 @@ button.add-section{
   }
 }
 
-.section-buttons{
+.editor-buttons{
   padding: 10px;
   text-align: center;
   button{
     width: 100px;
+    color: white;
+    &:hover{
+      background: @patronus;
+    }
+    &.danger{
+      &:hover{
+        background: @crimson-red;
+      }
+    }
   }
+
 }
 
 #sections-modal{
@@ -947,7 +965,7 @@ button.add-section{
     }
     .current{
       color: @patronus;
-      border-bottom: 2px solid #5D8CAE;
+      border-bottom: 2px solid @patronus;
     }
   }
   .themes{
@@ -990,5 +1008,21 @@ button.add-section{
 
 #elfinder{
   display: none;
+}
+
+body{
+  &.media{
+    .footer {
+      display: none;
+    }
+    .menu{
+      display: none;
+    }
+    .page-wrap:after{
+      display: none;
+    }
+    padding-top: 50px;
+    background: white;
+  }
 }
 
