@@ -47,6 +47,40 @@ class Program extends BaseEntity implements JsonSerializable
 
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="memory_limit", type="smallint", nullable=false)
+     */
+    protected $memoryLimit;
+
+    /**
+     * @var \Question
+     *
+     * @ORM\Column(name="time_limit", type="smallint", nullable=false)
+     * })
+     */
+    protected $timeLimit;
+
+    /**
+     * @return int
+     */
+    public function getMemoryLimit()
+    {
+        return $this->memoryLimit;
+    }
+
+    /**
+     * @param int $memoryLimit
+     */
+    public function setMemoryLimit($memoryLimit)
+    {
+        $this->memoryLimit = $memoryLimit;
+    }
+
+
+
+
+    /**
      * Set template
      *
      * @param string $template

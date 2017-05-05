@@ -94,6 +94,9 @@ class DockerInstance
                 $new_res[] = $item;
             }
         }
+        if(empty($new_res)){
+            return $new_res;
+        }
         $time = $new_res[9];
         $time = explode(":" , $time);
         $time = ["minutes" => $time[0], "seconds" => $time[1]];
