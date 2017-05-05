@@ -100,33 +100,68 @@ class DocxReader {
             $namespaces = $xml->getNamespaces(true);
             $children = $xml->children($namespaces['w']);
 
-            foreach ($children->style as $s) {
-                $attr = $s->attributes('w', true);
-                if (isset($attr['styleId'])) {
-                    $tags = array();
-                    $attrs = array();
-                    foreach (get_object_vars($s->rPr) as $tag => $style) {
-                        $att = $style->attributes('w', true);
-                        switch ($tag) {
-                            case "b":
-                                $tags[] = 'strong';
-                                break;
-                            case "i":
-                                $tags[] = 'em';
-                                break;
-                            case "color":
-                                //echo (String) $att['val'];
-                                $attrs[] = 'color:#' . $att['val'];
-                                break;
-                            case "sz":
-                                $attrs[] = 'font-size:' . $att['val'] . 'px';
-                                break;
-                        }
-                    }
-                    $styles[(String)$attr['styleId']] = array('tags' => $tags, 'attrs' => $attrs);
-                }
+            foreach ($children->style as $style) {
+               $this->parseStyle($style);
             }
-            $this->styles = $styles;
+           // $this->styles = $styles;
+        }
+    }
+
+    private function parseStyle($style){
+        $attr = $style->attributes('w', true);
+        if (isset($attr['styleId'])) {
+            $styleId = (String)$attr['styleId'];
+            $styleType = $attr['type'];
+
+            $tags = array();
+            $attrs = array();
+
+            if ($style->basedOn) {
+                $attr = $style->basedOn->attributes('w', true);
+                $id = (String)$attr['val'];
+                $basedStyle = $this->styles[$id];
+                $tags = $basedStyle['tags'];
+                $attrs = $basedStyle['attrs'];
+            }
+
+            if ($styleType == 'table'){
+                $newAttrs = $this->parseTableProperties($style->tblPr);
+                if ($newAttrs)
+                    foreach ($newAttrs as $newAttr)
+                        $attrs[] = $newAttr;
+
+                $newAttrs = $this->parseTableCellMar($style->tblPr);
+                if ($newAttrs)
+                    foreach ($newAttrs as $newAttr)
+                        $attrs[] = $newAttr;
+
+                $newAttrs = $this->parseTableBorders($style->tblPr);
+                if ($newAttrs)
+                    foreach ($newAttrs as $newAttr)
+                        if (strrpos($newAttr, '{')) $attrs[] = $newAttr;
+                        else $attrs[] = '{ ' . $newAttr . ' }';
+            }
+            /*foreach (get_object_vars($style->rPr) as $tag => $style) {
+                $att = $style->attributes('w', true);
+                switch ($tag) {
+                    case "b":
+                        $tags[] = 'strong';
+                        break;
+                    case "i":
+                        $tags[] = 'em';
+                        break;
+                    case "color":
+                        //echo (String) $att['val'];
+                        $attrs[] = 'color:#' . $att['val'];
+                        break;
+                    case "sz":
+                        $attrs[] = 'font-size:' . $att['val'] . 'px';
+                        break;
+                }
+            } */
+
+
+            $this->styles[$styleId] = array('tags' => $tags, 'attrs' => $attrs);
         }
     }
 
@@ -210,8 +245,15 @@ class DocxReader {
         $children = $xml->children($namespaces['w']);
         $childrenBody = $children->body->children($namespaces['w']);
 
-        $this->html = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title>
-        <style>span.block { display: block; } body { padding-left: 100px; padding-right: 100px}</style></head><body>';
+        $this->html = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title>
+        <style>span.block { display: block; } body { padding-left: 100px; padding-right: 100px}';
+
+        foreach ($this->styles as $id => $style){
+            foreach ($style['attrs'] as $styleAttr){
+                $this->html .= ' #' . $id . " " . $styleAttr;
+            }
+        }
+        $this->html .= '</style></head><body>';
 
         $this->convertDoc($childrenBody);
         $this->addEnd();
@@ -233,9 +275,9 @@ class DocxReader {
             $this->parseProperties($child);
             $this->parseList($child);
 
-            // если есть текст, то обработать его;
+            // если есть текст или изображение, то обработать их;
             // иначе пустая строка
-            if (isset($child->r)) {
+            if (isset($child->r->t) || isset($child->r->drawing)) {
                 $this->parseText($child->r);
             }
             else $this->html .= '<br>';
@@ -248,22 +290,49 @@ class DocxReader {
 
     private function parseTable($table){
         if (isset($table->tblPr)) {
-            $this->html .= '<table>';
-            $this->parseTableProperties($table->tblPr);
+            $tableId = $this->getTableId($table->tblPr);
+            $properties = $this->parseTableProperties($table->tblPr);
+
+            if($tableId)
+                $this->html .= '<table id="' . $tableId . '"';
+            else $this->html .= '<table ';
+
+            if ($properties) {
+                $this->html .= ' style = "';
+                foreach ($properties as $prop)
+                    $this->html .= $prop;
+                $this->html .= '"';
+            }
+            $this->html .= '>';
+
             foreach ($table->tr as $tr) $this->parseTableRow($tr);
             $this->html .= '</table>';
         }
     }
 
+    private function getTableId($tblPr){
+        if($tblPr->tblStyle){
+            $att = $tblPr->tblStyle->attributes('w', true);
+            $styleId = (String)$att['val'];
+            return $styleId;
+        }
+        return null;
+    }
+
     private function parseTableProperties($tblPr){
-        //$att = $tblPr->attributes('w', true);
+        $attrs = array();
+        if ($tblPr->tblInd) {
+            $att = $tblPr->tblInd->attributes('w', true);
+            $attrs[] = 'table { margin-left: ' . ($att['w']/10) . 'px }';
+        }
+        if (empty($attrs)) return null;
+        return $attrs;
     }
 
     private function parseTableRow($tr){
         $this->html.= '<tr>';
         foreach ($tr->tc as $tc) {
             $cellStyle = $this->parseCellStyle($tc->tcPr);
-           // dd($cellStyle);
             $this->html.= '<td ' . $cellStyle . ' >';
             foreach ($tc->p as $p) {
                 $this->style = '';
@@ -273,8 +342,6 @@ class DocxReader {
             $this->html .= '</td>';
         }
         $this->html .= '</tr>';
-
-
     }
 
     private function parseCellStyle($cellStyle){
@@ -288,10 +355,108 @@ class DocxReader {
                     if ($val['val'] == 'center') $cellStyle .= 'vertical-align: middle;';
                     else $style .= 'vertical-align:' . $val['val'];
                     break;
+                case "tcBorders":
+                    $attrs = $this->parseTableBorders($cellStyle);
+                    if (!empty($attrs)){
+                        foreach ($attrs as $borderAtt)
+                            $style .= $borderAtt . ';';
+                    }
+                    break;
             }
         }
         $style .= "'";
         return $style;
+    }
+
+    private function parseTableBorders($tblPr){
+        $isCell = false;
+        $attrs = array();
+        $collapse = false;
+
+        if ($tblPr->tblBorders) {
+            $bordersStyle = $tblPr->tblBorders;
+        }
+        else if ($tblPr->tcBorders ){
+            $bordersStyle = $tblPr->tcBorders;
+            $isCell = true;
+        }
+        else return null;
+
+        foreach (get_object_vars($bordersStyle) as $tag => $style) {
+            $att = $style->attributes('w', true);
+            if ($att['space'] == 0) $collapse = true;
+            if ($att['color'] == 'auto') $color = 'black';
+            else $color = '#' . $att['color'];
+
+            switch ($tag) {
+                case "top":
+                    $attrs[] = ' border-top: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color;
+                    break;
+                case "bottom":
+                    $attrs[] = ' border-bottom: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color;
+                    break;
+                case "right":
+                    $attrs[] = ' border-right: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color;
+                    break;
+                case "left":
+                    $attrs[] = ' border-left: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color;
+                    break;
+                case "insideH":
+                    if (!$isCell)
+                        $attrs[] = ' td {border-top: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color. ' ;' .
+                            'border-bottom: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color. ' } ';
+                    break;
+                case "insideV":
+                    if (!$isCell)
+                        $attrs[] = ' td {border-right: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color. ' ;' .
+                            'border-left: ' . ($att['sz']/10) . 'px '. $this->getBorderStyle($att['val']) . ' ' . $color. ' } ';
+                    break;
+            }
+        }
+        if (!$isCell)
+            if ($collapse) $attrs[] = 'table {border-collapse: collapse} ';
+            else $attrs[] = 'table {border-collapse: separate} ';
+        return $attrs;
+
+    }
+
+    private function getBorderStyle($style){
+        switch ($style) {
+            case "single": return 'solid'; break;
+            case "nil": return 'none'; break;
+            case "none": return 'none'; break;
+            case "dotted": return 'dotted'; break;
+            case "dashed": return 'dashed'; break;
+            case "double": return 'double'; break;
+            case "outset": return 'outset'; break;
+            case "inset": return 'inset'; break;
+            default: return 'solid'; break;
+        }
+    }
+
+    private function parseTableCellMar($tblPr){
+        if ($tblPr->tblCellMar) {
+            $attrs = array();
+            foreach (get_object_vars($tblPr->tblCellMar) as $tag => $style) {
+                $att = $style->attributes('w', true);
+                switch ($tag) {
+                    case "top":
+                        $attrs[] = 'td {padding-top: ' . ($att['w']/10) . 'px} ';
+                        break;
+                    case "bottom":
+                        $attrs[] = 'td {padding-bottom: ' . ($att['w']/10) . 'px} ';
+                        break;
+                    case "right":
+                        $attrs[] = 'td {padding-right: ' . ($att['w']/10) . 'px} ';
+                        break;
+                    case "left":
+                        $attrs[] = 'td {padding-left: ' . ($att['w']/10) . 'px} ';
+                        break;
+                }
+            }
+            return $attrs;
+        }
+        return null;
     }
 
 
