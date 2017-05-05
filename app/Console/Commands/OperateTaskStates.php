@@ -2,12 +2,9 @@
 
 namespace App\Console\Commands;
 
-use CodeQuestionEngine\DockerManager;
-use CodeQuestionEngine\EngineGlobalSettings;
 use Illuminate\Console\Command;
-use CodeQuestionEngine\CodeTask;
-use CodeTaskStatus;
-use Queue;
+use TaskStatesManager;
+
 
 class OperateTaskStates extends Command
 {
@@ -37,48 +34,19 @@ class OperateTaskStates extends Command
 
     /**
      * Execute the console command
-     * @param DockerManager $dockerManager
+     * @param TaskStatesManager $checkResultManager
      * @return mixed
      */
-    public function handle(DockerManager $dockerManager)
+    public function handle(TaskStatesManager $checkResultManager)
     {
        while(true){
 
-           $tasks = CodeTask::getAll();
-
-           foreach($tasks as $task){
-
-               switch($task->state){
-
-                   case CodeTaskStatus::Running:
-                   {
-                        $dockerManager->setLanguage($task->language);
-                        $dockerInstance = $dockerManager->getOrCreateInstance();
-                        $processInfo = $dockerInstance->getProcessInfo($task->processName);
-                        if(!empty($processInfo)) {
-                            if (($processInfo["memory"] - EngineGlobalSettings::STANDART_MEMORY_USAGE)
-                                > $task->memoryLimit
-                            ) {
-                                $task->state = CodeTaskStatus::MemoryOverflow;
-                                $dockerInstance->killProcess($task->processName);
-                                //todo: поставить двойку
-                            }
-                            if($processInfo["time"]["seconds"] > $task->timeLimit){
-                                $task->state = CodeTaskStatus::Timeout;
-                                $dockerInstance->killProcess($task->processName);
-                                //todo: поставить двойку
-                            }
-                        }
-                        else{
-                            $task->state = CodeTaskStatus::QueuedToCheck;
-                            //todo: отправить на проверку
-                        }
-                        $task->store();
-                   }break;
-               }
+                $checkResultManager->operateTaskStates();
 
            }
         sleep(1);
-       }
+
     }
+
+
 }
