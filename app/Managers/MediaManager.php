@@ -31,6 +31,10 @@ class MediaManager
     }
 
     public function updateMedia(Media $media){
+        $oldMedia = $this->_unitOfWork->medias()->find($media->getId());
+        if ($media->getType() == 'text' && file_exists('upload/.wordImage/' . $oldMedia->getHash())){
+            rename('upload/.wordImage/' . $oldMedia->getHash(), 'upload/.wordImage/' . $media->getHash());
+        }
         $this->_unitOfWork->medias()->update($media);
         $this->_unitOfWork->commit();
     }
