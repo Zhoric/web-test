@@ -33,7 +33,6 @@ class TaskStatesManager
                     $this->dockerInstance = $this->dockerManager->getOrCreateInstance();
                     $processInfo = $this->dockerInstance->getProcessInfo($task->processName);
                     $this->changeProcessState($processInfo,$task);
-                    $task->store();
                     $this->pushTasksToChecking($tasks,$task);
                 }
                     break;
@@ -55,7 +54,7 @@ class TaskStatesManager
         if ($ready_count == $currentTask->casesCount) {
 
             foreach ($cases_tasks as $case_task) {
-                $case_task = CodeTaskStatus::Checking;
+                $case_task->state = CodeTaskStatus::Checking;
                 $case_task->store();
             }
 
@@ -95,7 +94,7 @@ class TaskStatesManager
         } else {
             $task->state = CodeTaskStatus::QueuedToCheck;
         }
-
+        $task->store();
     }
 
     private function getTasksByProgramId(array $tasks, $programId)
