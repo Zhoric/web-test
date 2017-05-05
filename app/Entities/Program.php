@@ -62,6 +62,22 @@ class Program extends BaseEntity implements JsonSerializable
     protected $timeLimit;
 
     /**
+     * @return Question
+     */
+    public function getTimeLimit()
+    {
+        return $this->timeLimit;
+    }
+
+    /**
+     * @param Question $timeLimit
+     */
+    public function setTimeLimit($timeLimit)
+    {
+        $this->timeLimit = $timeLimit;
+    }
+
+    /**
      * @return int
      */
     public function getMemoryLimit()

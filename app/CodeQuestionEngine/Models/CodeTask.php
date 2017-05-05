@@ -25,6 +25,8 @@ class CodeTask
 
     public $state;
 
+    public $casesCount;
+
     /**
      * максимальное время выполнения программы в секундах
      */
@@ -40,6 +42,11 @@ class CodeTask
     public $testCaseNumber;
 
     /**
+     * @var язык программирования
+     */
+    public $language;
+
+    /**
      * Префикс ключа задачи с кодом для хранения в кеше
      */
     const  prefix = "ct";
@@ -49,13 +56,14 @@ class CodeTask
      * CodeTask constructor.
      * @param $programId
      * @param $processName
+     * @param $language
      * @param $state
      * @param $key
      * @param $timeout
      * @param $memoryLimit
      * @param string $testCaseNumber
      */
-    public function __construct($programId, $processName, $state, $timeout, $memoryLimit, $testCaseNumber = "", $key = "")
+    public function __construct($programId, $language, $processName, $state, $timeout, $memoryLimit, $casesCount = 1, $testCaseNumber = "", $key = "")
     {
         $this->programId   = $programId;
         $this->timeout = $timeout;
@@ -63,6 +71,8 @@ class CodeTask
         $this->processName   = $processName;
         $this->state = $state;
         $this->testCaseNumber = $testCaseNumber == "" ? 1 : $testCaseNumber;
+        $this->language = $language;
+        $this->casesCount = $casesCount;
 
         if($key == "") {
             $this->key = self::prefix . '-' . $programId . '-' . $this->testCaseNumber;
@@ -78,10 +88,12 @@ class CodeTask
         Redis::hmset($this->key, [
             'key'      => $this->key,
             'programId'    => $this->programId,
+            'language'     => $this->language,
             'processName'   => $this->processName,
             'state' => $this->state,
             'timeout' => $this->timeout,
             'memoryLimit' => $this->memoryLimit,
+            'casesCount'  => $this->casesCount,
             'testCaseNumber' => $this->testCaseNumber,
         ]);
     }
@@ -93,10 +105,12 @@ class CodeTask
         if (!empty($stored)) {
             return new CodeTask(
                   $stored['programId']
+                , $stored['language']
                 , $stored['processName']
                 , $stored['state']
                 , $stored['timeout']
                 , $stored['memoryLimit']
+                , $stored['casesCount']
                 , $stored['testCaseNumber']
                 , $stored['key']);
         }
@@ -112,10 +126,12 @@ class CodeTask
             $stored = Redis::hgetall($key);
             $task = new CodeTask(
                 $stored['programId']
+                , $stored['language']
                 , $stored['processName']
                 , $stored['state']
                 , $stored['timeout']
                 , $stored['memoryLimit']
+                , $stored['casesCount']
                 , $stored['testCaseNumber']
                 , $stored['key']);
 

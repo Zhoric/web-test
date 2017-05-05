@@ -86,14 +86,13 @@ class AnswerChecker
         if (!isset($program)){
             throw new Exception('По данному вопросу не найдены данные о программе!');
         }
-        $programId = $program->getId();
         $lang = $program->getLang();
 
         if (!isset($studentCode) || empty($studentCode)){
             return 0;
         }
 
-        $rightPercentage = self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $programId);
+        $rightPercentage = self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $program);
 
         return $rightPercentage;
     }

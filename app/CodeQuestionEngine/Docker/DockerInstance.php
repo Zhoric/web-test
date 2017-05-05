@@ -78,6 +78,13 @@ class DockerInstance
 
     }
 
+    public function killProcess($name){
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command = "killall $name";
+        exec("docker exec $this->container_id $command", $output);
+    }
+
     private function getProcessInfoStringFromCommand(array $command_result,$name){
         foreach($command_result as $proc_info) {
             if (strstr($proc_info, $name)) {

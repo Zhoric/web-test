@@ -323,8 +323,16 @@ class CodeFileManager
     }
 
 
-    public function calculateMark($casesCount)
+    /**
+     * @param $casesCount
+     * @param array \CodeQuestionEngine\CodeTask $codeTasks
+     * @return float
+     * @throws Exception
+     */
+    public function calculateMark(array $codeTasks)
     {
+        $casesCount = count($codeTasks);
+
         if ($casesCount == 0) {
             throw new Exception('Отсутствует тестовые параметры');
         }
@@ -332,6 +340,12 @@ class CodeFileManager
 
 
         for ($i = 0; $i < $casesCount; $i++) {
+
+            if($codeTasks[$i]->state == CodeTaskStatus::MemoryOverflow ||
+                $codeTasks[$i]->state == CodeTaskStatus::Timeout){
+                continue;
+            }
+
             $expectedOutputFileName = str_replace("*",$i,$this->expecedOutputFileName);
             $outputFileName = str_replace("*",$i,$this->getOutputFileNameForTestCase($i));
 

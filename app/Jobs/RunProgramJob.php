@@ -20,31 +20,30 @@ class RunProgramJob implements ShouldQueue
      */
     protected $command;
 
+
+
     /**
-     * @var \Language
+     * @var CodeTask
      */
-    protected $lang;
+    protected $codeTask;
 
 
-
-    public function __construct($lang,$command)
+    public function __construct($command,CodeTask $codeTask)
     {
-        $this->lang = $lang;
         $this->command = $command;
+        $this->codeTask = $codeTask;
     }
 
 
     public function handle(DockerManager $dockerManager)
     {
 
-        $dockerManager->setLanguage($this->lang);
+        $dockerManager->setLanguage($this->codeTask->language);
         $dockerInstance = $dockerManager->getOrCreateInstance();
         $dockerInstance->runAsync($this->command);
-        //$result = $dockerInstance->getProcessInfo("c_output_1_0.out");
+        $this->codeTask->state = \CodeTaskStatus::Running;
+        $this->codeTask->store();
 
-
-
-       // echo $result;
         return;
     }
 

@@ -2,6 +2,7 @@
 namespace CodeQuestionEngine;
 
 use Auth;
+use Program;
 use Repositories\UnitOfWork;
 use App\Jobs\RunProgramJob;
 use Queue;
@@ -50,14 +51,14 @@ class CodeQuestionManager
      * Запускает код на выполнение с входными параметрами, которые берутся из базы и заполняются преподавателем при
      * добавлении вопроса. Возвращает оценку студента
      * @param $code
-     * @param $programId
+     * @param Program $program
      * @return string оценка
      */
-    public function runQuestionProgram($code,$programId)
+    public function runQuestionProgram($code,$program)
     {
         $this->prepareForRunning($code);
-        $cases_count = $this->fileManager->createTestCasesFiles($programId);
-        $this->run($cases_count,$programId);
+        $cases_count = $this->fileManager->createTestCasesFiles($program->getId());
+        $this->run($cases_count,$program);
 
        // $result = $this->fileManager->calculateMark($cases_count);
         //$this->fileManager->putLogInfo($result);
@@ -101,7 +102,11 @@ class CodeQuestionManager
     }
 
 
-    private function run($cases_count, $programId){
+    /**
+     * @param Program $program
+     * @param $cases_count
+     */
+    private function run($cases_count, $program){
         $dirName = $this->fileManager->getDirNameFromFullPath();
         $cache_dir = $this->fileManager->getCacheDirName();
 
@@ -112,31 +117,33 @@ class CodeQuestionManager
             $executeFileName = $result["executeFileName"];
             $command = "sh /opt/$cache_dir/$dirName/$script_name";
 
-            $codeTask = new CodeTask($programId
+            $codeTask = new CodeTask($program->getId()
+                ,$this->language
                 ,$executeFileName
                 ,\CodeTaskStatus::QueuedToExecute
-                ,1,1);
+                ,$program->getTimeLimit(),$program->getMemoryLimit());
             $codeTask->store();
 
-            Queue::push(new RunProgramJob($this->language,$command));
+            Queue::push(new RunProgramJob($command,$codeTask));
             return;
         }
 
         for($i = 0; $i < $cases_count; $i++) {
-            $result = $this->fileManager->createShellScriptForTestCase($programId, $i);
+            $result = $this->fileManager->createShellScriptForTestCase($program->getId(), $i);
 
             $script_name = $result["scriptName"];
             $executeFileName = $result["executeFileName"];
 
             $command = "sh /opt/$cache_dir/$dirName/$script_name";
 
-            $codeTask = new CodeTask($programId
+            $codeTask = new CodeTask($program->getId()
+                ,$this->language
                 ,$executeFileName
                 ,\CodeTaskStatus::QueuedToExecute
-                ,1,1,$i);
+                ,$program->getTimeLimit(),$program->getMemoryLimit(),$i);
             $codeTask->store();
 
-            Queue::push(new RunProgramJob($this->language,$command));
+            Queue::push(new RunProgramJob($command,$codeTask));
         }
 
 
