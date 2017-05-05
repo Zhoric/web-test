@@ -3,146 +3,120 @@ $(document).ready(function () {
         return new function () {
             var self = this;
 
-            self.section = ko.observable({
-                id: ko.observable(0),
-                name: ko.observable(''),
-                content: ko.observable(''),
-                disciplineId: ko.observable(0)
+            initializeViewModel.call(self, {
+                page: menu.admin.materials,
+                mode: true
             });
-            self.page = ko.observable(menu.admin.disciplines);
-            self.errors = errors();
-            self.user = new user();
-            self.user.read(self.errors);
-            self.theme = ko.observable(null);
 
-            self.mode = ko.observable('none');
-            self.text = ko.observable('');
+            self.modals = {
+                approve: '#approve-modal',
+                move: '#move-modal',
+                fileExist: '#file-exist-modal'
+            };
 
+            self.media = ko.observable({
+                id: ko.observable(0),
+                type: ko.observable(''),
+                content: ko.observable(''),
+                path: ko.observable(''),
+                name: ko.observable(''),
+                hash: ko.observable('')
+            });
 
-            self.getSection = function () {
+            self.name = ko.observable('');
+
+            self.getMedia = function () {
                 var currentUrl = window.location.href;
                 var urlParts = currentUrl.split('/');
-                var urlNewSection = urlParts[urlParts.length - 3];
+                var mediaId = +urlParts[urlParts.length-1];
+                $ajaxget({
+                    url: '/api/media/' + mediaId,
+                    errors: self.errors,
+                    successCallback: function(data){
+                        self.fill(data);
+                        self.name(data.name().substring(0, data.name().lastIndexOf('.')));
+                    }
+                });
+            };
 
-                if (urlNewSection != 'new') {
-                    self.mode('edit');
-                    var sectionId = +urlParts[urlParts.length-1];
-                    var url = '/api/sections/' + sectionId;
+            self.initializeEditor = function () {
+                tinymce.init({
+                    selector:'#editor',
+                    language: 'ru',
+                    height: 500,
+                    plugins: [
+                        'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                        'searchreplace wordcount visualblocks visualchars code fullscreen',
+                        'insertdatetime nonbreaking save table contextmenu directionality',
+                        'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help'
+                    ],
+                    toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                    toolbar2: 'print preview media | forecolor backcolor emoticons | codesample help',
+                });
+            };
 
+            self.getMedia();
+            self.initializeEditor();
+            self.fill = function (data) {
+                self.media()
+                    .id(data.id())
+                    .type(data.type())
+                    .content(data.content())
+                    .path(data.path())
+                    .name(data.name())
+                    .hash(data.hash());
+            };
 
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.section()
-                                .id(result.Data.id())
-                                .name(result.Data.name())
-                                .content(result.Data.content())
-                                .disciplineId(result.Data.disciplineId());
+            self.move = function () {
+                window.location.href = '/admin/materials/';
+            };
 
-                            if (ko.isObservable(result.Data.theme))
-                                self.theme(null);
-                            else self.theme(result.Data.theme);
-                            return;
+            self.approve = {
+                start: function () {
+                    commonHelper.modal.open(self.modals.approve);
+                },
+                end: function () {
+                    // новый хэш
+                    var volumeId = 'l1_';
+                    var oldPath = self.media().path();
+                    var extension = self.media().name().substring(self.media().name().lastIndexOf('.'), self.media().name().length);
+                    var newPath = oldPath.substring(oldPath.indexOf('/'), oldPath.lastIndexOf('/')) + self.name() + extension;
+                    var hash = volumeId + btoa(unescape(encodeURIComponent(newPath)))
+                            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.')
+                            .replace(/\.+$/, '');
+
+                    var media = {
+                        id: self.media().id(),
+                        type: self.media().type(),
+                        content: tinyMCE.activeEditor.getContent({format : 'raw'}),
+                        path: self.media().path(),
+                        name: self.name() + extension,
+                        hash: hash
+                    };
+
+                    $ajaxget({
+                        url: '/api/media/hash/' + hash, // есть ли файл с таким же названием
+                        errors: self.errors,
+                        successCallback: function(data){
+                            if (data().length == 0)
+                                $ajaxpost({
+                                    url: '/api/media/update',
+                                    error: self.errors,
+                                    data: JSON.stringify({media: media}),
+                                    successCallback: function(){
+                                        commonHelper.modal.close(self.modals.approve);
+                                        commonHelper.modal.open(self.modals.move);
+                                    }
+                                });
+                            else {
+                                commonHelper.modal.close(self.modals.approve);
+                                commonHelper.modal.open(self.modals.fileExist);
+                            }
                         }
-                        self.errors.show(result.Message());
                     });
-
-                }
-                else{
-                    self.mode('create');
                 }
             };
 
-           self.getSection();
-
-           self.toggleModal = function(selector, action){
-               $(selector).arcticmodal(action);
-           };
-
-           self.create = function () {
-               var currentUrl = window.location.href;
-               var urlParts = currentUrl.split('/');
-               var disciplineId = +urlParts[urlParts.length - 2];
-               var themeId = +urlParts[urlParts.length - 1];
-               if (themeId === 0) themeId = null;
-
-               var section = {
-                   name: self.section().name(),
-                   content: CKEDITOR.instances.editor.getData()
-               };
-
-               var json = JSON.stringify({section: section, themeId: themeId, disciplineId: disciplineId});
-               var url = '/api/sections/create';
-
-               $.post(url, json, function(response){
-                   var result = ko.mapping.fromJSON(response);
-                   if (result.Success()){
-                       self.text("Раздел был успешно создан!");
-                       self.toggleModal('#cancel-modal', '');
-                       setTimeout(function () {
-                           window.location.href = '/admin/disciplines/';
-                       }, 1500);
-                       return;
-                   }
-                   self.errors.show(result.Message());
-               });
-
-           };
-           self.update = function () {
-               var section = {
-                   id: self.section().id(),
-                   name: self.section().name(),
-                   content: CKEDITOR.instances.editor.getData()
-               };
-
-               var disciplineId = self.section().disciplineId();
-
-               if (self.theme() != null)
-                   var themeId = self.theme().id();
-               else themeId = null;
-
-
-               var json = JSON.stringify({section: section, themeId: themeId, disciplineId: disciplineId});
-               var url = '/api/sections/update';
-
-               $.post(url, json, function(response){
-                   var result = ko.mapping.fromJSON(response);
-                   if (result.Success()){
-                       self.text("Раздел был успешно изменен!");
-                       self.toggleModal('#cancel-modal', '');
-                       setTimeout(function () {
-                           window.location.href = '/admin/disciplines/';
-                       }, 1500);
-                       return;
-                   }
-                   self.errors.show(result.Message());
-               });
-
-           };
-
-           self.approve = function () {
-               if(self.mode() === 'create') {
-                   self.create();
-               }
-               else if(self.mode() === 'edit'){
-                   self.update();
-               }
-           };
-
-           self.cancel = function () {
-               window.location.href = '/admin/disciplines/';
-           };
-
-
-            return {
-                page: self.page,
-                user: self.user,
-                section : self.section,
-                approve: self.approve,
-                text: self.text,
-                cancel: self.cancel,
-                errors: self.errors
-            }
         };
     };
 

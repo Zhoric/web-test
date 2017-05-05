@@ -167,6 +167,7 @@
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <td class="action-holder">
+                <button data-bind="click: $root.actions.media.start.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
                 <button data-bind="click: $root.actions.media.start.change" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.media.start.remove" class="fa remove mini actions">&#xf014;</button>
             </td>

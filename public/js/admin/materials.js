@@ -135,9 +135,7 @@ $(document).ready(function(){
                     },
                     move: function (data) {
                         if (data.type() == 'text') {
-                            var newWindow = window.open();
-                            newWindow.document.write(data.content());
-                            return;
+                            window.open('/admin/media/' + data.id());
                         }
                         var index = data.path().indexOf(data.name());
                         var path = data.path().substring(0,index);
@@ -151,6 +149,10 @@ $(document).ready(function(){
                         remove: function (data) {
                             self.alter.media.fill(data);
                             commonHelper.modal.open(self.modals.removeMedia);
+                        },
+                        editor: function (data) {
+                            console.log(data);
+                            window.location.href = '/admin/editor/' + data.id();
                         }
                     },
                     end: {
