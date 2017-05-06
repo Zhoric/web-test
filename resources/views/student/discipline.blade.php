@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/site.css')}}" />
 @endsection
 @section('javascript')
-    <script src="{{ URL::asset('js/student/discipline.js')}}"></script>
+    <script src="{{ URL::asset('js/min/student-discipline.js')}}"></script>
 @endsection
 
 @section('menu')

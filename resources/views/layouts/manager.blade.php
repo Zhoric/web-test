@@ -3,28 +3,32 @@
 <head>
     <title>@yield('title')</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('images/favicon.ico')}}"/>
+
     <link rel="stylesheet" href="{{ URL::asset('css/styles.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/jquery.arcticmodal.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/simple.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/admin.css')}}" />
-    <script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>
-    <script src="{{ URL::asset('js/jquery.cookie.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.validation.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
-    <script src="{{ URL::asset('js/ru-RU.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
-    <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-pager.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/modals.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/ko-events.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/user-info.js')}}"></script>
+
+    <script src="{{ URL::asset('js/min/manager-common.js')}}"></script>
+    {{--<script src="{{ URL::asset('js/es5-shim.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/jquery-3.1.1.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/jquery.cookie.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/knockout-3.4.0.debug.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/knockout.validation.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/ru-RU.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/common.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/ko-pager.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/modals.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/ko-events.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/tooltip.js')}}"></script>--}}
+    {{--<script src="{{ URL::asset('js/helpers/user-info.js')}}"></script>--}}
     @yield('javascript')
 </head>
 <body>
@@ -55,13 +59,6 @@
     @yield('content')
     @include('shared.common-modals')
 </div>
-<div class="footer">
-    <div class="footer-content"></div>
-    <div class="footer-copyright">
-        <span>&#x24B8;&nbsp;2017</span>
-        <span class="float-right mr-30">Разработчики:&nbsp;Жихарев Н.Е.?&nbsp;Хивренко Н.А.,&nbsp;Сухоруких К.В.</span>
-    </div>
-</div>
-
+@include('shared.footer')
 </body>
 </html>

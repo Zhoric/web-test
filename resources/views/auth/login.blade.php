@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Вход')
 @section('javascript')
-    <script src="{{ URL::asset('js/auth/login.js')}}"></script>
+    <script src="{{ URL::asset('js/min/login.js')}}"></script>
 @endsection
 
 @section('content')

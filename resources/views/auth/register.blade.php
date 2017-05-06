@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Регистрация')
 @section('javascript')
-    <script src="{{ URL::asset('js/auth/register.js')}}"></script>
+    <script src="{{ URL::asset('js/min/register.js')}}"></script>
 @endsection
 @section('content')
     <div class="register">

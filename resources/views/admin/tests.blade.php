@@ -3,9 +3,7 @@
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.multiselect.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-tests.js')}}"></script>
 @endsection
 
 @section('content')

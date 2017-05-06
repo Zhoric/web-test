@@ -2,10 +2,7 @@
 @section('title', 'Администрирование')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/datepicker.css')}}"/>
-    <script src="{{ URL::asset('js/bootstrap-datepicker.min.js')}}"></script>
-    <script src="{{ URL::asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/datepicker.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/setting.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-setting.js')}}"></script>
 @endsection
 
 @section('content')

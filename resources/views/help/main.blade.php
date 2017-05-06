@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Помощь')
 @section('javascript')
-    <script src="{{ URL::asset('js/wheelzoom.js') }}"></script>
-    <script src="{{ URL::asset('js/admin/help.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-help.js')}}"></script>
 @endsection
 
 @section('content')

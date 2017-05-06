@@ -1,7 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Институты')
 @section('javascript')
-    <script src="{{ URL::asset('js/admin/institutes.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-institutes.js')}}"></script>
 @endsection
 
 @section('content')

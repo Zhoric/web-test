@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/site.css')}}" />
 @endsection
 @section('javascript')
-    <script src="{{ URL::asset('js/student/results.js')}}"></script>
+    <script src="{{ URL::asset('js/min/student-results.js')}}"></script>
 @endsection
 
 @section('menu')
@@ -34,11 +34,11 @@
                                     </div>
                                 </div>
                                 <div class="details-row">
-                                    <div class="details-column width-100p">
+                                    <div class="details-column width-100p zero-margin">
                                         <!-- ko if: mark() !== null -->
-                                        <span class="radio-important" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
+                                        <span class="info coloredin-patronus" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                                         <!-- /ko -->
-                                        <span class="radio-negative" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
+                                        <span class="info coloredin-crimson" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
                                     </div>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
                         <div class="details-column float-right">
                             <div class="float-right">
                                 <div class="details-row">
-                                    <div class="details-column float-right">
+                                    <div class="details-column float-right zero-margin">
                                         <label class="title">Номер&nbsp;попытки</label>
                                     </div>
                                 </div>

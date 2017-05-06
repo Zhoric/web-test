@@ -2,13 +2,7 @@
 @section('title', 'Результаты группы')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/datepicker.css')}}"/>
-    <script src="{{ URL::asset('js/bootstrap-datepicker.min.js')}}"></script>
-    <script src="{{ URL::asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{ URL::asset('js/d3.v2.min.js')}}"></script>
-    <script src="{{ URL::asset('js/timeknots-min.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/datepicker.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/timeline.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/overall.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-overall.js')}}"></script>
 @endsection
 
 @section('content')

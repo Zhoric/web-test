@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Преподаватели')
 @section('javascript')
-    <script src="{{ URL::asset('js/knockout.multiselect.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/lecturers.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-lecturers.js')}}"></script>
 @endsection
 
 @section('content')

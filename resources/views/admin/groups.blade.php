@@ -1,7 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Группы')
 @section('javascript')
-    <script src="{{ URL::asset('js/admin/groups.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-groups.js')}}"></script>
 @endsection
 
 @section('content')

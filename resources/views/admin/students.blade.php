@@ -1,7 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Студенты')
 @section('javascript')
-    <script src="{{ URL::asset('js/admin/students.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-students.js')}}"></script>
 @endsection
 
 @section('content')

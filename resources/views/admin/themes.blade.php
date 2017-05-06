@@ -3,11 +3,8 @@
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/knockout-file-bindings.css')}}"/>
-    <script src="{{ URL::asset('js/knockout-file-bindings.js')}}"></script>
-    <script src="{{ URL::asset('js/ace.js') }}"></script>
-    <script src="{{ URL::asset('js/codeEditor/sendCode.js')}}"></script>
-    <script src="{{ URL::asset('js/wheelzoom.js') }}"></script>
-    <script src="{{ URL::asset('js/admin/themes.js')}}"></script>
+
+    <script src="{{ URL::asset('js/min/manager-themes.js')}}"></script>
 @endsection
 
 @section('content')
