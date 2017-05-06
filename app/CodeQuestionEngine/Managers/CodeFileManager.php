@@ -343,6 +343,7 @@ class CodeFileManager
 
             if($codeTasks[$i]->state == CodeTaskStatus::MemoryOverflow ||
                 $codeTasks[$i]->state == CodeTaskStatus::Timeout){
+                echo "задача умерла по таймауту";
                 continue;
             }
 

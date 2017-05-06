@@ -33,7 +33,6 @@ class TaskStatesManager
                     $processInfo = $this->dockerInstance->getProcessInfo($task->processName);
                     $this->changeProcessState($processInfo,$task);
                     $this->pushTasksToChecking($tasks,$task);
-                    echo "задача обработана";
                 }break;
             }
         }
@@ -58,7 +57,6 @@ class TaskStatesManager
                 $case_task->store();
             }
 
-            echo "добавил задачу на проверку в очередь";
             \Queue::push(new CheckResultJob($currentTask->language, $cases_tasks));
         }
 
@@ -87,6 +85,7 @@ class TaskStatesManager
 
             }
             if ($processInfo["time"]["seconds"] > $task->timeout) {
+                echo "убил по таймауту \n";
                 $task->state = CodeTaskStatus::Timeout;
                 $this->dockerInstance->killProcess($task->processName);
 

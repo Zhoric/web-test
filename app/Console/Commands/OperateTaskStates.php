@@ -46,7 +46,7 @@ class OperateTaskStates extends Command
                 $i++;
                 foreach($tasks as $task){
 
-                    echo "Ключ: ".$task->key."Состояние: ".$task->state."\n";
+                    echo "Ключ: ".$task->key."Состояние: ".$task->state."Timeout: $task->timeout \n";
                 }
                 echo "checked $i\n";
                 sleep(1);
