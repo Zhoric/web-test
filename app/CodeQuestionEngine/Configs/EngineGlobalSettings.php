@@ -31,6 +31,7 @@ class EngineGlobalSettings
      */
     const SHELL_SCRIPT_NAME_ARRAY = [
         \Language::C => "run.sh",
+        \Language::PHP => "php-run.php",
 
         ];
 
@@ -40,15 +41,16 @@ class EngineGlobalSettings
      */
     const CODE_FILE_EXTENSIONS_ARRAY = [
         \Language::C => 'c',
+        \Language::PHP => "php",
     ];
 
     /**
      * имя исполняемого файла для конкретного языка
-     *
+     * Для скриптовых языков оставьте пустую строку
      */
     const EXECUTE_FILE_NAME = [
-
         \Language::C => 'c_output.out',
+        \Language::PHP => "",
     ];
 
     /**

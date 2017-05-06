@@ -324,8 +324,7 @@ class CodeFileManager
 
 
     /**
-     * @param $casesCount
-     * @param array \CodeQuestionEngine\CodeTask $codeTasks
+     * @param array $codeTasks
      * @return float
      * @throws Exception
      */
