@@ -6,7 +6,9 @@ ko.observable.fn.cut = function(length){
     return this().substr(0, length) + dots;
 };
 ko.observable.fn.parseDate = function(){
-    var date = new Date(this());
+    var t = this().split(/[- :]/);
+    var d = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5]));
+    var date = new Date(d);
     var options = {
         timezone: 'UTC',
         hour: 'numeric',
@@ -34,6 +36,21 @@ ko.observable.fn.parseDay = function(){
 
     return date;
 };
+ko.observable.fn.parseDayFromString = function(){
+    var t = this().split(/[- :]/);
+    var d = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5]));
+    var date = new Date(d);
+    var options = {
+        timezone: 'UTC',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+    };
+    date = date.toLocaleString("ru", options);
+    date = date.replace(',', ' ');
+
+    return date;
+};
 ko.observable.fn.parseAnswer = function(){
     if (!this()) return;
     return this().replace(/<\/answer>/g, '\n\n')
@@ -41,17 +58,21 @@ ko.observable.fn.parseAnswer = function(){
 };
 ko.observableArray.fn.knot = function(startDate, endDate){
     return ko.pureComputed(function(){
-        var initial = this();
-        var timeline = [];
-        var endDatePoint = new Date(endDate);
+
         Date.prototype.addDays = function(days) {
             this.setDate(this.getDate() + parseInt(days));
             return this;
         };
+
+        var initial = this();
+        var timeline = [];
+        var endDatePoint = new Date(endDate).addDays(1);
+        var startDatePoint = new Date(startDate);
+
         var item = null;
         timeline.push({
             name: 'Начало периода',
-            date: new Date(startDate),
+            date: startDatePoint,
             radius: 2
         });
         for (var i=0; i < initial.length; i++){
@@ -64,7 +85,7 @@ ko.observableArray.fn.knot = function(startDate, endDate){
         }
         timeline.push({
             name: 'Конец периода',
-            date: endDatePoint.addDays(1),
+            date: endDatePoint,
             radius: 2
         });
         return timeline;

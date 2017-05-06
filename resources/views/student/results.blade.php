@@ -36,15 +36,15 @@
                                 <div class="details-row">
                                     <div class="details-column width-100p zero-margin">
                                         <!-- ko if: mark() !== null -->
-                                        <span class="info coloredin-patronus" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
+                                        <span class="info coloredin-patronus float-right" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                                         <!-- /ko -->
-                                        <span class="info coloredin-crimson" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
+                                        <span class="info coloredin-crimson float-right" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="details-column width-60p">
-                            <label class="title">Название теста</label>
+                            <label class="title">Название&nbsp;теста</label>
                             <span class="info" data-bind="text: testName"></span>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="details-column width-60p">
                             <label class="title">Дата&nbsp;прохождения</label>
-                            <span class="info" data-bind="text: commonHelper.parseDate(dateTime.date())"></span>
+                            <span class="info" data-bind="text: dateTime.date.parseDate()"></span>
                         </div>
                     </div>
                     <!-- /ko -->

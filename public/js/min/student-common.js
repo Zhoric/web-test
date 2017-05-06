@@ -2066,6 +2066,48 @@
     }
 }));
 
+/**
+ * Created by nyanjii on 06.05.17.
+ */
+if (!String.prototype.includes) {
+    String.prototype.includes = function(search, start) {
+        'use strict';
+        if (typeof start !== 'number') {
+            start = 0;
+        }
+
+        if (start + search.length > this.length) {
+            return false;
+        } else {
+            return this.indexOf(search, start) !== -1;
+        }
+    };
+}
+
+// Polyfill for Date.parse
+Date.parse = Date.parse || function(
+        a // ISO Date string
+    ){
+        // turn into array, cutting the first character of the Month
+        a = a.split(/\W\D?/);
+        // create a new date object
+        return new Date(
+            // year
+            a[3],
+            // month (starting with zero)
+            // we got only the second and third character, so we find it in a string
+            // Jan => an => 0, Feb => eb => 1, ...
+            "anebarprayunulugepctovec".search(a[1]) / 2,
+            // day
+            a[2],
+            // hour
+            a[4],
+            // minute
+            a[5],
+            // second
+            a[6]
+        )
+    };
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
@@ -25564,6 +25606,19 @@ var commonHelper = {
 
         return date;
     },
+    parseDay: function(date){
+        var date = new Date(date);
+        var options = {
+            timezone: 'UTC',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+        };
+        date = date.toLocaleString("ru", options);
+        date = date.replace(',', ' ');
+
+        return date;
+    },
 
     buildValidationList: function(validation){
         $('[validate]').each(function(){
@@ -25672,7 +25727,9 @@ ko.observable.fn.cut = function(length){
     return this().substr(0, length) + dots;
 };
 ko.observable.fn.parseDate = function(){
-    var date = new Date(this());
+    var t = this().split(/[- :]/);
+    var d = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5]));
+    var date = new Date(d);
     var options = {
         timezone: 'UTC',
         hour: 'numeric',
@@ -25700,6 +25757,21 @@ ko.observable.fn.parseDay = function(){
 
     return date;
 };
+ko.observable.fn.parseDayFromString = function(){
+    var t = this().split(/[- :]/);
+    var d = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5]));
+    var date = new Date(d);
+    var options = {
+        timezone: 'UTC',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+    };
+    date = date.toLocaleString("ru", options);
+    date = date.replace(',', ' ');
+
+    return date;
+};
 ko.observable.fn.parseAnswer = function(){
     if (!this()) return;
     return this().replace(/<\/answer>/g, '\n\n')
@@ -25707,17 +25779,21 @@ ko.observable.fn.parseAnswer = function(){
 };
 ko.observableArray.fn.knot = function(startDate, endDate){
     return ko.pureComputed(function(){
-        var initial = this();
-        var timeline = [];
-        var endDatePoint = new Date(endDate);
+
         Date.prototype.addDays = function(days) {
             this.setDate(this.getDate() + parseInt(days));
             return this;
         };
+
+        var initial = this();
+        var timeline = [];
+        var endDatePoint = new Date(endDate).addDays(1);
+        var startDatePoint = new Date(startDate);
+
         var item = null;
         timeline.push({
             name: 'Начало периода',
-            date: new Date(startDate),
+            date: startDatePoint,
             radius: 2
         });
         for (var i=0; i < initial.length; i++){
@@ -25730,7 +25806,7 @@ ko.observableArray.fn.knot = function(startDate, endDate){
         }
         timeline.push({
             name: 'Конец периода',
-            date: endDatePoint.addDays(1),
+            date: endDatePoint,
             radius: 2
         });
         return timeline;

@@ -23378,6 +23378,19 @@ var commonHelper = {
 
         return date;
     },
+    parseDay: function(date){
+        var date = new Date(date);
+        var options = {
+            timezone: 'UTC',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+        };
+        date = date.toLocaleString("ru", options);
+        date = date.replace(',', ' ');
+
+        return date;
+    },
 
     buildValidationList: function(validation){
         $('[validate]').each(function(){

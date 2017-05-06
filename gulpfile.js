@@ -26,6 +26,7 @@ elixir(function(mix){
 elixir(function(mix){
     mix.scripts([
         "lib/es5-shim.js",
+        "lib/polyfills.js",
         "lib/jquery-3.1.1.js",
         "lib/jquery.cookie.js",
         "lib/knockout-3.4.0.debug.js",
@@ -47,6 +48,7 @@ elixir(function(mix){
 elixir(function(mix){
     mix.scripts([
         "lib/es5-shim.js",
+        "lib/polyfills.js",
         "lib/jquery-3.1.1.js",
         "lib/jquery.cookie.js",
         "lib/knockout-3.4.0.debug.js",
@@ -65,7 +67,6 @@ elixir(function(mix){
         "helpers/user-info.js"
     ], "public/js/min/student-common.js");
 });
-
 // ------ /COMMON ------
 
 
