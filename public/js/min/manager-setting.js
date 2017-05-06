@@ -75,6 +75,11 @@ $(document).ready(function(){
                         digit: true,
                         min: 1, max: 1000
                     }),
+                    complexQuestionPoints: ko.observable().extend({
+                        required: true,
+                        number: true,
+                        min: 1, max: 10
+                    }),
                     questionEndTolerance: ko.observable().extend({
                         required: true,
                         digit: true,
