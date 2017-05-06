@@ -128,6 +128,12 @@ class Answer extends BaseEntity implements JsonSerializable
         return $this->question;
     }
 
+    public function setId($id){
+        $this->id = $id;
+
+        return $this;
+    }
+
     function jsonSerialize()
     {
         return array(

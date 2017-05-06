@@ -78,7 +78,7 @@ class TestResultCalculator
      * @param bool $isIntermediateResult - Признак того, что производится подсчёт промежуточной оценки (тест ещё не окончен).
      * @return float|int|null - Возвращает оценку в баллах.
      */
-    private static function calculateTestResult(array $answers, $isIntermediateResult = false){
+    public static function calculateTestResult(array $answers, $isIntermediateResult = false){
         $maxMark = $studentMark = 0;
 
         foreach ($answers as $answer) {
