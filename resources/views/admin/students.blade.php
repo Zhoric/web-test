@@ -201,7 +201,7 @@
     <div class="box-modal removal-modal" id="remove-request-modal">
         <div class="layer zero-margin width-auto">
             <div class="layer-head">
-                <h3>Удалить выбранную заявку?</h3>
+                <h3>Удалить выбранную запись?</h3>
             </div>
             <div class="layer-body">
                 <div class="details-row float-buttons">
@@ -212,19 +212,3 @@
         </div>
     </div>
 </div>
-
-{{--<div class="g-hidden">--}}
-    {{--<div class="box-modal removal-modal" id="cancel-request-modal">--}}
-        {{--<div class="layer zero-margin width-auto">--}}
-            {{--<div class="layer-head">--}}
-                {{--<h3>Заявка будет удалена. Вы действительно хотите отклонить выбранную заявку?</h3>--}}
-            {{--</div>--}}
-            {{--<div class="layer-body">--}}
-                {{--<div class="details-row float-buttons">--}}
-                    {{--<button class="cancel arcticmodal-close">Отмена</button>--}}
-                    {{--<button class="remove arcticmodal-close" data-bind="click: $root.actions.end.remove">Удалить</button>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}

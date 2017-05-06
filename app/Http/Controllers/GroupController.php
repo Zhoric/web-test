@@ -32,7 +32,7 @@ class GroupController extends Controller
         try{
             $pageNum =  $request->query('page');
             $pageSize = $request->query('pageSize');
-            $profileId = $request->query('profile');
+            $profileId = $request->query('profileId');
             $groupName = $request->query('name');
 
             $paginationResult = $this->_groupManager
