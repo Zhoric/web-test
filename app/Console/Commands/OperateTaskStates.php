@@ -39,12 +39,19 @@ class OperateTaskStates extends Command
      */
     public function handle(TaskStatesManager $checkResultManager)
     {
+        $i = 0;
        while(true){
 
-                $checkResultManager->operateTaskStates();
+                $tasks = $checkResultManager->operateTaskStates();
+                $i++;
+                foreach($tasks as $task){
 
+                    echo "Ключ: ".$task->key."Состояние: ".$task->state."\n";
+                }
+                echo "checked $i\n";
+                sleep(1);
            }
-        sleep(1);
+
 
     }
 

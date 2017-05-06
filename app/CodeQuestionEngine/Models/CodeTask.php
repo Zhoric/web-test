@@ -46,6 +46,13 @@ class CodeTask
      */
     public $language;
 
+
+    /**
+     * @var string путь к уникальной папке пользователя, где находятся результаты
+     * данной задачи
+     */
+    public $dirPath;
+
     /**
      * Префикс ключа задачи с кодом для хранения в кеше
      */
@@ -57,25 +64,29 @@ class CodeTask
      * @param $programId
      * @param $processName
      * @param $language
+     * @param $dirPath
      * @param $state
      * @param $key
      * @param $timeout
      * @param $memoryLimit
      * @param string $testCaseNumber
      */
-    public function __construct($programId, $language, $processName, $state, $timeout, $memoryLimit, $casesCount = 1, $testCaseNumber = "", $key = "")
+    public function __construct($programId, $language, $dirPath, $processName, $state, $timeout, $memoryLimit, $casesCount = 1, $testCaseNumber = "", $key = "")
     {
         $this->programId   = $programId;
         $this->timeout = $timeout;
         $this->memoryLimit = $memoryLimit;
         $this->processName   = $processName;
         $this->state = $state;
-        $this->testCaseNumber = $testCaseNumber == "" ? 1 : $testCaseNumber;
+        $this->testCaseNumber = $testCaseNumber === "" ? 1 : $testCaseNumber;
         $this->language = $language;
         $this->casesCount = $casesCount;
+        $this->dirPath = $dirPath;
+        $splitted = explode("/", $this->dirPath);
+        $name = array_pop($splitted);
 
-        if($key == "") {
-            $this->key = self::prefix . '-' . $programId . '-' . $this->testCaseNumber;
+        if($key === "") {
+            $this->key = self::prefix . '-' . $programId . '-' . $this->testCaseNumber. '-' . $name;
         }
         else {
             $this->key = $key;
@@ -89,6 +100,7 @@ class CodeTask
             'key'      => $this->key,
             'programId'    => $this->programId,
             'language'     => $this->language,
+            'dirPath'      => $this->dirPath,
             'processName'   => $this->processName,
             'state' => $this->state,
             'timeout' => $this->timeout,
@@ -106,6 +118,7 @@ class CodeTask
             return new CodeTask(
                   $stored['programId']
                 , $stored['language']
+                , $stored['dirPath']
                 , $stored['processName']
                 , $stored['state']
                 , $stored['timeout']
@@ -127,6 +140,7 @@ class CodeTask
             $task = new CodeTask(
                 $stored['programId']
                 , $stored['language']
+                , $stored['dirPath']
                 , $stored['processName']
                 , $stored['state']
                 , $stored['timeout']

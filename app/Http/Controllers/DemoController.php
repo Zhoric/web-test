@@ -20,6 +20,7 @@ use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
 use CodeQuestionEngine\EngineGlobalSettings;
+use TaskStatesManager;
 
 class DemoController extends BaseController
 {
@@ -28,16 +29,18 @@ class DemoController extends BaseController
     private $manager;
     private $fileManager;
     private $dockerManager;
+    private $taskStatesManager;
 
 
 
-    public function __construct(UnitOfWork $uow, DockerManager $dockerManager, CodeQuestionManager $manager)
+    public function __construct(UnitOfWork $uow,TaskStatesManager $taskStatesManager, DockerManager $dockerManager, CodeQuestionManager $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = CodeFileManagerFactory::getCodeFileManager(\Language::C);
         $this->manager = $manager;
         $this->app_path = app_path();
         $this->dockerManager = $dockerManager;
+        $this->taskStatesManager = $taskStatesManager;
     }
 
     public function auth(){
@@ -52,6 +55,21 @@ class DemoController extends BaseController
 
     public function docker(){
 
+        $tasks = CodeTask::getAll();
+
+
+
+
+        CodeTask::flush();
+
+        $program = $this->_uow->programs()->find(1);
+        for($i = 0; $i < 1; $i ++) {
+            $this->manager->setProgramLanguage(\Language::C);
+            $this->manager->runQuestionProgram($program->getTemplate(), $program);
+            sleep(1);
+        }
+
+        dd();
 
 
 

@@ -4,7 +4,6 @@ use App\Jobs\CheckResultJob;
 use CodeQuestionEngine\DockerManager;
 use CodeQuestionEngine\EngineGlobalSettings;
 use CodeQuestionEngine\CodeTask;
-use Queue;
 
 class TaskStatesManager
 {
@@ -34,10 +33,11 @@ class TaskStatesManager
                     $processInfo = $this->dockerInstance->getProcessInfo($task->processName);
                     $this->changeProcessState($processInfo,$task);
                     $this->pushTasksToChecking($tasks,$task);
-                }
-                    break;
+                    echo "задача обработана";
+                }break;
             }
         }
+        return $tasks;
     }
 
 
@@ -48,7 +48,7 @@ class TaskStatesManager
 
     private function pushTasksToChecking(array $allTasks, $currentTask){
 
-        $cases_tasks = $this->getTasksByProgramId($allTasks, $currentTask->programId);
+        $cases_tasks = $this->getTasksByProgramId($allTasks, $currentTask->programId, $currentTask->dirPath);
         $ready_count = $this->getReadyCaseTasksCount($cases_tasks);
 
         if ($ready_count == $currentTask->casesCount) {
@@ -58,7 +58,8 @@ class TaskStatesManager
                 $case_task->store();
             }
 
-            Queue::push(new CheckResultJob($currentTask->language, $cases_tasks));
+            echo "добавил задачу на проверку в очередь";
+            \Queue::push(new CheckResultJob($currentTask->language, $cases_tasks));
         }
 
     }
@@ -85,7 +86,7 @@ class TaskStatesManager
                 $this->dockerInstance->killProcess($task->processName);
 
             }
-            if ($processInfo["time"]["seconds"] > $task->timeLimit) {
+            if ($processInfo["time"]["seconds"] > $task->timeout) {
                 $task->state = CodeTaskStatus::Timeout;
                 $this->dockerInstance->killProcess($task->processName);
 
@@ -97,11 +98,11 @@ class TaskStatesManager
         $task->store();
     }
 
-    private function getTasksByProgramId(array $tasks, $programId)
+    private function getTasksByProgramId(array $tasks, $programId, $dirPath)
     {
         $result = [];
         foreach ($tasks as $task) {
-            if ($task->programId == $programId) {
+            if ($task->programId == $programId && $task->dirPath  == $dirPath) {
                 $result[] = $task;
             }
         }

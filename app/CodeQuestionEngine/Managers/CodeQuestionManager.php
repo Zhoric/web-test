@@ -51,7 +51,7 @@ class CodeQuestionManager
      * Запускает код на выполнение с входными параметрами, которые берутся из базы и заполняются преподавателем при
      * добавлении вопроса. Возвращает оценку студента
      * @param $code
-     * @param Program $program
+     * @param object $program
      * @return string оценка
      */
     public function runQuestionProgram($code,$program)
@@ -103,7 +103,7 @@ class CodeQuestionManager
 
 
     /**
-     * @param Program $program
+     * @param object $program
      * @param $cases_count
      */
     private function run($cases_count, $program){
@@ -119,9 +119,10 @@ class CodeQuestionManager
 
             $codeTask = new CodeTask($program->getId()
                 ,$this->language
+                ,$this->fileManager->getDirPath()
                 ,$executeFileName
                 ,\CodeTaskStatus::QueuedToExecute
-                ,$program->getTimeLimit(),$program->getMemoryLimit());
+                ,$program->getTimeLimit(),$program->getMemoryLimit(),1);
             $codeTask->store();
 
             Queue::push(new RunProgramJob($command,$codeTask));
@@ -138,10 +139,13 @@ class CodeQuestionManager
 
             $codeTask = new CodeTask($program->getId()
                 ,$this->language
+                ,$this->fileManager->getDirPath()
                 ,$executeFileName
                 ,\CodeTaskStatus::QueuedToExecute
-                ,$program->getTimeLimit(),$program->getMemoryLimit(),$i);
+                ,$program->getTimeLimit(),$program->getMemoryLimit(),$cases_count,$i);
+
             $codeTask->store();
+
 
             Queue::push(new RunProgramJob($command,$codeTask));
         }

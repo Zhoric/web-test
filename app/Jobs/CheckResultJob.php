@@ -47,10 +47,14 @@ class CheckResultJob implements ShouldQueue
     public function handle()
     {
        $this->fileManager =  CodeFileManagerFactory::getCodeFileManager($this->language);
+       $this->fileManager->setDirPath($this->codeTasks[0]->dirPath);
+       echo "cases_count = ".count($this->codeTasks);
        $mark = $this->fileManager->calculateMark($this->codeTasks);
+       echo "оценка $mark\n";
        foreach($this->codeTasks as $codeTask){
-
+           echo $codeTask->key." почищена\n";
            $codeTask->delete();
        }
+       return;
     }
 }
