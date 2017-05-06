@@ -270,7 +270,6 @@ class TestResultManager
      */
     private function prepareForStudentResultRequest(Test $test, TestResultViewModel $resultViewModel, $studentId)
     {
-
         $requestedTestResultStudentId = $resultViewModel->getTestResult()->getUser()->getId();
 
         if ($requestedTestResultStudentId != $studentId) {

@@ -48,6 +48,7 @@ class SettingsManager
     public function getAll(){
         $settingsKeys = [
             GlobalTestSettings::maxMarkValueKey,
+            GlobalTestSettings::complexQuestionPointsKey,
             GlobalTestSettings::firstSemesterMonthKey,
             GlobalTestSettings::secondSemesterMonthKey,
             GlobalTestSettings::questionEndToleranceKey,
@@ -70,6 +71,7 @@ class SettingsManager
     public function getDefaults(){
         return [
             GlobalTestSettings::maxMarkValueKey => GlobalTestSettings::maxMarkValue,
+            GlobalTestSettings::complexQuestionPointsKey => GlobalTestSettings::complexQuestionPoints,
             GlobalTestSettings::firstSemesterMonthKey => GlobalTestSettings::firstSemesterMonth,
             GlobalTestSettings::secondSemesterMonthKey => GlobalTestSettings::secondSemesterMonth,
             GlobalTestSettings::questionEndToleranceKey => GlobalTestSettings::questionEndTolerance,
