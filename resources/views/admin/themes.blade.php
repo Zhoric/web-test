@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div class="file-input">
-                            <input type="file"
+                            <input type="file" style="margin-right: 60px"
                                    data-bind="fileInput: $root.current.fileData,
                                    customFileInput: {
                                    buttonClass: 'upload-btn', fileNameClass: 'disabled',
@@ -360,7 +360,7 @@
                         <div class="image-uploader" data-bind="fileDrag: $root.current.importFile">
                             <div class="row">
                                 <div class="file-input">
-                                    <input type="file"
+                                    <input type="file" style="margin-right: 60px"
                                            data-bind="fileInput: $root.current.importFile,
                                                customFileInput: {
                                                buttonClass: 'upload-btn', fileNameClass: 'disabled',

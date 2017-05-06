@@ -33,6 +33,26 @@ h1{line-height: 25px;}
     }
   }
 }
+.item.test{
+  span.start{
+    display: none;
+  }
+  span.attempts{
+    float: right;
+  }
+  &:hover {
+    span {
+      display: none;
+    }
+    span.start {
+      display: block;
+      width: 100%;
+      text-align: center;
+      color: @white;
+    }
+  }
+
+}
 .result{
   width:100%;
   margin: 1% 0;

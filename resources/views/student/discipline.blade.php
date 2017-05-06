@@ -25,9 +25,9 @@
             </div>
             <div class="items-body" data-bind="foreach: current.tests">
                 <div class="item test" data-bind="click: $root.actions.start">
+                    <span class="start">Пройти тест</span>
                     <span data-bind="text: test.subject"></span>
                     <span class="attempts" data-bind="text: 'Попыток осталось: ' + attemptsLeft()"></span>
-                    <span class="start">Пройти тест</span>
                 </div>
             </div>
         </div>

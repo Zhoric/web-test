@@ -20282,6 +20282,7 @@ $(document).ready(function(){
                         var fileType = fileData.file() ? fileData.file().type : null;
                         var program = self.code.text() ? self.code.text() : null;
                         var question = {
+                            image: q.image(),
                             type: q.type().id(),
                             text: q.text(),
                             complexity: q.complexity().id(),
@@ -20523,7 +20524,7 @@ $(document).ready(function(){
                             .dispatchEvent(new CustomEvent('wheelzoom.destroy'));
                     },
                     remove: function(){
-                        self.current.question().showImage(null);
+                        self.current.question().showImage(null).image(null);
                     }
                 },
                 importFile: {
