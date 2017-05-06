@@ -42,7 +42,13 @@ class OperateTaskStates extends Command
         $i = 0;
        while(true){
 
-                $tasks = $checkResultManager->operateTaskStates();
+           try {
+               $tasks = $checkResultManager->operateTaskStates();
+           }
+           catch(Exception $e){
+
+               echo $e->getMessage();
+           }
                 $i++;
                 foreach($tasks as $task){
 

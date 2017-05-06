@@ -77,11 +77,13 @@ class TaskStatesManager
 
     private function changeProcessState($processInfo,$task){
         if (!empty($processInfo)) {
+
             if (($processInfo["memory"] - EngineGlobalSettings::STANDART_MEMORY_USAGE)
                 > $task->memoryLimit
             ) {
                 $task->state = CodeTaskStatus::MemoryOverflow;
                 $this->dockerInstance->killProcess($task->processName);
+                echo "убил по лимиту памяти\n";
 
             }
             if ($processInfo["time"]["seconds"] > $task->timeout) {
