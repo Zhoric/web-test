@@ -34,6 +34,13 @@ class MediaManager
         $oldMedia = $this->_unitOfWork->medias()->find($media->getId());
         if ($media->getType() == 'text' && file_exists('upload/.wordImage/' . $oldMedia->getHash())){
             rename('upload/.wordImage/' . $oldMedia->getHash(), 'upload/.wordImage/' . $media->getHash());
+            $doc = new DocxReader();
+            $doc->setFile($media->getPath());
+            if(!$doc->getErrors()) {
+                $doc->loadImages($media->getPath(), 'upload/.wordImage/' . $media->getHash());
+                $html = $doc->toHtml();
+                $media->setContent($html);
+            }
         }
         $this->_unitOfWork->medias()->update($media);
         $this->_unitOfWork->commit();

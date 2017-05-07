@@ -185,20 +185,21 @@ $(document).ready(function(){
                         url: 'http://' + window.location.host + '/elfinder/connector',
                         lang: 'ru',
                         resizable: false,
+                        overwriteUploadConfirm : false,
                         commands : [
                             'getfile', 'back', 'chmod', 'colwidth', 'copy', 'cut',
                             'edit', 'forward',  'help', 'home', 'info', 'reload',
-                            'mkdir', 'mkfile', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
+                            'mkdir', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
                             'quicklook', 'rename', 'resize', 'rm', 'search', 'sort', 'up', 'upload', 'view'
                         ],
                         uiOptions: {
                             toolbar: [
                                 ['back', 'forward'],
                                 ['reload'],
-                                ['mkdir', 'mkfile', 'upload'],
+                                ['mkdir', 'upload'],
                                 ['open', 'opendir'],
-                                ['copy', 'cut', 'paste']
-                                    ['info'],
+                                ['copy', 'cut', 'paste'],
+                                ['info'],
                                 ['quicklook'],
                                 ['rename', 'edit', 'resize'],
                                 ['search'],
@@ -226,6 +227,7 @@ $(document).ready(function(){
                     self.elfinder.handlers.upload(elf.elfinder('instance'));
                     self.elfinder.handlers.rename(elf.elfinder('instance'));
                     self.elfinder.handlers.open(elf.elfinder('instance'));
+                    self.elfinder.handlers.change(elf.elfinder('instance'));
                     self.current.elf(elf);
                 },
                 open: function () {
@@ -247,6 +249,7 @@ $(document).ready(function(){
                 handlers: {
                     upload: function (elfinder) {
                         elfinder.bind('upload', function(event) {
+                            if (event.data.removed[0] == event.data.removed[1]) return;
                             ko.utils.arrayForEach(event.data.added, function(file) {
                                 var media = {
                                     name: file.name,
@@ -271,7 +274,7 @@ $(document).ready(function(){
                     },
                     open: function (elfinder) {
                         elfinder.bind('open', function (event) {
-                            console.log(event);
+                          //  console.log(event);
 
                         });
                     },
@@ -290,7 +293,8 @@ $(document).ready(function(){
                                         type: media.type(),
                                         path: newPath,
                                         name: event.data.added[0].name,
-                                        hash: event.data.added[0].hash
+                                        hash: event.data.added[0].hash,
+                                        content: media.content()
                                     };
                                     $ajaxpost({
                                         url: '/api/media/update',
@@ -298,11 +302,42 @@ $(document).ready(function(){
                                         data: JSON.stringify({media: mediaJSON}),
                                         successCallback: function(){
                                             self.get.currentMedias();
-                                            $('#elfinder').elfinder('instance').exec('reload');
                                         }
                                     });
                                 }
                             });
+                        });
+                    },
+                    change: function (elfinder) {
+                        elfinder.bind('change', function (event) {
+                            if (event.data.removed[0] == event.data.removed[1]) {
+                                $ajaxget({
+                                    url: '/api/media/hash/' + event.data.added[0].hash,
+                                    errors: self.errors,
+                                    successCallback: function(media){
+                                        var type = event.data.added[0].mime.split('/')[0];
+                                        if (type != 'audio' && type != 'video' && type != 'image')
+                                            type = 'text';
+
+                                        var mediaJSON = {
+                                            id: media()[0].id(),
+                                            type: type,
+                                            name: event.data.added[0].name,
+                                            path: event.data.added[0].url.substring(event.data.added[0].url.search('upload'),event.data.added[0].url.length),
+                                            content: null,
+                                            hash: event.data.added[0].hash
+                                        };
+                                        $ajaxpost({
+                                            url: '/api/media/update',
+                                            error: self.errors,
+                                            data: JSON.stringify({media: mediaJSON}),
+                                            successCallback: function(){
+                                                self.get.currentMedias();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
                     }
                 }

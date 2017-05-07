@@ -245,8 +245,8 @@ class DocxReader {
         $children = $xml->children($namespaces['w']);
         $childrenBody = $children->body->children($namespaces['w']);
 
-        $this->html = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title>
-        <style>span.block { display: block; } body { padding-left: 100px; padding-right: 100px}';
+        $this->html = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title>'.
+        '<style>span.block { display: block; } body { padding-left: 100px; padding-right: 100px}';
 
         foreach ($this->styles as $id => $style){
             foreach ($style['attrs'] as $styleAttr){
