@@ -15,7 +15,8 @@ $(document).ready(function(){
                 repeatAdd: '#repeat-add-modal',
                 lastDelete: '#last-delete-modal',
                 changeMedia: '#change-media-modal',
-                haveMediables: '#have-mediables-modal'
+                haveMediables: '#have-mediables-modal',
+                anchorAudio: '#anchor-audio-modal'
             };
 
             self.current = {
@@ -51,7 +52,22 @@ $(document).ready(function(){
                 disciplineMediables: ko.observableArray([]),
                 themeMediables: ko.observableArray([]),
                 changeMode: ko.observable(false),
-                elf: ko.observable()
+                anchorMode: ko.observable(false),
+                elf: ko.observable(),
+                audio: ko.observable({
+                    type: ko.observable(''),
+                    url: ko.observable(''),
+                    start: ko.observable('').extend({
+                        required: true,
+                        pattern: '^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$',
+                        maxLength: 8
+                    }),
+                    stop: ko.observable('').extend({
+                        required: true,
+                        pattern: '^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$',
+                        maxLength: 8
+                    })
+                })
             };
 
             self.filter = {
@@ -141,6 +157,10 @@ $(document).ready(function(){
                         var path = data.path().substring(0,index);
                         window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
                     },
+                    anchor: function () {
+                        self.current.anchorMode(true);
+                        self.elfinder.open();
+                    },
                     start: {
                         change: function (data) {
                             self.alter.media.fill(data);
@@ -173,7 +193,61 @@ $(document).ready(function(){
                             });
                         }
                     }
+                },
+                anchor: {
+
                 }
+            };
+
+            self.anchor = {
+                startHour: ko.observable('').extend({ digit: true }),
+                startMinute: ko.observable('').extend({ digit: true }),
+                startSecond: ko.observable('').extend({ digit: true }),
+                stopHour: ko.observable('').extend({ digit: true }),
+                stopMinute: ko.observable('').extend({ digit: true }),
+                stopSecond: ko.observable('').extend({ digit: true }),
+                request: ko.observable('start'),
+                open: {
+                    common: function (file) {
+                        self.anchor.open.audio(file);
+                    },
+                    audio: function (file) {
+                        var index = file.path.indexOf(file.name);
+                        var path = file.path.substring(0,index);
+                        var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(file.name);
+                        self.current.audio()
+                            .url(url)
+                            .type(file.mime);
+                        commonHelper.modal.open(self.modals.anchorAudio);
+                    }
+                },
+                audio: {
+                    play: function () {
+                        var audio = $('#audio')[0];
+                        var currentTime = audio.currentTime;
+                        var sec_num = parseInt(currentTime, 10);
+                        var hours   = Math.floor(sec_num / 3600);
+                        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+                        if (hours   < 10) hours   = "0"+hours;
+                        if (minutes < 10) minutes = "0"+minutes;
+                        if (seconds < 10) seconds = "0"+seconds;
+
+                        if (self.anchor.request() == 'start'){
+                            self.anchor.startHour(hours);
+                            self.anchor.startMinute(minutes);
+                            self.anchor.startSecond(seconds);
+                        }
+                        else {
+                            self.anchor.stopHour(hours);
+                            self.anchor.stopMinute(minutes);
+                            self.anchor.stopSecond(seconds);
+                        }
+
+                    }
+                }
+
             };
 
             self.elfinder = {
@@ -244,6 +318,11 @@ $(document).ready(function(){
                         self.current.changeMode(false);
                         return;
                     }
+                    else if (self.current.anchorMode()){
+                        self.anchor.open.common(file);
+                        self.current.anchorMode(false);
+                        return;
+                    }
                     self.media.add(file.hash, self.current.discipline().id(), self.current.theme().id());
                 },
                 handlers: {
@@ -261,14 +340,15 @@ $(document).ready(function(){
                                     media.type = type;
                                     self.media.createSimple(media);
                                 }
-                                else if (type == 'application' || type == 'text') {
-                                    media.type = 'text';
-                                    self.media.createDocx(media);
+                                else if (file.mime == 'application/pdf') {
+                                    media.type = 'pdf';
+                                    self.media.createPdf(media);
                                 }
                                 else {
                                     media.type = 'text';
-                                    self.media.createPdf(media);
+                                    self.media.createDocx(media);
                                 }
+
                             });
                         });
                     },
@@ -385,7 +465,6 @@ $(document).ready(function(){
                     });
                 },
                 createPdf: function (media) {
-
                 },
                 change: function (file) {
                     $ajaxget({
@@ -442,7 +521,7 @@ $(document).ready(function(){
                         errors: self.errors
                     });
 
-                }
+                },
             };
             self.check = {
                 // проверка повторного привязывания файла

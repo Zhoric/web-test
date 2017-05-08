@@ -146,6 +146,45 @@
         </div>
     </div>
 
+    <div class="g-hidden">
+        <div class="box-modal anchor-modal" id="anchor-audio-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Выделите начало и конец:</h3>
+                </div>
+                <div class="layer-body">
+                    <audio id="audio" data-bind="event: {play: $root.anchor.audio.play, timeupdate: $root.anchor.audio.play}" controls>
+                        <source data-bind="attr: {src: $root.current.audio().url, type: $root.current.audio().type} ">
+                        Ваш браузер не поддерживает данный аудио-элемент.
+                    </audio>
+                    <div class="anchor-details" data-bind="with: $root.anchor">
+                        <div class="inline-block">
+                            <input id="start" type="radio" value="start" name="anchor" data-bind="checked: request" class="custom-radio"/>
+                            <label for="start"><span class="required">*</span> Начало</label>
+                            <input class="anchor" type="text" data-bind="value: startHour" maxlength="2">
+                            <label>:</label>
+                            <input class="anchor" type="text" data-bind="value: startMinute" maxlength="2">
+                            <label>:</label>
+                            <input class="anchor" type="text" data-bind="value: startSecond" maxlength="2">
+                        </div>
+                        <div class="inline-block">
+                            <input id="stop" type="radio" value="stop" name="anchor" data-bind="checked: request" class="custom-radio"/>
+                            <label for="stop"><span class="required">*</span> Конец</label>
+                            <input class="anchor" type="text" data-bind="value: stopHour" maxlength="2">
+                            <label>:</label>
+                            <input class="anchor" type="text" data-bind="value: stopMinute" maxlength="2">
+                            <label>:</label>
+                            <input class="anchor" type="text" data-bind="value: stopSecond" maxlength="2">
+                        </div>
+                    </div>
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button class="approve arcticmodal-close">ОК</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -158,6 +197,11 @@
         <tr class="adder-row">
             <td data-bind="click: $root.actions.media.add" colspan="4">
                 <span class="fa">&#xf067;</span>&nbsp;Добавить материал
+            </td>
+        </tr>
+        <tr class="adder-row">
+            <td data-bind="click: $root.actions.media.anchor" colspan="4">
+                <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок
             </td>
         </tr>
         <!-- ko if:  $root.current.medias().length > 0-->

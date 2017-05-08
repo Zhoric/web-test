@@ -1110,7 +1110,8 @@ table.werewolf.materials tr .material-type {
 table.werewolf.materials tr .material-type.video:before {
   content: "\f008";
 }
-table.werewolf.materials tr .material-type.text:before {
+table.werewolf.materials tr .material-type.text:before,
+table.werewolf.materials tr .material-type.pdf:before {
   content: "\f15c";
 }
 table.werewolf.materials tr .material-type.audio:before {
@@ -1638,6 +1639,26 @@ body.media .menu {
 }
 body.media .page-wrap:after {
   display: none;
+}
+.anchor-modal .anchor-details {
+  margin-top: 30px;
+}
+.anchor-modal .anchor-details .inline-block {
+  margin-bottom: 5px;
+}
+.anchor-modal .anchor-details .inline-block input[type=radio].custom-radio + label {
+  display: inline-block;
+  margin-right: 15px;
+}
+.anchor-modal .anchor-details .inline-block .anchor {
+  display: inline-block;
+  width: 40px;
+}
+.anchor-modal .anchor-details .inline-block:last-child input[type=radio].custom-radio + label {
+  margin-right: 25px;
+}
+.anchor-modal audio {
+  width: 450px;
 }
 
 /*# sourceMappingURL=admin.css.map */

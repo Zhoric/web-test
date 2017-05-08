@@ -7,6 +7,7 @@ use Media;
 use DocxReader;
 use \RecursiveDirectoryIterator;
 use \RecursiveIteratorIterator;
+use Gufy\PdfToHtml\Pdf as Pdf;
 
 class MediaManager
 {
@@ -29,6 +30,8 @@ class MediaManager
         $this->_unitOfWork->medias()->create($media);
         $this->_unitOfWork->commit();
     }
+
+    //upload/LabsSIILisp_2015.pdf
 
     public function updateMedia(Media $media){
         $oldMedia = $this->_unitOfWork->medias()->find($media->getId());
