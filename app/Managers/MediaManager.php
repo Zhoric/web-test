@@ -7,7 +7,6 @@ use Media;
 use DocxReader;
 use \RecursiveDirectoryIterator;
 use \RecursiveIteratorIterator;
-use Gufy\PdfToHtml\Pdf as Pdf;
 
 class MediaManager
 {

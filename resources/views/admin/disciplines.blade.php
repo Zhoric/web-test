@@ -20,13 +20,12 @@
         <div class="items-body">
             <!-- ko foreach: $root.current.disciplines -->
             <div class="item" data-bind="click: $root.actions.discipline.show, css: {'current': $root.current.discipline().id() === id()}">
-                <span class="fa tag float-right" data-bind="click: $root.actions.section.show" title="Общие разделы">&#xf0f6;</span>
                 <span class="fa tag float-right" data-bind="click: $root.actions.discipline.move" title="Перейти к тестам">&#xf022;</span>
                 <span data-bind="text: name"></span>
             </div>
             <!-- ko if: $root.mode() !== state.none && $data.id() === $root.current.discipline().id()-->
 
-                <!-- ko if: $root.mode() === state.info || $root.mode() === state.remove || $root.mode() === 'section' -->
+                <!-- ko if: $root.mode() === state.info || $root.mode() === state.remove -->
                 <div class="details" data-bind="template: {name: 'info-mode', data: $data}"></div>
                 <!-- /ko -->
 
@@ -66,7 +65,6 @@
                             <td data-bind="text: $index()+1"></td>
                             <td data-bind="text: name"><a data-bind="text: name, click: $root.actions.theme.move"></a></td>
                             <td class="action-holder">
-                                <button data-bind="click: $root.actions.section.theme.show" class="fa approve mini actions">&#xf0f6;</button>
                                 <button data-bind="click: $root.actions.theme.start.remove" class="fa remove mini actions">&#xf014;</button>
                             </td>
                         </tr>
@@ -99,43 +97,6 @@
 </div>
 
 <div class="g-hidden">
-    <div class="box-modal" id="sections-modal">
-        <div class="box-modal_close arcticmodal-close">закрыть</div>
-        <div class="width100">
-            <div>
-                <button data-bind="click: $root.actions.section.theme.add" class="add-section"><span class="fa">&#xf067;</span>&nbsp;Добавить новый раздел</button>
-            </div>
-            <!-- ko if:  $root.current.sections().length > 0-->
-            <div class="section-info">
-            <table class="theme">
-                <thead>
-                <tr><th>#</th><th>Название</th><th>Действия</th></tr>
-                </thead>
-                <tbody>
-                <!-- ko foreach: $root.current.sections-->
-                <tr>
-                    <td data-bind="text: $index()+1"></td>
-                    <td><a data-bind="click: $root.actions.section.move, text: name"></a></td>
-                    <td><button data-bind="click: $root.actions.section.move" class="fa success">&#xf0f6;</button>
-                        <button data-bind="click: $root.actions.section.end.update" class="fa info">&#xf040;</button>
-                        <button data-bind="click: $root.actions.section.start.remove" class="fa danger">&#xf014;</button>
-                    </td>
-                </tr>
-                <!-- /ko -->
-                </tbody>
-            </table>
-            </div>
-            <!-- /ko -->
-            <!-- ko if:  $root.current.sections().length == 0-->
-            <div class="section-info">
-                <p>Для данной части разделы отсутствуют</p>
-            </div>
-            <!-- /ko -->
-
-        </div>
-    </div>
-</div>
-<div class="g-hidden">
     <div class="box-modal removal-modal" id="remove-theme-modal">
         <div class="layer zero-margin width-auto">
             <div class="layer-head">
@@ -150,21 +111,7 @@
         </div>
     </div>
 </div>
-<div class="g-hidden">
-    <div class="box-modal removal-modal" id="remove-section-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Удалить выбранный раздел?</h3>
-            </div>
-            <div class="layer-body">
-                <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close">Отмена</button>
-                    <button class="remove arcticmodal-close" data-bind="click: $root.actions.section.end.remove">Удалить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <!-- ko if: $root.user.role() === role.admin.name -->
 <div class="g-hidden">
     <div class="box-modal removal-modal" id="remove-discipline-modal">

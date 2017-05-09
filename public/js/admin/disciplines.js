@@ -11,9 +11,7 @@ $(document).ready(function(){
             });
             self.modals = {
                 removeTheme: '#remove-theme-modal',
-                removeDiscipline: '#remove-discipline-modal',
-                section: '#sections-modal',
-                removeSection: '#remove-section-modal'
+                removeDiscipline: '#remove-discipline-modal'
             };
 
             self.current = {
@@ -35,13 +33,6 @@ $(document).ready(function(){
                     id: ko.observable(0),
                     name: ko.observable(''),
                     mode: ko.observable(state.none)
-                }),
-                sections : ko.observableArray([]),
-                section: ko.observable({
-                    id: ko.observable(0),
-                    themeId: ko.observable(0),
-                    name: ko.observable(''),
-                    content: ko.observable('')
                 })
             };
             self.filter = {
@@ -146,44 +137,6 @@ $(document).ready(function(){
                         });
                         window.location.href = '/admin/tests';
                     }
-                },
-                section: {
-                    show: function(data, e){
-                        e.stopPropagation();
-                        self.get.sectionsByDiscipline();
-                        commonHelper.modal.open(self.modals.section);
-                    },
-                    start: {
-                        remove: function(){
-                            commonHelper.modal.open('#remove-section-modal');
-                            self.current.section(data);
-                        }
-                    },
-                    end: {
-                        update: function(){
-                            window.location.href = '/admin/editor/' + data.id();
-                        },
-                        remove: function(){
-                            self.post.removal.section();
-                        }
-                    },
-                    move: function(data){
-                        window.location.href = '/section/' + data.id();
-                    },
-                    theme: {
-                        show: function(data, e){
-                            e.stopPropagation();
-                            self.current.theme().name(data.name()).id(data.id());
-                            self.get.sectionsByTheme();
-                            commonHelper.modal.open(self.modals.section);
-                        },
-                        add: function(){
-                            window.location.href = '/admin/editor/new/' +
-                                self.current.discipline().id() + '/' +
-                                self.current.theme().id();
-                        }
-                    }
-
                 }
             };
 
@@ -274,28 +227,6 @@ $(document).ready(function(){
                         }
                         self.errors.show(result.Message());
                     });
-                },
-                sectionsByTheme: function() {
-                    var url = '/api/sections/theme/' + self.current.theme().id() ;
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.sections(result.Data());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
-                },
-                sectionsByDiscipline: function () {
-                    var url = '/api/sections/discipline/' + self.current.discipline().id() ;
-                    $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.sections(result.Data());
-                            return;
-                        }
-                        self.errors.show(result.Message());
-                    });
                 }
             };
             self.get.disciplines();
@@ -352,17 +283,6 @@ $(document).ready(function(){
                             successCallback: function(){
                                 self.actions.discipline.cancel();
                                 self.get.disciplines();
-                            }
-                        });
-                    },
-                    section: function(){
-                        $ajaxpost({
-                            url: '/api/sections/delete/' + self.current.section().id(),
-                            errors: self.errors,
-                            data: null,
-                            successCallback: function(){
-                                commonHelper.modal.close(self.modals.removeSection);
-                                self.get.sections();
                             }
                         });
                     }
