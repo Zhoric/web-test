@@ -17,9 +17,9 @@
     <script src="{{ URL::asset('js/knockout.mapping.js')}}"></script>
     <script src="{{ URL::asset('js/ru-RU.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-postget.js')}}"></script>
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.min.js')}}"></script>
     <script src="{{ URL::asset('js/jquery-ui.min.js')}}"></script>
+    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.arcticmodal.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
     <script src="{{ URL::asset('js/helpers/ko-copy.js')}}"></script>

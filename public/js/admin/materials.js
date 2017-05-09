@@ -11,12 +11,8 @@ $(document).ready(function(){
             });
 
             self.modals = {
-                removeMedia: '#remove-media-modal',
-                repeatAdd: '#repeat-add-modal',
-                lastDelete: '#last-delete-modal',
-                changeMedia: '#change-media-modal',
-                haveMediables: '#have-mediables-modal',
-                anchorAudio: '#anchor-audio-modal'
+                anchorMultimedia: '#anchor-multimedia-modal',
+                multimedia: '#multimedia-modal'
             };
 
             self.current = {
@@ -47,27 +43,32 @@ $(document).ready(function(){
                     path: ko.observable(''),
                     name: ko.observable(''),
                     hash: ko.observable(''),
-                    mediableId: ko.observable(0)
+                    mediableId: ko.observable(0),
+                    start: ko.observable(null),
+                    stop: ko.observable(null)
                 }),
                 disciplineMediables: ko.observableArray([]),
                 themeMediables: ko.observableArray([]),
                 changeMode: ko.observable(false),
                 anchorMode: ko.observable(false),
                 elf: ko.observable(),
-                audio: ko.observable({
-                    type: ko.observable(''),
-                    url: ko.observable(''),
-                    start: ko.observable('').extend({
-                        required: true,
-                        pattern: '^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$',
-                        maxLength: 8
-                    }),
-                    stop: ko.observable('').extend({
-                        required: true,
-                        pattern: '^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$',
-                        maxLength: 8
-                    })
-                })
+                multimediaURL: ko.observable(''),
+                anchor: ko.validatedObservable({
+                    startHour: ko.observable('').extend({ digit: true }),
+                    startMinute: ko.observable('').extend({ digit: true, max: 59 }),
+                    startSecond: ko.observable('').extend({ digit: true, required: true, max: 59 }),
+                    stopHour: ko.observable('').extend({ digit: true }),
+                    stopMinute: ko.observable('').extend({ digit: true, max: 59 }),
+                    stopSecond: ko.observable('').extend({ digit: true, required: true, max: 59 }),
+                    startTime: ko.observable(''),
+                    stopTime: ko.observable(''),
+                    maxValue: ko.observable(0),
+                    request: ko.observable('start'),
+                    init: function() {
+                        this.stopTime = this.stopTime.extend({min: this.startTime, max: this.maxValue});
+                        return this;
+                    }
+                }.init())
             };
 
             self.filter = {
@@ -131,121 +132,179 @@ $(document).ready(function(){
                     add: function () {
                         self.elfinder.open();
                     },
-                    remove: function () {
-                        $ajaxpost({
-                            url: '/api/media/delete/' + self.current.media().id(),
-                            data: null,
-                            errors: self.errors,
-                            successCallback: function(){
-                                $ajaxpost({
-                                    url: '/api/media/deletefile',
-                                    data: JSON.stringify({path: self.current.media().path()}),
-                                    errors: self.errors,
-                                    successCallback: function () {
-                                        commonHelper.modal.close(self.modals.lastDelete);
-                                        $('#elfinder').elfinder('instance').exec('reload');
-                                    }
-                                });
-                            }
-                        });
-                    },
                     move: function (data) {
+                        self.alter.media.fill(data);
+                        var index = data.path().indexOf(data.name());
+                        var path = data.path().substring(0,index);
+
                         if (data.type() == 'text') {
                             window.open('/admin/media/' + data.id());
                         }
-                        var index = data.path().indexOf(data.name());
-                        var path = data.path().substring(0,index);
-                        window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
+                        else  if (data.type() == 'audio' || data.type() == 'video') {
+                            self.multimedia.open(data);
+                        }
+                        else window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
                     },
                     anchor: function () {
                         self.current.anchorMode(true);
                         self.elfinder.open();
                     },
-                    start: {
-                        change: function (data) {
-                            self.alter.media.fill(data);
-                            commonHelper.modal.open(self.modals.changeMedia);
-                        },
-                        remove: function (data) {
-                            self.alter.media.fill(data);
-                            commonHelper.modal.open(self.modals.removeMedia);
-                        },
-                        editor: function (data) {
-                            console.log(data);
-                            window.location.href = '/admin/editor/' + data.id();
-                        }
+                    change: function (data) {
+                        self.alter.media.fill(data);
+                        self.confirm.show({
+                            message: 'Заменить данный материал во всех вхождениях (старая версия материала будет удалена)?',
+                            approve: function(){
+                                self.current.changeMode(true);
+                                self.elfinder.open();
+                            }
+                        });
                     },
-                    end: {
-                        change: function () {
-                            self.current.changeMode(true);
-                            self.elfinder.open();
-                        },
-                        remove: function () {
-                            $ajaxpost({
-                                url: '/api/mediable/delete/' + self.current.media().mediableId(),
-                                data: null,
-                                errors: self.errors,
-                                successCallback: function(){
-                                    self.get.currentMedias();
-                                    commonHelper.modal.close(self.modals.removeMedia);
-                                    self.check.lastDelete(self.current.media().id());
-                                }
-                            });
-                        }
+                    remove: function (data) {
+                        console.log(data);
+                        self.alter.media.fill(data);
+                        self.confirm.show({
+                            message: 'Вы уверены, что хотите удалить выбранный материал?',
+                            approve: function(){
+                                $ajaxpost({
+                                    url: '/api/mediable/delete/' + self.current.media().mediableId(),
+                                    data: null,
+                                    errors: self.errors,
+                                    successCallback: function(){
+                                        self.get.currentMedias();
+                                        self.check.lastDelete(self.current.media().id());
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    editor: function (data) {
+                        window.location.href = '/admin/editor/' + data.id();
                     }
+
                 },
                 anchor: {
+                    add: function (data) {
+                        self.current.anchor().stopTime(+self.current.anchor().stopSecond() +
+                        +self.current.anchor().stopMinute() * 60 +
+                        +self.current.anchor().stopHour() * 3600);
 
+                        self.current.anchor().startTime(+self.current.anchor().startSecond() +
+                            +self.current.anchor().startMinute() * 60 +
+                            +self.current.anchor().startHour() * 3600);
+
+                        if (self.current.anchor.isValid()){
+                            self.anchor.create();
+                            commonHelper.modal.close(self.modals.anchorMultimedia);
+                        }
+                        else self.validation['bAddAnchor'].open();
+                    }
                 }
             };
 
+            self.multimedia = {
+                open: function (data) {
+                    var index = data.path().indexOf(data.name());
+                    var path = data.path().substring(0,index);
+                    var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name());
+                    self.current.multimediaURL(url);
+                    commonHelper.modal.open(self.modals.multimedia);
+                    $('#multimedia')[0].load();
+                },
+                anchor: function () {
+                    var multimedia = $('#multimediaAnchor')[0];
+                    var currentTime = multimedia.currentTime;
+                    var sec_num = parseInt(currentTime, 10);
+                    var hours   = Math.floor(sec_num / 3600);
+                    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+                    if (hours   < 10) hours   = "0" + hours;
+                    if (minutes < 10) minutes = "0" + minutes;
+                    if (seconds < 10) seconds = "0" + seconds;
+
+                    if (self.current.anchor().request() == 'start'){
+                        self.current.anchor().startTime(currentTime);
+                        self.current.anchor().startHour(hours);
+                        self.current.anchor().startMinute(minutes);
+                        self.current.anchor().startSecond(seconds);
+                    }
+                    else {
+                        self.current.anchor().stopTime(currentTime);
+                        self.current.anchor().stopHour(hours);
+                        self.current.anchor().stopMinute(minutes);
+                        self.current.anchor().stopSecond(seconds);
+                    }
+                    self.current.anchor().maxValue(Math.floor(multimedia.duration));
+                },
+                loadeddata: function () {
+                    if (self.current.media().start() == null) return;
+                    var multimedia = $('#multimedia')[0];
+                    multimedia.currentTime = self.toSeconds(self.current.media().start());
+                },
+                play: function () {
+                    if (self.current.media().start() == null && self.current.media().stop() == null) return;
+                    var multimedia = $('#multimedia')[0];
+                    var stopTime = self.toSeconds(self.current.media().stop());
+                    var startTime = self.toSeconds(self.current.media().start());
+                    var currentTime = Math.floor(multimedia.currentTime);
+
+                    if (currentTime >= stopTime){
+                        multimedia.pause();
+                        multimedia.currentTime = stopTime;
+                    }
+                    else if (currentTime < startTime) {
+                        multimedia.pause();
+                        multimedia.currentTime = startTime;
+                    }
+                }
+
+
+            };
+
             self.anchor = {
-                startHour: ko.observable('').extend({ digit: true }),
-                startMinute: ko.observable('').extend({ digit: true }),
-                startSecond: ko.observable('').extend({ digit: true }),
-                stopHour: ko.observable('').extend({ digit: true }),
-                stopMinute: ko.observable('').extend({ digit: true }),
-                stopSecond: ko.observable('').extend({ digit: true }),
-                request: ko.observable('start'),
                 open: {
                     common: function (file) {
-                        self.anchor.open.audio(file);
+                        var type = file.mime.split('/')[0];
+                        if (type == 'video' || type == 'audio')
+                            self.anchor.open.multimedia(file);
+                        else if (type == 'image')
+                            self.errors.show('Нельзя выделить отрывок в изображении!');
+
                     },
-                    audio: function (file) {
-                        var index = file.path.indexOf(file.name);
-                        var path = file.path.substring(0,index);
-                        var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(file.name);
-                        self.current.audio()
-                            .url(url)
-                            .type(file.mime);
-                        commonHelper.modal.open(self.modals.anchorAudio);
+                    multimedia: function (file) {
+                        $ajaxget({
+                            url: '/api/media/hash/' + file.hash,
+                            errors: self.errors,
+                            successCallback: function(data){
+                                var media = data()[0];
+                                media.mediableId = ko.observable(null);
+                                media.start = ko.observable(null);
+                                media.stop = ko.observable(null);
+                                self.alter.media.fill(media);
+                                console.log(self.current.media());
+                                var index = file.path.indexOf(file.name);
+                                var path = file.path.substring(0,index);
+                                var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(file.name);
+                                self.current.multimediaURL(url);
+                                commonHelper.modal.open(self.modals.anchorMultimedia);
+                                commonHelper.buildValidationList(self.validation);
+                            }
+                        });
                     }
                 },
-                audio: {
-                    play: function () {
-                        var audio = $('#audio')[0];
-                        var currentTime = audio.currentTime;
-                        var sec_num = parseInt(currentTime, 10);
-                        var hours   = Math.floor(sec_num / 3600);
-                        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-                        var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-                        if (hours   < 10) hours   = "0"+hours;
-                        if (minutes < 10) minutes = "0"+minutes;
-                        if (seconds < 10) seconds = "0"+seconds;
-
-                        if (self.anchor.request() == 'start'){
-                            self.anchor.startHour(hours);
-                            self.anchor.startMinute(minutes);
-                            self.anchor.startSecond(seconds);
+                create: function () {
+                    $ajaxpost({
+                        url: '/api/mediable/create',
+                        error: self.errors,
+                        data: JSON.stringify({
+                            mediable: {start: self.current.anchor().startTime(), stop: self.current.anchor().stopTime()},
+                            disciplineId: self.current.discipline().id(),
+                            mediaId: self.current.media().id(),
+                            themeId: self.current.theme().id() == 0 ? null : self.current.theme().id()}),
+                        successCallback: function () {
+                            self.get.currentMedias();
                         }
-                        else {
-                            self.anchor.stopHour(hours);
-                            self.anchor.stopMinute(minutes);
-                            self.anchor.stopSecond(seconds);
-                        }
-
-                    }
+                    });
                 }
 
             };
@@ -482,7 +541,7 @@ $(document).ready(function(){
                                         self.get.currentMedias();
                                     }
                                     else {
-                                        commonHelper.modal.open(self.modals.haveMediables);
+                                        self.errors.show('Данный материал уже к чему-то прикреплен!');
                                     }
                                 }
                             })
@@ -528,8 +587,8 @@ $(document).ready(function(){
                 repeatAdd : function (mediables, mediaId) {
                     var repeat = false;
                     ko.utils.arrayForEach(mediables, function (mediable) {
-                        if (mediaId == mediable.media.id()) {
-                            commonHelper.modal.open(self.modals.repeatAdd);
+                        if (mediaId == mediable.media.id() && mediable.media.start() == null && mediable.media.stop() == null) {
+                            self.errors.show('Прикрепление данного материала уже сделано!');
                             repeat = true;
                         }
                     });
@@ -542,10 +601,47 @@ $(document).ready(function(){
                         error: self.errors,
                         successCallback: function (data) {
                             if (data().length == 0)
-                                commonHelper.modal.open(self.modals.lastDelete);
+                                self.confirm.show({
+                                    message: 'Данный материал больше ни к чему не прикреплен. Удалить его из файловой системы?',
+                                    approve: function(){
+                                        $ajaxpost({
+                                            url: '/api/media/delete/' + self.current.media().id(),
+                                            data: null,
+                                            errors: self.errors,
+                                            successCallback: function(){
+                                                $ajaxpost({
+                                                    url: '/api/media/deletefile',
+                                                    data: JSON.stringify({path: self.current.media().path()}),
+                                                    errors: self.errors,
+                                                    successCallback: function () {
+                                                        $('#elfinder').elfinder('instance').exec('reload');
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
                         }
                     })
                 }
+            };
+
+            self.toHHMMSS = function (time) {
+                var sec_num = parseInt(time, 10);
+                var hours   = Math.floor(sec_num / 3600);
+                var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+                if (hours   < 10) hours   = "0" + hours;
+                if (minutes < 10) minutes = "0" + minutes;
+                if (seconds < 10) seconds = "0" + seconds;
+
+                return hours + ':' + minutes + ':' + seconds;
+            };
+            self.toSeconds = function (time) {
+                if(+time == 0) return 0;
+                var timeArray = time.split(':');
+                return +timeArray[2] + +timeArray[1] * 60 + +timeArray[0] * 3600;
             };
 
             self.alter = {
@@ -567,6 +663,10 @@ $(document).ready(function(){
                 },
                 media: {
                     fill: function (data) {
+                        var start, stop;
+                        +data.start() ? start = self.toHHMMSS(+data.start()) : start = data.start();
+                        +data.stop() ? stop = self.toHHMMSS(+data.stop()) : stop = data.stop();
+
                         self.current.media()
                             .id(data.id())
                             .type(data.type())
@@ -574,7 +674,9 @@ $(document).ready(function(){
                             .path(data.path())
                             .name(data.name())
                             .hash(data.hash())
-                            .mediableId(data.mediableId());
+                            .mediableId(data.mediableId())
+                            .stop(stop)
+                            .start(start);
                     },
                     empty: function () {
                         self.current.media()
@@ -584,7 +686,9 @@ $(document).ready(function(){
                             .path('')
                             .name('')
                             .hash('')
-                            .mediableId(0);
+                            .mediableId(0)
+                            .stop(null)
+                            .start(null);
                     }
                 }
 
@@ -655,6 +759,12 @@ $(document).ready(function(){
                             self.current.disciplineMediables(data());
                             ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
+                                +mediable.start() ?
+                                    mediable.media.start = ko.observable(self.toHHMMSS(+mediable.start()))
+                                    : mediable.media.start = ko.observable(mediable.start());
+                                +mediable.stop() ?
+                                    mediable.media.stop = ko.observable(self.toHHMMSS(+mediable.stop()))
+                                    : mediable.media.stop = ko.observable(mediable.stop());
                                 self.current.medias.push(mediable.media);
                             });
                         }
@@ -669,6 +779,12 @@ $(document).ready(function(){
                             self.current.themeMediables(data());
                             ko.utils.arrayForEach(self.current.themeMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
+                                +mediable.start() ?
+                                    mediable.media.start = ko.observable(self.toHHMMSS(+mediable.start()))
+                                    : mediable.media.start = ko.observable(mediable.start());
+                                +mediable.stop() ?
+                                    mediable.media.stop = ko.observable(self.toHHMMSS(+mediable.stop()))
+                                    : mediable.media.stop = ko.observable(mediable.stop());
                                 self.current.medias.push(mediable.media);
                             });
                         }

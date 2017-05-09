@@ -1657,8 +1657,34 @@ body.media .page-wrap:after {
 .anchor-modal .anchor-details .inline-block:last-child input[type=radio].custom-radio + label {
   margin-right: 25px;
 }
-.anchor-modal audio {
+.anchor-modal audio,
+.anchor-modal video {
   width: 450px;
+}
+.anchor-text {
+  font-weight: bold;
+  margin-left: 5px;
+  font-size: large;
+}
+.multimedia-modal h3 {
+  display: inline-block;
+}
+.multimedia-modal h3 + .anchor-modal-text {
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #4e545a;
+}
+.multimedia-modal audio {
+  width: 450px;
+  margin-bottom: 30px;
+}
+.multimedia-modal.video {
+  width: 1000px;
+}
+.multimedia-modal.video video {
+  width: 950px;
+  margin-bottom: 40px;
 }
 
 /*# sourceMappingURL=admin.css.map */

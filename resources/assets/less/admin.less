@@ -1046,8 +1046,37 @@ body{
       }
     }
   }
+  audio, video{
+    width: 450px;
+  }
+}
+
+.anchor-text{
+  font-weight: bold;
+  margin-left: 5px;
+  font-size: large;
+}
+
+.multimedia-modal{
+  h3 {
+    display: inline-block;
+    & + .anchor-modal-text {
+      display: inline-block;
+      font-weight: bold;
+      margin-left: 10px;
+      color: @anchor;
+    }
+  }
   audio{
     width: 450px;
+    margin-bottom: 30px;
+  }
+  &.video{
+    width: 1000px;
+    video{
+      width: 950px;
+      margin-bottom: 40px;
+    }
   }
 }
 

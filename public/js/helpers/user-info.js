@@ -134,6 +134,8 @@ var returnStandart = function(){
     if (self.code) vm.code = self.code;
     if (self.initial) vm.initial = self.initial;
     if (self.allowTimer) vm.timer = self.allowTimer;
+    if (self.anchor) vm.anchor = self.anchor;
+    if (self.multimedia) vm.multimedia = self.multimedia;
 
     return vm;
 };
