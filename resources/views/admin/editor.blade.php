@@ -8,7 +8,7 @@
 @section('content')
     <div class="content">
         <div class="editor-buttons">
-            <button data-bind="click: $root.approve.start" class="fa success">&#xf00c;</button>
+            <button data-bind="click: $root.approve" class="fa success">&#xf00c;</button>
             <button data-bind="click: $root.move" class="fa danger">&#xf00d;</button>
         </div>
         <div class="editor-name">
@@ -19,21 +19,6 @@
 
     </div>
 @endsection
-<div class="g-hidden">
-    <div class="box-modal removal-modal" id="approve-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Вы уверены, что хотите сохранить изменения?</h3>
-            </div>
-            <div class="layer-body">
-                <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close">Отмена</button>
-                    <button data-bind="click: $root.approve.end" class="remove arcticmodal-close">Да</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="g-hidden">
     <div class="box-modal removal-modal" id="move-modal">
@@ -45,21 +30,6 @@
                 <div class="details-row float-buttons">
                     <button class="cancel arcticmodal-close">Отмена</button>
                     <button data-bind="click: $root.move" class="remove arcticmodal-close">Да</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="g-hidden">
-    <div class="box-modal removal-modal" id="file-exist-modal">
-        <div class="layer zero-margin width-auto">
-            <div class="layer-head">
-                <h3>Файл с таким названием уже существует!</h3>
-            </div>
-            <div class="layer-body">
-                <div class="details-row float-buttons">
-                    <button class="cancel arcticmodal-close">ОК</button>
                 </div>
             </div>
         </div>

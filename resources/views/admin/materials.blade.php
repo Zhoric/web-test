@@ -242,19 +242,25 @@
                 <span class="fa">&#xf067;</span>&nbsp;Добавить материал
             </td>
         </tr>
+        <tr class="adder-row">
+            <td data-bind="click: $root.actions.media.anchor" colspan="4">
+                <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок
+            </td>
+        </tr>
         <!-- ko if:  $root.current.medias().length > 0-->
         <!-- ko foreach: $root.current.medias-->
         <tr>
             <td data-bind="text: $index()+1"></td>
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
-            <!-- ko if: start != null && stop != null -->
+            <!-- ko if: start() != null && stop() != null -->
             <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>; <span data-bind="text: stop"></span>] </span></td>
             <!-- /ko -->
-            <!-- ko if: start == null && stop == null -->
+            <!-- ko if: start() == null && stop() == null -->
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <!-- /ko -->
             <td class="action-holder">
+                <button data-bind="click: $root.actions.media.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
                 <button data-bind="click: $root.actions.media.change" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.media.remove" class="fa remove mini actions">&#xf014;</button>
             </td>

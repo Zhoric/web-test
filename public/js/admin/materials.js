@@ -6,7 +6,7 @@ $(document).ready(function(){
             initializeViewModel.call(self, {
                 page: menu.admin.materials,
                 mode: true,
-                pagination: 10,
+                pagination: 5,
                 multiselect: true
             });
 
@@ -817,6 +817,7 @@ $(document).ready(function(){
                 self.mode(state.none);
                 self.get.disciplines();
             });
+
             self.filter.discipline.subscribe(function(){
                 self.mode(state.none);
                 self.pagination.currentPage(1);

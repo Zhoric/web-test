@@ -9,9 +9,7 @@ $(document).ready(function () {
             });
 
             self.modals = {
-                approve: '#approve-modal',
-                move: '#move-modal',
-                fileExist: '#file-exist-modal'
+                move: '#move-modal'
             };
 
             self.media = ko.observable({
@@ -71,50 +69,58 @@ $(document).ready(function () {
                 window.location.href = '/admin/materials/';
             };
 
-            self.approve = {
-                start: function () {
-                    commonHelper.modal.open(self.modals.approve);
-                },
-                end: function () {
-                    // новый хэш
-                    var volumeId = 'l1_';
-                    var oldPath = self.media().path();
-                    var extension = self.media().name().substring(self.media().name().lastIndexOf('.'), self.media().name().length);
-                    var newPath = oldPath.substring(oldPath.indexOf('/'), oldPath.lastIndexOf('/')) + self.name() + extension;
-                    var hash = volumeId + btoa(unescape(encodeURIComponent(newPath)))
-                            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.')
-                            .replace(/\.+$/, '');
+            self.update = function (media) {
+                $ajaxpost({
+                    url: '/api/media/update',
+                    error: self.errors,
+                    data: JSON.stringify({media: media}),
+                    successCallback: function(){
+                        commonHelper.modal.open(self.modals.move);
+                    }
+                });
+            };
 
-                    var media = {
-                        id: self.media().id(),
-                        type: self.media().type(),
-                        content: tinyMCE.activeEditor.getContent({format : 'raw'}),
-                        path: self.media().path(),
-                        name: self.name() + extension,
-                        hash: hash
-                    };
-
-                    $ajaxget({
-                        url: '/api/media/hash/' + hash, // есть ли файл с таким же названием
-                        errors: self.errors,
-                        successCallback: function(data){
-                            if (data().length == 0)
-                                $ajaxpost({
-                                    url: '/api/media/update',
-                                    error: self.errors,
-                                    data: JSON.stringify({media: media}),
-                                    successCallback: function(){
-                                        commonHelper.modal.close(self.modals.approve);
-                                        commonHelper.modal.open(self.modals.move);
-                                    }
-                                });
-                            else {
-                                commonHelper.modal.close(self.modals.approve);
-                                commonHelper.modal.open(self.modals.fileExist);
-                            }
+            self.check = function (hash, media) {
+                $ajaxget({
+                    url: '/api/media/hash/' + hash, // есть ли файл с таким же названием
+                    errors: self.errors,
+                    successCallback: function(data){
+                        if (data().length == 0)
+                            self.update(media);
+                        else {
+                            self.errors.show('Файл с таким названием уже существует!');
                         }
-                    });
-                }
+                    }
+                });
+            };
+
+            self.approve = function () {
+                self.confirm.show({
+                    message: 'Вы уверены, что хотите сохранить изменения?',
+                    approve: function(){
+                        // новый хэш
+                        var volumeId = 'l1_';
+                        var oldPath = self.media().path();
+                        var extension = self.media().name().substring(self.media().name().lastIndexOf('.'), self.media().name().length);
+                        var newPath = oldPath.substring(oldPath.indexOf('/'), oldPath.lastIndexOf('/')) + self.name() + extension;
+                        var hash = volumeId + btoa(unescape(encodeURIComponent(newPath)))
+                                .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.')
+                                .replace(/\.+$/, '');
+
+                        var media = {
+                            id: self.media().id(),
+                            type: self.media().type(),
+                            content: tinyMCE.activeEditor.getContent({format : 'raw'}),
+                            path: self.media().path(),
+                            name: self.name() + extension,
+                            hash: hash
+                        };
+
+                        if (self.media().name().substring(0, self.media().name().lastIndexOf('.')) == self.name()) self.update(media);
+                        else self.check(hash, media);
+                    }
+                });
+
             };
 
         };
