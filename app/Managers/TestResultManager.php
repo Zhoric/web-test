@@ -93,7 +93,8 @@ class TestResultManager
      */
     public function getByUserAndDiscipline($userId, $disciplineId)
     {
-        return $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
+        $results = $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
+        return $results;
     }
 
     /**

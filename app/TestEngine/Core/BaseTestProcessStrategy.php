@@ -9,6 +9,7 @@ use Managers\TestManager;
 use Managers\TestResultManager;
 use QuestionType;
 use QuestionViewModel;
+use Repositories\UnitOfWork;
 use TestResult;
 use TestType;
 
@@ -210,11 +211,11 @@ class BaseTestProcessStrategy
         $question = $questionInfo->getQuestion();
         $questionType = $question->getType();
         $answers = $questionInfo->getAnswers();
-
         switch ($questionType){
             case QuestionType::ClosedOneAnswer:
             case QuestionType::ClosedManyAnswers: {
-                $studentAnswers = $questionAnswer->getAnswerIds();
+
+            $studentAnswers = $questionAnswer->getAnswerIds();
                 $answerResultPoints =  AnswerChecker::calculatePointsForClosedAnswer($answers, $studentAnswers);
                 break;
             }
@@ -276,7 +277,9 @@ class BaseTestProcessStrategy
      * @internal param Question $question
      */
     protected function getAnswerText($questionAnswer, $studentAnswer){
+
         $openAnswerText = $studentAnswer->getAnswerText();
+
         if ($openAnswerText != null && $openAnswerText != ""){
             return $openAnswerText;
         }
@@ -285,20 +288,22 @@ class BaseTestProcessStrategy
         $questionType = $questionAnswer->getQuestion()->getType();
         $answers = $questionAnswer->getAnswers();
         $answerText = '';
+
         switch ($questionType){
             case QuestionType::ClosedOneAnswer: {
-                $answerText = $answers[0]->getText();
+                $answerText = $answers[0]['text'];
                 break;
             }
             case QuestionType::ClosedManyAnswers: {
                 foreach ($answers as $answer){
-                    if (in_array($answer->getId(), $studentAnswersIds)){
-                        $answerText .= $answer->getText().'</answer>';
+                    if (in_array($answer['id'], $studentAnswersIds)){
+                        $answerText .= $answer['text'].'</answer>';
                     }
                 }
                 break;
             }
         }
+
         return $answerText;
     }
 

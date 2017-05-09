@@ -103,9 +103,9 @@ class QuestionManager
      * @return QuestionViewModel
      */
     public function getWithAnswers($questionId){
-        $question = $this->_unitOfWork->questions()->find($questionId);
-        $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
 
+        $question = $this->_unitOfWork->questions()->find($questionId);
+        $answers = $this->_unitOfWork->answers()->where('Answer.question = '.$questionId);
         $program = $this->_unitOfWork->programs()->getByQuestion($question->getId());
 
         if (isset($program)){

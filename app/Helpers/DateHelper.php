@@ -15,6 +15,13 @@ class DateHelper
         return $nowString;
     }
 
+    public static function getCurrentUtcDateTimeString(){
+        $now = new DateTime();
+        $nowString = $now->format(GlobalTestSettings::dateSerializationFormat);
+
+        return $nowString;
+    }
+
     public static function getCurrentDateTime(){
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone(GlobalTestSettings::dateTimeZone));

@@ -83,7 +83,7 @@ class TestResultCalculator
 
         foreach ($answers as $answer) {
             //Обработка случая, когда оценка ответа на очередной вопрос оказалась равна null.
-            $answer = self::processNullPointsAnswer($answer);
+            $answer = self::processNullPointsAnswer($answer, $isIntermediateResult);
             //Если даже после processNullPointsAnswer, оценка за ответ по-прежнему null
             if ($answer->getRightPercentage() === null) {
                 //Если выполняется подсчёт промежуточной оценки (тест ещё не закончился)
@@ -168,10 +168,11 @@ class TestResultCalculator
      * В этом случае оценка за ответ так и останется равной null.
      * Если не проставлена оценка за другой тип вопроса, значит, ответ не был дан студентом и будет оценён в 0 баллов.
      * @param GivenAnswer $answer - Ответ на вопрос теста, который дал студент.
+     * @param bool $isIntermediateResult - Признак того, что производится подсчёт промежуточной оценки (тест ещё не окончен).
      * @return GivenAnswer - Возвращает ответ на вопрос с изменённой оценкой за него.
      * @throws Exception
      */
-    private static function processNullPointsAnswer(GivenAnswer $answer){
+    private static function processNullPointsAnswer(GivenAnswer $answer, $isIntermediateResult){
 
         if ($answer->getRightPercentage() === null) {
             $questionAnswered = $answer->getQuestion();
@@ -184,8 +185,11 @@ class TestResultCalculator
             if ($questionType !== QuestionType::OpenManyStrings && $questionType !== QuestionType::WithProgram) {
                 $answer->setRightPercentage(0);
 
-                self::$_unitOfWork->givenAnswers()->update($answer);
-                self::$_unitOfWork->commit();
+                if (!$isIntermediateResult){
+                    // Если подсчёт оценки не промежуточный, нужно также обновить оценку в БД.
+                    self::$_unitOfWork->givenAnswers()->update($answer);
+                    self::$_unitOfWork->commit();
+                }
             }
         }
         return $answer;
@@ -197,6 +201,7 @@ class TestResultCalculator
      * Значения максимальных оценок за вопросы разной сложности могут быть установлены в разделе "Настройки" страницы администрирования.
      * @param $questionComplexity - Сложность вопроса.
      * @return int - Возвращает максимальную оценку, которая может быть получена за вопрос указанной сложности.
+     * @throws Exception
      */
     private static function getMaxPointsForAnswer($questionComplexity){
         switch ($questionComplexity){
@@ -206,8 +211,8 @@ class TestResultCalculator
                 return self::getComplexQuestionMaxPoints();
             case QuestionComplexity::Medium:
                 return (1 + self::getComplexQuestionMaxPoints()) / 2;
+            default: throw new Exception('Невозможно подсчитать оценку за ответ. Не указана сложность вопроса!');
         }
-        return 1;
     }
 
 }

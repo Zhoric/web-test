@@ -82,14 +82,19 @@ class TestManager
     public function getQuestionWithAnswers($questionId, $showWhichRight = true){
         $question = $this->_unitOfWork->questions()->find($questionId);
         $answers = $this->_unitOfWork->answers()->getByQuestion($questionId);
-
         shuffle($answers);
 
         //Не отправляем студенту информацию о правильности ответов
         if ($showWhichRight == false){
+            $answersForStudents = [];
             for($i = 0; $i < count($answers); $i++){
-                $answers[$i]->setIsRight(null);
+                $answer = new \Answer();
+                $answer->setId($answers[$i]->getId());
+                $answer->setQuestion($answers[$i]->getQuestion());
+                $answer->setText($answers[$i]->getText());
+                array_push($answersForStudents, $answer);
             }
+            $answers = $answersForStudents;
         }
 
         //Если тест открытый с однострочным ответом - не отправляем студенту варианты ответов
