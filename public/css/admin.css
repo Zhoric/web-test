@@ -1515,6 +1515,12 @@ button.add-section:hover {
 .editor-name label {
   font-size: 18px;
 }
+.editor-name + .extra {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin-bottom: 15px;
+  display: block;
+}
 .editor-buttons {
   padding: 10px;
   text-align: center;
@@ -1685,6 +1691,13 @@ body.media .page-wrap:after {
 .multimedia-modal.video video {
   width: 950px;
   margin-bottom: 40px;
+}
+.ui-dialog .ui-dialog-title {
+  text-align: center;
+  color: #625c5c;
+  font-size: 16px;
+  letter-spacing: 1px;
+  font-family: "Roboto Regular" !important;
 }
 
 /*# sourceMappingURL=admin.css.map */

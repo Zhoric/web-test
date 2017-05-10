@@ -871,6 +871,12 @@ button.add-section{
   label{
     font-size: 18px;
   }
+  &+ .extra{
+    color: @asbestos;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: block;
+  }
 }
 
 .editor-buttons{
@@ -879,199 +885,199 @@ button.add-section{
   button{
     width: 100px;
     color: white;
-    &:hover{
-      background: @patronus;
-    }
-    &.danger{
       &:hover{
-        background: @crimson-red;
+        background: @patronus;
+      }
+      &.danger{
+        &:hover{
+          background: @crimson-red;
+        }
+      }
+    }
+
+  }
+
+  #sections-modal{
+    width: 800px;
+    table {
+      td:first-child {
+        width: 5%;
+      }
+      td:nth-child(2){
+        width: 70%;
+      }
+      td:last-child {
+        width: 15%;
+        button.info {
+          background: @peterriver;
+        }
       }
     }
   }
 
-}
 
-#sections-modal{
-  width: 800px;
-  table {
-    td:first-child {
-      width: 5%;
-    }
-    td:nth-child(2){
-      width: 70%;
-    }
-    td:last-child {
-      width: 15%;
-      button.info {
-        background: @peterriver;
-      }
-    }
-  }
-}
-
-
-#cancel-modal{
-  div{
-    text-align: center;
-    font-size: 18px;
-    padding: 15px;
-  }
-}
-
-.popup{
-  &-delete{
-    height: 80px;
-    div:last-child{
-      float: right;
-      button:first-child{
-        margin: 0 5px;
-      }
-    }
-  }
-  &-theme{
+  #cancel-modal{
     div{
-      margin: 10px 0;
-    }
-    input{
-      width: 95%;
-    }
-    label{
-      .label();
-    }
-    .popup-btn-group{
-      float: right;
-      margin: 5px 4px;
+      text-align: center;
+      font-size: 18px;
+      padding: 15px;
     }
   }
-}
-#add-theme-modal{
-  width: 350px;
-  height: 160px;
-}
 
-.ui-widget-overlay{
-  background: none !important;
-}
-
-.materials-details{
-  .materials-link {
-    overflow: auto;
-    .details-column {
-      margin: 2% 2% 3% 2%;
-      float: right;
-    }
-    .adder{
-      color: @missnorris;
-    }
-    .current{
-      color: @patronus;
-      border-bottom: 2px solid @patronus;
-    }
-  }
-  .themes{
-    margin-top: -2px;
-    .details-row{
-      font-size: 16px;
-      cursor: pointer;
-      border-bottom: 1px solid @patronus-shade;
-      padding: 5px;
-      &:hover {
-        background: @patronus-shade;
+  .popup{
+    &-delete{
+      height: 80px;
+      div:last-child{
+        float: right;
+        button:first-child{
+          margin: 0 5px;
+        }
       }
     }
-    .materials{
-      margin: 30px auto;
-      width: 95%;
-      thead{
-        tr {
-          th {
-            &:first-child {
-              border-radius: 10px 0 0 0;
-            }
-            &:last-child {
-              border-radius: 0 10px 0 0;
+    &-theme{
+      div{
+        margin: 10px 0;
+      }
+      input{
+        width: 95%;
+      }
+      label{
+        .label();
+      }
+      .popup-btn-group{
+        float: right;
+        margin: 5px 4px;
+      }
+    }
+  }
+  #add-theme-modal{
+    width: 350px;
+    height: 160px;
+  }
+
+  .ui-widget-overlay{
+    background: none !important;
+  }
+
+  .materials-details{
+    .materials-link {
+      overflow: auto;
+      .details-column {
+        margin: 2% 2% 3% 2%;
+        float: right;
+      }
+      .adder{
+        color: @missnorris;
+      }
+      .current{
+        color: @patronus;
+        border-bottom: 2px solid @patronus;
+      }
+    }
+    .themes{
+      margin-top: -2px;
+      .details-row{
+        font-size: 16px;
+        cursor: pointer;
+        border-bottom: 1px solid @patronus-shade;
+        padding: 5px;
+        &:hover {
+          background: @patronus-shade;
+        }
+      }
+      .materials{
+        margin: 30px auto;
+        width: 95%;
+        thead{
+          tr {
+            th {
+              &:first-child {
+                border-radius: 10px 0 0 0;
+              }
+              &:last-child {
+                border-radius: 0 10px 0 0;
+              }
             }
           }
         }
-      }
 
+      }
     }
   }
-}
 
-.elfinder-button-icon-getfile{
-  background-position: 0 -736px !important;
-  +.elfinder-button-text{
-    display: inline-block !important;
+  .elfinder-button-icon-getfile{
+    background-position: 0 -736px !important;
+    +.elfinder-button-text{
+      display: inline-block !important;
+    }
   }
-}
 
-#elfinder{
-  display: none;
-}
-
-body{
-  &.media{
-    .footer {
-      display: none;
-    }
-    .menu{
-      display: none;
-    }
-    .page-wrap:after{
-      display: none;
-    }
-    padding-top: 50px;
-    background: white;
+  #elfinder{
+    display: none;
   }
-}
 
-.anchor-modal{
-  .anchor-details{
-    margin-top: 30px;
-    .inline-block {
-      margin-bottom: 5px;
-      input[type=radio].custom-radio + label{
-        display: inline-block;
-        margin-right: 15px;
+  body{
+    &.media{
+      .footer {
+        display: none;
       }
-      .anchor {
-        display: inline-block;
-        width: 40px;
+      .menu{
+        display: none;
       }
-      &:last-child{
-        input[type=radio].custom-radio + label {
-          margin-right: 25px;
+      .page-wrap:after{
+        display: none;
+      }
+      padding-top: 50px;
+      background: white;
+    }
+  }
+
+  .anchor-modal{
+    .anchor-details{
+      margin-top: 30px;
+      .inline-block {
+        margin-bottom: 5px;
+        input[type=radio].custom-radio + label{
+          display: inline-block;
+          margin-right: 15px;
+        }
+        .anchor {
+          display: inline-block;
+          width: 40px;
+        }
+        &:last-child{
+          input[type=radio].custom-radio + label {
+            margin-right: 25px;
+          }
         }
       }
     }
-  }
-  audio, video{
-    width: 450px;
-  }
-}
-
-.anchor-text{
-  font-weight: bold;
-  margin-left: 5px;
-  font-size: large;
-}
-
-.multimedia-modal{
-  h3 {
-    display: inline-block;
-    & + .anchor-modal-text {
-      display: inline-block;
-      font-weight: bold;
-      margin-left: 10px;
-      color: @anchor;
+    audio, video{
+      width: 450px;
     }
   }
-  audio{
-    width: 450px;
-    margin-bottom: 30px;
+
+  .anchor-text{
+    font-weight: bold;
+    margin-left: 5px;
+    font-size: large;
   }
-  &.video{
+
+  .multimedia-modal{
+    h3 {
+      display: inline-block;
+      & + .anchor-modal-text {
+        display: inline-block;
+        font-weight: bold;
+        margin-left: 10px;
+        color: @anchor;
+      }
+    }
+    audio{
+      width: 450px;
+      margin-bottom: 30px;
+    }
+    &.video{
     width: 1000px;
     video{
       width: 950px;
@@ -1079,4 +1085,16 @@ body{
     }
   }
 }
+
+  .ui-dialog{
+    .ui-dialog-title{
+      text-align: center;
+      color: @ui-title;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-family: "Roboto Regular" !important;
+    }
+  }
+
+
 

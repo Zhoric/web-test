@@ -13,8 +13,11 @@
         </div>
         <div class="editor-name">
             <label>Название документа</label>
-            <input type="text" data-bind="value: $root.name">
+            <input id="iName" type="text" data-bind="value: $root.name">
         </div>
+        <!-- ko if:  $root.mode() == state.anchor -->
+        <label class="extra"><span class="required">*</span> Для каждого якоря будет создана своя собственная запись.</label>
+        <!-- /ko -->
         <textarea id="editor" data-bind="value: $root.media().content"></textarea>
 
     </div>

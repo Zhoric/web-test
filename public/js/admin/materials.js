@@ -130,7 +130,7 @@ $(document).ready(function(){
                 },
                 media: {
                     add: function () {
-                        self.elfinder.open();
+                        self.elfinder.open("Добавление материала");
                     },
                     move: function (data) {
                         self.alter.media.fill(data);
@@ -147,7 +147,7 @@ $(document).ready(function(){
                     },
                     anchor: function () {
                         self.current.anchorMode(true);
-                        self.elfinder.open();
+                        self.elfinder.open("Выделение отрывка");
                     },
                     change: function (data) {
                         self.alter.media.fill(data);
@@ -155,7 +155,7 @@ $(document).ready(function(){
                             message: 'Заменить данный материал во всех вхождениях (старая версия материала будет удалена)?',
                             approve: function(){
                                 self.current.changeMode(true);
-                                self.elfinder.open();
+                                self.elfinder.open("Замена материала");
                             }
                         });
                     },
@@ -269,6 +269,9 @@ $(document).ready(function(){
                             self.anchor.open.multimedia(file);
                         else if (type == 'image')
                             self.errors.show('Нельзя выделить отрывок в изображении!');
+                        else {
+                            self.anchor.open.editor(file);
+                        }
 
                     },
                     multimedia: function (file) {
@@ -288,6 +291,16 @@ $(document).ready(function(){
                                 self.current.multimediaURL(url);
                                 commonHelper.modal.open(self.modals.anchorMultimedia);
                                 commonHelper.buildValidationList(self.validation);
+                            }
+                        });
+                    },
+                    editor: function (file) {
+                        $ajaxget({
+                            url: '/api/media/hash/' + file.hash,
+                            errors: self.errors,
+                            successCallback: function(data){
+                                window.location.href = '/admin/editor/anchor/' + self.current.discipline().id() + '/'
+                                    + self.current.theme().id() + '/' + data()[0].id();
                             }
                         });
                     }
@@ -363,12 +376,13 @@ $(document).ready(function(){
                     self.elfinder.handlers.change(elf.elfinder('instance'));
                     self.current.elf(elf);
                 },
-                open: function () {
+                open: function (name) {
                     self.current.elf().dialog({
                         modal: true,
                         width : 1300,
                         resizable: true,
-                        position: { my: "center top-70%", at: "center", of: window }
+                        position: { my: "center top-70%", at: "center", of: window },
+                        title: name
                     });
                 },
                 getFile: function (file) {

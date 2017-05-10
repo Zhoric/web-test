@@ -197,6 +197,10 @@
             <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>; <span data-bind="text: stop"></span>] </span></td>
             <!-- /ko -->
+            <!-- ko if: start() != null && stop() == null -->
+            <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
+                <span class="anchor-text"> [<span data-bind="text: start"></span>] </span></td>
+            <!-- /ko -->
             <!-- ko if: start() == null && stop() == null -->
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <!-- /ko -->
@@ -255,6 +259,10 @@
             <!-- ko if: start() != null && stop() != null -->
             <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>; <span data-bind="text: stop"></span>] </span></td>
+            <!-- /ko -->
+            <!-- ko if: start() != null && stop() == null -->
+            <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
+                <span class="anchor-text"> [<span data-bind="text: start"></span>] </span></td>
             <!-- /ko -->
             <!-- ko if: start() == null && stop() == null -->
             <td data-bind="text: name, click: $root.actions.media.move"></td>

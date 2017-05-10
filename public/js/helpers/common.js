@@ -6,7 +6,8 @@ var state = {
     info: 'info',
     overall: 'overall',
     themes: 'themes',
-    materials: 'materials'
+    materials: 'materials',
+    anchor: 'anchor'
 };
 
 var filters = {

@@ -49,7 +49,7 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('theme/{id}', function(){return View('admin.themes');});
     Route::get('tests/{id}', function(){return View('admin.tests');});
     Route::get('tests', function(){return View('admin.tests');});
-    Route::get('editor/new/{discipline_id}/{theme_id}', function(){return View('admin.editor');});
+    Route::get('editor/anchor/{discipline_id}/{theme_id}/{id}', function(){return View('admin.editor');});
     Route::get('editor/{id}', function(){return View('admin.editor');});
     Route::get('studyplans', function(){return View('admin.studyplans');});
     Route::get('studyplan/{id}', function(){return View('admin.studyplan');});
@@ -271,18 +271,6 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('show', 'LecturerController@getByNamePaginated');
     });
 
-     /*-----------------------------------------------------------------------------
-    *                             СЕКЦИИ
-    *-----------------------------------------------------------------------------
-   */
-    Route::group(['prefix' => 'sections'], function () {
-        Route::get('theme/{id}', 'SectionController@getAllSectionsByTheme');
-        Route::get('discipline/{id}', 'SectionController@getAllSectionsByDiscipline');
-        Route::post('create', 'SectionController@create');
-        Route::post('update', 'SectionController@update');
-        Route::post('delete/{id}', 'SectionController@delete');
-        Route::get('{id}', 'SectionController@getSection');
-    });
 
     /*-----------------------------------------------------------------------------
     *                             МЕДИЯ

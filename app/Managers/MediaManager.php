@@ -2,6 +2,7 @@
 
 namespace Managers;
 
+use League\Flysystem\Exception;
 use Repositories\UnitOfWork;
 use Media;
 use DocxReader;
@@ -30,19 +31,18 @@ class MediaManager
         $this->_unitOfWork->commit();
     }
 
-    //upload/LabsSIILisp_2015.pdf
-
     public function updateMedia(Media $media){
         $oldMedia = $this->_unitOfWork->medias()->find($media->getId());
         if ($media->getType() == 'text' && file_exists('upload/.wordImage/' . $oldMedia->getHash())){
-            rename('upload/.wordImage/' . $oldMedia->getHash(), 'upload/.wordImage/' . $media->getHash());
             $doc = new DocxReader();
-            $doc->setFile($media->getPath());
+            $doc->setFile($oldMedia->getPath());
             if(!$doc->getErrors()) {
                 $doc->loadImages($media->getPath(), 'upload/.wordImage/' . $media->getHash());
                 $html = $doc->toHtml();
                 $media->setContent($html);
             }
+            rename('upload/' . $oldMedia->getName(), 'upload/' . $media->getName());
+            rename('upload/.wordImage/' . $oldMedia->getHash(), 'upload/.wordImage/' . $media->getHash());
         }
         $this->_unitOfWork->medias()->update($media);
         $this->_unitOfWork->commit();
