@@ -81,7 +81,7 @@ class FullTestingProcessTests extends TestCase
      * Тестирование полного процесса создания и прохождения теста студентом.
      */
     public function testFullProcess(){
-        $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ ПОЛНОГО ПРОЦЕССА. -----', 'green', 2);
+        $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ ПОЛНОГО ПРОЦЕССА. -----', 'cyan', 2);
 
         $this->createInstitute();
         $this->createProfile();
@@ -136,6 +136,7 @@ class FullTestingProcessTests extends TestCase
         $this->logIn(self::$STUDENT_EMAIL, self::$PASSWORD);
         $this->checkStudentCanSeeNewMark();
         $this->checkStudentCanStartTestIfExtraAttemptWasAdded();
+        $this->logOut();
 
         $this->writeConsoleMessage(PHP_EOL.'---- ТЕСТИРОВАНИЕ ПОЛНОГО ПРОЦЕССА ЗАВЕРШЕНО УСПЕШНО. ----', 'green', 2);
     }
@@ -145,6 +146,7 @@ class FullTestingProcessTests extends TestCase
      */
     protected function setUp()
     {
+        $this->askForConfirmation();
         parent::setUp();
         $this->createApplication();
         $this->clearTables();
@@ -331,16 +333,20 @@ class FullTestingProcessTests extends TestCase
     private function logIn($email, $password){
         $this->writeNewLine();
         $this->writeConsoleMessage('Авторизация с email: '.$email.' и паролем: '.$password.'. [API]', 'blue');
+        $apiUri = '/login';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/login', ['email' => $email, 'password' => $password])
+        $this->json('POST',$apiUri , ['email' => $email, 'password' => $password])
             ->seeJson(['Success' => true]);
         $this->writeOk();
     }
 
     private function logOut(){
         $this->writeConsoleMessage('Выход из учётной записи. [API]', 'blue');
+        $apiUri = '/logout';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/logout')
+        $this->json('POST', $apiUri)
             ->followRedirects()
             ->see('Войти');
         $this->writeOk(1);
@@ -353,16 +359,20 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkRepeatableLoginDisabled($email, $password){
         $this->writeConsoleMessage('Проверка отсутствия возможности повторной авторизации. [API]');
+        $apiUri = '/login';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/login', ['email' => $email, 'password' => $password])
+        $this->json('POST', $apiUri, ['email' => $email, 'password' => $password])
             ->seeJson(['Success' => false, 'Message' => self::$AUTHORISATION_REPEAT_ERROR]);
         $this->writeOk();
     }
 
     private function checkWrongCredentialsAuthorization($email, $password){
         $this->writeConsoleMessage('Проверка отсутствия возможности авторизации с данными не существующего пользователя. [API]');
+        $apiUri = '/login';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/login', ['email' => $email, 'password' => $password])
+        $this->json('POST', $apiUri, ['email' => $email, 'password' => $password])
             ->seeJson(['Success' => false, 'Message' => self::$USER_NOT_EXISTS_ERROR]);
         $this->writeOk();
     }
@@ -389,8 +399,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function createStudyPlan(){
         $this->writeConsoleMessage('Создание учебного плана. [API]');
+        $apiUri = '/api/plan/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', 'api/plan/create', ['studyPlan' =>
+        $this->json('POST', $apiUri, ['studyPlan' =>
             ["name" => "Учебный план ИСиТ 2017 бакалавр очная форма"], "profileId" => self::$ISIT_PROFILE_ID])
             ->seeJson(['Success' => true]);
 
@@ -404,8 +416,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function createDiscipline(){
         $this->writeConsoleMessage('Добавление дисциплины. [API]');
+        $apiUri = '/api/disciplines/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', 'api/disciplines/create', ['discipline' =>
+        $this->json('POST', $apiUri, ['discipline' =>
             ["name" => "WEB-Технологии",
             "abbreviation" => "WEB"],
             "profileIds" => [self::$ISIT_PROFILE_ID]])
@@ -420,8 +434,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function addDisciplineToStudyPlan(){
         $this->writeConsoleMessage('Добавление дисциплины в учебный план. [API]');
+        $apiUri = 'api/plan/discipline/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', 'api/plan/discipline/create', ['disciplinePlan' =>
+        $this->json('POST', $apiUri, ['disciplinePlan' =>
             ["startSemester" => 1,
                 "semestersCount" => 3,
                 "hours" => 250,
@@ -444,8 +460,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function createLecturerWithDisciplineAttached(){
         $this->writeConsoleMessage('Создание учётной записи преподавателя c закреплением за ним дисциплины. [API]');
+        $apiUri = '/api/lecturers/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/lecturers/create', ["lecturer" =>[
+        $this->json('POST', $apiUri, ["lecturer" =>[
             'firstName' => 'Александр',
             'lastName' => 'Овчинников',
             'email' => self::$LECTURER_EMAIL,
@@ -466,8 +484,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function createGroupWithStudyPlanAttached(){
         $this->writeConsoleMessage('Создание группы с закреплением за ней учебного плана. [API]');
+        $apiUri = 'api/groups/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', 'api/groups/create', ["group" => [
+        $this->json('POST', $apiUri, ["group" => [
             'id' => self::$STUDENT_GROUP_ID,
             'prefix' => 'ИС',
             'course' => 4,
@@ -488,8 +508,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function createDisciplineTheme(){
         $this->writeConsoleMessage('Добавление темы дисциплины. [API]');
+        $apiUri = '/api/disciplines/themes/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/disciplines/themes/create', ["theme" =>[
+        $this->json('POST', $apiUri, ["theme" =>[
             'id' => self::$HTML_DISCIPLINE_THEME_ID,
             'name' => 'Язык гиперекстовой разметки HTML',
         ], "disciplineId" => self::$WEB_DISCIPLINE_ID])
@@ -506,8 +528,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function addClosedOneAnswerQuestionWithImage(){
         $this->writeConsoleMessage('Создание закрытого вопроса теста с единственным правильным ответом и изображением. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/questions/create',
+        $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$HTML_MARKUP_QUESTION_ID,
                 'type' => QuestionType::ClosedOneAnswer,
@@ -552,8 +576,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function addClosedManyAnswersQuestion(){
         $this->writeConsoleMessage('Создание закрытого вопроса теста с несколькими правильными ответами. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/questions/create',
+        $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$CSS_QUESTION_ID,
                 'type' => QuestionType::ClosedManyAnswers,
@@ -589,8 +615,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function addClosedOneAnswerQuestion(){
         $this->writeConsoleMessage('Создание закрытого вопроса теста с единственным правильным ответом. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/questions/create',
+        $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$JAVASCRIPT_QUESTION_ID,
                 'type' => QuestionType::ClosedOneAnswer,
@@ -623,8 +651,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function addOpenSingleStringQuestion(){
         $this->writeConsoleMessage('Создание открытого вопроса теста с однострочным ответом. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/questions/create',
+        $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$HTML_VERSION_QUESTION_ID,
                 'type' => QuestionType::OpenOneString,
@@ -657,8 +687,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function addOpenManyStringsQuestion(){
         $this->writeConsoleMessage('Создание открытого вопроса теста с многострочным ответом. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/questions/create',
+        $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$MIME_TYPES_QUESTION_ID,
                 'type' => QuestionType::OpenManyStrings,
@@ -680,8 +712,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function createTest(){
         $this->writeConsoleMessage('Создание теста по теме дисциплины. [API]');
+        $apiUri = '/api/tests/create';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/tests/create', [
+        $this->json('POST', $apiUri, [
            'test' => [
                'id' => self::$WEB_TEST_ID,
                'subject' => 'Тест на знание основ HTML, CSS и JavaScript',
@@ -712,6 +746,8 @@ class FullTestingProcessTests extends TestCase
      */
     private function sendStudentRegistrationApplication(){
         $this->writeConsoleMessage('Отправка студентом заявки на регистрацию в системе. [API]');
+        $apiUri = '/register';
+        $this->writeApiCall($apiUri);
 
         $this->json('POST', '/register', [
            'user' => [
@@ -740,7 +776,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkLoginWithoutAcceptionUnavailable(){
         $this->writeConsoleMessage('Проверка невозможности авторизации без подтверждения заявки студента. [API]');
-        $this->json('POST', '/login', ['email' => self::$STUDENT_EMAIL, 'password' => self::$PASSWORD])
+        $apiUri = '/login';
+        $this->writeApiCall($apiUri);
+
+        $this->json('POST', $apiUri , ['email' => self::$STUDENT_EMAIL, 'password' => self::$PASSWORD])
             ->seeJson(['Success' => false, 'Message' => self::$ACCOUNT_NOT_CONFIRMED]);
         $this->writeOk();
     }
@@ -750,8 +789,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function acceptStudentRegistrationApplication(){
         $this->writeConsoleMessage('Подтверждение преподавателем заявки студента на регистрацию. [API]');
+        $apiUri = '/api/user/activate/'.self::$STUDENT_ID;
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/user/activate/'.self::$STUDENT_ID)
+        $this->json('POST', $apiUri)
             ->seeJson(['Success' => true]);
 
         $this->seeInDatabase('user', ['email' => self::$STUDENT_EMAIL, 'active' => true]);
@@ -764,8 +805,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkIsDisciplineAvailableForStudent(){
         $this->writeConsoleMessage('Проверка доступности дисциплины из учебного плана для студента. [API]');
+        $apiUri = '/api/disciplines/actual';
+        $this->writeApiCall($apiUri);
 
-        $this->json('GET', '/api/disciplines/actual')
+        $this->json('GET', $apiUri)
             ->seeJson(['Success' => true])
             ->seeJsonContains(['id' => self::$WEB_DISCIPLINE_ID]);
 
@@ -777,8 +820,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkIfCreatedTestAvailableForStudent(){
         $this->writeConsoleMessage('Проверка доступности теста по дисциплине WEB-технологии для студента. [API]');
+        $apiUri = '/api/tests/showForStudent?discipline='.self::$WEB_DISCIPLINE_ID;
+        $this->writeApiCall($apiUri);
 
-        $this->json('GET', '/api/tests/showForStudent?discipline='.self::$WEB_DISCIPLINE_ID)
+        $this->json('GET', $apiUri)
             ->seeJson(['Success' => true])
             ->seeJsonContains(['id' => self::$WEB_TEST_ID, 'attempts' => 1]);
 
@@ -790,8 +835,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function startTest(){
         $this->writeConsoleMessage('Запуск процесса тестирования. [API]');
+        $apiUri = '/api/tests/start';
+        $this->writeApiCall($apiUri);
 
-        $serverResponse = $this->json('POST', '/api/tests/start', [
+        $serverResponse = $this->json('POST', $apiUri, [
             'testId' => self::$WEB_TEST_ID,
         ])
             ->seeJson(['Success' => true])
@@ -859,8 +906,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function getNextTestQuestion(){
         $this->writeConsoleMessage('   Получение очередного вопроса студентом. [API]');
+        $apiUri = '/api/tests/nextQuestion';
+        $this->writeApiCall($apiUri);
 
-        $serverResponse = $this->getJson('/api/tests/nextQuestion')
+        $serverResponse = $this->getJson($apiUri)
             ->seeJson(['Success' => true])
             ->response->content();
 
@@ -923,8 +972,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function answerTestQuestion($answerData){
         $this->writeConsoleMessage('   Отправка ответа на вопрос. [API]');
+        $apiUri = '/api/tests/answer';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/tests/answer', $answerData)
+        $this->json('POST', $apiUri, $answerData)
             ->seeJson(['Success' => true]);
 
         $this->writeOk();
@@ -954,7 +1005,7 @@ class FullTestingProcessTests extends TestCase
      * Проверка отсутствия оценки по результату теста (т.к. среди вопросов есть открытый, проверяющийся преподавателем).
      */
     private function checkTestResultHasNoMark(){
-        $this->writeConsoleMessage('Проверка отсутствия оценки по результату теста (среди вопросов есть открытый). [API]');
+        $this->writeConsoleMessage('Проверка отсутствия оценки по результату теста (среди вопросов есть открытый). [Query]');
         $this->seeInDatabase('test_result',['id' => self::$TEST_RESULT_ID, 'mark' => null]);
         $this->writeOk();
     }
@@ -964,7 +1015,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkTestResultAvailableInResultsList(){
         $this->writeConsoleMessage('Проверка наличия результата в списке результатов тестирования студента. [API]');
-        $this->json('GET', '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID)
+        $apiUri = '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID;
+        $this->writeApiCall($apiUri);
+
+        $this->json('GET', $apiUri)
             ->seeJson(['Success' => true])
             ->seeJsonContains(['testId' => self::$WEB_TEST_ID, 'attempt' => 1]);
         $this->writeOk();
@@ -975,7 +1029,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkStartTestUnavailableIfNoAttemptsLeft(){
         $this->writeConsoleMessage('Проверка невозможности запуска теста без попыток прохождения. [API]');
-        $this->json('POST', '/api/tests/start', [
+        $apiUri = '/api/tests/start/';
+        $this->writeApiCall($apiUri);
+
+        $this->json('POST', $apiUri, [
             'testId' => self::$WEB_TEST_ID,
         ])
             ->seeJson(['Success' => false, 'Message' => self::$NO_ATTEMPTS_FOR_TEST_LEFT]);
@@ -987,8 +1044,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkTestResultAvailableForLecturer(){
         $this->writeConsoleMessage('Проверка доступности результата тестирования для преподавателя. [API]');
+        $apiUri = '/api/results/show?testId='.self::$WEB_TEST_ID.'&groupId='.self::$STUDENT_GROUP_ID;
+        $this->writeApiCall($apiUri);
 
-        $this->json('GET', '/api/results/show?testId='.self::$WEB_TEST_ID.'&groupId='.self::$STUDENT_GROUP_ID)
+        $this->json('GET', $apiUri)
             ->seeJson(['Success' => true])
             ->seeJsonContains(['testId' => self::$WEB_TEST_ID, 'userId' => self::$STUDENT_ID, 'attempt' => 1]);
         $this->writeOk();
@@ -999,8 +1058,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkSetOpenQuestionMark(){
         $this->writeConsoleMessage('Проверка возможности установки преподавателем оценки за открытый вопрос. [API]');
+        $apiUri = '/api/results/setMark';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/results/setMark', [
+        $this->json('POST', $apiUri, [
             'answerId' => self::$OPEN_QUESTION_ANSWER_ID,
             'mark' => 0])
             ->seeJson(['Success' => true]);
@@ -1012,7 +1073,7 @@ class FullTestingProcessTests extends TestCase
      * Проверка пересчёта общей оценки студента за тест после оценивания открытого вопроса.
      */
     private function checkResultMarkReCalculated(){
-        $this->writeConsoleMessage('Проверка пересчёта оценки за тест после оценивания открытого вопроса. [API]');
+        $this->writeConsoleMessage('Проверка пересчёта оценки за тест после оценивания открытого вопроса. [Query]');
 
         $this->seeInDatabase('test_result', ['id' => self::$TEST_RESULT_ID, 'mark' => self::$EXPECTED_RESULT_MARK]);
         $this->writeOk();
@@ -1023,8 +1084,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkAddExtraAttempt(){
         $this->writeConsoleMessage('Проверка возможности добавления студенту дополнительных попыток по тесту. [API]');
+        $apiUri = '/api/attempts/set';
+        $this->writeApiCall($apiUri);
 
-        $this->json('POST', '/api/attempts/set', [
+        $this->json('POST', $apiUri, [
             'userId' => self::$STUDENT_ID,
             'testId' => self::$WEB_TEST_ID,
             'count' => 3])
@@ -1042,7 +1105,10 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkStudentCanSeeNewMark(){
         $this->writeConsoleMessage('Проверка доступности результата для студента после оценки открытого вопроса. [API]');
-        $this->json('GET', '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID)
+        $apiUri = '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID;
+        $this->writeApiCall($apiUri);
+
+        $this->json('GET', $apiUri)
             ->seeJson(['Success' => true])
             ->seeJsonContains(['testId' => self::$WEB_TEST_ID, 'attempt' => 1, 'mark' => self::$EXPECTED_RESULT_MARK]);
         $this->writeOk();
@@ -1053,6 +1119,8 @@ class FullTestingProcessTests extends TestCase
      */
     private function checkStudentCanStartTestIfExtraAttemptWasAdded(){
         $this->writeConsoleMessage('Проверка возможности запуска теста после добавления дополнительных попыток. [API]');
+        $apiUri = '/api/tests/start';
+        $this->writeApiCall($apiUri);
 
         $this->json('POST', '/api/tests/start', [
             'testId' => self::$WEB_TEST_ID,
@@ -1078,6 +1146,23 @@ class FullTestingProcessTests extends TestCase
         $selectedAnswersIds = array_map(function($ans){ return $ans->id;}, $selectedAnswers);
 
         return array_values($selectedAnswersIds);
+    }
+
+    private function askForConfirmation(){
+        $warningMessage   =  "
+                              ВНИМАНИЕ!
+    Во время теста база данных и Redis Cache будут полностью очищены. 
+    Убедитесь, что не используется основная база данных.";
+
+        $this->writeConsoleMessage($warningMessage, 'red', 2);
+        $this->writeConsoleMessage("Запустить тестирование полного процесса? [y/N] ",'white', 0);
+
+        flush();
+        ob_flush();
+        $confirmation  =  trim( fgets( STDIN ) );
+        if ( $confirmation !== 'y' ) {
+            exit (0);
+        }
     }
 
 

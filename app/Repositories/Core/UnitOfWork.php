@@ -222,7 +222,27 @@ class UnitOfWork
         return $this->_dockerInfoRepo;
     }
 
+    /**
+     * Применяет к базе данных изменения, сделанные втечение сессии.
+     */
     public function commit(){
         $this->_em->flush();
+    }
+
+    /**
+     * Отсоединяет сущность от контеста БД.
+     * @param $entity
+     */
+    public function detach($entity){
+        $this->_em->detach($entity);
+    }
+
+    /**
+     * Обновляет сущность, полученную из БД.
+     * (из-за кэширования ORM некоторых получаемых из БД данных, могут возвращаться неактуальные значения).
+     * @param $entity
+     */
+    public function refresh($entity){
+        $this->_em->refresh($entity);
     }
 }

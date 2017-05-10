@@ -11,10 +11,6 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     protected $baseUrl = 'http://localhost';
 
-    protected $connectionsToTransact = [
-        'mysql'
-    ];
-
     protected $redisClient;
 
     /**
@@ -61,6 +57,10 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
                 $colorEscapeSequence = "\033[1;34m";
                 break;
             }
+            case 'cyan' : {
+                $colorEscapeSequence = "\033[0;36m";
+                break;
+            }
             default:{
                 $colorEscapeSequence = "\033[1;37m";
             }
@@ -79,5 +79,10 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     protected function writeNewLine(){
         fwrite(STDOUT, PHP_EOL);
+    }
+
+    protected function writeApiCall($url){
+        //$this->writeNewLine();
+        $this->writeConsoleMessage('URL: '.$url, 'cyan', 0);
     }
 }

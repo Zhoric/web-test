@@ -94,6 +94,17 @@ class TestResultManager
     public function getByUserAndDiscipline($userId, $disciplineId)
     {
         $results = $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
+
+        /**
+         * Этот замечательный костыль нужен, чтобы студент смог увидеть изменения своей оценки за тест
+         * СРАЗУ ЖЕ, как они произойдут. Из-за того, что ORM кэширует некоторые получаемые из неё данные,
+         * изменения в БД могут быть некоторое время недоступны, в связи с чем приходятся так явно и убого обновлять
+         * полученные сущности результатов тестирования.
+         */
+        foreach ($results as $result){
+            $this->_unitOfWork->refresh($result);
+        }
+
         return $results;
     }
 
