@@ -34,13 +34,13 @@ class MediaManager
     public function updateMedia(Media $media){
         $oldMedia = $this->_unitOfWork->medias()->find($media->getId());
         if ($media->getType() == 'text' && file_exists('upload/.wordImage/' . $oldMedia->getHash())){
-            $doc = new DocxReader();
+            /*$doc = new DocxReader();
             $doc->setFile($oldMedia->getPath());
             if(!$doc->getErrors()) {
                 $doc->loadImages($media->getPath(), 'upload/.wordImage/' . $media->getHash());
                 $html = $doc->toHtml();
                 $media->setContent($html);
-            }
+            } */
             rename('upload/' . $oldMedia->getName(), 'upload/' . $media->getName());
             rename('upload/.wordImage/' . $oldMedia->getHash(), 'upload/.wordImage/' . $media->getHash());
         }

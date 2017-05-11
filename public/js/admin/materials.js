@@ -134,16 +134,19 @@ $(document).ready(function(){
                     },
                     move: function (data) {
                         self.alter.media.fill(data);
-                        var index = data.path().indexOf(data.name());
-                        var path = data.path().substring(0,index);
-
+                        console.log(data);
                         if (data.type() == 'text') {
-                            window.open('/admin/media/' + data.id());
+                            if (data.start() != null) window.open('/admin/media/' + data.id() + '#' + data.start());
+                            else window.open('/admin/media/' + data.id());
                         }
                         else  if (data.type() == 'audio' || data.type() == 'video') {
                             self.multimedia.open(data);
                         }
-                        else window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
+                        else {
+                            var index = data.path().indexOf(data.name());
+                            var path = data.path().substring(0,index);
+                            window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
+                        }
                     },
                     anchor: function () {
                         self.current.anchorMode(true);

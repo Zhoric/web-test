@@ -5,6 +5,6 @@
 @endsection
 @section('content')
     <div class="section">
-        <div data-bind="html: $root.media().content"></div>
+        <div class="section-data" data-bind="html: $root.media().content, afterHtmlRender: $root.goToAnchor"></div>
     </div>
 @endsection
