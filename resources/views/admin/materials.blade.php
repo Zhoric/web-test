@@ -68,6 +68,22 @@
     <div id="elfinder"></div>
 
     <div class="g-hidden">
+        <div class="box-modal removal-modal" id="delete-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Данный материал больше ни к чему не прикреплен. Удалить его из файловой системы?</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button data-bind="click: $root.actions.media.lastDelete" class="remove arcticmodal-close">Да</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-hidden">
         <div class="box-modal anchor-modal" id="anchor-multimedia-modal">
             <div class="layer zero-margin width-auto">
                 <div class="layer-head">

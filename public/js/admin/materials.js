@@ -11,6 +11,7 @@ $(document).ready(function(){
             });
 
             self.modals = {
+                delete: '#delete-modal',
                 anchorMultimedia: '#anchor-multimedia-modal',
                 multimedia: '#multimedia-modal'
             };
@@ -100,6 +101,7 @@ $(document).ready(function(){
                     overall: function (data) {
                         if (self.mode() != state.overall){
                             self.mode(state.overall);
+                            self.current.theme().id(0);
                             self.get.disciplineMedias(data.id());
                         }
                     },
@@ -130,6 +132,8 @@ $(document).ready(function(){
                 },
                 media: {
                     add: function () {
+                        self.current.anchorMode(false);
+                        self.current.changeMode(false);
                         self.elfinder.open("Добавление материала");
                     },
                     move: function (data) {
@@ -150,14 +154,16 @@ $(document).ready(function(){
                     },
                     anchor: function () {
                         self.current.anchorMode(true);
+                        self.current.changeMode(false);
                         self.elfinder.open("Выделение отрывка");
                     },
                     change: function (data) {
                         self.alter.media.fill(data);
                         self.confirm.show({
-                            message: 'Заменить данный материал во всех вхождениях (старая версия материала будет удалена)?',
+                            message: 'Заменить данный материал во всех вхождениях (старая версия материала, а также все отрывки будут удалены)?',
                             approve: function(){
                                 self.current.changeMode(true);
+                                self.current.anchorMode(false);
                                 self.elfinder.open("Замена материала");
                             }
                         });
@@ -182,6 +188,24 @@ $(document).ready(function(){
                     },
                     editor: function (data) {
                         window.location.href = '/admin/editor/' + data.id();
+                    },
+                    lastDelete: function () {
+                        $ajaxpost({
+                            url: '/api/media/delete/' + self.current.media().id(),
+                            data: null,
+                            errors: self.errors,
+                            successCallback: function(){
+                                $ajaxpost({
+                                    url: '/api/media/deletefile',
+                                    data: JSON.stringify({path: self.current.media().path()}),
+                                    errors: self.errors,
+                                    successCallback: function () {
+                                        commonHelper.modal.close(self.modals.delete);
+                                        $('#elfinder').elfinder('instance').exec('reload');
+                                    }
+                                });
+                            }
+                        });
                     }
 
                 },
@@ -555,6 +579,7 @@ $(document).ready(function(){
                                     if (data().length == 0){ // если заменяющий файл ни к чему не привязан
                                         self.media.update(file); // поменять заменяемый файл
                                         self.media.removeAfterUpdate(mediaId, self.current.media().path()); // удалить старый заменяемый файл
+                                        self.media.removeAnchorMediables();
                                         self.get.currentMedias();
                                     }
                                     else {
@@ -598,6 +623,24 @@ $(document).ready(function(){
                     });
 
                 },
+                removeAnchorMediables: function () {
+                    $ajaxget({
+                        url: '/api/mediable/media/' + self.current.media().id(),
+                        error: self.errors,
+                        successCallback: function (data) {
+                            if (data().length == 0) return;
+                            ko.utils.arrayForEach(data(), function (mediable) {
+                                if (mediable.start() != null)
+                                    $ajaxpost({
+                                        url: '/api/mediable/delete/' + mediable.id(),
+                                        error: self.errors,
+                                        data: null
+                                    });
+                            })
+                        }
+                    })
+
+                }
             };
             self.check = {
                 // проверка повторного привязывания файла
@@ -617,27 +660,7 @@ $(document).ready(function(){
                         url: '/api/mediable/media/' + mediaId,
                         error: self.errors,
                         successCallback: function (data) {
-                            if (data().length == 0)
-                                self.confirm.show({
-                                    message: 'Данный материал больше ни к чему не прикреплен. Удалить его из файловой системы?',
-                                    approve: function(){
-                                        $ajaxpost({
-                                            url: '/api/media/delete/' + self.current.media().id(),
-                                            data: null,
-                                            errors: self.errors,
-                                            successCallback: function(){
-                                                $ajaxpost({
-                                                    url: '/api/media/deletefile',
-                                                    data: JSON.stringify({path: self.current.media().path()}),
-                                                    errors: self.errors,
-                                                    successCallback: function () {
-                                                        $('#elfinder').elfinder('instance').exec('reload');
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
+                            if (data().length == 0) commonHelper.modal.open(self.modals.delete);
                         }
                     })
                 }

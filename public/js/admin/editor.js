@@ -64,12 +64,6 @@ $(document).ready(function () {
                     toolbar1: 'anchor',
                     menubar: false,
                     init_instance_callback: function (editor) {
-                        editor.on('execcommand', function (e) {
-                            if (e.command != 'mceInsertContent') return;
-                            var anchor = $.parseHTML(e.value)[0];
-                            if (anchor.nodeName != 'A') return;
-                            self.anchorNames.push(anchor.id);
-                        });
                         editor.on('keypress', function (e) {
                             e.preventDefault();
                         });
@@ -144,7 +138,7 @@ $(document).ready(function () {
 
             };
             self.createAnchors = function () {
-                self.checkAnchors();
+                self.getAnchors();
 
                 var media = {
                     id: self.media().id(),
@@ -155,7 +149,7 @@ $(document).ready(function () {
                     hash: self.media().hash()
                 };
 
-                $ajaxpost({
+                /*$ajaxpost({
                     url: '/api/media/update',
                     error: self.errors,
                     data: JSON.stringify({media: media}),
@@ -175,7 +169,7 @@ $(document).ready(function () {
                             });
                         })
                     }
-                });
+                }); */
 
 
             };
@@ -193,11 +187,13 @@ $(document).ready(function () {
                     }
                 });
             };
-            self.checkAnchors = function () {
+            self.getAnchors = function () {
                 var content = tinyMCE.activeEditor.getContent({format : 'raw'});
-                ko.utils.arrayForEach(self.anchorNames(), function (anchor) {
-                    if (content.indexOf('<a id="' + anchor +'"') == -1)
-                        self.anchorNames.remove(anchor);
+                var anchors = content.match(/<a\sid=\"(.*?)"\scontenteditable=\"false"\sclass=\"mce-item-anchor\">/g);
+                console.log(anchors);
+                ko.utils.arrayForEach(anchors, function (anchor) {
+                    var htmlAnchor = $.parseHTML(anchor)[0];
+                    self.anchorNames.push(htmlAnchor.id);
                 });
             };
 
