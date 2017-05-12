@@ -178,12 +178,23 @@ class Program extends BaseEntity implements JsonSerializable
         return $this->question;
     }
 
+    //TODO: убрать поведение из доменной модели
+    private function getLanguageAlias(){
+        switch($this->lang){
+            case Language::C: return "C";
+            case Language::PHP: return "PHP";
+            default: return "default";
+        }
+    }
+
     function jsonSerialize()
     {
         return array(
             'id' => $this->id,
             'template' => $this->template,
-            'lang' => $this->lang
+            'lang' => $this->getLanguageAlias(),
+            'timeLimit' => $this->timeLimit,
+            'memoryLimit' => $this->memoryLimit
         );
     }
 }
