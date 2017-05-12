@@ -193,6 +193,7 @@
         </div>
         <!-- /ko -->
     </div>
+    <!-- ko if: $root.user.role() === role.admin.name || $root.current.hasInactive() -->
     <div class="details-row float-buttons">
         <div class="details-column width-100p">
             <!-- ko if: $root.current.hasInactive-->
@@ -207,4 +208,5 @@
             <!-- /ko -->
         </div>
     </div>
+    <!-- /ko -->
 </script>

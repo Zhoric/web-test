@@ -32,8 +32,10 @@
     @yield('javascript')
 </head>
 <body>
-@include('shared.common-script')
 <div class="page-wrap">
+    <div class="loading">
+        <img src="{{ URL::asset('images/loading.gif')}}" />
+    </div>
     <div class="menu">
         <a href="/admin/main" data-bind="css: {'current': $root.page() === menu.admin.main}">Главная</a>
         <!-- ko if: $root.user.role() === role.admin.name -->

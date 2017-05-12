@@ -23214,6 +23214,29 @@ $post = function(url, data, errors, successCallback){
         });
     };
 };
+ko.validation.init({
+    messagesOnModified: true,
+    insertMessages:false,
+    errorsAsTitle: true
+});
+ko.validation.locale('ru-RU');
+
+$(document).ready(function(){
+    var loading = $(".loading");
+    $(document).ajaxStart(function () {
+        loading.show();
+    });
+    $(document).ajaxStop(function () {
+        loading.hide();
+    });
+    if ($('.filter').length){
+        $('.content').css({
+            'min-width': $('.filter').height()
+        });
+    }
+});
+
+
 var state = {
     none: 'none',
     update: 'update',
@@ -23488,7 +23511,6 @@ var menu = {
         faq: 'faq'
     }
 };
-
 
 
 var validationEvents = function(validObj){
