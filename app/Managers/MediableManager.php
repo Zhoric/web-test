@@ -14,15 +14,23 @@ class MediableManager
         $this->_unitOfWork = $unitOfWork;
     }
 
-    public function getMediablesByTheme($themeId){
+    public function getByTheme($themeId){
         return $this->_unitOfWork->mediables()->getByTheme($themeId);
     }
 
-    public function getMediablesByDiscipline($disciplineId){
+    public function getByThemeAndMedia($themeId, $mediaId){
+        return $this->_unitOfWork->mediables()->getByThemeAndMedia($themeId, $mediaId);
+    }
+
+    public function getByDiscipline($disciplineId){
         return $this->_unitOfWork->mediables()->getByDiscipline($disciplineId);
     }
 
-    public function getMediablesByMedia($mediaId){
+    public function getByDisciplineAndMedia($disciplineId, $mediaId){
+        return $this->_unitOfWork->mediables()->getByDisciplineAndMedia($disciplineId, $mediaId);
+    }
+
+    public function getByMedia($mediaId){
         return $this->_unitOfWork->mediables()->getByMedia($mediaId);
     }
 
@@ -34,9 +42,10 @@ class MediableManager
         $media = $this->_unitOfWork->medias()->find($mediaId);
         $mediable->setMedia($media);
 
-        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
-        $mediable->setDiscipline($discipline);
-
+        if ($disciplineId != null) {
+            $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+            $mediable->setDiscipline($discipline);
+        }
         if ($themeId != null) {
             $theme = $this->_unitOfWork->themes()->find($themeId);
             $mediable->setTheme($theme);
@@ -50,9 +59,10 @@ class MediableManager
         $media = $this->_unitOfWork->medias()->find($mediaId);
         $mediable->setMedia($media);
 
-        $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
-        $mediable->setDiscipline($discipline);
-
+        if ($disciplineId != null) {
+            $discipline = $this->_unitOfWork->disciplines()->find($disciplineId);
+            $mediable->setDiscipline($discipline);
+        }
         if ($themeId != null) {
             $theme = $this->_unitOfWork->themes()->find($themeId);
             $mediable->setTheme($theme);

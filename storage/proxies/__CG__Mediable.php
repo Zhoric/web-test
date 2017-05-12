@@ -246,7 +246,7 @@ class Mediable extends \Mediable implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setDiscipline($discipline)
+    public function setDiscipline(\Discipline $discipline = NULL)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDiscipline', [$discipline]);

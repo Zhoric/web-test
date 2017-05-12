@@ -16,7 +16,7 @@ class CreateMediableTable extends Migration
         Schema::create('mediable', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('media_id')->unsigned();
-            $table->integer('discipline_id')->unsigned();
+            $table->integer('discipline_id')->unsigned()->nullable()->default(NULL);
             $table->integer('theme_id')->unsigned()->nullable()->default(NULL);
             $table->text('start')->nullable()->default(NULL);
             $table->text('stop')->nullable()->default(NULL);

@@ -16,27 +16,49 @@ class MediableController extends Controller
         $this->_mediableManager = $mediableManager;
     }
 
-    public function getAllMediablesByMedia($mediaId){
+    public function getAllByMedia($mediaId){
         try{
-            $mediables = $this->_mediableManager->getMediablesByMedia($mediaId);
+            $mediables = $this->_mediableManager->getByMedia($mediaId);
             return $this->successJSONResponse($mediables);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
-    public function getAllMediablesByTheme($themeId){
+    public function getAllByTheme($themeId){
         try{
-            $mediables = $this->_mediableManager->getMediablesByTheme($themeId);
+            $mediables = $this->_mediableManager->getByTheme($themeId);
             return $this->successJSONResponse($mediables);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
     }
 
-    public function getAllMediablesByDiscipline($disciplineId){
+    public function getAllByThemeAndMedia(Request $request){
         try{
-            $mediables = $this->_mediableManager->getMediablesByDiscipline($disciplineId);
+            $themeId = $request->query('theme');
+            $mediaId = $request->query('media');
+            $mediables = $this->_mediableManager->getByThemeAndMedia($themeId, $mediaId);
+            return $this->successJSONResponse($mediables);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    public function getAllByDiscipline($disciplineId){
+        try{
+            $mediables = $this->_mediableManager->getByDiscipline($disciplineId);
+            return $this->successJSONResponse($mediables);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
+    public function getAllByDisciplineAndMedia(Request $request){
+        try{
+            $disciplineId = $request->query('discipline');
+            $mediaId = $request->query('media');
+            $mediables = $this->_mediableManager->getByDisciplineAndMedia($disciplineId, $mediaId);
             return $this->successJSONResponse($mediables);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
@@ -57,11 +79,11 @@ class MediableController extends Controller
             $mediableData = $request->json('mediable');
             $mediaId = $request->json('mediaId');
             $themeId = $request->json('themeId');
-            $disciplineId = $request->json('disciplineId');
+            $discipline = $request->json('discipline');
 
             $mediable = new Mediable();
             $mediable->fillFromJson($mediableData);
-            $this->_mediableManager->addMediable($mediable, $mediaId, $themeId, $disciplineId);
+            $this->_mediableManager->addMediable($mediable, $mediaId, $themeId, $discipline);
             return $this->successJSONResponse();
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
@@ -73,11 +95,11 @@ class MediableController extends Controller
             $mediableData = $request->json('mediable');
             $mediaId = $request->json('mediaId');
             $themeId = $request->json('themeId');
-            $disciplineId = $request->json('disciplineId');
+            $discipline = $request->json('discipline');
 
             $mediable = new Mediable();
             $mediable->fillFromJson($mediableData);
-            $this->_mediableManager->updateMediable($mediable, $mediaId, $themeId, $disciplineId);
+            $this->_mediableManager->updateMediable($mediable, $mediaId, $themeId, $discipline);
             return $this->successJSONResponse();
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

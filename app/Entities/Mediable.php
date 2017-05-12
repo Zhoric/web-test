@@ -54,16 +54,16 @@ class Mediable extends BaseEntity implements JsonSerializable
     protected $discipline;
 
     /**
-     * @var array
+     * @var string
      *
-     * @ORM\Column(name="start", type="array", nullable=true)
+     * @ORM\Column(name="start", type="string", , length=255, nullable=true)
      */
     protected $start;
 
     /**
-     * @var array
+     * @var string
      *
-     * @ORM\Column(name="stop", type="array", nullable=true)
+     * @ORM\Column(name="stop", type="string", , length=255, nullable=true)
      */
     protected $stop;
 
@@ -125,7 +125,7 @@ class Mediable extends BaseEntity implements JsonSerializable
     }
 
     /**
-     * @return Discipline
+     * @return \Discipline
      */
     public function getDiscipline()
     {
@@ -133,19 +133,23 @@ class Mediable extends BaseEntity implements JsonSerializable
     }
 
     /**
-     * @param Discipline $discipline
+     * @param \Discipline $discipline
+     *
+     * @return Mediable
      */
 
-    public function setDiscipline($discipline)
+    public function setDiscipline(\Discipline $discipline = null)
     {
         $this->discipline = $discipline;
+
+        return $this;
     }
 
 
     /**
      * Set start
      *
-     * @param array $start
+     * @param string $start
      *
      * @return Mediable
      */
@@ -159,7 +163,7 @@ class Mediable extends BaseEntity implements JsonSerializable
     /**
      * Get start
      *
-     * @return array
+     * @return string
      */
     public function getStart()
     {
@@ -169,7 +173,7 @@ class Mediable extends BaseEntity implements JsonSerializable
     /**
      * Set stop
      *
-     * @param array $stop
+     * @param string $stop
      *
      * @return Mediable
      */
@@ -183,7 +187,7 @@ class Mediable extends BaseEntity implements JsonSerializable
     /**
      * Get stop
      *
-     * @return array
+     * @return string
      */
     public function getStop()
     {
@@ -200,7 +204,7 @@ class Mediable extends BaseEntity implements JsonSerializable
             'stop' => $this->stop,
             'media' => $this->media,
             'theme' => $this->theme,
-            'disciplineId' => $this->discipline->getId()
+            'discipline' => $this->discipline
         );
     }
 }

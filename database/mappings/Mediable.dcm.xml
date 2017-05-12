@@ -9,12 +9,12 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="start" type="array" column="start" nullable="true">
+    <field name="start" type="string" length="255" column="start" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="stop" type="array" column="stop" nullable="true">
+    <field name="stop" type="string" length="255" column="stop" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
