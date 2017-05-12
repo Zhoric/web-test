@@ -82,8 +82,10 @@ return array(
                 'driver' => 'LocalFileSystem',
                 'path'   => public_path().'/upload',
                 'URL'    => 'http://'. $_SERVER['HTTP_HOST']. '/upload',
+                'uploadDeny'   => array('all'),
                 'uploadAllow' => array('audio', 'video', 'image', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'application/pdf'),
+                'uploadOrder'  => 'deny, allow',
                 'attributes' => array(
                     array(
                         'pattern' => '/.wordImage/',

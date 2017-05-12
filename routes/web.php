@@ -49,7 +49,7 @@ Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'
     Route::get('theme/{id}', function(){return View('admin.themes');});
     Route::get('tests/{id}', function(){return View('admin.tests');});
     Route::get('tests', function(){return View('admin.tests');});
-    Route::get('editor/anchor/{discipline_id}/{theme_id}/{id}', function(){return View('admin.editor');});
+    Route::get('editor/anchor/{id}', function(){return View('admin.editor');});
     Route::get('editor/{id}', function(){return View('admin.editor');});
     Route::get('studyplans', function(){return View('admin.studyplans');});
     Route::get('studyplan/{id}', function(){return View('admin.studyplan');});
@@ -294,9 +294,11 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('create', 'MediableController@create');
         Route::post('update', 'MediableController@update');
         Route::post('delete/{id}', 'MediableController@delete');
-        Route::get('media/{id}', 'MediableController@getAllMediablesByMedia');
-        Route::get('discipline/{id}', 'MediableController@getAllMediablesByDiscipline');
-        Route::get('theme/{id}', 'MediableController@getAllMediablesByTheme');
+        Route::get('media/{id}', 'MediableController@getAllByMedia');
+        Route::get('discipline/{id}', 'MediableController@getAllByDiscipline');
+        Route::get('theme/{id}', 'MediableController@getAllByTheme');
+        Route::get('themeMedia', 'MediableController@getAllByThemeAndMedia');
+        Route::get('disciplineMedia', 'MediableController@getAllByDisciplineAndMedia');
         Route::get('{id}', 'MediableController@getMediable');
     });
 

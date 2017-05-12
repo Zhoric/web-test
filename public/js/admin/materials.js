@@ -13,7 +13,8 @@ $(document).ready(function(){
             self.modals = {
                 delete: '#delete-modal',
                 anchorMultimedia: '#anchor-multimedia-modal',
-                multimedia: '#multimedia-modal'
+                multimedia: '#multimedia-modal',
+                textAnchors: '#text-anchors-modal'
             };
 
             self.current = {
@@ -50,26 +51,33 @@ $(document).ready(function(){
                 }),
                 disciplineMediables: ko.observableArray([]),
                 themeMediables: ko.observableArray([]),
-                changeMode: ko.observable(false),
-                anchorMode: ko.observable(false),
-                elf: ko.observable(),
-                multimediaURL: ko.observable(''),
                 anchor: ko.validatedObservable({
-                    startHour: ko.observable('').extend({ digit: true }),
-                    startMinute: ko.observable('').extend({ digit: true, max: 59 }),
-                    startSecond: ko.observable('').extend({ digit: true, required: true, max: 59 }),
-                    stopHour: ko.observable('').extend({ digit: true }),
-                    stopMinute: ko.observable('').extend({ digit: true, max: 59 }),
-                    stopSecond: ko.observable('').extend({ digit: true, required: true, max: 59 }),
-                    startTime: ko.observable(''),
-                    stopTime: ko.observable(''),
-                    maxValue: ko.observable(0),
+                    hour: {
+                        start: ko.observable('').extend({digit: true}),
+                        stop: ko.observable('').extend({digit: true})
+                    },
+                    minute: {
+                        start: ko.observable('').extend({digit: true, max: 59}),
+                        stop: ko.observable('').extend({digit: true, max: 59})
+                    },
+                    second: {
+                        start: ko.observable('').extend({ digit: true, required: true, max: 59 }),
+                        stop: ko.observable('').extend({ digit: true, required: true, max: 59 })
+                    },
+                    time: {
+                        start: ko.observable(''),
+                        stop: ko.observable(0)
+                    },
+                    maxTime: ko.observable(0),
                     request: ko.observable('start'),
                     init: function() {
-                        this.stopTime = this.stopTime.extend({min: this.startTime, max: this.maxValue});
+                        this.time.stop = this.time.stop.extend({min: this.time.start, max: this.maxTime});
                         return this;
                     }
-                }.init())
+                }.init()),
+                textAnchors: ko.observableArray([]),
+                multimediaURL: ko.observable(''),
+                mode: ko.observable('')
             };
 
             self.filter = {
@@ -131,225 +139,580 @@ $(document).ready(function(){
                     }
                 },
                 media: {
-                    add: function () {
-                        self.current.anchorMode(false);
-                        self.current.changeMode(false);
-                        self.elfinder.open("Добавление материала");
+                    open: {
+                        add: function () {
+                            self.current.mode('');
+                            self.elfinder.open("Добавление материала");
+                        },
+                        anchor: function () {
+                            self.current.mode('anchor');
+                            self.elfinder.open("Выделение отрывка");
+                        },
+                        replacement: function (data) {
+                            self.alter.media.fill(data);
+                            self.confirm.show({
+                                message: 'Заменить данный материал во всех вхождениях (старая версия материала, а также все отрывки будут удалены)?',
+                                approve: function(){
+                                    self.current.mode('replace');
+                                    self.elfinder.open("Замена материала");
+                                }
+                            });
+                        },
+                        editor: function (data) {
+                            window.location.href = '/admin/editor/' + data.id();
+                        }
                     },
                     move: function (data) {
                         self.alter.media.fill(data);
-                        console.log(data);
                         if (data.type() == 'text') {
                             if (data.start() != null) window.open('/admin/media/' + data.id() + '#' + data.start());
                             else window.open('/admin/media/' + data.id());
                         }
                         else  if (data.type() == 'audio' || data.type() == 'video') {
-                            self.multimedia.open(data);
+                            self.actions.multimedia.open(data);
                         }
-                        else {
-                            var index = data.path().indexOf(data.name());
-                            var path = data.path().substring(0,index);
-                            window.open(window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name()));
-                        }
+                        else window.open(self.helpers.getEncodedUrl(data));
                     },
-                    anchor: function () {
-                        self.current.anchorMode(true);
-                        self.current.changeMode(false);
-                        self.elfinder.open("Выделение отрывка");
-                    },
-                    change: function (data) {
-                        self.alter.media.fill(data);
-                        self.confirm.show({
-                            message: 'Заменить данный материал во всех вхождениях (старая версия материала, а также все отрывки будут удалены)?',
-                            approve: function(){
-                                self.current.changeMode(true);
-                                self.current.anchorMode(false);
-                                self.elfinder.open("Замена материала");
-                            }
-                        });
-                    },
-                    remove: function (data) {
-                        console.log(data);
+                    remove: function (data) { //удаление связи
                         self.alter.media.fill(data);
                         self.confirm.show({
                             message: 'Вы уверены, что хотите удалить выбранный материал?',
                             approve: function(){
-                                $ajaxpost({
-                                    url: '/api/mediable/delete/' + self.current.media().mediableId(),
-                                    data: null,
-                                    errors: self.errors,
-                                    successCallback: function(){
-                                        self.get.currentMedias();
-                                        self.check.lastDelete(self.current.media().id());
-                                    }
-                                });
+                                self.post.remove.mediable();
                             }
                         });
                     },
-                    editor: function (data) {
-                        window.location.href = '/admin/editor/' + data.id();
-                    },
-                    lastDelete: function () {
+                    removeFromSystem: function () { //удаление файла из ФС и БД
                         $ajaxpost({
                             url: '/api/media/delete/' + self.current.media().id(),
                             data: null,
                             errors: self.errors,
                             successCallback: function(){
-                                $ajaxpost({
-                                    url: '/api/media/deletefile',
-                                    data: JSON.stringify({path: self.current.media().path()}),
-                                    errors: self.errors,
-                                    successCallback: function () {
-                                        commonHelper.modal.close(self.modals.delete);
-                                        $('#elfinder').elfinder('instance').exec('reload');
+                                self.post.remove.file();
+                            }
+                        });
+                    },
+                    replacement: function (file) { //замена файла
+                        $ajaxget({
+                            url: '/api/media/hash/' + file.hash,
+                            errors: self.errors,
+                            successCallback: function(media){
+                                var mediaId = media()[0].id();
+
+                                $ajaxget({
+                                    url: '/api/mediable/media/' + mediaId,
+                                    error: self.errors,
+                                    successCallback: function (data) {
+                                        if (data().length == 0){ // если заменяющий файл ни к чему не привязан
+                                            self.post.update.media(file); // поменять заменяемый файл
+                                            self.post.remove.cleanAfterUpdate(mediaId, self.current.media().path()); // удалить старый заменяемый файл
+                                            self.actions.media.removeAnchorMediables();
+                                            self.get.currentMedias();
+                                        }
+                                        else {
+                                            self.errors.show('Данный материал уже к чему-то прикреплен!');
+                                        }
                                     }
-                                });
+                                })
+                            }
+                        });
+                    },
+                    removeAnchorMediables: function () { //удаление связей с якорями
+                        $ajaxget({
+                            url: '/api/mediable/media/' + self.current.media().id(),
+                            error: self.errors,
+                            successCallback: function (data) {
+                                if (data().length == 0) return;
+
+                                ko.utils.arrayForEach(data(), function (mediable) {
+                                    if (mediable.start() != null) self.post.remove.mediableById(mediable.id());
+                                })
+                            }
+                        })
+                    },
+                    createMediable: function (hash) { //создание связи при выборе файла в elfinder
+                        $ajaxget({
+                            url: '/api/media/hash/' + hash,
+                            errors: self.errors,
+                            successCallback: function(data){
+                                var mediaId = data()[0].id();
+
+                                //проверка повторного добавления данного файла к текущей теме или дисциплине
+                                if((self.current.theme().id() != 0 && (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true)) ||
+                                    (self.current.theme().id() == 0 && (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true))) return;
+                                self.post.create.mediable(mediaId, null, null);
                             }
                         });
                     }
-
                 },
                 anchor: {
-                    add: function (data) {
-                        self.current.anchor().stopTime(+self.current.anchor().stopSecond() +
-                        +self.current.anchor().stopMinute() * 60 +
-                        +self.current.anchor().stopHour() * 3600);
+                    create: {
+                        multimedia: function () {
+                            //проверка валидности якоря и вызов функции его создания
+                            //перевод из ЧЧ:ММ:СС в секунды
+                            self.current.anchor().time.stop(+self.current.anchor().second.stop() +
+                                +self.current.anchor().minute.stop() * 60 +
+                                +self.current.anchor().hour.stop() * 3600);
 
-                        self.current.anchor().startTime(+self.current.anchor().startSecond() +
-                            +self.current.anchor().startMinute() * 60 +
-                            +self.current.anchor().startHour() * 3600);
+                            self.current.anchor().time.start(+self.current.anchor().second.start() +
+                                +self.current.anchor().minute.start() * 60 +
+                                +self.current.anchor().hour.start() * 3600);
 
-                        if (self.current.anchor.isValid()){
-                            self.anchor.create();
-                            commonHelper.modal.close(self.modals.anchorMultimedia);
+                            console.log(self.current.anchor());
+
+                            if (self.current.anchor.isValid()){
+                                self.post.create.mediable(self.current.media().id(), self.current.anchor().time.start(), self.current.anchor().time.stop());
+                                commonHelper.modal.close(self.modals.anchorMultimedia);
+                            }
+                            else self.validation['bAddAnchor'].open();
+                        },
+                        disciplineTextAnchor: function (mediable) {
+                            //проверка существования связи с выбранным якорем;
+                            // её создание при отсутствии связи
+
+                            var isExist = false;
+                            var discipline = 'discipline=' + self.current.discipline().id();
+                            var media = 'media=' + mediable.media.id();
+
+                            $ajaxget({
+                                url: '/api/mediable/disciplineMedia?' + discipline + '&' + media,
+                                error: self.errors,
+                                successCallback: function (data) {
+                                    ko.utils.arrayForEach(data(), function (elem) {
+                                        if (elem.start() == mediable.start() && elem.media.id() == mediable.media.id())
+                                            isExist = true;
+                                    });
+                                    if (!isExist) self.post.create.mediable(mediable.media.id(), mediable.start(), mediable.stop());
+                                }
+                            });
+                        },
+                        themeTextAnchor: function (mediable) {
+                            //проверка существования связи с выбранным якорем;
+                            // её создание при отсутствии связи
+
+                            var isExist = false;
+                            var theme = 'theme=' + self.current.theme().id();
+                            var media = 'media=' + mediable.media.id();
+
+                            $ajaxget({
+                                url: '/api/mediable/themeMedia?' + theme + '&' + media,
+                                error: self.errors,
+                                successCallback: function (data) {
+                                    ko.utils.arrayForEach(data(), function (elem) {
+                                        if (elem.start() == mediable.start() && elem.media.id() == mediable.media.id())
+                                            isExist = true;
+                                    });
+                                    if (!isExist) self.post.create.mediable(mediable.media.id(), mediable.start(), mediable.stop());
+                                }
+                            });
                         }
-                        else self.validation['bAddAnchor'].open();
+
+                    },
+                    open: {
+                        common: function (file) {
+                            var type = file.mime.split('/')[0];
+                            if (type == 'video' || type == 'audio')
+                                self.actions.anchor.open.multimedia(file);
+                            else if (type == 'image')
+                                self.errors.show('Нельзя выделить отрывок в изображении!');
+                            else {
+                                self.actions.anchor.open.editor(file);
+                            }
+
+                        },
+                        multimedia: function (file) {
+                            $ajaxget({
+                                url: '/api/media/hash/' + file.hash,
+                                errors: self.errors,
+                                successCallback: function(data){
+                                    var media = data()[0];
+                                    media.mediableId = ko.observable(null);
+                                    media.start = ko.observable(null);
+                                    media.stop = ko.observable(null);
+                                    self.alter.media.fill(media);
+
+                                    var index = file.path.indexOf(file.name);
+                                    var path = file.path.substring(0,index);
+                                    var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(file.name);
+                                    self.current.multimediaURL(url);
+                                    commonHelper.modal.open(self.modals.anchorMultimedia);
+                                    commonHelper.buildValidationList(self.validation);
+
+                                    $('#multimediaAnchor')[0].load();
+                                }
+                            });
+                        },
+                        editor: function (file) {
+                            $ajaxget({
+                                url: '/api/media/hash/' + file.hash,
+                                errors: self.errors,
+                                successCallback: function(data){
+                                    window.location.href = '/admin/editor/anchor/' + data()[0].id();
+                                }
+                            });
+                        }
+                    },
+                    remove: {
+                        disciplineTextAnchor: function (mediable) {
+                            var existedMediableId = 0;
+                            var discipline = 'discipline=' + self.current.discipline().id();
+                            var media = 'media=' + mediable.media.id();
+
+                            $ajaxget({
+                                url: '/api/mediable/disciplineMedia?' + discipline + '&' + media,
+                                error: self.errors,
+                                successCallback: function (data) {
+                                    ko.utils.arrayForEach(data(), function (elem) {
+                                        if (elem.start() == mediable.start() && elem.media.id() == mediable.media.id()){
+                                            existedMediableId = elem.id();
+                                        }
+                                    });
+                                    if (existedMediableId != 0) self.post.remove.mediableById(existedMediableId);
+                                }
+                            });
+                        },
+                        themeTextAnchor: function (mediable) {
+                            var existedMediableId = 0;
+                            var theme = 'theme=' + self.current.theme().id();
+                            var media = 'media=' + mediable.media.id();
+
+                            $ajaxget({
+                                url: '/api/mediable/themeMedia?' + theme + '&' + media,
+                                error: self.errors,
+                                successCallback: function (data) {
+                                    ko.utils.arrayForEach(data(), function (elem) {
+                                        if (elem.start() == mediable.start() && elem.media.id() == mediable.media.id()){
+                                            existedMediableId = elem.id();
+                                        }
+                                    });
+                                    if (existedMediableId != 0) self.post.remove.mediableById(existedMediableId);
+                                }
+                            });
+                        }
+                    },
+                    show: function (data) {
+                        $ajaxget({
+                            url: '/api/mediable/media/' + data.id(),
+                            error: self.errors,
+                            successCallback: function (mediables) {
+                                self.current.textAnchors.removeAll();
+                                ko.utils.arrayForEach(mediables(), function (mediable) {
+                                    var isInArray = false;
+                                    if (mediable.start() != null) {
+                                        if ((self.current.theme().id() != 0 && typeof mediable.theme == 'object' && self.current.theme().id() == mediable.theme.id()) ||
+                                            (self.current.theme().id() == 0 && typeof mediable.discipline == 'object' && self.current.discipline().id() == mediable.discipline.id())){
+                                            mediable.isChecked = ko.observable(true);
+                                            ko.utils.arrayForEach(self.current.textAnchors(), function (txtAnc) {
+                                                if (txtAnc.start() == mediable.start()) {
+                                                    txtAnc.isChecked(true);
+                                                    isInArray = true;
+                                                }
+                                            })
+                                        }
+                                        else if (typeof mediable.discipline != 'object' && mediable.discipline() == null &&
+                                            typeof mediable.theme != 'object' && mediable.theme() == null) {
+                                            mediable.isChecked = ko.observable(false);
+                                            console.log(mediable);
+                                        }
+                                        else isInArray = true;
+                                        if (!isInArray) self.current.textAnchors.push(mediable);
+                                    }
+                                });
+                                console.log(self.current.textAnchors());
+                                commonHelper.modal.open(self.modals.textAnchors);
+                            }
+                        })
+                    }, // TO DO
+                    attachTextAnchor: function () {
+                        //прикрепление связи с якорем текста
+                        ko.utils.arrayForEach(self.current.textAnchors(), function (textAnchor) {
+                            if (textAnchor.isChecked() == true){
+                                if (self.current.theme().id() != 0)
+                                    self.actions.anchor.create.themeTextAnchor(textAnchor);
+                                else self.actions.anchor.create.disciplineTextAnchor(textAnchor);
+                            }
+                            else {
+                                if (self.current.theme().id() != 0)
+                                    self.actions.anchor.remove.themeTextAnchor(textAnchor);
+                                else self.actions.anchor.remove.disciplineTextAnchor(textAnchor);
+                            }
+                        })
+                    }
+                },
+                multimedia : {
+                    open: function (data) {
+                        //открытие модального окна с аудио/видео; загрузка аудио/видео
+                        self.current.multimediaURL(self.helpers.getEncodedUrl(data));
+                        commonHelper.modal.open(self.modals.multimedia);
+                        $('#multimedia')[0].load();
+                    },
+                    anchorUpdate: function () {
+                        //обновление значения якоря при передвижении ползунка
+                        var multimedia = $('#multimediaAnchor')[0];
+                        var currentTime = multimedia.currentTime;
+
+                        self.current.anchor().maxTime(Math.floor(multimedia.duration));
+                        self.helpers.convertAnchorTime(currentTime);
+                    },
+                    loadeddata: function () {
+                        //проверка наличия якорей у аудио/видео при загрузке;
+                        //если есть, то перевести ползунок в начальное время
+                        if (self.current.media().start() == null && self.current.media().stop() == null) return;
+
+                        var multimedia = $('#multimedia')[0];
+                        multimedia.currentTime = self.helpers.toSeconds(self.current.media().start());
+                    },
+                    play: function () {
+                        //проверка выхода за границы якорей ползунка при проигрывании аудио/видео
+                        if (self.current.media().start() == null && self.current.media().stop() == null) return;
+
+                        var multimedia = $('#multimedia')[0];
+                        var stopTime = self.helpers.toSeconds(self.current.media().stop());
+                        var startTime = self.helpers.toSeconds(self.current.media().start());
+                        var currentTime = Math.floor(multimedia.currentTime);
+
+                        if (currentTime >= stopTime){
+                            multimedia.pause();
+                            multimedia.currentTime = stopTime;
+                        }
+                        else if (currentTime < startTime) {
+                            multimedia.pause();
+                            multimedia.currentTime = startTime;
+                        }
                     }
                 }
             };
 
-            self.multimedia = {
-                open: function (data) {
-                    var index = data.path().indexOf(data.name());
-                    var path = data.path().substring(0,index);
-                    var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name());
-                    self.current.multimediaURL(url);
-                    commonHelper.modal.open(self.modals.multimedia);
-                    $('#multimedia')[0].load();
-                },
-                anchor: function () {
-                    var multimedia = $('#multimediaAnchor')[0];
-                    var currentTime = multimedia.currentTime;
-                    var sec_num = parseInt(currentTime, 10);
-                    var hours   = Math.floor(sec_num / 3600);
-                    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-                    var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-                    if (hours   < 10) hours   = "0" + hours;
-                    if (minutes < 10) minutes = "0" + minutes;
-                    if (seconds < 10) seconds = "0" + seconds;
-
-                    if (self.current.anchor().request() == 'start'){
-                        self.current.anchor().startTime(currentTime);
-                        self.current.anchor().startHour(hours);
-                        self.current.anchor().startMinute(minutes);
-                        self.current.anchor().startSecond(seconds);
+            self.post = {
+                create: {
+                    simpleMedia: function (media) {
+                        $ajaxpost({
+                            url: '/api/media/create',
+                            error: self.errors,
+                            data: JSON.stringify({media: media})
+                        });
+                    },
+                    docxMedia: function (media) {
+                        $ajaxpost({
+                            url: '/api/media/createdocx',
+                            error: self.errors,
+                            data: JSON.stringify({media: media})
+                        });
+                    },
+                    pdfMedia: function (media) {
+                    },
+                    mediable: function (mediaId, start, stop) {
+                        $ajaxpost({
+                            url: '/api/mediable/create',
+                            error: self.errors,
+                            data: JSON.stringify({
+                                mediable: {start: start, stop: stop},
+                                discipline: self.current.discipline().id(),
+                                mediaId: mediaId,
+                                themeId: self.current.theme().id() == 0 ? null : self.current.theme().id()
+                            }),
+                            successCallback: function () {
+                                self.get.currentMedias();
+                            }
+                        });
                     }
-                    else {
-                        self.current.anchor().stopTime(currentTime);
-                        self.current.anchor().stopHour(hours);
-                        self.current.anchor().stopMinute(minutes);
-                        self.current.anchor().stopSecond(seconds);
-                    }
-                    self.current.anchor().maxValue(Math.floor(multimedia.duration));
                 },
-                loadeddata: function () {
-                    if (self.current.media().start() == null) return;
-                    var multimedia = $('#multimedia')[0];
-                    multimedia.currentTime = self.toSeconds(self.current.media().start());
-                },
-                play: function () {
-                    if (self.current.media().start() == null && self.current.media().stop() == null) return;
-                    var multimedia = $('#multimedia')[0];
-                    var stopTime = self.toSeconds(self.current.media().stop());
-                    var startTime = self.toSeconds(self.current.media().start());
-                    var currentTime = Math.floor(multimedia.currentTime);
-
-                    if (currentTime >= stopTime){
-                        multimedia.pause();
-                        multimedia.currentTime = stopTime;
+                remove: {
+                    mediable: function () {
+                        $ajaxpost({
+                            url: '/api/mediable/delete/' + self.current.media().mediableId(),
+                            data: null,
+                            errors: self.errors,
+                            successCallback: function(){
+                                self.get.currentMedias();
+                                self.check.lastDelete(self.current.media().id());
+                            }
+                        });
+                    },
+                    mediableById: function (id) {
+                        $ajaxpost({
+                            url: '/api/mediable/delete/' + id,
+                            data: null,
+                            errors: self.errors,
+                            successCallback: function () {
+                                self.get.currentMedias();
+                            }
+                        });
+                    },
+                    file: function () {
+                        $ajaxpost({
+                            url: '/api/media/deletefile',
+                            data: JSON.stringify({path: self.current.media().path()}),
+                            errors: self.errors,
+                            successCallback: function () {
+                                commonHelper.modal.close(self.modals.delete);
+                                $('#elfinder').elfinder('instance').exec('reload');
+                            }
+                        });
+                    },
+                    cleanAfterUpdate: function (mediaId, path) {
+                        // удаление старого файла из директории
+                        $ajaxpost({
+                            url: '/api/media/deletefile',
+                            data: JSON.stringify({path: path}),
+                            errors: self.errors
+                        });
+                        // удаление из БД нового файла
+                        $ajaxpost({
+                            url: '/api/media/delete/' + mediaId,
+                            data: null,
+                            errors: self.errors
+                        });
                     }
-                    else if (currentTime < startTime) {
-                        multimedia.pause();
-                        multimedia.currentTime = startTime;
+                },
+                update: {
+                    media: function (file) {
+                        $ajaxpost({
+                            url: '/api/media/update',
+                            error: self.errors,
+                            data: JSON.stringify({
+                                media: {
+                                    id: self.current.media().id(),
+                                    type: file.mime.split('/')[0],
+                                    path: decodeURIComponent(file.url.substring(file.url.search('upload'), file.url.length)),
+                                    name: file.name,
+                                    hash: file.hash
+                                }
+                            }),
+                            successCallback: function(){
+                                self.get.currentMedias();
+                                $('#elfinder').elfinder('instance').exec('reload');
+                            }
+                        });
                     }
                 }
-
-
             };
 
-            self.anchor = {
-                open: {
-                    common: function (file) {
-                        var type = file.mime.split('/')[0];
-                        if (type == 'video' || type == 'audio')
-                            self.anchor.open.multimedia(file);
-                        else if (type == 'image')
-                            self.errors.show('Нельзя выделить отрывок в изображении!');
-                        else {
-                            self.anchor.open.editor(file);
-                        }
-
-                    },
-                    multimedia: function (file) {
-                        $ajaxget({
-                            url: '/api/media/hash/' + file.hash,
-                            errors: self.errors,
-                            successCallback: function(data){
-                                var media = data()[0];
-                                media.mediableId = ko.observable(null);
-                                media.start = ko.observable(null);
-                                media.stop = ko.observable(null);
-                                self.alter.media.fill(media);
-                                console.log(self.current.media());
-                                var index = file.path.indexOf(file.name);
-                                var path = file.path.substring(0,index);
-                                var url = window.location.origin + '/' + encodeURI(path) + encodeURIComponent(file.name);
-                                self.current.multimediaURL(url);
-                                commonHelper.modal.open(self.modals.anchorMultimedia);
-                                commonHelper.buildValidationList(self.validation);
-                            }
-                        });
-                    },
-                    editor: function (file) {
-                        $ajaxget({
-                            url: '/api/media/hash/' + file.hash,
-                            errors: self.errors,
-                            successCallback: function(data){
-                                window.location.href = '/admin/editor/anchor/' + self.current.discipline().id() + '/'
-                                    + self.current.theme().id() + '/' + data()[0].id();
-                            }
-                        });
-                    }
-                },
-                create: function () {
-                    $ajaxpost({
-                        url: '/api/mediable/create',
-                        error: self.errors,
-                        data: JSON.stringify({
-                            mediable: {start: self.current.anchor().startTime(), stop: self.current.anchor().stopTime()},
-                            disciplineId: self.current.discipline().id(),
-                            mediaId: self.current.media().id(),
-                            themeId: self.current.theme().id() == 0 ? null : self.current.theme().id()}),
-                        successCallback: function () {
-                            self.get.currentMedias();
+            self.check = {
+                repeatAdd : function (mediables, mediaId) {
+                    // проверка повторного привязывания файла
+                    var repeat = false;
+                    ko.utils.arrayForEach(mediables, function (mediable) {
+                        if (mediaId == mediable.media.id() && mediable.media.start() == null && mediable.media.stop() == null) {
+                            self.errors.show('Прикрепление данного материала уже сделано!');
+                            repeat = true;
                         }
                     });
+                    return repeat;
+                },
+                lastDelete: function (mediaId) {
+                    // проверка на последнее удаление файла
+                    $ajaxget({
+                        url: '/api/mediable/media/' + mediaId,
+                        error: self.errors,
+                        successCallback: function (data) {
+                            if (data().length == 0) commonHelper.modal.open(self.modals.delete);
+                        }
+                    })
+                }
+            };
+            self.helpers = {
+                toHHMMSS : function (time) {
+                return self.helpers.toHH(time) + ':' + self.helpers.toMM(time) + ':' + self.helpers.toSS(time);
+             },
+                toHH : function (time) {
+                var sec_num = parseInt(time, 10);
+                var hours = Math.floor(sec_num / 3600);
+                if (hours < 10) hours = "0" + hours;
+                return hours;
+            },
+                toMM : function (time) {
+                var sec_num = parseInt(time, 10);
+                var hours   = Math.floor(sec_num / 3600);
+                var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                if (minutes < 10) minutes = "0" + minutes;
+                return minutes;
+            },
+                toSS : function (time) {
+                var sec_num = parseInt(time, 10);
+                var hours   = Math.floor(sec_num / 3600);
+                var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                var seconds = sec_num - (hours * 3600) - (minutes * 60);
+                if (seconds < 10) seconds = "0" + seconds;
+                return seconds;
+            },
+                toSeconds : function (time) {
+                if(+time == 0) return 0;
+                var timeArray = time.split(':');
+                return +timeArray[2] + +timeArray[1] * 60 + +timeArray[0] * 3600;
+            },
+                convertAnchorTime : function (time) {
+                    if (self.current.anchor().request() == 'start'){
+                        self.current.anchor().time.start(time);
+                        self.current.anchor().hour.start(self.helpers.toHH(time));
+                        self.current.anchor().minute.start(self.helpers.toMM(time));
+                        self.current.anchor().second.start(self.helpers.toSS(time));
+                    }
+                    else {
+                        self.current.anchor().time.stop(time);
+                        self.current.anchor().hour.stop(self.helpers.toHH(time));
+                        self.current.anchor().minute.stop(self.helpers.toMM(time));
+                        self.current.anchor().second.stop(self.helpers.toSS(time));
+                    }
+                },
+                getEncodedUrl : function (data) {
+                var index = data.path().indexOf(data.name());
+                var path = data.path().substring(0,index);
+                return window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name());
+            }
+            };
+            self.alter = {
+                discipline: {
+                    fill: function(data){
+                        self.current.discipline()
+                            .id(data.id())
+                            .name(data.name())
+                            .abbreviation(data.abbreviation())
+                            .description(data.description());
+                    },
+                    empty: function(){
+                        self.current.discipline()
+                            .id(0)
+                            .name('')
+                            .abbreviation('')
+                            .description('');
+                    }
+                },
+                media: {
+                    fill: function (data) {
+                        var start, stop;
+                        +data.start() ? start = self.toHHMMSS(+data.start()) : start = data.start();
+                        +data.stop() ? stop = self.toHHMMSS(+data.stop()) : stop = data.stop();
+
+                        self.current.media()
+                            .id(data.id())
+                            .type(data.type())
+                            .content(data.content())
+                            .path(data.path())
+                            .name(data.name())
+                            .hash(data.hash())
+                            .mediableId(data.mediableId())
+                            .stop(stop)
+                            .start(start);
+                    },
+                    empty: function () {
+                        self.current.media()
+                            .id(0)
+                            .type('')
+                            .content('')
+                            .path('')
+                            .name('')
+                            .hash('')
+                            .mediableId(0)
+                            .stop(null)
+                            .start(null);
+                    }
                 }
 
             };
 
             self.elfinder = {
+                currant: ko.observable(''),
                 initialize: function () {
                     var elfOptions = {
                         customData: {
@@ -399,12 +762,11 @@ $(document).ready(function(){
                     var elf = $('#elfinder').elfinder(elfOptions);
                     self.elfinder.handlers.upload(elf.elfinder('instance'));
                     self.elfinder.handlers.rename(elf.elfinder('instance'));
-                    self.elfinder.handlers.open(elf.elfinder('instance'));
                     self.elfinder.handlers.change(elf.elfinder('instance'));
-                    self.current.elf(elf);
+                    self.elfinder.currant(elf);
                 },
                 open: function (name) {
-                    self.current.elf().dialog({
+                    self.elfinder.currant().dialog({
                         modal: true,
                         width : 1300,
                         resizable: true,
@@ -413,49 +775,45 @@ $(document).ready(function(){
                     });
                 },
                 getFile: function (file) {
-                    if(self.current.changeMode()) {
-                        self.media.change(file);
-                        self.current.changeMode(false);
+                    if(self.current.mode() == 'replace') {
+                        self.actions.media.replacement(file);
+                        self.current.mode('');
                         return;
                     }
-                    else if (self.current.anchorMode()){
-                        self.anchor.open.common(file);
-                        self.current.anchorMode(false);
+                    else if (self.current.mode() == 'anchor'){
+                        self.actions.anchor.open.common(file);
+                        self.current.mode('');
                         return;
                     }
-                    self.media.add(file.hash, self.current.discipline().id(), self.current.theme().id());
+                    self.actions.media.createMediable(file.hash);
                 },
                 handlers: {
                     upload: function (elfinder) {
                         elfinder.bind('upload', function(event) {
                             if (event.data.removed[0] == event.data.removed[1]) return;
+
                             ko.utils.arrayForEach(event.data.added, function(file) {
                                 var media = {
                                     name: file.name,
                                     path: file.url.substring(file.url.search('upload'),file.url.length),
                                     hash: file.hash
                                 };
+
                                 var type = file.mime.split('/')[0];
                                 if (type == 'audio' || type == 'video' || type == 'image'){
                                     media.type = type;
-                                    self.media.createSimple(media);
+                                    self.post.create.simpleMedia(media);
                                 }
                                 else if (file.mime == 'application/pdf') {
                                     media.type = 'pdf';
-                                    self.media.createPdf(media);
+                                    self.post.create.pdfMedia(media);
                                 }
                                 else {
                                     media.type = 'text';
-                                    self.media.createDocx(media);
+                                    self.post.create.docxMedia(media);
                                 }
 
                             });
-                        });
-                    },
-                    open: function (elfinder) {
-                        elfinder.bind('open', function (event) {
-                          //  console.log(event);
-
                         });
                     },
                     rename: function (elfinder) {
@@ -522,218 +880,6 @@ $(document).ready(function(){
                     }
                 }
             };
-
-            self.media = {
-                add : function (hash, disciplineId, themeId) {
-                    $ajaxget({
-                        url: '/api/media/hash/' + hash,
-                        errors: self.errors,
-                        successCallback: function(data){
-                            var mediaId = data()[0].id();
-                            //проверка повторного добавления данного файла к текущей теме или дисциплине
-                            if((self.current.theme().id() != 0 && (self.check.repeatAdd(self.current.themeMediables(), mediaId) == true)) ||
-                                (self.current.theme().id() == 0 && (self.check.repeatAdd(self.current.disciplineMediables(), mediaId) == true))) return;
-
-                            $ajaxpost({
-                                url: '/api/mediable/create',
-                                error: self.errors,
-                                data: JSON.stringify({
-                                    mediable: {start: null, stop: null},
-                                    disciplineId: disciplineId,
-                                    mediaId: mediaId,
-                                    themeId: themeId == 0 ? null : themeId}),
-                                successCallback: function () {
-                                    self.get.currentMedias();
-                                }
-                            });
-                        }
-
-                    });
-                },
-                createSimple: function (media) {
-                    $ajaxpost({
-                        url: '/api/media/create',
-                        error: self.errors,
-                        data: JSON.stringify({media: media})
-                    });
-                },
-                createDocx: function (media) {
-                    $ajaxpost({
-                        url: '/api/media/createdocx',
-                        error: self.errors,
-                        data: JSON.stringify({media: media})
-                    });
-                },
-                createPdf: function (media) {
-                },
-                change: function (file) {
-                    $ajaxget({
-                        url: '/api/media/hash/' + file.hash,
-                        errors: self.errors,
-                        successCallback: function(media){
-                            var mediaId = media()[0].id();
-                            $ajaxget({
-                                url: '/api/mediable/media/' + mediaId,
-                                error: self.errors,
-                                successCallback: function (data) {
-                                    if (data().length == 0){ // если заменяющий файл ни к чему не привязан
-                                        self.media.update(file); // поменять заменяемый файл
-                                        self.media.removeAfterUpdate(mediaId, self.current.media().path()); // удалить старый заменяемый файл
-                                        self.media.removeAnchorMediables();
-                                        self.get.currentMedias();
-                                    }
-                                    else {
-                                        self.errors.show('Данный материал уже к чему-то прикреплен!');
-                                    }
-                                }
-                            })
-                        }
-                    });
-                },
-                update: function (file) {
-                    var mediaJSON = {
-                        id: self.current.media().id(),
-                        type: file.mime.split('/')[0],
-                        path: decodeURIComponent(file.url.substring(file.url.search('upload'), file.url.length)),
-                        name: file.name,
-                        hash: file.hash
-                    };
-                    $ajaxpost({
-                        url: '/api/media/update',
-                        error: self.errors,
-                        data: JSON.stringify({media: mediaJSON}),
-                        successCallback: function(){
-                            self.get.currentMedias();
-                            $('#elfinder').elfinder('instance').exec('reload');
-                        }
-                    });
-                },
-                removeAfterUpdate: function (mediaId, path) {
-                    // удаление старого файла из директории
-                    $ajaxpost({
-                        url: '/api/media/deletefile',
-                        data: JSON.stringify({path: path}),
-                        errors: self.errors
-                    });
-                    // удаление из БД нового файла
-                    $ajaxpost({
-                        url: '/api/media/delete/' + mediaId,
-                        data: null,
-                        errors: self.errors
-                    });
-
-                },
-                removeAnchorMediables: function () {
-                    $ajaxget({
-                        url: '/api/mediable/media/' + self.current.media().id(),
-                        error: self.errors,
-                        successCallback: function (data) {
-                            if (data().length == 0) return;
-                            ko.utils.arrayForEach(data(), function (mediable) {
-                                if (mediable.start() != null)
-                                    $ajaxpost({
-                                        url: '/api/mediable/delete/' + mediable.id(),
-                                        error: self.errors,
-                                        data: null
-                                    });
-                            })
-                        }
-                    })
-
-                }
-            };
-            self.check = {
-                // проверка повторного привязывания файла
-                repeatAdd : function (mediables, mediaId) {
-                    var repeat = false;
-                    ko.utils.arrayForEach(mediables, function (mediable) {
-                        if (mediaId == mediable.media.id() && mediable.media.start() == null && mediable.media.stop() == null) {
-                            self.errors.show('Прикрепление данного материала уже сделано!');
-                            repeat = true;
-                        }
-                    });
-                    return repeat;
-                },
-                // проверка на последнее удаление файла
-                lastDelete: function (mediaId) {
-                    $ajaxget({
-                        url: '/api/mediable/media/' + mediaId,
-                        error: self.errors,
-                        successCallback: function (data) {
-                            if (data().length == 0) commonHelper.modal.open(self.modals.delete);
-                        }
-                    })
-                }
-            };
-
-            self.toHHMMSS = function (time) {
-                var sec_num = parseInt(time, 10);
-                var hours   = Math.floor(sec_num / 3600);
-                var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-                var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-                if (hours   < 10) hours   = "0" + hours;
-                if (minutes < 10) minutes = "0" + minutes;
-                if (seconds < 10) seconds = "0" + seconds;
-
-                return hours + ':' + minutes + ':' + seconds;
-            };
-            self.toSeconds = function (time) {
-                if(+time == 0) return 0;
-                var timeArray = time.split(':');
-                return +timeArray[2] + +timeArray[1] * 60 + +timeArray[0] * 3600;
-            };
-
-            self.alter = {
-                discipline: {
-                    fill: function(data){
-                        self.current.discipline()
-                            .id(data.id())
-                            .name(data.name())
-                            .abbreviation(data.abbreviation())
-                            .description(data.description());
-                    },
-                    empty: function(){
-                        self.current.discipline()
-                            .id(0)
-                            .name('')
-                            .abbreviation('')
-                            .description('');
-                    }
-                },
-                media: {
-                    fill: function (data) {
-                        var start, stop;
-                        +data.start() ? start = self.toHHMMSS(+data.start()) : start = data.start();
-                        +data.stop() ? stop = self.toHHMMSS(+data.stop()) : stop = data.stop();
-
-                        self.current.media()
-                            .id(data.id())
-                            .type(data.type())
-                            .content(data.content())
-                            .path(data.path())
-                            .name(data.name())
-                            .hash(data.hash())
-                            .mediableId(data.mediableId())
-                            .stop(stop)
-                            .start(start);
-                    },
-                    empty: function () {
-                        self.current.media()
-                            .id(0)
-                            .type('')
-                            .content('')
-                            .path('')
-                            .name('')
-                            .hash('')
-                            .mediableId(0)
-                            .stop(null)
-                            .start(null);
-                    }
-                }
-
-            };
-
             self.get = {
                 disciplines: function(profileId){
                     var filter = self.filter;
@@ -800,10 +946,10 @@ $(document).ready(function(){
                             ko.utils.arrayForEach(self.current.disciplineMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
                                 +mediable.start() ?
-                                    mediable.media.start = ko.observable(self.toHHMMSS(+mediable.start()))
+                                    mediable.media.start = ko.observable(self.helpers.toHHMMSS(+mediable.start()))
                                     : mediable.media.start = ko.observable(mediable.start());
                                 +mediable.stop() ?
-                                    mediable.media.stop = ko.observable(self.toHHMMSS(+mediable.stop()))
+                                    mediable.media.stop = ko.observable(self.helpers.toHHMMSS(+mediable.stop()))
                                     : mediable.media.stop = ko.observable(mediable.stop());
                                 self.current.medias.push(mediable.media);
                             });
@@ -820,10 +966,10 @@ $(document).ready(function(){
                             ko.utils.arrayForEach(self.current.themeMediables(), function (mediable) {
                                 mediable.media.mediableId = mediable.id;
                                 +mediable.start() ?
-                                    mediable.media.start = ko.observable(self.toHHMMSS(+mediable.start()))
+                                    mediable.media.start = ko.observable(self.helpers.toHHMMSS(+mediable.start()))
                                     : mediable.media.start = ko.observable(mediable.start());
                                 +mediable.stop() ?
-                                    mediable.media.stop = ko.observable(self.toHHMMSS(+mediable.stop()))
+                                    mediable.media.stop = ko.observable(self.helpers.toHHMMSS(+mediable.stop()))
                                     : mediable.media.stop = ko.observable(mediable.stop());
                                 self.current.medias.push(mediable.media);
                             });
@@ -836,6 +982,7 @@ $(document).ready(function(){
                     else self.get.themeMedias(self.current.theme().id());
                 }
             };
+
             self.get.disciplines();
             self.get.profiles();
             self.elfinder.initialize();

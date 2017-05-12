@@ -16,8 +16,16 @@ class MediableRepository extends BaseRepository
         return $this->repo->findBy(['theme' => $themeId]);
     }
 
+    public function getByThemeAndMedia($themeId, $mediaId){
+        return $this->repo->findBy(['theme' => $themeId, 'media' => $mediaId]);
+    }
+
     public function getByDiscipline($disciplineId){
         return $this->repo->findBy(['discipline' => $disciplineId, 'theme' => null]);
+    }
+
+    public function getByDisciplineAndMedia($disciplineId, $mediaId){
+        return $this->repo->findBy(['discipline' => $disciplineId, 'theme' => null, 'media' => $mediaId]);
     }
 
     public function getByMedia($mediaId){

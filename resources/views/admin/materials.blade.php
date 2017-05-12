@@ -33,7 +33,7 @@
                             </div>
 
                         </div>
-                        <!-- ko if: $root.mode() === state.overall -->
+                        <!-- ko if: $root.mode() === state.overall  -->
                         <div class="details" data-bind="template: {name: 'overall-mode', data: $data}"></div>
                         <!-- /ko -->
                         <!-- ko if: $root.mode() === state.themes || $root.mode() === state.materials -->
@@ -76,7 +76,29 @@
                 <div class="layer-body">
                     <div class="details-row float-buttons">
                         <button class="cancel arcticmodal-close">Отмена</button>
-                        <button data-bind="click: $root.actions.media.lastDelete" class="remove arcticmodal-close">Да</button>
+                        <button data-bind="click: $root.actions.media.removeFromSystem" class="remove arcticmodal-close">Да</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="text-anchors-modal">
+            <div class="layer zero-margin width-auto">
+                <div class="layer-head">
+                    <h3>Выберите из списка ниже ссылки, которые необходимо прикрепить.</h3>
+                </div>
+                <div class="layer-body">
+                    <div>
+                        <!-- ko foreach: $root.current.textAnchors-->
+                        <input data-bind="attr: {id: id}, checked: isChecked" class="custom-checkbox" type="checkbox">
+                        <label data-bind="text: start, attr: {for: id}"></label>
+                        <!-- /ko -->
+                    </div>
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <button data-bind="click: $root.actions.anchor.attachTextAnchor" class="remove arcticmodal-close">Да</button>
                     </div>
                 </div>
             </div>
@@ -91,15 +113,21 @@
                 </div>
                 <div class="layer-body">
                     <!-- ko if: $root.current.media().type() === "audio" -->
-                    <audio id="multimediaAnchor" data-bind="event: {canplay: $root.multimedia.anchor, play: $root.multimedia.anchor, timeupdate: $root.multimedia.anchor}" controls>
+                    <audio id="multimediaAnchor"
+                           data-bind="event: {canplay: $root.actions.multimedia.anchorUpdate,
+                           play: $root.actions.multimedia.anchorUpdate,
+                           timeupdate: $root.actions.multimedia.anchorUpdate}" controls>
                         <source data-bind="attr: {src: $root.current.multimediaURL()} ">
                         Ваш браузер не поддерживает данный аудио-элемент.
                     </audio>
                     <!-- /ko -->
                     <!-- ko if: $root.current.media().type() === "video" -->
-                    <video id="multimediaAnchor" data-bind="event: {canplay: $root.multimedia.anchor, play: $root.multimedia.anchor, timeupdate: $root.multimedia.anchor}" controls>
+                    <video id="multimediaAnchor"
+                           data-bind="event: {canplay: $root.actions.multimedia.anchorUpdate,
+                           play: $root.actions.multimedia.anchorUpdate,
+                           timeupdate: $root.actions.multimedia.anchorUpdate}" controls>
                         <source data-bind="attr: {src: $root.current.multimediaURL()} ">
-                        Ваш браузер не поддерживает данный аудио-элемент.
+                        Ваш браузер не поддерживает данный видео-элемент.
                     </video>
                     <!-- /ko -->
                     <div class="anchor-details" data-bind="with: $root.current.anchor">
@@ -107,17 +135,17 @@
                             <input id="start" type="radio" value="start" name="anchor" data-bind="checked: request" class="custom-radio"/>
                             <label for="start"><span class="required">*</span> Начало</label>
                             <input id="startHour" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: startHour,
+                                   data-bind="value: hour.start,
                                               validationElement: startHour,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
                             <input id="startMinute" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: startMinute,
+                                   data-bind="value: minute.start,
                                               validationElement: startMinute,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
                             <input id="startSecond" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: startSecond,
+                                   data-bind="value: second.start,
                                               validationElement: startSecond,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         </div>
@@ -125,17 +153,17 @@
                             <input id="stop" type="radio" value="stop" name="anchor" data-bind="checked: request" class="custom-radio"/>
                             <label for="stop"><span class="required">*</span> Конец</label>
                             <input id="stopHour" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: stopHour,
+                                   data-bind="value: hour.stop,
                                               validationElement: stopHour,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
                             <input id="stopMinute" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: stopMinute,
+                                   data-bind="value: minute.stop,
                                               validationElement: stopMinute,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
                             <input id="stopSecond" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: stopSecond,
+                                   data-bind="value: second.stop,
                                               validationElement: stopSecond,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         </div>
@@ -143,7 +171,7 @@
                     <div class="details-row float-buttons">
                         <button class="cancel arcticmodal-close">Отмена</button>
                         <button id="bAddAnchor" accept-validation
-                                data-bind="click: $root.actions.anchor.add"
+                                data-bind="click: $root.actions.anchor.create.multimedia"
                                 title="Проверьте правильность заполнения полей"
                                 class="approve">ОК</button>
                     </div>
@@ -167,13 +195,19 @@
                 </div>
                 <div class="layer-body">
                     <!-- ko if: $root.current.media().type() === "audio" -->
-                    <audio id="multimedia" data-bind="event: {loadeddata: $root.multimedia.loadeddata, play: $root.multimedia.play, timeupdate: $root.multimedia.play}" controls>
+                    <audio id="multimedia"
+                           data-bind="event: {loadeddata: $root.actions.multimedia.loadeddata,
+                           play: $root.actions.multimedia.play,
+                           timeupdate: $root.actions.multimedia.play}" controls>
                         <source data-bind="attr: {src: $root.current.multimediaURL()} ">
                         Ваш браузер не поддерживает данный аудио-элемент.
                     </audio>
                     <!-- /ko -->
                     <!-- ko if: $root.current.media().type() === "video" -->
-                    <video id="multimedia" data-bind="event: {loadeddata: $root.multimedia.loadeddata, play: $root.multimedia.play, timeupdate: $root.multimedia.play}" controls>
+                    <video id="multimedia"
+                           data-bind="event: {loadeddata: $root.actions.multimedia.loadeddata,
+                           play: $root.actions.multimedia.play,
+                           timeupdate: $root.actions.multimedia.play}" controls>
                         <source data-bind="attr: {src: $root.current.multimediaURL()} ">
                         Ваш браузер не поддерживает данный аудио-элемент.
                     </video>
@@ -195,12 +229,12 @@
         </thead>
         <tbody>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.add" colspan="4">
+            <td data-bind="click: $root.actions.media.open.add" colspan="4">
                 <span class="fa">&#xf067;</span>&nbsp;Добавить материал
             </td>
         </tr>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.anchor" colspan="4">
+            <td data-bind="click: $root.actions.media.open.anchor" colspan="4">
                 <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок
             </td>
         </tr>
@@ -221,8 +255,9 @@
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <!-- /ko -->
             <td class="action-holder">
-                <button data-bind="click: $root.actions.media.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
-                <button data-bind="click: $root.actions.media.change" class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.anchor.show, css: type" class="editor fa approve mini actions">&#xf13d;</button>
+                <button data-bind="click: $root.actions.media.open.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
+                <button data-bind="click: $root.actions.media.open.replacement" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.media.remove" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>
@@ -258,12 +293,12 @@
         </thead>
         <tbody>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.add" colspan="4">
+            <td data-bind="click: $root.actions.media.open.add" colspan="4">
                 <span class="fa">&#xf067;</span>&nbsp;Добавить материал
             </td>
         </tr>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.anchor" colspan="4">
+            <td data-bind="click: $root.actions.media.open.anchor" colspan="4">
                 <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок
             </td>
         </tr>
@@ -284,8 +319,8 @@
             <td data-bind="text: name, click: $root.actions.media.move"></td>
             <!-- /ko -->
             <td class="action-holder">
-                <button data-bind="click: $root.actions.media.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
-                <button data-bind="click: $root.actions.media.change" class="fa approve mini actions">&#xf0ec;</button>
+                <button data-bind="click: $root.actions.media.open.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
+                <button data-bind="click: $root.actions.media.open.replacement" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.media.remove" class="fa remove mini actions">&#xf014;</button>
             </td>
         </tr>

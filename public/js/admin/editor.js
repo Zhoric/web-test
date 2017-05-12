@@ -23,31 +23,31 @@ $(document).ready(function () {
             self.name = ko.observable('');
             self.anchorNames = ko.observableArray([]);
             self.current = {
-                discipline: ko.observable(''),
-                theme: ko.observable('')
+                discipline: ko.observable(0),
+                theme: ko.observable(0)
             };
 
-            self.getMedia = function () {
-                var currentUrl = window.location.href;
-                var urlParts = currentUrl.split('/');
-                var mediaId = +urlParts[urlParts.length-1];
-                $ajaxget({
-                    url: '/api/media/' + mediaId,
-                    errors: self.errors,
-                    successCallback: function(data){
-                        self.fill(data);
-                        self.name(data.name().substring(0, data.name().lastIndexOf('.')));
+            self.get = {
+                media: function () {
+                    var currentUrl = window.location.href;
+                    var urlParts = currentUrl.split('/');
+                    var mediaId = +urlParts[urlParts.length-1];
+                    $ajaxget({
+                        url: '/api/media/' + mediaId,
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.fill(data);
+                            self.name(data.name().substring(0, data.name().lastIndexOf('.')));
+                        }
+                    });
+                },
+                state: function () {
+                    var currentUrl = window.location.href;
+                    var urlParts = currentUrl.split('/');
+                    if (urlParts[urlParts.length-2] == 'anchor'){
+                        self.mode(state.anchor);
+                        $('#iName')[0].disabled = true;
                     }
-                });
-            };
-            self.getState = function () {
-                var currentUrl = window.location.href;
-                var urlParts = currentUrl.split('/');
-                if (urlParts[urlParts.length-4] == 'anchor'){
-                    self.mode(state.anchor);
-                    $('#iName')[0].disabled = true;
-                    self.current.discipline(urlParts[urlParts.length-3]);
-                    self.current.theme(urlParts[urlParts.length-2]);
                 }
             };
 
@@ -138,7 +138,7 @@ $(document).ready(function () {
 
             };
             self.createAnchors = function () {
-                self.getAnchors();
+                self.updateAnchors();
 
                 var media = {
                     id: self.media().id(),
@@ -149,7 +149,7 @@ $(document).ready(function () {
                     hash: self.media().hash()
                 };
 
-                /*$ajaxpost({
+                $ajaxpost({
                     url: '/api/media/update',
                     error: self.errors,
                     data: JSON.stringify({media: media}),
@@ -160,16 +160,16 @@ $(document).ready(function () {
                                 error: self.errors,
                                 data: JSON.stringify({
                                     mediable: {start: anchor, stop: null},
-                                    disciplineId: self.current.discipline(),
+                                    discipline: null,
                                     mediaId: self.media().id(),
-                                    themeId: self.current.theme() == 0 ? null : self.current.theme()}),
+                                    themeId: null}),
                                 successCallback: function () {
                                     commonHelper.modal.open(self.modals.move);
                                 }
                             });
                         })
                     }
-                }); */
+                });
 
 
             };
@@ -187,7 +187,7 @@ $(document).ready(function () {
                     }
                 });
             };
-            self.getAnchors = function () {
+            self.updateAnchors = function () {
                 var content = tinyMCE.activeEditor.getContent({format : 'raw'});
                 var anchors = content.match(/<a\sid=\"(.*?)"\scontenteditable=\"false"\sclass=\"mce-item-anchor\">/g);
                 console.log(anchors);
@@ -207,8 +207,8 @@ $(document).ready(function () {
                     .hash(data.hash());
             };
 
-            self.getMedia();
-            self.getState();
+            self.get.media();
+            self.get.state();
             self.initEditor();
 
         };

@@ -57,10 +57,9 @@ $(document).ready(function () {
             };
 
             self.goToAnchor = function () {
-                var anchorEl = $('#' + self.anchor());
-                if (self.anchor().length > 0 && anchorEl.length) {
+                if (self.anchor().length > 0 && $('#' + self.anchor()).length) {
                    $('html, body').animate({
-                       scrollTop: anchorEl.offset().top
+                       scrollTop: $('#' + self.anchor()).offset().top
                    }, 0);
                 }
 
