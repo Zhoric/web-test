@@ -58,6 +58,7 @@ class CodeQuestionManager
     {
         $this->prepareForRunning($code);
         $cases_count = $this->fileManager->createTestCasesFiles($program->getId());
+
         $this->run($cases_count,$program);
 
        // $result = $this->fileManager->calculateMark($cases_count);
@@ -115,6 +116,9 @@ class CodeQuestionManager
             $result = $this->fileManager->createShellScript();
             $script_name = $result["scriptName"];
             $executeFileName = $result["executeFileName"];
+
+
+
             $command = "sh /opt/$cache_dir/$dirName/$script_name";
 
             $codeTask = new CodeTask($program->getId()
@@ -131,6 +135,7 @@ class CodeQuestionManager
 
         for($i = 0; $i < $cases_count; $i++) {
             $result = $this->fileManager->createShellScriptForTestCase($program->getId(), $i);
+
 
             $script_name = $result["scriptName"];
             $executeFileName = $result["executeFileName"];
@@ -158,6 +163,7 @@ class CodeQuestionManager
         $this->fileManager->setDirPath($dirPath);
         $this->fileManager->putCodeInFile($code);
         $this->fileManager->createLogFile();
+
     }
 
 

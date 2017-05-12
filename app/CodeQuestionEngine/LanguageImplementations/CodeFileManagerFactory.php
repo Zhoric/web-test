@@ -24,6 +24,7 @@ class CodeFileManagerFactory
             $fileManager->setBaseShellScriptName(EngineGlobalSettings::SHELL_SCRIPT_NAME_ARRAY[$lang]);
             $fileManager->setCodeFileExtension(EngineGlobalSettings::CODE_FILE_EXTENSIONS_ARRAY[$lang]);
             $fileManager->setExecuteFileName(EngineGlobalSettings::EXECUTE_FILE_NAME[$lang]);
+            $fileManager->setRunWord(EngineGlobalSettings::RUN_WORD[$lang]);
 
         }
         else throw new Exception("Не реализован класс файлового менеджера для нового языка программирования");

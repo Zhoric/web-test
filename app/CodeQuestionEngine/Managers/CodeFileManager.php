@@ -50,6 +50,14 @@ class CodeFileManager
      */
     protected $codeFileName;
 
+    /**
+     * @return mixed
+     */
+    public function getCodeFileName()
+    {
+        return str_replace("*",$this->codeFileExtension, $this->codeFileName);
+    }
+
 
     /**
      * имя уникальной папки пользователя
@@ -87,6 +95,27 @@ class CodeFileManager
      * файл с ошибками времени компиляции
      */
     protected $errorsFileName;
+
+    /**
+     * служебное слово для запуска
+     */
+    protected $runWord;
+
+    /**
+     * @return mixed
+     */
+    public function getRunWord()
+    {
+        return $this->runWord;
+    }
+
+    /**
+     * @param mixed $runWord
+     */
+    public function setRunWord($runWord)
+    {
+        $this->runWord = $runWord;
+    }
 
 
     /**
@@ -252,7 +281,7 @@ class CodeFileManager
 
 
     public function putCodeInFile($code){
-        $fileName = str_replace("*",$this->codeFileExtension, $this->codeFileName);
+        $fileName = $this->getCodeFileName();
         $fp = fopen("$this->dirPath/$fileName", "w");
         fwrite($fp, $code);
         fclose($fp);
@@ -408,6 +437,9 @@ class CodeFileManager
     protected function getExecutionFileNameIfExist(){
 
         $dir_items  = scandir($this->dirPath);
+        if($this->executeFileName === ""){
+            $this->executeFileName = $this->getCodeFileName();
+        }
         $name = explode(".",$this->executeFileName)[0];
         foreach($dir_items as $item){
             if(strstr($item,$name)){
@@ -424,13 +456,16 @@ class CodeFileManager
 
     protected function putBaseShellScriptInfoIntoExecuteShellScript($executeShellScriptName, $executeFileName){
 
+
         $filePath = "$this->app_path/$this->cacheDirName/$this->uniqueDirName/$executeShellScriptName";
+
 
         $uniqueScript = fopen($filePath, "w");
 
         $command = "cd /opt/$this->cacheDirName/$this->uniqueDirName/\n";
 
         $alreadyExistedExecutionFile = $this->getExecutionFileNameIfExist();
+
 
         if($alreadyExistedExecutionFile == ""){
 
@@ -472,6 +507,10 @@ class CodeFileManager
     protected function getExecuteFileNameForTestCase($programId,$testCaseNum){
         $executeFileNameForTestCase = $this->getExecuteFileName();
 
+        if($executeFileNameForTestCase === ""){
+            return $this->getCodeFileName();
+        }
+
         $splitted = explode(".", $executeFileNameForTestCase);
         $first_part = $splitted[0].'_'.$programId.'_'.$testCaseNum;
         $second_part = $splitted[1];
@@ -480,12 +519,18 @@ class CodeFileManager
     }
 
 
-    protected function CreateCommandStringToExecute($executeFileName,$inputFileName,$outputFileName){
+    protected function CreateCommandStringToExecute($executeFileName,$inputFileName,$outputFileName,$isScriptLang){
 
-        $executeCommand = EngineGlobalSettings::EXECUTE_PATTERN;
-        $executeCommand = str_replace("$1", $executeFileName, $executeCommand);
-        $executeCommand = str_replace("$2", $outputFileName, $executeCommand);
-        $executeCommand = str_replace("$3", $inputFileName,$executeCommand);
+        if(!$isScriptLang) {
+            $executeCommand = EngineGlobalSettings::EXECUTE_PATTERN;
+        }
+        else {
+            $executeCommand = EngineGlobalSettings::EXECUTE_PATTERN_FOR_SCRIPT_LANGUAGES;
+        }
+            $executeCommand = str_replace("$0", $this->getRunWord(), $executeCommand);
+            $executeCommand = str_replace("$1", $executeFileName, $executeCommand);
+            $executeCommand = str_replace("$2", $outputFileName, $executeCommand);
+            $executeCommand = str_replace("$3", $inputFileName, $executeCommand);
 
         return $executeCommand;
     }
@@ -501,9 +546,10 @@ class CodeFileManager
                 , $this->executeFileName);
             $testShellScriptText = file_get_contents($filePath);
 
+            //todo:: доделать
             $command = $this->CreateCommandStringToExecute($this->executeFileName
                 ,$this->inputFileName
-                , $this->outputFileName);
+                , $this->outputFileName,false);
             $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
             file_put_contents($filePath, $text);
 
@@ -528,16 +574,32 @@ class CodeFileManager
     {
         try {
             $scriptName = $this->createShellScriptNameForTestCase($testCaseNum);
-            $executeFileName = $this->getExecuteFileNameForTestCase($programId, $testCaseNum);
-            $filePath = $this->putBaseShellScriptInfoIntoExecuteShellScript($scriptName, $executeFileName);
+
+            $isScriptLang = false;
+            if($this->executeFileName === ""){
+                $isScriptLang = true;
+            }
+
+            $executeFileNameForTestCase = $this->getExecuteFileNameForTestCase($programId, $testCaseNum);
+
+
+            $filePath = $this->putBaseShellScriptInfoIntoExecuteShellScript($scriptName, $executeFileNameForTestCase);
+
+
             $testShellScriptText = file_get_contents($filePath);
+
             $outputFileName = $this->getOutputFileNameForTestCase($testCaseNum);
             $inputFileName = $this->getInputFileNameForTestCase($testCaseNum);
-            $command = $this->CreateCommandStringToExecute($executeFileName, $inputFileName, $outputFileName);
+            $command = $this->CreateCommandStringToExecute($executeFileNameForTestCase
+                , $inputFileName
+                , $outputFileName
+                , $isScriptLang);
+
+
             $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);
             file_put_contents($filePath, $text);
 
-            return ["scriptName" => $scriptName, "executeFileName" => $executeFileName];
+            return ["scriptName" => $scriptName, "executeFileName" => $executeFileNameForTestCase];
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             throw new \Exception("Ошибка при создании скрипта: $msg");

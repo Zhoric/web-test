@@ -31,7 +31,7 @@ class EngineGlobalSettings
      */
     const SHELL_SCRIPT_NAME_ARRAY = [
         \Language::C => "run.sh",
-        \Language::PHP => "php-run.php",
+        \Language::PHP => "php-run.sh",
 
         ];
 
@@ -51,6 +51,14 @@ class EngineGlobalSettings
     const EXECUTE_FILE_NAME = [
         \Language::C => 'c_output.out',
         \Language::PHP => "",
+    ];
+
+    /**
+     * Служебное слово для запуска
+     */
+    const RUN_WORD = [
+        \Language::C => './',
+        \Language::PHP => 'php ',
     ];
 
     /**
@@ -97,11 +105,13 @@ class EngineGlobalSettings
 
     /**
      * Паттерн строки запуска кода
+     * Вместо $0 - имя служебной команды для запуска
      * Вместо $1 - имя скрипта или exe-шника
      * Вместо $2 - имя выходного файла, куда перенаправляется выходной поток программы
      * Вместо $3 - имя входного файла, куда перенаправляется входной поток программы
      */
-    const EXECUTE_PATTERN = "./$1 1> $2 < $3";
+    const EXECUTE_PATTERN = "$0$1 1> $2 < $3";
+    const EXECUTE_PATTERN_FOR_SCRIPT_LANGUAGES = "$0$1 1> $2 < $3 2> errors.txt";
 
     /**
      * Имя папки, где лежает шаблонные шелл-скрипты

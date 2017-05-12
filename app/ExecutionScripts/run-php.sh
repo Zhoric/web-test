@@ -1,2 +1,2 @@
-php code.php 2> errors.txt
+php code.php
 run

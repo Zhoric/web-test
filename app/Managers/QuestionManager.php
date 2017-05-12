@@ -107,7 +107,6 @@ class QuestionManager
         $question = $this->_unitOfWork->questions()->find($questionId);
         $answers = $this->_unitOfWork->answers()->where('Answer.question = '.$questionId);
         $program = $this->_unitOfWork->programs()->getByQuestion($question->getId());
-
         if (isset($program)){
             $paramSets = $this->_unitOfWork->paramsSets()->getByProgram($program);
             return new QuestionViewModel($question, $answers, $program, $paramSets);

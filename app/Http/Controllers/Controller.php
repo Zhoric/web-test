@@ -14,6 +14,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected function successJSONResponse($data = null, $message = null){
+
         return json_encode(new JsonResult(true, $data, $message));
     }
 
