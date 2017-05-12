@@ -52,26 +52,18 @@ $(document).ready(function(){
                 disciplineMediables: ko.observableArray([]),
                 themeMediables: ko.observableArray([]),
                 anchor: ko.validatedObservable({
-                    hour: {
-                        start: ko.observable('').extend({digit: true}),
-                        stop: ko.observable('').extend({digit: true})
-                    },
-                    minute: {
-                        start: ko.observable('').extend({digit: true, max: 59}),
-                        stop: ko.observable('').extend({digit: true, max: 59})
-                    },
-                    second: {
-                        start: ko.observable('').extend({ digit: true, required: true, max: 59 }),
-                        stop: ko.observable('').extend({ digit: true, required: true, max: 59 })
-                    },
-                    time: {
-                        start: ko.observable(''),
-                        stop: ko.observable(0)
-                    },
+                    hourStart: ko.observable('').extend({digit: true}),
+                    hourStop: ko.observable('').extend({digit: true}),
+                    minuteStart: ko.observable('').extend({digit: true, max: 59}),
+                    minuteStop: ko.observable('').extend({digit: true, max: 59}),
+                    secondStart: ko.observable('').extend({ digit: true, required: true, max: 59 }),
+                    secondStop: ko.observable('').extend({ digit: true, required: true, max: 59 }),
+                    timeStart: ko.observable(''),
+                    timeStop: ko.observable(0),
                     maxTime: ko.observable(0),
                     request: ko.observable('start'),
                     init: function() {
-                        this.time.stop = this.time.stop.extend({min: this.time.start, max: this.maxTime});
+                        this.timeStop = this.timeStop.extend({min: this.timeStart, max: this.maxTime});
                         return this;
                     }
                 }.init()),
@@ -250,18 +242,16 @@ $(document).ready(function(){
                         multimedia: function () {
                             //проверка валидности якоря и вызов функции его создания
                             //перевод из ЧЧ:ММ:СС в секунды
-                            self.current.anchor().time.stop(+self.current.anchor().second.stop() +
-                                +self.current.anchor().minute.stop() * 60 +
-                                +self.current.anchor().hour.stop() * 3600);
+                            self.current.anchor().timeStop(+self.current.anchor().secondStop() +
+                                +self.current.anchor().minuteStop() * 60 +
+                                +self.current.anchor().hourStop() * 3600);
 
-                            self.current.anchor().time.start(+self.current.anchor().second.start() +
-                                +self.current.anchor().minute.start() * 60 +
-                                +self.current.anchor().hour.start() * 3600);
-
-                            console.log(self.current.anchor());
+                            self.current.anchor().timeStart(+self.current.anchor().secondStart() +
+                                +self.current.anchor().minuteStart() * 60 +
+                                +self.current.anchor().hourStart() * 3600);
 
                             if (self.current.anchor.isValid()){
-                                self.post.create.mediable(self.current.media().id(), self.current.anchor().time.start(), self.current.anchor().time.stop());
+                                self.post.create.mediable(self.current.media().id(), self.current.anchor().timeStart(), self.current.anchor().timeStop());
                                 commonHelper.modal.close(self.modals.anchorMultimedia);
                             }
                             else self.validation['bAddAnchor'].open();
@@ -643,16 +633,16 @@ $(document).ready(function(){
             },
                 convertAnchorTime : function (time) {
                     if (self.current.anchor().request() == 'start'){
-                        self.current.anchor().time.start(time);
-                        self.current.anchor().hour.start(self.helpers.toHH(time));
-                        self.current.anchor().minute.start(self.helpers.toMM(time));
-                        self.current.anchor().second.start(self.helpers.toSS(time));
+                        self.current.anchor().timeStart(time);
+                        self.current.anchor().hourStart(self.helpers.toHH(time));
+                        self.current.anchor().minuteStart(self.helpers.toMM(time));
+                        self.current.anchor().secondStart(self.helpers.toSS(time));
                     }
                     else {
-                        self.current.anchor().time.stop(time);
-                        self.current.anchor().hour.stop(self.helpers.toHH(time));
-                        self.current.anchor().minute.stop(self.helpers.toMM(time));
-                        self.current.anchor().second.stop(self.helpers.toSS(time));
+                        self.current.anchor().timeStop(time);
+                        self.current.anchor().hourStop(self.helpers.toHH(time));
+                        self.current.anchor().minuteStop(self.helpers.toMM(time));
+                        self.current.anchor().secondStop(self.helpers.toSS(time));
                     }
                 },
                 getEncodedUrl : function (data) {

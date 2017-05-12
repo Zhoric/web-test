@@ -134,37 +134,37 @@
                         <div class="inline-block">
                             <input id="start" type="radio" value="start" name="anchor" data-bind="checked: request" class="custom-radio"/>
                             <label for="start"><span class="required">*</span> Начало</label>
-                            <input id="startHour" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: hour.start,
-                                              validationElement: startHour,
+                            <input id="hourStart" class="anchor" type="text" maxlength="2" validate
+                                   data-bind="value: hourStart,
+                                              validationElement: hourStart,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
-                            <input id="startMinute" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: minute.start,
-                                              validationElement: startMinute,
+                            <input id="minuteStart" class="anchor" type="text" maxlength="2" validate
+                                   data-bind="value: minuteStart,
+                                              validationElement: minuteStart,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
-                            <input id="startSecond" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: second.start,
-                                              validationElement: startSecond,
+                            <input id="secondStart" class="anchor" type="text" maxlength="2" validate
+                                   data-bind="value: secondStart,
+                                              validationElement: secondStart,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         </div>
                         <div class="inline-block">
                             <input id="stop" type="radio" value="stop" name="anchor" data-bind="checked: request" class="custom-radio"/>
                             <label for="stop"><span class="required">*</span> Конец</label>
-                            <input id="stopHour" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: hour.stop,
-                                              validationElement: stopHour,
+                            <input id="hourStop" class="anchor" type="text" maxlength="2" validate
+                                   data-bind="value: hourStop,
+                                              validationElement: hourStop,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
-                            <input id="stopMinute" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: minute.stop,
-                                              validationElement: stopMinute,
+                            <input id="minute.stop" class="anchor" type="text" maxlength="2" validate
+                                   data-bind="value: minuteStop,
+                                              validationElement: minuteStop,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                             <label>:</label>
-                            <input id="stopSecond" class="anchor" type="text" maxlength="2" validate
-                                   data-bind="value: second.stop,
-                                              validationElement: stopSecond,
+                            <input id="second.stop" class="anchor" type="text" maxlength="2" validate
+                                   data-bind="value: secondStop,
+                                              validationElement: secondStop,
                                               event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         </div>
                     </div>
