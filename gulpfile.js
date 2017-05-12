@@ -221,7 +221,10 @@ elixir(function(mix){
     mix.scripts([
         "lib/knockout-file-bindings.js",
         "lib/ace.js",
+        "lib/worker-php.js",
         "lib/mode-c_cpp.js",
+        "lib/mode-php.js",
+        "lib/mode-pascal.js",
         "helpers/sendCode.js",
         "lib/wheelzoom.js",
         "admin/themes.js"

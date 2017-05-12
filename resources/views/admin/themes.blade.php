@@ -59,7 +59,7 @@
     </div>
 
     <!-- ko if: $root.mode() === state.create || $root.mode() === state.update -->
-    <div class="layer theme minw-600" id="question-form">
+    <div class="layer theme" id="question-form">
         <div class="details-rows">
             <div class="details-column width-15p minw-120">
                 <label class="title">Время&nbsp;на&nbsp;ответ&nbsp;<span class="required">*</span></label>
