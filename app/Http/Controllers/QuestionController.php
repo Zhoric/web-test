@@ -57,6 +57,7 @@ class QuestionController extends Controller
      */
     public function create(Request $request){
         try{
+            dd($request->json());
             $questionData = $request->json('question');
             $answers = (array) $request->json('answers');
             $themeId = $request->json('theme');
@@ -89,6 +90,7 @@ class QuestionController extends Controller
      */
     public function update(Request $request){
         try{
+            dd($request->json());
             $questionData = $request->json('question');
             $answers = $request->json('answers');
             $themeId = $request->json('theme');
