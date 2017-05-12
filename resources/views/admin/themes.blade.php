@@ -59,9 +59,9 @@
     </div>
 
     <!-- ko if: $root.mode() === state.create || $root.mode() === state.update -->
-    <div class="layer theme" id="question-form">
+    <div class="layer theme minw-600" id="question-form">
         <div class="details-rows">
-            <div class="details-column width-15p">
+            <div class="details-column width-15p minw-120">
                 <label class="title">Время&nbsp;на&nbsp;ответ&nbsp;<span class="required">*</span></label>
                 <input class="time" type="text" id="iQMinutes"
                        data-bind="value: $root.current.question().minutes,
@@ -144,48 +144,80 @@
             </div>
         </div>
         <!-- ko if: $root.current.question().isCode() && $root.current.question().type() -->
+        <div class="details" data-bind="attr: {'rdrd': $root.events.afterRender()}">
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <button data-bind="click: $root.code.open" class="action-button width-100p">
+                        <span class="fa">&#xf121;</span>&nbsp;Отладка программы
+                    </button>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column minw-120 width-10p">
+                    <label class="title">Лимит&nbsp;времени&nbsp;<span class="required">*</span></label>
+                    <input class="text-center" type="text" id="iQTimeLimit"
+                           data-bind="value: $root.code.timeLimit,
+                           valueUpdate: 'keyup',
+                           validationElement: $root.code.timeLimit,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
+                           placeholder="сек." validate/>
+                </div>
+                <div class="details-column minw-120 width-10p">
+                    <label class="title">Лимит&nbsp;памяти&nbsp;<span class="required">*</span></label>
+                    <input class="text-center" type="text" id="iQMemoryLimit"
+                           data-bind="value: $root.code.memoryLimit,
+                           valueUpdate: 'keyup',
+                           validationElement: $root.code.memoryLimit,
+                           event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"
+                           placeholder="кб." validate/>
+                </div>
+                <div class="details-column width-72p">
+                    <label class="title">Язык&nbsp;программирования&nbsp;<span class="required">*</span></label>
+                    <select id="sQLang" validate
+                            data-bind="options: $root.initial.langs,
+                            value: $root.code.lang,
+                            optionsCaption: 'Выберите язык программирования',
+                            validationElement: $root.code.lang,
+                            event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
+                    </select>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="details-column width-48p float-left">
+                    <label class="title">Входные&nbsp;параметры&nbsp;<span class="required">*</span></label>
+                    <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
+                </div>
+                <div class="details-column width-48p float-right">
+                    <label class="title">Выходной&nbsp;параметр&nbsp;<span class="required">*</span></label>
+                    <textarea data-bind="value: $root.code.params.output" placeholder="Выходной параметр"></textarea>
+                </div>
+            </div>
+            <div class="details-row float-buttons">
+                <div class="details-column width-99p">
+                    <button id="bQParams" validate special
+                            title="Пожалуйста, укажите хотя бы один набор параметров"
+                            data-bind="click: $root.code.params.add" class="approve">
+                        <span class="fa">&#xf067;</span>&nbsp;Добавить набор параметров
+                    </button>
+                </div>
+            </div>
+            <!-- ko if: $root.code.params.set().length -->
+            <div class="details-row">
+                <div class="details-column width-98p">
+                    <table class="werewolf">
+                        <tbody data-bind="foreach: $root.code.params.set">
+                        <tr>
+                            <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
+                            <td data-bind="text: input" class="width-50p"></td>
+                            <td data-bind="text: expectedOutput" class="width-50p"></td>
+                            <td class="action-holder"><button class="remove mini fa" data-bind="click: $root.code.params.remove">&#xf014;</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /ko -->
 
-        <div class="details-row">
-            <div class="details-column width-48p">
-                <label class="title">Входные&nbsp;параметры&nbsp;<span class="required">*</span></label>
-                <textarea data-bind="value: $root.code.params.input" placeholder="Входные параметры"></textarea>
-            </div>
-            <div class="details-column width-48p float-right">
-                <label class="title">Выходной&nbsp;параметр&nbsp;<span class="required">*</span></label>
-                <textarea data-bind="value: $root.code.params.output" placeholder="Выходной параметр"></textarea>
-            </div>
-        </div>
-        <div class="details-row float-buttons">
-            <div class="details-column width-99p">
-                <button id="bQParams" validate special
-                        title="Пожалуйста, укажите хотя бы один набор параметров"
-                        data-bind="click: $root.code.params.add" class="approve">
-                    <span class="fa">&#xf067;</span>&nbsp;Добавить набор параметров
-                </button>
-            </div>
-        </div>
-        <!-- ko if: $root.code.params.set().length -->
-        <div class="details-row">
-            <div class="details-column width-98p">
-                <table class="werewolf">
-                    <tbody data-bind="foreach: $root.code.params.set">
-                    <tr>
-                        <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
-                        <td data-bind="text: input" class="width-50p"></td>
-                        <td data-bind="text: expectedOutput" class="width-50p"></td>
-                        <td class="action-holder"><button class="remove mini fa" data-bind="click: $root.code.params.remove">&#xf014;</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <!-- /ko -->
-        <div class="details-row">
-            <div class="details-column width-98p">
-                <button data-bind="click: $root.code.open" class="action-button width-100p">
-                    <span class="fa">&#xf121;</span>&nbsp;Отладка программы
-                </button>
-            </div>
         </div>
         <!-- /ko -->
         <!-- ko if: !$root.current.question().isOpenMultiLine() && !$root.current.question().isCode() && $root.current.question().type() -->

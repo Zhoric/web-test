@@ -20134,7 +20134,8 @@ $(document).ready(function(){
             self.theme = ko.observable({});
             self.initial ={
                 types: ko.observableArray(ko.mapping.fromJS(array.question)()),
-                complexity: ko.observableArray(ko.mapping.fromJS(array.complexity)())
+                complexity: ko.observableArray(ko.mapping.fromJS(array.complexity)()),
+                langs: ["C", "PHP", "Pascal"]
             };
 
             self.current = {
@@ -20281,6 +20282,9 @@ $(document).ready(function(){
                         var file = fileData.file() ? fileData.base64String() : null;
                         var fileType = fileData.file() ? fileData.file().type : null;
                         var program = self.code.text() ? self.code.text() : null;
+                        var timeLimit = self.code.timeLimit() ? self.code.timeLimit() : null;
+                        var memoryLimit = self.code.memoryLimit() ? self.code.memoryLimit() : null;
+                        var lang = self.code.lang() ? self.code.lang() : null;
                         var question = {
                             image: q.image(),
                             type: q.type().id(),
@@ -20316,6 +20320,9 @@ $(document).ready(function(){
                             file: file,
                             fileType: fileType,
                             program: program,
+                            timeLimit: timeLimit,
+                            memoryLimit: memoryLimit,
+                            lang: lang,
                             paramSets: params
                         });
                     },
@@ -20385,6 +20392,13 @@ $(document).ready(function(){
                             return false;
                         }
                         if (type === questionType.code){
+                            if (!self.code.lang.isValid() ||
+                                !self.code.timeLimit.isValid() ||
+                                !self.code.memoryLimit.isValid())
+                            {
+                                self.validation[$('[accept-validation]').attr('id')].open();
+                                return false;
+                            }
                             if (self.code.params.set().length) return true;
                             self.validation[validateAnswers].open();
                             return false;
@@ -20549,6 +20563,17 @@ $(document).ready(function(){
             self.code = {
                 text: ko.observable(),
                 program: ko.observable(),
+                timeLimit: ko.observable().extend({
+                    required: true,
+                    digit: true,
+                    min: 1, max: 60
+                }),
+                memoryLimit: ko.observable().extend({
+                    required: true,
+                    digit: true,
+                    min: 1, max: 10000
+                }),
+                lang: ko.observable().extend({required: true}),
                 result: {
                     text: ko.observable(),
                     show: function(message){
@@ -20615,6 +20640,9 @@ $(document).ready(function(){
                     self.code.params.set(data.paramSets());
                     self.code.program(data.program);
                     self.code.text(data.program.template());
+                    self.code.timeLimit(data.program.timeLimit());
+                    self.code.memoryLimit(data.program.memoryLimit());
+                    self.code.lang(data.program.lang());
                 },
                 empty: function(){
                     self.code.params.set([]);
@@ -20622,6 +20650,9 @@ $(document).ready(function(){
                     self.code.params.output('');
                     self.code.program(null);
                     self.code.text('');
+                    self.code.timeLimit('');
+                    self.code.memoryLimit('');
+                    self.code.lang('');
                 }
             };
 
@@ -20767,6 +20798,10 @@ $(document).ready(function(){
                 if (e.which === 13) {
                     self.actions.answer.add();
                 }
+            };
+            self.events.afterRender = function(){
+                commonHelper.buildValidationList(self.validation);
+                return true;
             };
 
             //SUBSCRIPTIONS
