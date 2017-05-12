@@ -214,7 +214,8 @@ elixir(function(mix){
 });
 elixir(function(mix){
     mix.scripts([
-        "admin/tests.js"
+        "lib/knockout.multiselect.js",
+        "admin/tests.js",
     ], "public/js/min/manager-tests.js");
 });
 elixir(function(mix){

@@ -132,7 +132,7 @@
                  title="Пожалуйста, укажите хотя бы одну тему" validate special
                  data-bind="with: $root.multiselect">
                 <label class="title">Темы&nbsp;<span class="required">*</span></label>
-                <multiselect params="{source: data, tags: tags}"></multiselect>
+                <multiselect params="{source: $root.multiselect.data, tags: $root.multiselect.tags}"></multiselect>
             </div>
         </div>
         <div class="details-row float-buttons">
