@@ -34,7 +34,7 @@ class AnswerChecker
         if (self::$_codeQuestionManager == null){
             self::$_codeQuestionManager = app()->make(CodeQuestionManager::class);
         }
-        self::$_codeQuestionManager->setLanguage($lang);
+        self::$_codeQuestionManager->setProgramLanguage($lang);
         return self::$_codeQuestionManager;
     }
 
@@ -94,8 +94,9 @@ class AnswerChecker
         }
 
 
+        $question = self::getUnitOfWork()->questions()->find($questionId);
 
-        self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $program,$testResult);
+        self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $program,$testResult,$question);
 
         //код обрабатывается асинхронно, поэтому null
         return null;

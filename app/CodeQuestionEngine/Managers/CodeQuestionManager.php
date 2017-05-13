@@ -55,15 +55,15 @@ class CodeQuestionManager
      * @param $testResult
      * @return string оценка
      */
-    public function runQuestionProgram($code,$program, $testResult)
+    public function runQuestionProgram($code,$program, $testResult,$question)
     {
-        $givenAnswer =  $this->createEmptyAnswerEntity($testResult);
+        $givenAnswer =  $this->createEmptyAnswerEntity($testResult,$question,$code);
         $this->prepareForRunning($code);
         $cases_count = $this->fileManager->createTestCasesFiles($program->getId());
 
 
 
-        $this->run($cases_count,$program,$givenAnswer);
+        $this->run($cases_count,$program,$givenAnswer->getId());
 
     }
 
@@ -107,7 +107,7 @@ class CodeQuestionManager
      * @param object $program
      * @param $cases_count
      */
-    private function run($cases_count, $program,$givenAnswer){
+    private function run($cases_count, $program,$givenAnswerId){
         $dirName = $this->fileManager->getDirNameFromFullPath();
         $cache_dir = $this->fileManager->getCacheDirName();
 
@@ -122,6 +122,7 @@ class CodeQuestionManager
             $command = "sh /opt/$cache_dir/$dirName/$script_name";
 
             $codeTask = new CodeTask($program->getId()
+                ,$givenAnswerId
                 ,$this->language
                 ,$this->fileManager->getDirPath()
                 ,$executeFileName
@@ -143,6 +144,7 @@ class CodeQuestionManager
             $command = "sh /opt/$cache_dir/$dirName/$script_name";
 
             $codeTask = new CodeTask($program->getId()
+                ,$givenAnswerId
                 ,$this->language
                 ,$this->fileManager->getDirPath()
                 ,$executeFileName
@@ -158,9 +160,11 @@ class CodeQuestionManager
 
     }
 
-    private function createEmptyAnswerEntity($testResult){
+    private function createEmptyAnswerEntity($testResult,$question,$code){
         //пустая сущность ответа на вопрос, потому что это костыль
         $givenAnswer = new GivenAnswer();
+        $givenAnswer->setAnswer($code);
+        $givenAnswer->setQuestion($question);
         $givenAnswer->setTestResult($testResult);
         $this->_uow->givenAnswers()->create($givenAnswer);
         $this->_uow->commit();
