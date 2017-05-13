@@ -25823,7 +25823,8 @@ ko.observableArray.fn.knot = function(startDate, endDate){
             timeline.push({
                 name: item.testName() + '<br/>Оценка: ' +
                 (item.mark() ? item.mark(): 'отсутствует' + '<br/>'),
-                date: new Date(item.dateTime.date())
+                date: new Date(item.dateTime.date()),
+                id: item.id()
             });
         }
         timeline.push({
