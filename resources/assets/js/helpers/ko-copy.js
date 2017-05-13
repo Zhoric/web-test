@@ -69,18 +69,20 @@ ko.observableArray.fn.knot = function(startDate, endDate){
         var endDatePoint = new Date(endDate).addDays(1);
         var startDatePoint = new Date(startDate);
 
-        var item = null;
         timeline.push({
             name: 'Начало периода',
             date: startDatePoint,
             radius: 2
         });
         for (var i=0; i < initial.length; i++){
-            item = initial[i];
+            var item = initial[i];
+            var date = item.dateTime.date().split(/[- :]/);
+            date = new Date(Date.UTC(date[0], date[1]-1, date[2], date[3], date[4], date[5]));
+            date = new Date(date);
             timeline.push({
                 name: item.testName() + '<br/>Оценка: ' +
                 (item.mark() ? item.mark(): 'отсутствует' + '<br/>'),
-                date: new Date(item.dateTime.date()),
+                date: date,
                 id: item.id()
             });
         }

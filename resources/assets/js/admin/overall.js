@@ -17,8 +17,8 @@ $(document).ready(function(){
                 profile: ko.observable(),
                 discipline: ko.observable(),
                 group: ko.observable(),
-                startDate: ko.observable(new Date(Date.now())),
-                endDate: ko.observable(new Date(Date.now())),
+                startDate: ko.observable(),
+                endDate: ko.observable(),
                 criterion: ko.observable(criterion.mark),
  
                 profiles: ko.observableArray([]),
@@ -57,18 +57,33 @@ $(document).ready(function(){
                         });
                     },
                     startDate: function(){
-                        self.filter.startDate(new Date(Date.now()));
-                        if (!self.initial.settings()) return;
+                        var now = new Date();
+                        var startDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(), 0, 0, 0);
+                        self.filter.startDate(startDate);
+                        if (!self.initial.settings()){
+                            self.filter.startDate(startDate);
+                            return;
+                        }
                         var date = self.initial.settings().overall_start_date;
-                        if (date && date() && !isNaN(new Date(date()).valueOf()))
-                            self.filter.startDate(new Date(date()));
+                        if (date && date() && !isNaN(new Date(date()).valueOf())){
+                            date = new Date(date());
+                            startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+                            self.filter.startDate(startDate);
+                        }
                     },
                     endDate: function(){
-                        self.filter.endDate(new Date(Date.now()));
-                        if (!self.initial.settings()) return;
+                        var now = new Date();
+                        var endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+                        if (!self.initial.settings()){
+                            self.filter.endDate(endDate);
+                            return;
+                        }
                         var date = self.initial.settings().overall_end_date;
-                        if (date && date() && !isNaN(new Date(date()).valueOf()))
-                            self.filter.endDate(new Date(date()));
+                        if (date && date() && !isNaN(new Date(date()).valueOf())){
+                            date = new Date(date());
+                            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+                            self.filter.endDate(endDate);
+                        }
                     },
                     criterion: function(){
                         self.filter.criterion(criterion.mark);
