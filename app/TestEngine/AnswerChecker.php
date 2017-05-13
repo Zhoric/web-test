@@ -82,7 +82,7 @@ class AnswerChecker
      * @throws \Exception
      * @internal param $questionId - идентификатор вопроса.
      */
-    public static function calculatePointsForProgramAnswer($questionId, $studentCode){
+    public static function calculatePointsForProgramAnswer($questionId, $studentCode, $testResult){
         $program = self::getUnitOfWork()->programs()->getByQuestion($questionId);
         if (!isset($program)){
             throw new Exception('По данному вопросу не найдены данные о программе!');
@@ -93,9 +93,12 @@ class AnswerChecker
             return 0;
         }
 
-        $rightPercentage = self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $program);
 
-        return $rightPercentage;
+
+        self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $program,$testResult);
+
+        //код обрабатывается асинхронно, поэтому null
+        return null;
     }
 
     /**
