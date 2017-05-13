@@ -127,16 +127,18 @@ class QuestionManager
     /**
      * Добавление программы и тестовых наборов параметров к вопросу.
      * @param $question
-     * @param $programText
+     * @param $programData
      * @param $paramSets
      * @throws Exception
      */
-    private function addQuestionProgram($question, $programText, $paramSets){
+    private function addQuestionProgram($question, $programData, $paramSets){
         $program = new Program();
         $program->setQuestion($question);
-        $program->setTemplate($programText);
-        //TODO[NZ]: Добавить перечисление языков и выбор языка при добавлении вопроса.
-        $program->setLang(1);
+        $program->setTemplate($programData["text"]);
+        $program->setMemoryLimit($programData["memoryLimit"]);
+        $program->setTimeLimit($programData["timeLimit"]);
+        $program->setLang($programData["language"]);
+
         $this->_unitOfWork->programs()->create($program);
         $this->_unitOfWork->commit();
 
@@ -159,16 +161,21 @@ class QuestionManager
     /**
      * Обновление программы и тестовых наборов параметров к вопросу.
      * @param $question
-     * @param $programText
+     * @param $programData
      * @param $paramSets
      * @throws Exception
      */
-    private function updateQuestionProgram($question, $programText, $paramSets){
+    private function updateQuestionProgram($question, $programData, $paramSets){
         $program = $this->_unitOfWork->programs()->getByQuestion($question->getId());
         if (!isset($program)){
             throw new Exception('Невозможно обновить данные вопроса. Программа не найдена!');
         }
-        $program->setTemplate($programText);
+
+        $program->setTemplate($programData["text"]);
+        $program->setMemoryLimit($programData["memoryLimit"]);
+        $program->setTimeLimit($programData["timeLimit"]);
+        $program->setLang($programData["language"]);
+
         $this->_unitOfWork->programs()->update($program);
         $this->_unitOfWork->commit();
 

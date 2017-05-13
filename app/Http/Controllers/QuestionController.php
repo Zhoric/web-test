@@ -57,13 +57,18 @@ class QuestionController extends Controller
      */
     public function create(Request $request){
         try{
-            dd($request->json());
             $questionData = $request->json('question');
             $answers = (array) $request->json('answers');
             $themeId = $request->json('theme');
             $file = $request->json('file');
             $fileType = $request->json('fileType');
-            $program = $request->json('program');
+            $timeLimit = $request->json('timeLimit');
+            $memoryLimit = $request->json('memoryLimit');
+            $language = \Language::getLanguageByAlias($request->json('lang'));
+            $program = ["text" => $request->json('program'),
+                "timeLimit" => $timeLimit,
+                "memoryLimit" => $memoryLimit,
+                "language" => $language];
             $paramSets = (array) $request->json('paramSets');
 
             $question = new Question();
@@ -90,13 +95,22 @@ class QuestionController extends Controller
      */
     public function update(Request $request){
         try{
-            dd($request->json());
             $questionData = $request->json('question');
             $answers = $request->json('answers');
             $themeId = $request->json('theme');
             $file = $request->json('file');
             $fileType = $request->json('fileType');
-            $program = $request->json('program');
+            $timeLimit = $request->json('timeLimit');
+            $memoryLimit = $request->json('memoryLimit');
+            $language = \Language::getLanguageByAlias($request->json('lang'));
+            $program = ["text" => $request->json('program'),
+                        "timeLimit" => $timeLimit,
+                        "memoryLimit" => $memoryLimit,
+                        "language" => $language];
+
+
+
+
             $paramSets = (array) $request->json('paramSets');
 
             $question = new Question();
