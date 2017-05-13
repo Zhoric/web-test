@@ -997,7 +997,7 @@ class FullTestingProcessTests extends TestCase
         $this->writeConsoleMessage('   Проверка доступности изображения для вопроса с изображением. [API]');
         $imagePath = $questionData->question->image;
         $this->assertNotNull($imagePath);
-        $this->assertFileExists($imagePath);
+        $this->assertFileExists(public_path().$imagePath);
         $this->writeOk();
     }
 

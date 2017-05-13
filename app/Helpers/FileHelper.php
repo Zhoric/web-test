@@ -14,7 +14,7 @@ use Exception;
  */
 class FileHelper
 {
-    private static $savePath = '/images/questions/';
+    private static $savePath = 'images/questions/';
     private static $fileNameLength = 15;
 
     /**
@@ -31,7 +31,7 @@ class FileHelper
             do {
                 $extension = self::tryGetFileExtension($fileType);
                 $fileName = self::getRandomString(self::$fileNameLength);
-                $filePath = public_path().self::$savePath.$fileName.$extension;
+                $filePath = self::$savePath.$fileName.$extension;
             } while (file_exists($filePath));
         }
 
