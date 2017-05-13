@@ -75,8 +75,11 @@ class TestProcessControlStrategy extends BaseTestProcessStrategy implements ITes
             $this->validateQuestionToAnswer($questionId);
 
             $question = $this->_questionManager->getWithAnswers($questionId);
+            $testResultId = $session->getTestResultId();
+            $testResult = $this->_testResultManager->getById($testResultId);
 
-            $answerRightPercentage = $this->checkAnswers($question, $questionAnswer);
+            $answerRightPercentage = $this->checkAnswers($question, $questionAnswer,$testResult);
+
 
             $answerText = $this->getAnswerText($question, $questionAnswer);
             $this->saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);

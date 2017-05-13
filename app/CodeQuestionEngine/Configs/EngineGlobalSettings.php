@@ -32,6 +32,7 @@ class EngineGlobalSettings
     const SHELL_SCRIPT_NAME_ARRAY = [
         \Language::C => "run.sh",
         \Language::PHP => "php-run.sh",
+        \Language::Pascal => "pascal-run.sh",
 
         ];
 
@@ -42,6 +43,7 @@ class EngineGlobalSettings
     const CODE_FILE_EXTENSIONS_ARRAY = [
         \Language::C => 'c',
         \Language::PHP => "php",
+        \Language::Pascal => "pas",
     ];
 
     /**
@@ -51,6 +53,7 @@ class EngineGlobalSettings
     const EXECUTE_FILE_NAME = [
         \Language::C => 'c_output.out',
         \Language::PHP => "",
+        \Language::Pascal => 'pascal_output.out',
     ];
 
     /**
@@ -59,6 +62,7 @@ class EngineGlobalSettings
     const RUN_WORD = [
         \Language::C => './',
         \Language::PHP => 'php ',
+        \Language::Pascal => './',
     ];
 
     /**

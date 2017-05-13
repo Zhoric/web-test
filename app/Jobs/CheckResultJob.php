@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use TestEngine\TestResultCalculator;
 
 class CheckResultJob implements ShouldQueue
 {
@@ -52,6 +53,8 @@ class CheckResultJob implements ShouldQueue
        echo "cases_count = $count\n";
        $mark = $this->fileManager->calculateMark($this->codeTasks);
        echo "оценка $mark\n";
+
+       TestResultCalculator::setAnswerMark($this->codeTasks[0]->givenAnswerId, $mark);
        foreach($this->codeTasks as $codeTask){
            echo $codeTask->key." почищена\n";
            $codeTask->delete();

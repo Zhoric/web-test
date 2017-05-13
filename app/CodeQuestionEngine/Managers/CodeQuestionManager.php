@@ -2,7 +2,7 @@
 namespace CodeQuestionEngine;
 
 use Auth;
-use Program;
+use GivenAnswer;
 use Repositories\UnitOfWork;
 use App\Jobs\RunProgramJob;
 use Queue;
@@ -52,19 +52,18 @@ class CodeQuestionManager
      * добавлении вопроса. Возвращает оценку студента
      * @param $code
      * @param object $program
+     * @param $testResult
      * @return string оценка
      */
-    public function runQuestionProgram($code,$program)
+    public function runQuestionProgram($code,$program, $testResult)
     {
+        $givenAnswer =  $this->createEmptyAnswerEntity($testResult);
         $this->prepareForRunning($code);
         $cases_count = $this->fileManager->createTestCasesFiles($program->getId());
 
-        $this->run($cases_count,$program);
 
-       // $result = $this->fileManager->calculateMark($cases_count);
-        //$this->fileManager->putLogInfo($result);
-        $result = "finished";
-        return $result;
+
+        $this->run($cases_count,$program,$givenAnswer);
 
     }
 
@@ -76,6 +75,7 @@ class CodeQuestionManager
      * @throws \Exception
      */
     public function runQuestionProgramWithParamSets($code,array $paramSets){
+
 
             $this->prepareForRunning($code);
 
@@ -107,7 +107,7 @@ class CodeQuestionManager
      * @param object $program
      * @param $cases_count
      */
-    private function run($cases_count, $program){
+    private function run($cases_count, $program,$givenAnswer){
         $dirName = $this->fileManager->getDirNameFromFullPath();
         $cache_dir = $this->fileManager->getCacheDirName();
 
@@ -158,11 +158,21 @@ class CodeQuestionManager
 
     }
 
+    private function createEmptyAnswerEntity($testResult){
+        //пустая сущность ответа на вопрос, потому что это костыль
+        $givenAnswer = new GivenAnswer();
+        $givenAnswer->setTestResult($testResult);
+        $this->_uow->givenAnswers()->create($givenAnswer);
+        $this->_uow->commit();
+        return $givenAnswer;
+
+    }
     private function prepareForRunning($code){
         $dirPath = $this->fileManager->createDir(Auth::user());
         $this->fileManager->setDirPath($dirPath);
         $this->fileManager->putCodeInFile($code);
         $this->fileManager->createLogFile();
+
 
     }
 

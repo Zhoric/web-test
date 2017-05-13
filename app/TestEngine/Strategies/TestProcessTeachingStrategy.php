@@ -74,8 +74,12 @@ class TestProcessTeachingStrategy extends BaseTestProcessStrategy implements ITe
 
             $question = $this->_questionManager->getWithAnswers($questionId);
 
+
+            $testResultId = $session->getTestResultId();
+            $testResult = $this->_testResultManager->getById($testResultId);
+
             $answerRightPercentage = $this->checkAnswers($question, $questionAnswer);
-            $answerText = $this->getAnswerText($question, $questionAnswer);
+            $answerText = $this->getAnswerText($question, $questionAnswer,$testResult);
 
             $this->saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
 

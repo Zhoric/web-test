@@ -59,18 +59,19 @@ class DemoController extends BaseController
 
 
 
+
+
         CodeTask::flush();
 
 
-        $program = $this->_uow->programs()->find(1);
 
-
+        $program = $this->_uow->programs()->find(6);
 
         $this->manager->setProgramLanguage($program->getLang());
         $this->manager->runQuestionProgram($program->getTemplate(), $program);
+        sleep(1);
 
-
-        dd();
+        dd("done");
 
 
 

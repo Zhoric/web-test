@@ -202,10 +202,10 @@ class BaseTestProcessStrategy
      * Проверка правильности ответов
      * @param QuestionViewModel $questionInfo - Вопрос со всеми его ответами.
      * @param QuestionAnswer $questionAnswer - ответы, которые дал студент
+     * @param TestResult $testResult - айдишник результата теста(нужен в случаях, если вопрос с кодом)
      * @return int - оценка за ответ, %
-     * @throws Exception
      */
-    protected function checkAnswers($questionInfo, $questionAnswer){
+    protected function checkAnswers($questionInfo, $questionAnswer, $testResult = null){
         $answerResultPoints = null;
 
         $question = $questionInfo->getQuestion();
@@ -227,7 +227,7 @@ class BaseTestProcessStrategy
             case QuestionType::WithProgram:{
                 $studentCode = $questionAnswer->getAnswerText();
                 $questionId = $question->getId();
-                $answerResultPoints = AnswerChecker::calculatePointsForProgramAnswer($questionId, $studentCode);
+                $answerResultPoints = AnswerChecker::calculatePointsForProgramAnswer($questionId, $studentCode, $testResult);
                 break;
             }
         }
@@ -258,13 +258,17 @@ class BaseTestProcessStrategy
             throw new Exception("На данный вопрос уже был дан ответ.");
         }
 
-        $givenAnswer = new GivenAnswer();
-        $givenAnswer->setTestResult($testResult);
-        $givenAnswer->setQuestion($question);
-        $givenAnswer->setRightPercentage($rightPercentage);
-        $givenAnswer->setAnswer($answerText);
+        //todo:: для вопроса с программой сущность ответа на вопрос создается ранее
+        if($question->getType() != QuestionType::WithProgram) {
+            $givenAnswer = new GivenAnswer();
+            $givenAnswer->setTestResult($testResult);
+            $givenAnswer->setQuestion($question);
+            $givenAnswer->setRightPercentage($rightPercentage);
+            $givenAnswer->setAnswer($answerText);
+            $this->_questionManager->createQuestionAnswer($givenAnswer);
+        }
 
-        $this->_questionManager->createQuestionAnswer($givenAnswer);
+
     }
 
     /**

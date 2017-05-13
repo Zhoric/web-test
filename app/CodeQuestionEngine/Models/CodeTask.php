@@ -54,6 +54,10 @@ class CodeTask
     public $dirPath;
 
     /**
+     * @var айди ответа на вопрос(пустого) он заполнится при проставлении оценки
+     */
+    public $givenAnsweId;
+    /**
      * Префикс ключа задачи с кодом для хранения в кеше
      */
     const  prefix = "ct";
@@ -62,6 +66,7 @@ class CodeTask
     /**
      * CodeTask constructor.
      * @param $programId
+     * @param $givenAnswerId
      * @param $processName
      * @param $language
      * @param $dirPath
@@ -71,9 +76,10 @@ class CodeTask
      * @param $memoryLimit
      * @param string $testCaseNumber
      */
-    public function __construct($programId, $language, $dirPath, $processName, $state, $timeout, $memoryLimit, $casesCount = 1, $testCaseNumber = "", $key = "")
+    public function __construct($programId,$givenAnswerId, $language, $dirPath, $processName, $state, $timeout, $memoryLimit, $casesCount = 1, $testCaseNumber = "", $key = "")
     {
         $this->programId   = $programId;
+        $this->givenAnswerId = $givenAnswerId;
         $this->timeout = $timeout;
         $this->memoryLimit = $memoryLimit;
         $this->processName   = $processName;
@@ -99,6 +105,7 @@ class CodeTask
         Redis::hmset($this->key, [
             'key'      => $this->key,
             'programId'    => $this->programId,
+            'givenAnswerId' => $this->givenAnswerId,
             'language'     => $this->language,
             'dirPath'      => $this->dirPath,
             'processName'   => $this->processName,
@@ -117,6 +124,7 @@ class CodeTask
         if (!empty($stored)) {
             return new CodeTask(
                   $stored['programId']
+                , $stored['givenAnswerId']
                 , $stored['language']
                 , $stored['dirPath']
                 , $stored['processName']
@@ -138,7 +146,8 @@ class CodeTask
         foreach ($keys as $key) {
             $stored = Redis::hgetall($key);
             $task = new CodeTask(
-                $stored['programId']
+                  $stored['programId']
+                , $stored['givenAnswerId']
                 , $stored['language']
                 , $stored['dirPath']
                 , $stored['processName']
