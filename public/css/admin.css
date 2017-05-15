@@ -1110,8 +1110,7 @@ table.werewolf.materials tr .material-type {
 table.werewolf.materials tr .material-type.video:before {
   content: "\f008";
 }
-table.werewolf.materials tr .material-type.text:before,
-table.werewolf.materials tr .material-type.pdf:before {
+table.werewolf.materials tr .material-type.text:before {
   content: "\f15c";
 }
 table.werewolf.materials tr .material-type.audio:before {
@@ -1119,6 +1118,9 @@ table.werewolf.materials tr .material-type.audio:before {
 }
 table.werewolf.materials tr .material-type.image:before {
   content: "\f03e";
+}
+table.werewolf.materials tr .material-type.other:before {
+  content: "\f016";
 }
 table.werewolf.materials tr .actions {
   visibility: hidden;

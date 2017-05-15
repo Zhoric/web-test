@@ -209,3 +209,168 @@ h1{line-height: 25px;}
   border:1px solid @akcio;
   width: 100%;
 }
+
+//--------MATERIALS-----//
+.anchor-text{
+  font-weight: bold;
+  margin-left: 5px;
+  font-size: large;
+}
+
+.materials-details{
+  .materials-link {
+    overflow: auto;
+    .details-column {
+      margin: 2% 2% 3% 2%;
+      float: right;
+    }
+    .adder{
+      color: @missnorris;
+    }
+    .current{
+      color: @smth;
+      border-bottom: 2px solid @smth;
+    }
+  }
+  .themes{
+    margin-top: -2px;
+    .details-row{
+      font-size: 16px;
+      cursor: pointer;
+      border-bottom: 1px solid @patronus-shade;
+      padding: 5px;
+      &:hover {
+        background: @patronus-shade;
+      }
+    }
+    .materials{
+      margin: 30px auto;
+      width: 95%;
+    }
+  }
+}
+
+table.werewolf.materials{
+  width: 100%;
+  border-spacing: 0;
+  cursor: default;
+  margin-top: -2px;
+  thead tr th{
+    color: @smth;
+    background: @white;
+    &:last-child {
+      text-align: left;
+    }
+  }
+  tr th{
+    text-align: center;
+    padding: 7px 15px;
+    background: @light-smth;
+    color: @smth;
+  }
+  tr {
+    cursor: pointer;
+    .material-type {
+      color: @dark-gray;
+      &.video:before {
+        content: "\f008";
+      }
+      &.text:before{
+        content: "\f15c";
+      }
+      &.audio:before {
+        content: "\f001";
+      }
+      &.image:before {
+        content: "\f03e";
+      }
+      &.other:before {
+        content: "\f016";
+      }
+    }
+    .empty{
+      height: 50px;
+      font-size: 15px;
+    }
+    &:hover{
+      background: @patronus-shade;
+      .actions{
+        visibility: visible;
+      }
+    }
+    td {
+      border-bottom: 1px solid @patronus-shade;
+      padding: 3px 15px;
+      height: 40px;
+      &:first-child {
+        width: 15px;
+        text-align: center;
+      }
+      &:nth-child(2) {
+        width: 30px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.item{
+  background: @patronus-shade;
+  color: @filch;
+  font-size: 16px;
+  padding: 9px;
+  cursor: pointer;
+  margin: 1px 0;
+  &:hover, &.current{
+    background: @patronus;
+    color: @white;
+    span.tag{
+      color: @white;
+    }
+  }
+  &.no-hover{
+    &:hover{
+      background: @patronus-shade;
+      color: @filch;
+    }
+  }
+  span.tag{
+    color: @patronus-shade;
+    margin: 0 8px;
+    font-size: 23px;
+  }
+}
+
+.filter.theme{
+  position: absolute;
+}
+
+.filter-block{
+  input[type=text]{
+    padding: 0;
+    text-indent: 5px;
+  }
+}
+
+.multimedia-modal{
+  h3 {
+    display: inline-block;
+    & + .anchor-modal-text {
+      display: inline-block;
+      font-weight: bold;
+      margin-left: 10px;
+      color: @anchor;
+    }
+  }
+  audio{
+    width: 450px;
+    margin-bottom: 30px;
+  }
+  &.video{
+    width: 1000px;
+    video{
+      width: 950px;
+      margin-bottom: 40px;
+    }
+  }
+}

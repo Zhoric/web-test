@@ -908,5 +908,156 @@ h1 {
   border: 1px solid #BFBFBF;
   width: 100%;
 }
+.anchor-text {
+  font-weight: bold;
+  margin-left: 5px;
+  font-size: large;
+}
+.materials-details .materials-link {
+  overflow: auto;
+}
+.materials-details .materials-link .details-column {
+  margin: 2% 2% 3% 2%;
+  float: right;
+}
+.materials-details .materials-link .adder {
+  color: #8D9899;
+}
+.materials-details .materials-link .current {
+  color: #414141;
+  border-bottom: 2px solid #414141;
+}
+.materials-details .themes {
+  margin-top: -2px;
+}
+.materials-details .themes .details-row {
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #EDEEF0;
+  padding: 5px;
+}
+.materials-details .themes .details-row:hover {
+  background: #EDEEF0;
+}
+.materials-details .themes .materials {
+  margin: 30px auto;
+  width: 95%;
+}
+table.werewolf.materials {
+  width: 100%;
+  border-spacing: 0;
+  cursor: default;
+  margin-top: -2px;
+}
+table.werewolf.materials thead tr th {
+  color: #414141;
+  background: #fff;
+}
+table.werewolf.materials thead tr th:last-child {
+  text-align: left;
+}
+table.werewolf.materials tr th {
+  text-align: center;
+  padding: 7px 15px;
+  background: #e8e8e8;
+  color: #414141;
+}
+table.werewolf.materials tr {
+  cursor: pointer;
+}
+table.werewolf.materials tr .material-type {
+  color: #747272;
+}
+table.werewolf.materials tr .material-type.video:before {
+  content: "\f008";
+}
+table.werewolf.materials tr .material-type.text:before {
+  content: "\f15c";
+}
+table.werewolf.materials tr .material-type.audio:before {
+  content: "\f001";
+}
+table.werewolf.materials tr .material-type.image:before {
+  content: "\f03e";
+}
+table.werewolf.materials tr .material-type.other:before {
+  content: "\f016";
+}
+table.werewolf.materials tr .empty {
+  height: 50px;
+  font-size: 15px;
+}
+table.werewolf.materials tr:hover {
+  background: #EDEEF0;
+}
+table.werewolf.materials tr:hover .actions {
+  visibility: visible;
+}
+table.werewolf.materials tr td {
+  border-bottom: 1px solid #EDEEF0;
+  padding: 3px 15px;
+  height: 40px;
+}
+table.werewolf.materials tr td:first-child {
+  width: 15px;
+  text-align: center;
+}
+table.werewolf.materials tr td:nth-child(2) {
+  width: 30px;
+  text-align: center;
+}
+.item {
+  background: #EDEEF0;
+  color: #6C7A89;
+  font-size: 16px;
+  padding: 9px;
+  cursor: pointer;
+  margin: 1px 0;
+}
+.item:hover,
+.item.current {
+  background: #5D8CAE;
+  color: #fff;
+}
+.item:hover span.tag,
+.item.current span.tag {
+  color: #fff;
+}
+.item.no-hover:hover {
+  background: #EDEEF0;
+  color: #6C7A89;
+}
+.item span.tag {
+  color: #EDEEF0;
+  margin: 0 8px;
+  font-size: 23px;
+}
+.filter.theme {
+  position: absolute;
+}
+.filter-block input[type=text] {
+  padding: 0;
+  text-indent: 5px;
+}
+.multimedia-modal h3 {
+  display: inline-block;
+}
+.multimedia-modal h3 + .anchor-modal-text {
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #4e545a;
+}
+.multimedia-modal audio {
+  width: 450px;
+  margin-bottom: 30px;
+}
+.multimedia-modal.video {
+  width: 1000px;
+}
+.multimedia-modal.video video {
+  width: 950px;
+  margin-bottom: 40px;
+}
 
 /*# sourceMappingURL=site.css.map */

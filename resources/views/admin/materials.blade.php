@@ -29,7 +29,7 @@
                                 <label class="adder" data-bind="click: $root.actions.discipline.themes, css: {'current': $root.mode() === state.themes || $root.mode() === state.materials}">Темы</label>
                             </div>
                             <div class="details-column">
-                                <label class="adder" data-bind="click: $root.actions.discipline.overall, css: {'current': $root.mode() === state.overall}">Общие материалы</label>
+                                <label class="adder" data-bind="click: $root.actions.discipline.overall, css: {'current': $root.mode() === state.overall}">Учебно - методические материалы</label>
                             </div>
 
                         </div>
@@ -225,7 +225,7 @@
 <script type="text/html" id="overall-mode">
     <table class="werewolf materials">
         <thead>
-        <tr><th>№</th><th>Вид</th><th>Материалы</th><th>Действия</th></tr>
+        <tr><th>№</th><th>Тип</th><th>Материалы</th><th>Действия</th></tr>
         </thead>
         <tbody>
         <tr class="adder-row">
@@ -244,15 +244,15 @@
             <td data-bind="text: $index()+1"></td>
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
             <!-- ko if: start() != null && stop() != null -->
-            <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
+            <td data-bind="click: $root.actions.media.move"><span data-bind="text: pureName"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>; <span data-bind="text: stop"></span>] </span></td>
             <!-- /ko -->
             <!-- ko if: start() != null && stop() == null -->
-            <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
+            <td data-bind="click: $root.actions.media.move"><span data-bind="text: pureName"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>] </span></td>
             <!-- /ko -->
             <!-- ko if: start() == null && stop() == null -->
-            <td data-bind="text: name, click: $root.actions.media.move"></td>
+            <td data-bind="text: pureName, click: $root.actions.media.move"></td>
             <!-- /ko -->
             <td class="action-holder">
                 <button data-bind="click: $root.actions.anchor.show, css: type" class="editor fa approve mini actions">&#xf13d;</button>
@@ -289,7 +289,7 @@
 <script type="text/html" id="materials-mode">
     <table class="werewolf materials">
         <thead>
-        <tr><th>№</th><th>Вид</th><th>Материалы</th><th>Действия</th></tr>
+        <tr><th>№</th><th>Тип</th><th>Материалы</th><th>Действия</th></tr>
         </thead>
         <tbody>
         <tr class="adder-row">
@@ -308,15 +308,15 @@
             <td data-bind="text: $index()+1"></td>
             <td><span data-bind="css: type" class="fa approve mini material-type"></span></td>
             <!-- ko if: start() != null && stop() != null -->
-            <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
+            <td data-bind="click: $root.actions.media.move"><span data-bind="text: pureName"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>; <span data-bind="text: stop"></span>] </span></td>
             <!-- /ko -->
             <!-- ko if: start() != null && stop() == null -->
-            <td data-bind="click: $root.actions.media.move"><span data-bind="text: name"></span>
+            <td data-bind="click: $root.actions.media.move"><span data-bind="text: pureName"></span>
                 <span class="anchor-text"> [<span data-bind="text: start"></span>] </span></td>
             <!-- /ko -->
             <!-- ko if: start() == null && stop() == null -->
-            <td data-bind="text: name, click: $root.actions.media.move"></td>
+            <td data-bind="text: pureName, click: $root.actions.media.move"></td>
             <!-- /ko -->
             <td class="action-holder">
                 <button data-bind="click: $root.actions.media.open.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>

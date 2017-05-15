@@ -260,7 +260,8 @@ var menu = {
         main: 'home',
         results: 'results',
         stats: 'statistics',
-        faq: 'faq'
+        faq: 'faq',
+        materials: 'materials'
     }
 };
 

@@ -489,8 +489,6 @@ $(document).ready(function(){
                             data: JSON.stringify({media: media})
                         });
                     },
-                    pdfMedia: function (media) {
-                    },
                     mediable: function (mediaId, start, stop) {
                         $ajaxpost({
                             url: '/api/mediable/create',
@@ -794,13 +792,13 @@ $(document).ready(function(){
                                     media.type = type;
                                     self.post.create.simpleMedia(media);
                                 }
-                                else if (file.mime == 'application/pdf') {
-                                    media.type = 'pdf';
-                                    self.post.create.pdfMedia(media);
-                                }
-                                else {
+                                else if (file.mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                                     media.type = 'text';
                                     self.post.create.docxMedia(media);
+                                }
+                                else {
+                                    media.type = 'other';
+                                    self.post.create.simpleMedia(media);
                                 }
 
                             });
@@ -941,6 +939,7 @@ $(document).ready(function(){
                                 +mediable.stop() ?
                                     mediable.media.stop = ko.observable(self.helpers.toHHMMSS(+mediable.stop()))
                                     : mediable.media.stop = ko.observable(mediable.stop());
+                                mediable.media.pureName = ko.observable(mediable.media.name().substring(0, mediable.media.name().lastIndexOf('.')));
                                 self.current.medias.push(mediable.media);
                             });
                         }
@@ -961,12 +960,13 @@ $(document).ready(function(){
                                 +mediable.stop() ?
                                     mediable.media.stop = ko.observable(self.helpers.toHHMMSS(+mediable.stop()))
                                     : mediable.media.stop = ko.observable(mediable.stop());
+                                mediable.media.pureName = ko.observable(mediable.media.name().substring(0, mediable.media.name().lastIndexOf('.')));
                                 self.current.medias.push(mediable.media);
                             });
                         }
                     });
                 },
-                currentMedias: function () {
+                currentMedias: function (){
                     if(self.current.theme().id() == 0)
                         self.get.disciplineMedias(self.current.discipline().id());
                     else self.get.themeMedias(self.current.theme().id());

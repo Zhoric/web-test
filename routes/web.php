@@ -34,6 +34,8 @@ Route::get('/discipline/{id}', function(){return View('student.discipline');})
     ->middleware('checkRole:'.UserRole::Student);
 Route::get('/media/{id}', function(){return View('student.media');})
     ->middleware('checkRole:'.UserRole::Student);
+Route::get('/materials', function(){return View('student.materials');})
+    ->middleware('checkRole:'.UserRole::Student);
 
 
 Route::group(['prefix' => 'admin','middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
@@ -245,8 +247,7 @@ Route::group(['prefix' => 'api'], function() {
         /*------------------------------------------------------------------------
         *                   Работа со темами дисциплин                          */
 
-        Route::get('{id}/themes', 'DisciplineController@getThemes')
-            ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
+        Route::get('{id}/themes', 'DisciplineController@getThemes');
 
         Route::group(['prefix' => 'themes',
             'middleware' => 'checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer],
