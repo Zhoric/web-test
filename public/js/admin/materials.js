@@ -868,6 +868,7 @@ $(document).ready(function(){
                     }
                 }
             };
+
             self.get = {
                 disciplines: function(profileId){
                     var filter = self.filter;

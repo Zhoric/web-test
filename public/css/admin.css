@@ -1636,6 +1636,7 @@ button.add-section:hover {
   display: none;
 }
 body.media {
+  font-family: "Times New Roman" !important;
   padding-top: 50px;
   background: white;
 }
