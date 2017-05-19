@@ -112,8 +112,8 @@ $(document).ready(function(){
                     move: function (data) {
                         self.alter.media.fill(data);
                         if (data.type() == 'text') {
-                            if (data.start() != null) window.open('/admin/media/' + data.id() + '#' + data.start());
-                            else window.open('/admin/media/' + data.id());
+                            if (data.start() != null) window.open('/media/' + data.id() + '#' + data.start());
+                            else window.open('/media/' + data.id());
                         }
                         else  if (data.type() == 'audio' || data.type() == 'video') {
                             self.actions.multimedia.open(data);

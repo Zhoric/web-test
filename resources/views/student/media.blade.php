@@ -1,5 +1,5 @@
 @extends('layouts.student')
-@section('title', 'Документ')
+@section('title', '')
 @section('style')
     <link rel="stylesheet" href="{{ URL::asset('css/site.css')}}" />
 @endsection
@@ -8,6 +8,7 @@
 @endsection
 @section('content')
     <div class="section">
-        <div data-bind="html: $root.media().content"></div>
+        <div class="section-data" data-bind="html: $root.media().content, afterHtmlRender: $root.goToAnchor"></div>
     </div>
 @endsection
+

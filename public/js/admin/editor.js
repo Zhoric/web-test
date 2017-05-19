@@ -58,6 +58,7 @@ $(document).ready(function () {
             self.initAnchor = function () {
                 tinymce.init({
                     selector:'#editor',
+                    valid_children : '+body[style]',
                     language: 'ru',
                     height: 500,
                     plugins: ['anchor'],
@@ -79,6 +80,7 @@ $(document).ready(function () {
             self.initAllCommands = function () {
                 tinymce.init({
                     selector:'#editor',
+                    valid_children : '+body[style]',
                     language: 'ru',
                     height: 500,
                     plugins: [

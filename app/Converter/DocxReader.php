@@ -101,14 +101,17 @@ class DocxReader{
      *
      */
     private function setStyles($zip){
+        $styleList = array();
         if (($styleIndex = $zip->locateName('word/styles.xml')) !== false) {
             $stylesXml = $zip->getFromIndex($styleIndex);
             $xml = simplexml_load_string($stylesXml);
             $namespaces = $xml->getNamespaces(true);
             $children = $xml->children($namespaces['w']);
             $this->styles = $this->_mainParser->parseStyle($children);
+            $styleList = $this->_mainParser->parseStyleList($children);
         }
         $this->_mainParser->setStyles($this->styles);
+        $this->_mainParser->setStyleList($styleList);
     }
 
      /**
@@ -202,18 +205,19 @@ class DocxReader{
         $children = $xml->children($namespaces['w']);
         $childrenBody = $children->body->children($namespaces['w']);
 
-        $this->html = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title>'.
-            '<style>div.inline-block { display: inline-block; white-space: pre-wrap; } body { padding-left: 100px; padding-right: 100px} ul {padding: 0}';
+        $this->html = '<section class="docx-content"><style>div.inline-block { display: inline-block; white-space: pre-wrap; }' .
+            'section.docx-content { padding-left: 100px; padding-right: 100px; font-family: "Times New Roman" !important;' .
+            ' font-size: 28px; line-height: 34px; } li {line-height: 34px; } ul {padding: 0}';
 
         foreach ($this->styles as $id => $style){
             foreach ($style['attrs'] as $styleAttr){
                 $this->html .= ' .' . $id . " " . $styleAttr;
             }
         }
-        $this->html .= '</style></head><body>';
+        $this->html .= '</style>';
         $this->html .= $this->_mainParser->convertDoc($childrenBody);
         $this->addEnd();
-        return $this->html . '</body></html>';
+        return $this->html . '</section>';
     }
 
 

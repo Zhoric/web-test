@@ -1059,5 +1059,19 @@ table.werewolf.materials tr td:nth-child(2) {
   width: 950px;
   margin-bottom: 40px;
 }
+body.media {
+  font-family: "Times New Roman" !important;
+  padding-top: 50px;
+  background: white;
+}
+body.media .footer {
+  display: none;
+}
+body.media .menu {
+  display: none;
+}
+body.media .page-wrap:after {
+  display: none;
+}
 
 /*# sourceMappingURL=site.css.map */
