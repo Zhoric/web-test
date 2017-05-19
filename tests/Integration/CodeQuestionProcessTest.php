@@ -41,34 +41,21 @@ class CodeQuestionProcessTest extends TestCase
     private static $HTML_DISCIPLINE_THEME_ID = 1;
     private static $STUDENT_GROUP_ID = 1;
     private static $WEB_TEST_ID = 1;
-    private static $TEST_RESULT_ID = 1;
 
     // Идентификаторы тестовых вопросов по дисциплине "WEB-технологии"
     private static $C_CODE_QUESTION_ID = 1;
     private static $PHP_CODE_QUESTION_ID = 2;
     private static $PASCAL_CODE_QUESTION_ID = 3;
 
-
-    // Пути к папкам относительно папки /public
-    private static $QUESTION_IMAGES_DIR = "/images/questions";
-    private static $IMPORT_EXPORT_DIR = "/import";
-
     //Текст сообщений об ошибках
     private static $AUTHORISATION_REPEAT_ERROR = 'Вы уже вошли под другим пользователем!';
     private static $USER_NOT_EXISTS_ERROR = 'Такого пользователя не существует!';
-    private static $ACCOUNT_NOT_CONFIRMED = 'Ваш аккаунт ещё не подтвержден администратором!';
-    private static $NO_ATTEMPTS_FOR_TEST_LEFT = 'Все попытки прохождения теста исчерпаны!';
 
     //Идентификатор сессии тестирования студента (заполняется при запуске теста студентом).
     private static $TEST_SESSION_ID;
 
-    //Идентификатор ответа на открытый вопрос (должен проверяться вручную преподавателем).
-    private static $OPEN_QUESTION_ANSWER_ID;
-
     //Константы процесса тестирования.
     private static $QUESTIONS_COUNT = 3;
-    private static $EXPECTED_RESULT_MARK = 75;
-
 
     public function testFullProcess(){
         $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ ДВИЖКА С ВОПРОСАМИ С КОДОМ. -----', 'cyan', 2);
@@ -121,9 +108,8 @@ class CodeQuestionProcessTest extends TestCase
         $this->clearRedis();
         $this->writeConsoleMessage('Заполнение данными таблицы глобальных настроек тестирования. [Seed]', 'grey', 1);
         $this->seed('SettingsTableSeeder');
-        $this->checkQuestionImagesDirectoryWritable();
-        $this->checkImportDirectoryWritable();
-        $this->clearPublicFolder(self::$QUESTION_IMAGES_DIR);
+
+
     }
 
     /**
@@ -135,7 +121,6 @@ class CodeQuestionProcessTest extends TestCase
 
         $this->clearTables();
         $this->clearRedis();
-        $this->clearPublicFolder(self::$QUESTION_IMAGES_DIR);
     }
 
     /**
@@ -261,33 +246,6 @@ class CodeQuestionProcessTest extends TestCase
     }
 
 
-
-    /**
-     * Удаление всех файлов из указанной директории относительно директории /public.
-     * @param $path - Расположение папки относительно директории /public.
-     */
-    protected function clearPublicFolder($path){
-        $fullPath = public_path().$path;
-        $this->writeConsoleMessage("Очистка директории $fullPath. [DIR]", 'grey', 1);
-
-        array_map('unlink', glob("$fullPath/*"));
-    }
-
-    /**
-     * Проверка доступа к директории для хранения изображений вопросов.
-     */
-    protected function checkQuestionImagesDirectoryWritable(){
-        $fullPath = public_path().self::$QUESTION_IMAGES_DIR;
-        $this->checkDirectoryAccess($fullPath);
-    }
-
-    /**
-     * Проверка доступа к директории для временных файлов импорта/экспорта вопросов.
-     */
-    protected function checkImportDirectoryWritable(){
-        $fullPath = public_path().self::$IMPORT_EXPORT_DIR;
-        $this->checkDirectoryAccess($fullPath);
-    }
 
     /**
      * Проверка доступа к директории.
@@ -584,142 +542,6 @@ class CodeQuestionProcessTest extends TestCase
 
 
 
-    /**
-     * Создание закрытого вопроса теста с несколькими правильными ответами.
-     */
-    protected function addClosedManyAnswersQuestion(){
-        $this->writeConsoleMessage('Создание закрытого вопроса теста с несколькими правильными ответами. [API]');
-        $apiUri = '/api/questions/create';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri,
-            [ "question" => [
-                'id' => self::$CSS_QUESTION_ID,
-                'type' => QuestionType::ClosedManyAnswers,
-                'text' => 'Укажите свойства CSS, отвечающие за отступы HTML-элемента.',
-                'complexity' => QuestionComplexity::Low,
-                'time' => 45],
-                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "answers" =>
-                    [['text' => 'margin', 'isRight' => true],
-                        ['text' => 'background-color', 'isRight' => false],
-                        ['text' => 'font-weight', 'isRight' => false],
-                        ['text' => 'padding', 'isRight' => true]]
-            ])
-            ->seeJson(['Success' => true]);
-
-        $this->seeInDatabase('question', [
-            'type' => QuestionType::ClosedManyAnswers,
-            'time' => 45]);
-
-        $this->seeInDatabase('answer', ['text' => 'margin', 'is_right' => true,
-            'question_id' => self::$CSS_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' =>'background-color', 'is_right' => false,
-                'question_id' => self::$CSS_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' => 'font-weight', 'is_right' => false,
-                'question_id' => self::$CSS_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' => 'padding', 'is_right' => true,
-                'question_id' => self::$CSS_QUESTION_ID]);
-        $this->writeOk();
-    }
-
-    /**
-     * Создание закрытого вопроса теста с единственным правильным ответом.
-     */
-    protected function addClosedOneAnswerQuestion(){
-        $this->writeConsoleMessage('Создание закрытого вопроса теста с единственным правильным ответом. [API]');
-        $apiUri = '/api/questions/create';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri,
-            [ "question" => [
-                'id' => self::$JAVASCRIPT_QUESTION_ID,
-                'type' => QuestionType::ClosedOneAnswer,
-                'text' => 'При помощи какой из перечисленных операции языка JavaScript можно привести строку к числу?',
-                'complexity' => QuestionComplexity::Medium,
-                'time' => 30],
-                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "answers" =>
-                    [['text' => 'Бинарный +', 'isRight' => false],
-                        ['text' => 'Унарный +', 'isRight' => true],
-                        ['text' => 'Унарный -', 'isRight' => false]],
-            ])
-            ->seeJson(['Success' => true]);
-
-        $this->seeInDatabase('question', [
-            'type' => QuestionType::ClosedOneAnswer,
-            'time' => 30]);
-
-        $this->seeInDatabase('answer', ['text' => 'Бинарный +', 'is_right' => false,
-            'question_id' => self::$JAVASCRIPT_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' =>'Унарный +', 'is_right' => true,
-                'question_id' => self::$JAVASCRIPT_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' => 'Унарный -', 'is_right' => false,
-                'question_id' => self::$JAVASCRIPT_QUESTION_ID]);
-        $this->writeOk();
-    }
-
-    /**
-     * Создание открытого вопроса теста с однострочным ответом.
-     */
-    protected function addOpenSingleStringQuestion(){
-        $this->writeConsoleMessage('Создание открытого вопроса теста с однострочным ответом. [API]');
-        $apiUri = '/api/questions/create';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri,
-            [ "question" => [
-                'id' => self::$HTML_VERSION_QUESTION_ID,
-                'type' => QuestionType::OpenOneString,
-                'text' => 'Какая версия стандарта HTML была одобрена в 1995 году?',
-                'complexity' => QuestionComplexity::Medium,
-                'time' => 60],
-                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "answers" =>
-                    [['text' => '2', 'isRight' => true],
-                        ['text' => '2.0', 'isRight' => true],
-                        ['text' => 'вторая', 'isRight' => true],
-                        ['text' => 'два', 'isRight' => true]],
-            ])
-            ->seeJson(['Success' => true]);
-
-        $this->seeInDatabase('question', [
-            'type' => QuestionType::OpenOneString,
-            'time' => 60]);
-
-        $this->seeInDatabase('answer', ['text' => '2', 'is_right' => true, 'question_id' => self::$HTML_VERSION_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' =>'2.0', 'is_right' => true,'question_id' => self::$HTML_VERSION_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' => 'вторая', 'is_right' => true,'question_id' => self::$HTML_VERSION_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' => 'два', 'is_right' => true,'question_id' => self::$HTML_VERSION_QUESTION_ID]);
-        $this->writeOk();
-    }
-
-    /**
-     * Создание открытого вопроса теста с многострочным ответом.
-     * [!] Ответ на вопрос данного типа не проверяется автоматически. Проверку должен осуществлять преподаватель.
-     */
-    protected function addOpenManyStringsQuestion(){
-        $this->writeConsoleMessage('Создание открытого вопроса теста с многострочным ответом. [API]');
-        $apiUri = '/api/questions/create';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri,
-            [ "question" => [
-                'id' => self::$MIME_TYPES_QUESTION_ID,
-                'type' => QuestionType::OpenManyStrings,
-                'text' => 'Напишите что вам известно о MIME-типах.',
-                'complexity' => QuestionComplexity::High,
-                'time' => 90],
-                "theme" => self::$HTML_DISCIPLINE_THEME_ID
-            ])->seeJson(['Success' => true]);
-
-        $this->seeInDatabase('question', [
-            'type' => QuestionType::OpenManyStrings,
-            'time' => 90]);
-
-        $this->writeOk();
-    }
-
     /*
      * Создание теста по теме "HTML" дисциплины "WEB-технологии".
      */
@@ -785,19 +607,6 @@ class CodeQuestionProcessTest extends TestCase
     }
 
     /**
-     * Проверка невозможности авторизации студента без подтверждения заявки на регистрацию.
-     */
-    protected function checkLoginWithoutAcceptionUnavailable(){
-        $this->writeConsoleMessage('Проверка невозможности авторизации без подтверждения заявки студента. [API]');
-        $apiUri = '/login';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri , ['email' => self::$STUDENT_EMAIL, 'password' => self::$PASSWORD])
-            ->seeJson(['Success' => false, 'Message' => self::$ACCOUNT_NOT_CONFIRMED]);
-        $this->writeOk();
-    }
-
-    /**
      * Подтверждение преподавателем заявки студента на регистрацию.
      */
     protected function acceptStudentRegistrationApplication(){
@@ -813,35 +622,6 @@ class CodeQuestionProcessTest extends TestCase
         $this->writeOk();
     }
 
-    /**
-     * Проверка доступности дисциплины WEB-технологии для студента.
-     */
-    protected function checkIsDisciplineAvailableForStudent(){
-        $this->writeConsoleMessage('Проверка доступности дисциплины из учебного плана для студента. [API]');
-        $apiUri = '/api/disciplines/actual';
-        $this->writeApiCall($apiUri);
-
-        $this->json('GET', $apiUri)
-            ->seeJson(['Success' => true])
-            ->seeJsonContains(['id' => self::$WEB_DISCIPLINE_ID]);
-
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка доступности теста по дисциплине WEB-технологии для студента.
-     */
-    protected function checkIfCreatedTestAvailableForStudent(){
-        $this->writeConsoleMessage('Проверка доступности теста по дисциплине WEB-технологии для студента. [API]');
-        $apiUri = '/api/tests/showForStudent?discipline='.self::$WEB_DISCIPLINE_ID;
-        $this->writeApiCall($apiUri);
-
-        $this->json('GET', $apiUri)
-            ->seeJson(['Success' => true])
-            ->seeJsonContains(['id' => self::$WEB_TEST_ID, 'attempts' => 1]);
-
-        $this->writeOk();
-    }
 
     /**
      * Запуск процесса тестирования.
@@ -862,31 +642,6 @@ class CodeQuestionProcessTest extends TestCase
         $this->writeOk();
     }
 
-    /**
-     * Проверка создания сессии тестирования в Redis Cache при запуске теста.
-     */
-    protected function checkRedisTestSessionCreated(){
-        $this->writeConsoleMessage('Проверка создания сессии тестирования в Redis Cache при запуске теста. [Redis]');
-
-        /** @var \TestEngine\TestSessionFactory $testSessionFactory */
-        $testSessionFactory = app()->make(\TestEngine\TestSessionFactory::class);
-        $testSession = $testSessionFactory->getBySessionId(self::$TEST_SESSION_ID);
-
-        $this->assertNotNull($testSession);
-        $this->assertEquals(self::$WEB_TEST_ID, $testSession->getTestId());
-        $this->assertEquals(self::$STUDENT_ID, $testSession->getUserId());
-        $this->assertEquals(self::$TEST_RESULT_ID, $testSession->getTestResultId());
-        $this->writeOk();
-
-        $this->writeConsoleMessage('Проверка наличия всех вопросов в сессии тестирования. [Redis]');
-        $this->assertEquals(self::$QUESTIONS_COUNT, count($testSession->getAllQuestionsIds()));
-        $this->assertEquals(0, count($testSession->getAnsweredQuestionsIds()));
-        $this->writeOk();
-
-        $this->writeConsoleMessage('Проверка корректности времени окончания теста. [Redis]');
-        $this->assertGreaterThan(DateHelper::getCurrentUtcDateTimeString(), $testSession->getTestEndDateTime());
-        $this->writeOk();
-    }
 
     /**
      * Последовательное получение и отправка ответа на все вопросы теста.
@@ -902,8 +657,6 @@ class CodeQuestionProcessTest extends TestCase
             $answerData = $this->createQuestionAnswerData($questionData);
             $this->answerTestQuestion($answerData);
             $questionsAnswered++;
-
-
         }
 
         $this->writeConsoleMessage('Проверка общего количества полученных вопросов теста.');
@@ -949,16 +702,15 @@ class CodeQuestionProcessTest extends TestCase
         // Заполняем объект ответа на вопрос в соответствии с вопросом.
         switch ($question->id){
             case self::$C_CODE_QUESTION_ID:{
-                //$this->checkQuestionWithImageHasImage($questionData);
-                $answerData['answerIds'] = $this->getAnswersIds($answers, ['Markup']);
+
                 break;
             }
             case self::$PASCAL_CODE_QUESTION_ID:{
-                $answerData['answerIds'] = $this->getAnswersIds($answers, ['margin', 'padding']);
+
                 break;
             }
             case self::$PHP_CODE_QUESTION_ID:{
-                $answerData['answerIds'] = $this->getAnswersIds($answers, ['Унарный +']);
+
                 break;
             }
 
@@ -993,144 +745,6 @@ class CodeQuestionProcessTest extends TestCase
         $this->writeOk();
     }
 
-    /**
-     * Проверка доступности изображения для вопроса с изображением.
-     */
-    protected function checkQuestionWithImageHasImage($questionData){
-        $this->writeConsoleMessage('   Проверка доступности изображения для вопроса с изображением. [API]');
-        $imagePath = $questionData->question->image;
-        $this->assertNotNull($imagePath);
-        $this->assertFileExists(public_path().$imagePath);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка отсутствия оценки по результату теста (т.к. среди вопросов есть открытый, проверяющийся преподавателем).
-     */
-    protected function checkTestResultHasNoMark(){
-        $this->writeConsoleMessage('Проверка отсутствия оценки по результату теста (среди вопросов есть открытый). [Query]');
-        $this->seeInDatabase('test_result',['id' => self::$TEST_RESULT_ID, 'mark' => null]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка наличия результата в списке результатов тестирования студента.
-     */
-    protected function checkTestResultAvailableInResultsList(){
-        $this->writeConsoleMessage('Проверка наличия результата в списке результатов тестирования студента. [API]');
-        $apiUri = '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID;
-        $this->writeApiCall($apiUri);
-
-        $this->json('GET', $apiUri)
-            ->seeJson(['Success' => true])
-            ->seeJsonContains(['testId' => self::$WEB_TEST_ID, 'attempt' => 1]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка невозможности запуска тестирования при отсутствии попыток прохождения.
-     */
-    protected function checkStartTestUnavailableIfNoAttemptsLeft(){
-        $this->writeConsoleMessage('Проверка невозможности запуска теста без попыток прохождения. [API]');
-        $apiUri = '/api/tests/start/';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri, [
-            'testId' => self::$WEB_TEST_ID,
-        ])
-            ->seeJson(['Success' => false, 'Message' => self::$NO_ATTEMPTS_FOR_TEST_LEFT]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка доступности результата тестирования для преподавателя.
-     */
-    protected function checkTestResultAvailableForLecturer(){
-        $this->writeConsoleMessage('Проверка доступности результата тестирования для преподавателя. [API]');
-        $apiUri = '/api/results/show?testId='.self::$WEB_TEST_ID.'&groupId='.self::$STUDENT_GROUP_ID;
-        $this->writeApiCall($apiUri);
-
-        $this->json('GET', $apiUri)
-            ->seeJson(['Success' => true])
-            ->seeJsonContains(['testId' => self::$WEB_TEST_ID, 'userId' => self::$STUDENT_ID, 'attempt' => 1]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка возможности установки преподавателем оценки за открытый вопрос.
-     */
-    protected function checkSetOpenQuestionMark(){
-        $this->writeConsoleMessage('Проверка возможности установки преподавателем оценки за открытый вопрос. [API]');
-        $apiUri = '/api/results/setMark';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri, [
-            'answerId' => self::$OPEN_QUESTION_ANSWER_ID,
-            'mark' => 0])
-            ->seeJson(['Success' => true]);
-
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка пересчёта общей оценки студента за тест после оценивания открытого вопроса.
-     */
-    protected function checkResultMarkReCalculated(){
-        $this->writeConsoleMessage('Проверка пересчёта оценки за тест после оценивания открытого вопроса. [Query]');
-
-        $this->seeInDatabase('test_result', ['id' => self::$TEST_RESULT_ID, 'mark' => self::$EXPECTED_RESULT_MARK]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка возможности добавления студенту дополнительных попыток по тесту.
-     */
-    protected function checkAddExtraAttempt(){
-        $this->writeConsoleMessage('Проверка возможности добавления студенту дополнительных попыток по тесту. [API]');
-        $apiUri = '/api/attempts/set';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri, [
-            'userId' => self::$STUDENT_ID,
-            'testId' => self::$WEB_TEST_ID,
-            'count' => 3])
-            ->seeJson(['Success' => true]);
-
-        $this->seeInDatabase('extra_attempt', [
-            'user_id' => self::$STUDENT_ID,
-            'test_id' => self::$WEB_TEST_ID,
-            'count' => 3]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка доступности для студента результата тестирования после оценивания открытого вопроса преподавателем.
-     */
-    protected function checkStudentCanSeeNewMark(){
-        $this->writeConsoleMessage('Проверка доступности результата для студента после оценки открытого вопроса. [API]');
-        $apiUri = '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID;
-        $this->writeApiCall($apiUri);
-
-        $this->json('GET', $apiUri)
-            ->seeJson(['Success' => true])
-            ->seeJsonContains(['testId' => self::$WEB_TEST_ID, 'attempt' => 1, 'mark' => self::$EXPECTED_RESULT_MARK]);
-        $this->writeOk();
-    }
-
-    /**
-     * Проверка возможности повторного прохождения студентом теста после добавления дополнительных попыток.
-     */
-    protected function checkStudentCanStartTestIfExtraAttemptWasAdded(){
-        $this->writeConsoleMessage('Проверка возможности запуска теста после добавления дополнительных попыток. [API]');
-        $apiUri = '/api/tests/start';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', '/api/tests/start', [
-            'testId' => self::$WEB_TEST_ID,
-        ])
-            ->seeJson(['Success' => true]);
-        $this->writeOk();
-    }
 
     /**
      * Выбор идентификаторов ответов, текст которых указан в массиве $selectedAnswersText
