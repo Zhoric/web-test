@@ -174,7 +174,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Очистка всех задействованных в тесте таблиц.
      */
-    private function clearTables(){
+    protected function clearTables(){
         $this->writeNewLine();
         $this->writeConsoleMessage('Очистка таблиц. [Query]', 'grey', 1);
 
@@ -207,7 +207,7 @@ class FullTestingProcessTests extends TestCase
      * Удаление всех файлов из указанной директории относительно директории /public.
      * @param $path - Расположение папки относительно директории /public.
      */
-    private function clearPublicFolder($path){
+    protected function clearPublicFolder($path){
         $fullPath = public_path().$path;
         $this->writeConsoleMessage("Очистка директории $fullPath. [DIR]", 'grey', 1);
 
@@ -217,7 +217,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступа к директории для хранения изображений вопросов.
      */
-    private function checkQuestionImagesDirectoryWritable(){
+    protected function checkQuestionImagesDirectoryWritable(){
         $fullPath = public_path().self::$QUESTION_IMAGES_DIR;
         $this->checkDirectoryAccess($fullPath);
     }
@@ -225,7 +225,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступа к директории для временных файлов импорта/экспорта вопросов.
      */
-    private function checkImportDirectoryWritable(){
+    protected function checkImportDirectoryWritable(){
         $fullPath = public_path().self::$IMPORT_EXPORT_DIR;
         $this->checkDirectoryAccess($fullPath);
     }
@@ -234,7 +234,7 @@ class FullTestingProcessTests extends TestCase
      * Проверка доступа к директории.
      * @param $fullPath - полный путь к директории.
      */
-    private function checkDirectoryAccess($fullPath){
+    protected function checkDirectoryAccess($fullPath){
         $this->writeConsoleMessage('Проверка доступа к директории '.$fullPath.' [DIR]', 'grey', 1);
 
         $this->assertFileExists($fullPath);
@@ -245,7 +245,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка работы сервера Redis Cache.
      */
-    private function checkRedisServerIsRunning(){
+    protected function checkRedisServerIsRunning(){
         $this->writeConsoleMessage('Проверка подключения к серверу Redis Cache [Redis]', 'grey', 1);
         $serverResponse = $this->getRedisClient()->connection()->ping();
         $this->assertEquals('PONG', $serverResponse);
@@ -254,7 +254,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Очистка хранилища Redis Cache.
      */
-    private function clearRedis(){
+    protected function clearRedis(){
         $this->writeConsoleMessage('Очистка хранилища Redis Cache. [Redis]', 'grey', 1);
         $this->getRedisClient()->connection()->flushall();
     }
@@ -262,7 +262,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Добавление ролей пользователей в БД.
      */
-    private function createRoles(){
+    protected function createRoles(){
         $this->writeConsoleMessage('Добавление ролей пользователей в БД. [Query]');
 
         DB::table('roles')->insert(array(
@@ -287,7 +287,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Добавление данных об институте в БД.
      */
-    private function createInstitute(){
+    protected function createInstitute(){
         $this->writeConsoleMessage('Добавление института в БД. [Query]');
 
         DB::table('institute')->insert(array(
@@ -303,7 +303,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание учётной записи администратора в БД.
      */
-    private function createAdminAccount(){
+    protected function createAdminAccount(){
         $this->writeConsoleMessage('Добавление учётной записи администратора в БД. [Query]');
 
         DB::table('user')->insert(array(
@@ -330,7 +330,7 @@ class FullTestingProcessTests extends TestCase
      * @param $email - Почтовый адрес пользователя.
      * @param $password - Пароль пользователя.
      */
-    private function logIn($email, $password){
+    protected function logIn($email, $password){
         $this->writeNewLine();
         $this->writeConsoleMessage('Авторизация с email: '.$email.' и паролем: '.$password.'. [API]', 'blue');
         $apiUri = '/login';
@@ -341,7 +341,7 @@ class FullTestingProcessTests extends TestCase
         $this->writeOk();
     }
 
-    private function logOut(){
+    protected function logOut(){
         $this->writeConsoleMessage('Выход из учётной записи. [API]', 'blue');
         $apiUri = '/logout';
         $this->writeApiCall($apiUri);
@@ -357,7 +357,7 @@ class FullTestingProcessTests extends TestCase
      * @param $email - Почтовый адрес пользователя.
      * @param $password - Пароль пользователя.
      */
-    private function checkRepeatableLoginDisabled($email, $password){
+    protected function checkRepeatableLoginDisabled($email, $password){
         $this->writeConsoleMessage('Проверка отсутствия возможности повторной авторизации. [API]');
         $apiUri = '/login';
         $this->writeApiCall($apiUri);
@@ -367,7 +367,7 @@ class FullTestingProcessTests extends TestCase
         $this->writeOk();
     }
 
-    private function checkWrongCredentialsAuthorization($email, $password){
+    protected function checkWrongCredentialsAuthorization($email, $password){
         $this->writeConsoleMessage('Проверка отсутствия возможности авторизации с данными не существующего пользователя. [API]');
         $apiUri = '/login';
         $this->writeApiCall($apiUri);
@@ -380,7 +380,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Добавление в БД данных о направлении обучения студентов "ИСиТ".
      */
-    private function createProfile(){
+    protected function createProfile(){
         $this->writeConsoleMessage('Добавление направления подготовки студентов в БД. [Query]');
 
         DB::table('profile')->insert(array(
@@ -397,7 +397,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание учебного плана для профиля подготовки ИСиТ через API.
      */
-    private function createStudyPlan(){
+    protected function createStudyPlan(){
         $this->writeConsoleMessage('Создание учебного плана. [API]');
         $apiUri = '/api/plan/create';
         $this->writeApiCall($apiUri);
@@ -414,7 +414,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Добавление дисциплины "WEB-технологии" через API.
      */
-    private function createDiscipline(){
+    protected function createDiscipline(){
         $this->writeConsoleMessage('Добавление дисциплины. [API]');
         $apiUri = '/api/disciplines/create';
         $this->writeApiCall($apiUri);
@@ -432,7 +432,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Добавление дисциплины в учебный план ИСиТ через API.
      */
-    private function addDisciplineToStudyPlan(){
+    protected function addDisciplineToStudyPlan(){
         $this->writeConsoleMessage('Добавление дисциплины в учебный план. [API]');
         $apiUri = 'api/plan/discipline/create';
         $this->writeApiCall($apiUri);
@@ -458,7 +458,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание учётной записи преподавателя администратором с назначением дисциплины (WEB-технологии).
      */
-    private function createLecturerWithDisciplineAttached(){
+    protected function createLecturerWithDisciplineAttached(){
         $this->writeConsoleMessage('Создание учётной записи преподавателя c закреплением за ним дисциплины. [API]');
         $apiUri = '/api/lecturers/create';
         $this->writeApiCall($apiUri);
@@ -482,7 +482,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание группы ИСб-41о и закрепление за ней учебного созданного ранее учебного плана.
      */
-    private function createGroupWithStudyPlanAttached(){
+    protected function createGroupWithStudyPlanAttached(){
         $this->writeConsoleMessage('Создание группы с закреплением за ней учебного плана. [API]');
         $apiUri = 'api/groups/create';
         $this->writeApiCall($apiUri);
@@ -506,7 +506,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание темы дисциплины WEB.
      */
-    private function createDisciplineTheme(){
+    protected function createDisciplineTheme(){
         $this->writeConsoleMessage('Добавление темы дисциплины. [API]');
         $apiUri = '/api/disciplines/themes/create';
         $this->writeApiCall($apiUri);
@@ -526,7 +526,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание закрытого вопроса теста с единственным правильным ответом и изображением.
      */
-    private function addClosedOneAnswerQuestionWithImage(){
+    protected function addClosedOneAnswerQuestionWithImage(){
         $this->writeConsoleMessage('Создание закрытого вопроса теста с единственным правильным ответом и изображением. [API]');
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
@@ -576,7 +576,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание закрытого вопроса теста с несколькими правильными ответами.
      */
-    private function addClosedManyAnswersQuestion(){
+    protected function addClosedManyAnswersQuestion(){
         $this->writeConsoleMessage('Создание закрытого вопроса теста с несколькими правильными ответами. [API]');
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
@@ -615,7 +615,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание закрытого вопроса теста с единственным правильным ответом.
      */
-    private function addClosedOneAnswerQuestion(){
+    protected function addClosedOneAnswerQuestion(){
         $this->writeConsoleMessage('Создание закрытого вопроса теста с единственным правильным ответом. [API]');
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
@@ -651,7 +651,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Создание открытого вопроса теста с однострочным ответом.
      */
-    private function addOpenSingleStringQuestion(){
+    protected function addOpenSingleStringQuestion(){
         $this->writeConsoleMessage('Создание открытого вопроса теста с однострочным ответом. [API]');
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
@@ -687,7 +687,7 @@ class FullTestingProcessTests extends TestCase
      * Создание открытого вопроса теста с многострочным ответом.
      * [!] Ответ на вопрос данного типа не проверяется автоматически. Проверку должен осуществлять преподаватель.
      */
-    private function addOpenManyStringsQuestion(){
+    protected function addOpenManyStringsQuestion(){
         $this->writeConsoleMessage('Создание открытого вопроса теста с многострочным ответом. [API]');
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
@@ -712,7 +712,7 @@ class FullTestingProcessTests extends TestCase
     /*
      * Создание теста по теме "HTML" дисциплины "WEB-технологии".
      */
-    private function createTest(){
+    protected function createTest(){
         $this->writeConsoleMessage('Создание теста по теме дисциплины. [API]');
         $apiUri = '/api/tests/create';
         $this->writeApiCall($apiUri);
@@ -746,7 +746,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Отправка студентом заявки на регистрацию в системе.
      */
-    private function sendStudentRegistrationApplication(){
+    protected function sendStudentRegistrationApplication(){
         $this->writeConsoleMessage('Отправка студентом заявки на регистрацию в системе. [API]');
         $apiUri = '/register';
         $this->writeApiCall($apiUri);
@@ -776,7 +776,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка невозможности авторизации студента без подтверждения заявки на регистрацию.
      */
-    private function checkLoginWithoutAcceptionUnavailable(){
+    protected function checkLoginWithoutAcceptionUnavailable(){
         $this->writeConsoleMessage('Проверка невозможности авторизации без подтверждения заявки студента. [API]');
         $apiUri = '/login';
         $this->writeApiCall($apiUri);
@@ -789,7 +789,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Подтверждение преподавателем заявки студента на регистрацию.
      */
-    private function acceptStudentRegistrationApplication(){
+    protected function acceptStudentRegistrationApplication(){
         $this->writeConsoleMessage('Подтверждение преподавателем заявки студента на регистрацию. [API]');
         $apiUri = '/api/user/activate/'.self::$STUDENT_ID;
         $this->writeApiCall($apiUri);
@@ -805,7 +805,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступности дисциплины WEB-технологии для студента.
      */
-    private function checkIsDisciplineAvailableForStudent(){
+    protected function checkIsDisciplineAvailableForStudent(){
         $this->writeConsoleMessage('Проверка доступности дисциплины из учебного плана для студента. [API]');
         $apiUri = '/api/disciplines/actual';
         $this->writeApiCall($apiUri);
@@ -820,7 +820,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступности теста по дисциплине WEB-технологии для студента.
      */
-    private function checkIfCreatedTestAvailableForStudent(){
+    protected function checkIfCreatedTestAvailableForStudent(){
         $this->writeConsoleMessage('Проверка доступности теста по дисциплине WEB-технологии для студента. [API]');
         $apiUri = '/api/tests/showForStudent?discipline='.self::$WEB_DISCIPLINE_ID;
         $this->writeApiCall($apiUri);
@@ -835,7 +835,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Запуск процесса тестирования.
      */
-    private function startTest(){
+    protected function startTest(){
         $this->writeConsoleMessage('Запуск процесса тестирования. [API]');
         $apiUri = '/api/tests/start';
         $this->writeApiCall($apiUri);
@@ -854,7 +854,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка создания сессии тестирования в Redis Cache при запуске теста.
      */
-    private function checkRedisTestSessionCreated(){
+    protected function checkRedisTestSessionCreated(){
         $this->writeConsoleMessage('Проверка создания сессии тестирования в Redis Cache при запуске теста. [Redis]');
 
         /** @var \TestEngine\TestSessionFactory $testSessionFactory */
@@ -880,7 +880,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Последовательное получение и отправка ответа на все вопросы теста.
      */
-    private function answerAllTestQuestions(){
+    protected function answerAllTestQuestions(){
         $questionsAnswered = 0;
 
         // Вопросы будут запрашиваться до тех пор, пока с сервера не вернётся результат теста.
@@ -906,7 +906,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Получение очередного вопроса студентом.
      */
-    private function getNextTestQuestion(){
+    protected function getNextTestQuestion(){
         $this->writeConsoleMessage('   Получение очередного вопроса студентом. [API]');
         $apiUri = '/api/tests/nextQuestion';
         $this->writeApiCall($apiUri);
@@ -928,7 +928,7 @@ class FullTestingProcessTests extends TestCase
      * @return array
      * @throws Exception
      */
-    private function createQuestionAnswerData($questionData){
+    protected function createQuestionAnswerData($questionData){
         $question = $questionData->question;
         $answers = $questionData->answers;
 
@@ -972,7 +972,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Отправка ответа на вопрос.
      */
-    private function answerTestQuestion($answerData){
+    protected function answerTestQuestion($answerData){
         $this->writeConsoleMessage('   Отправка ответа на вопрос. [API]');
         $apiUri = '/api/tests/answer';
         $this->writeApiCall($apiUri);
@@ -995,7 +995,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступности изображения для вопроса с изображением.
      */
-    private function checkQuestionWithImageHasImage($questionData){
+    protected function checkQuestionWithImageHasImage($questionData){
         $this->writeConsoleMessage('   Проверка доступности изображения для вопроса с изображением. [API]');
         $imagePath = $questionData->question->image;
         $this->assertNotNull($imagePath);
@@ -1006,7 +1006,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка отсутствия оценки по результату теста (т.к. среди вопросов есть открытый, проверяющийся преподавателем).
      */
-    private function checkTestResultHasNoMark(){
+    protected function checkTestResultHasNoMark(){
         $this->writeConsoleMessage('Проверка отсутствия оценки по результату теста (среди вопросов есть открытый). [Query]');
         $this->seeInDatabase('test_result',['id' => self::$TEST_RESULT_ID, 'mark' => null]);
         $this->writeOk();
@@ -1015,7 +1015,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка наличия результата в списке результатов тестирования студента.
      */
-    private function checkTestResultAvailableInResultsList(){
+    protected function checkTestResultAvailableInResultsList(){
         $this->writeConsoleMessage('Проверка наличия результата в списке результатов тестирования студента. [API]');
         $apiUri = '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID;
         $this->writeApiCall($apiUri);
@@ -1029,7 +1029,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка невозможности запуска тестирования при отсутствии попыток прохождения.
      */
-    private function checkStartTestUnavailableIfNoAttemptsLeft(){
+    protected function checkStartTestUnavailableIfNoAttemptsLeft(){
         $this->writeConsoleMessage('Проверка невозможности запуска теста без попыток прохождения. [API]');
         $apiUri = '/api/tests/start/';
         $this->writeApiCall($apiUri);
@@ -1044,7 +1044,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступности результата тестирования для преподавателя.
      */
-    private function checkTestResultAvailableForLecturer(){
+    protected function checkTestResultAvailableForLecturer(){
         $this->writeConsoleMessage('Проверка доступности результата тестирования для преподавателя. [API]');
         $apiUri = '/api/results/show?testId='.self::$WEB_TEST_ID.'&groupId='.self::$STUDENT_GROUP_ID;
         $this->writeApiCall($apiUri);
@@ -1058,7 +1058,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка возможности установки преподавателем оценки за открытый вопрос.
      */
-    private function checkSetOpenQuestionMark(){
+    protected function checkSetOpenQuestionMark(){
         $this->writeConsoleMessage('Проверка возможности установки преподавателем оценки за открытый вопрос. [API]');
         $apiUri = '/api/results/setMark';
         $this->writeApiCall($apiUri);
@@ -1074,7 +1074,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка пересчёта общей оценки студента за тест после оценивания открытого вопроса.
      */
-    private function checkResultMarkReCalculated(){
+    protected function checkResultMarkReCalculated(){
         $this->writeConsoleMessage('Проверка пересчёта оценки за тест после оценивания открытого вопроса. [Query]');
 
         $this->seeInDatabase('test_result', ['id' => self::$TEST_RESULT_ID, 'mark' => self::$EXPECTED_RESULT_MARK]);
@@ -1084,7 +1084,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка возможности добавления студенту дополнительных попыток по тесту.
      */
-    private function checkAddExtraAttempt(){
+    protected function checkAddExtraAttempt(){
         $this->writeConsoleMessage('Проверка возможности добавления студенту дополнительных попыток по тесту. [API]');
         $apiUri = '/api/attempts/set';
         $this->writeApiCall($apiUri);
@@ -1105,7 +1105,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка доступности для студента результата тестирования после оценивания открытого вопроса преподавателем.
      */
-    private function checkStudentCanSeeNewMark(){
+    protected function checkStudentCanSeeNewMark(){
         $this->writeConsoleMessage('Проверка доступности результата для студента после оценки открытого вопроса. [API]');
         $apiUri = '/api/results/discipline/'.self::$WEB_DISCIPLINE_ID;
         $this->writeApiCall($apiUri);
@@ -1119,7 +1119,7 @@ class FullTestingProcessTests extends TestCase
     /**
      * Проверка возможности повторного прохождения студентом теста после добавления дополнительных попыток.
      */
-    private function checkStudentCanStartTestIfExtraAttemptWasAdded(){
+    protected function checkStudentCanStartTestIfExtraAttemptWasAdded(){
         $this->writeConsoleMessage('Проверка возможности запуска теста после добавления дополнительных попыток. [API]');
         $apiUri = '/api/tests/start';
         $this->writeApiCall($apiUri);
@@ -1137,7 +1137,7 @@ class FullTestingProcessTests extends TestCase
      * @param $selectedAnswersText - Текст выбранных ответов.
      * @return array
      */
-    private function getAnswersIds($answers, $selectedAnswersText){
+    protected function getAnswersIds($answers, $selectedAnswersText){
 
         $selectedAnswers = array_filter($answers, function($ans) use ($selectedAnswersText) {
             foreach ($selectedAnswersText as $answerText){
@@ -1150,7 +1150,7 @@ class FullTestingProcessTests extends TestCase
         return array_values($selectedAnswersIds);
     }
 
-    private function askForConfirmation(){
+    protected function askForConfirmation(){
         $warningMessage   =  "
                               ВНИМАНИЕ!
     Во время теста база данных и Redis Cache будут полностью очищены. 

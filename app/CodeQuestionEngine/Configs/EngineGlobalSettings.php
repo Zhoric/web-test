@@ -57,15 +57,6 @@ class EngineGlobalSettings
     ];
 
     /**
-     * Требуется ли компиляция для данного языка
-     */
-    const SCRIPT_LANGUAGE = [
-        \Language::C => false,
-        \Language::Pascal => false,
-        \Language::PHP => true,
-    ];
-
-    /**
      * Служебное слово для запуска
      */
     const RUN_WORD = [
