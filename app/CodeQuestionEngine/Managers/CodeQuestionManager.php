@@ -32,6 +32,22 @@ class CodeQuestionManager
      */
     private $language;
 
+    /**
+     * @return \CodeFileManager
+     */
+    public function getFileManager()
+    {
+        return $this->fileManager;
+    }
+
+    /**
+     * @return \Language
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
 
     public function __construct(UnitOfWork $uow)
     {
