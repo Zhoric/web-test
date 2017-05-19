@@ -20,6 +20,7 @@ class ParagraphParser {
         if ($p->pPr->pStyle) {
             $objectAttrs = $p->pPr->pStyle->attributes('w', true);
             $objectStyle = (String)$objectAttrs['val'];
+            if (is_numeric($objectStyle)) $objectStyle = 'id' . $objectStyle;
             if (isset($this->_styles[$objectStyle])) {
                 $className = $objectStyle;
             }

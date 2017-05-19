@@ -13,7 +13,7 @@ class TextParser {
         $this->_graphicParser = $graphicParser;
     }
 
-    public function parseText($paragraph, $className, $attrs, $isList = null){
+    public function parseText($paragraph, $className, $attrs, $isList = null, $isUlEnd = null){
         $html = '';
         foreach ($paragraph as $part) {
             $tags = array();
@@ -45,30 +45,36 @@ class TextParser {
         }
 
         if ($isList) {
-            $html.='</li>';
+            $html .= '</li>';
+        }
+        if ($isUlEnd){
+            $html .= '</ol>';
         }
         return $html;
     }
 
     public function parseTextStyle($part){
         $attrs = array();
-        foreach (get_object_vars($part->rPr) as $tag => $tagStyle) {
-            switch ($tag) {
-                case "b":
-                    $attrs[] = 'font-weight: bold;';
-                    break;
-                case "i":
-                    $attrs[] = 'font-style: italic;';
-                    break;
-                case "color":
-                    $attrs[] = 'color:#' . $tagStyle['val'] . ';';
-                    break;
-                case "sz":
-                    $attrs[] = 'font-size:' . $tagStyle['val'] . 'px;';
-                    break;
-                case "szCs":
-                    $attrs[] = 'font-size:' . $tagStyle['val'] . 'px;';
-                    break;
+        $namespaces = $part->getNamespaces(true);
+        if (isset($part->rPr)) {
+            foreach ($part->rPr->children($namespaces['w']) as $tag => $tagStyle) {
+                switch ($tag) {
+                    case "b":
+                        $attrs[] = 'font-weight: bold;';
+                        break;
+                    case "i":
+                        $attrs[] = 'font-style: italic;';
+                        break;
+                    case "color":
+                        $attrs[] = 'color:#' . $tagStyle['val'] . ';';
+                        break;
+                    case "sz":
+                        $attrs[] = 'font-size:' . $tagStyle['val'] . 'px;';
+                        break;
+                    case "szCs":
+                        $attrs[] = 'font-size:' . $tagStyle['val'] . 'px;';
+                        break;
+                }
             }
         }
         //if (!in_array('font-weight: bold;', $attrs)) $attrs[] = 'font-weight: normal;';

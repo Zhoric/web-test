@@ -5,11 +5,15 @@ class ListParser {
     * ОБРАБОТКА СПИСКОВ
     */
 
-    private $_numbering;
     private $_textParser;
     private $_paragraphParser;
 
+    private $_numbering;
+    private $_styleList;
+    private $_counts;
+
     private $_isList;
+    private $_isUlEnd;
 
     public function __construct(TextParser $textParser, ParagraphParser $paragraphParser)
     {
@@ -17,6 +21,9 @@ class ListParser {
         $this->_paragraphParser = $paragraphParser;
     }
 
+    public function setStyleList($styleList){
+        $this->_styleList = $styleList;
+    }
 
     public function setNumbering($numbering){
         $this->_numbering = $numbering;
@@ -28,30 +35,76 @@ class ListParser {
     public function getIsList(){
         return $this->_isList;
     }
+    public function getIsUlEnd(){
+        return $this->_isUlEnd;
+    }
 
     public function parseList($p, $currentHtml){
-        //print_r($this->_numbering);
         $html = '';
+        $this->_isUlEnd = false;
+        if ($p->pPr->pStyle){
+            $styleId = (String)$p->pPr->pStyle['val'];
+            if (is_numeric($styleId)) $styleId = 'id' . $styleId;
+            foreach ($this->_styleList as $style => $val){
+                if ($style == $styleId) {
+                    $numId = $val['numId'];
+                    if (isset($val['ilvl'])) $lvlId = $val['ilvl'];
+                    else $lvlId = 0;
+                    if ($this->_counts[$numId][$lvlId] > 0)
+                        $this->_counts[$numId][$lvlId]--;
+                    else $this->_isUlEnd = true;
+                    $html = $this->getListHtml($p, $currentHtml, $numId, $lvlId);
+                }
+            }
+        }
         if ($p->pPr->numPr) {
-            $this->_isList = true;
             $numId = (int)$p->pPr->numPr->numId['val'];
             $lvlId = (int)$p->pPr->numPr->ilvl['val'];
+            if ($this->_counts[$numId][$lvlId] > 0)
+                $this->_counts[$numId][$lvlId]--;
+            else $this->_isUlEnd = true;
+            $html = $this->getListHtml($p, $currentHtml, $numId, $lvlId);
+        }
 
+        return $html;
+    }
+
+    private function getListHtml($p, $currentHtml, $numId, $lvlId = null){
+        $html = '';
+        $this->_isList = true;
+        $isDecimalList = false;
+
+        $attrs = $this->_textParser->parseTextStyle($p->pPr);
+        $className = $this->_paragraphParser->parseParagraphStyle($p);
+
+        if ($numId == 0) {
+            if ($className) $html .= '<ul> <li class="' . $className .'"style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'"></li></ul>';
+            else $html .= '<ul> <li style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'"></li></ul>';
+            return $html;
+        }
+
+       // if (strrpos($this->_numbering[$numId][$lvlId], 'decimal') || strrpos($this->_numbering[$numId][$lvlId], 'decimal-leading-zero')) {
+            if (!strrpos($currentHtml, '<ol id="list' . $numId . '"'))
+                $html .= '<ol id="list' . $numId . '">';
+       // }
+        /*else {
             if (!strrpos($currentHtml, '<ul id="list'. $numId . '"'))
                 $html .= '<ul id="list'. $numId . '">';
+        } */
 
-            $attrs = $this->_textParser->parseTextStyle($p->pPr);
-            $className = $this->_paragraphParser->parseParagraphStyle($p);
+         if (strrpos($this->_numbering[$numId][$lvlId], 'decimal') || strrpos($this->_numbering[$numId][$lvlId], 'decimal-leading-zero')) {
+             $className .= " decimal-list";
+         }
 
-            if ($className)
-                if(isset($this->_numbering[$numId]))
-                    $html .= '<li class="' . $className .'" style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . implode(';', $attrs) . '">';
-                else $html .= '<li class="' . $className .'" style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
-            else
-                if(isset($this->_numbering[$numId]))
-                    $html .= '<li style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . '">';
-                else $html .= '<li style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
-        }
+
+        if ($className)
+            if(isset($this->_numbering[$numId]))
+                $html .= '<li class="' . $className .'" style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . implode(';', $attrs) . '">';
+            else $html .= '<li class="' . $className .'" style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
+        else
+            if(isset($this->_numbering[$numId]))
+                $html .= '<li style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . '">';
+            else $html .= '<li style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
         return $html;
     }
 
@@ -65,6 +118,32 @@ class ListParser {
             case "upperLetter": return 'upper-alpha'; break;
             case "upperRoman": return 'upper-roman'; break;
             default: return 'none'; break;
+        }
+    }
+
+    public function getListsCount($children){
+        $this->counts = array();
+        foreach ($children as $child) {
+            if ($child->pPr->numPr) {
+                $numId = (int)$child->pPr->numPr->numId['val'];
+                $ilvl = (int)$child->pPr->numPr->ilvl['val'];
+
+                if (isset($this->_counts[$numId][$ilvl])) $this->_counts[$numId][$ilvl]++;
+                else  $this->_counts[$numId][$ilvl] = 0;
+            }
+            else if ($child->pPr->pStyle) {
+                $styleId = (String)$child->pPr->pStyle['val'];
+                if (is_numeric($styleId)) $styleId = 'id' . $styleId;
+                foreach ($this->_styleList as $style => $val){
+                    if ($style == $styleId) {
+                        $numId = $val['numId'];
+                        if (isset($val['ilvl'])) $ilvl = $val['ilvl'];
+                        else $ilvl = 0;
+                        if (isset($this->_counts[$numId][$ilvl])) $this->_counts[$numId][$ilvl]++;
+                        else  $this->_counts[$numId][$ilvl] = 0;
+                    }
+                }
+            }
         }
     }
 }

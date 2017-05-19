@@ -30,8 +30,12 @@ class GraphicParser{
             if ($a->graphic)
                 $html .= $this->parseGraphic($a->graphic);
         }
+        if ($wp->anchor){
+            $a = $wp->anchor->children($namespaces['a']);
+            if ($a->graphic)
+                $html .= $this->parseGraphic($a->graphic);
+        }
         return $html;
-        //if ($wp->anchor)
     }
 
     public function parseInlineWP($wp){
