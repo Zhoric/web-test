@@ -82,7 +82,6 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     protected function writeApiCall($url){
-        //$this->writeNewLine();
         $this->writeConsoleMessage('URL: '.$url, 'cyan', 0);
     }
 }

@@ -54,11 +54,16 @@ class CheckResultJob implements ShouldQueue
        $mark = $this->fileManager->calculateMark($this->codeTasks);
        echo "оценка $mark\n";
 
+       $this->fileManager->removeDir($this->codeTasks[0]->dirPath);
+
+       echo "директория  c исходниками удалена\n";
+
        TestResultCalculator::setAnswerMark($this->codeTasks[0]->givenAnswerId, $mark);
        foreach($this->codeTasks as $codeTask){
            echo $codeTask->key." почищена\n";
            $codeTask->delete();
        }
+
        return;
     }
 }

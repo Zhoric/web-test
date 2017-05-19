@@ -13,7 +13,8 @@
             <!--directory>./tests</directory-->
             <!--directory suffix="Tests.php">./tests</directory-->
             <!--directory suffix="Tests.php">./tests/Unit</directory-->
-            <directory suffix="Tests.php">./tests/Integration</directory>
+            <directory suffix="Test.php">./tests/Unit</directory>
+            <!--directory suffix="Tests.php">./tests/Integration</directory-->
         </testsuite>
     </testsuites>
     <filter>

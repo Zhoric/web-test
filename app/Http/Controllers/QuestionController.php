@@ -74,8 +74,12 @@ class QuestionController extends Controller
             $question = new Question();
             $question->fillFromJson($questionData);
 
+          //  var_dump($request->json('answers'));
+
             if ($file != null){
                 $filePath = FileHelper::save($file, $fileType);
+
+
                 $question->setImage($filePath);
             }
             $this->_questionManager->create($question,$themeId,$answers,$program,$paramSets);

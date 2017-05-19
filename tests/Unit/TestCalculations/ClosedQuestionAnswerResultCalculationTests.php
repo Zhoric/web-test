@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use TestEngine\AnswerChecker;
 
 class ClosedQuestionAnswerResultCalculationTest extends TestCase
 {
 
-    /**
+
+   /**
      * Метод подсчёта оценки на закрытый вопрос должен возвращать 0, если не было выбрано ни одного ответа.
      */
     public function testCalculatePointsForClosedAnswerShouldReturn0IfNoAnswersGiven()
@@ -98,5 +97,6 @@ class ClosedQuestionAnswerResultCalculationTest extends TestCase
         //Assert
         $this->assertEquals(50, $twoRightOneWrongMark);
     }
+
 
 }

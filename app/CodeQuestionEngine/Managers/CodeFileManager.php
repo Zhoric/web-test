@@ -171,6 +171,14 @@ class CodeFileManager
         fclose($fp);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInputFileName()
+    {
+        return $this->inputFileName;
+    }
+
 
     /**
      * @return mixed
@@ -244,6 +252,38 @@ class CodeFileManager
         $this->setDirPath($dirPath);
         $this->uniqueDirName = $this->getDirNameFromFullPath();
         return $dirPath;
+    }
+
+    public function createNonUniqueDir(User $user){
+        try {
+            $dirName = $user->getFirstname() . "_" .
+                $user->getLastname() . "_" .
+                $user->getPatronymic();
+            $cacheDir = EngineGlobalSettings::CACHE_DIR;
+
+            $dirPath = "$this->app_path/$cacheDir/$dirName";
+            mkdir($dirPath, 0777);
+        } catch (\Exception $e) {
+            throw new \Exception("Не удалось создать директорию!");
+        }
+        $this->setDirPath($dirPath);
+        $this->uniqueDirName = $this->getDirNameFromFullPath();
+        return $dirPath;
+    }
+
+    public function removeDir($dir){
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir."/".$object) == "dir")
+                        $this->removeDir($dir."/".$object); else unlink($dir."/".$object);
+                }
+            }
+            reset($objects);
+            rmdir($dir);
+        }
+
     }
 
 
@@ -585,6 +625,7 @@ class CodeFileManager
             file_put_contents($filePath, $text);
 
             return ["scriptName" => $this->getBaseShellScriptName(), "executeFileName" => $this->executeFileName];
+
         }
         catch (\Exception $e)
         {
