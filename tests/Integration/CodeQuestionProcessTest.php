@@ -1,37 +1,27 @@
 <?php
-
+use Helpers\DateHelper;
 use Illuminate\Support\Facades\DB;
+
 
 /**
  * Тестирование полного процесса создания и прохождения теста студентом.
  * Запуск:
  *          cd /var/www/web-test
  *          phpunit --debug
- *
+
  *     Настройки среды, которые могут повлиять на успешность теста:
  * -- серверное время - от времени зависит определение текущего семестра для студента, а следовательно список дисциплин, по которым студент может пройти тест в текущий момент.
  * -- работа Redis Cache - для корректной работы процесса тестирования обязателен запуск сервера Redis Cache.
  * -- наличие базы данных, указанной в файле .env с применением всех миграций.
  *
  */
-class CodeQuestionProcessTests extends TestCase
+class CodeQuestionProcessTest extends TestCase
 {
     // Данные тестовых учётных записей
     private static $ADMIN_EMAIL = 'admin@admin.ru';
     private static $LECTURER_EMAIL = 'lecturer@lecturer.ru';
     private static $STUDENT_EMAIL = 'student@student.ru';
     private static $PASSWORD = '123456';
-
-
-    // Идентификаторы тестовых сущностей
-
-    private static $HTML_DISCIPLINE_THEME_ID = 1;
-
-    // Идентификаторы тестовых вопросов по дисциплине "WEB-технологии"
-    private static $C_CODE_QUESTION_ID = 1;
-    private static $PHP_CODE_QUESTION_ID = 2;
-    private static $PASCAL_CODE_QUESTION_ID = 3;
-
 
     // Идентификаторы тестовых учётных записей
     private static $ADMIN_ID = 1;
@@ -48,17 +38,16 @@ class CodeQuestionProcessTests extends TestCase
     private static $ISIT_PROFILE_ID = 1;
     private static $ISIT_STUDY_PLAN_ID = 1;
     private static $WEB_DISCIPLINE_ID = 1;
-
+    private static $HTML_DISCIPLINE_THEME_ID = 1;
     private static $STUDENT_GROUP_ID = 1;
     private static $WEB_TEST_ID = 1;
     private static $TEST_RESULT_ID = 1;
 
     // Идентификаторы тестовых вопросов по дисциплине "WEB-технологии"
-    private static $HTML_MARKUP_QUESTION_ID = 1;
-    private static $CSS_QUESTION_ID = 2;
-    private static $JAVASCRIPT_QUESTION_ID = 3;
-    private static $HTML_VERSION_QUESTION_ID = 4;
-    private static $MIME_TYPES_QUESTION_ID = 5;
+    private static $C_CODE_QUESTION_ID = 1;
+    private static $PHP_CODE_QUESTION_ID = 2;
+    private static $PASCAL_CODE_QUESTION_ID = 3;
+
 
     // Пути к папкам относительно папки /public
     private static $QUESTION_IMAGES_DIR = "/images/questions";
@@ -77,22 +66,17 @@ class CodeQuestionProcessTests extends TestCase
     private static $OPEN_QUESTION_ANSWER_ID;
 
     //Константы процесса тестирования.
-    private static $QUESTIONS_COUNT = 5;
+    private static $QUESTIONS_COUNT = 3;
     private static $EXPECTED_RESULT_MARK = 75;
 
 
-
-    /**
-     * Тестирование полного процесса создания и прохождения теста студентом.
-     */
     public function testFullProcess(){
-        $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ РАБОТЫ С ВОПРОСАМИ С КОДОМ. -----', 'cyan', 2);
+        $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ ДВИЖКА С ВОПРОСАМИ С КОДОМ. -----', 'cyan', 2);
 
         $this->createInstitute();
         $this->createProfile();
         $this->createRoles();
         $this->createAdminAccount();
-        $this->createUserAccount();
 
         $this->logIn(self::$ADMIN_EMAIL, self::$PASSWORD);
         $this->createDiscipline();
@@ -105,25 +89,21 @@ class CodeQuestionProcessTests extends TestCase
         $this->createGroupWithStudyPlanAttached();
         $this->createDisciplineTheme();
         $this->createCodeQuestionC();
-        $this->createCodeQuestionPHP();
         $this->createCodeQuestionPascal();
+        $this->createCodeQuestionPHP();
         $this->createTest();
         $this->logOut();
 
-        $this->logIn(self::$STUDENT_EMAIL, self::$PASSWORD);
+        $this->sendStudentRegistrationApplication();
 
+        $this->logIn(self::$LECTURER_EMAIL, self::$PASSWORD);
+        $this->acceptStudentRegistrationApplication();
+        $this->logOut();
+
+        $this->logIn(self::$STUDENT_EMAIL, self::$PASSWORD);
         $this->startTest();
         $this->answerAllTestQuestions();
-        $this->checkTestResultHasNoMark();
-        $this->checkTestResultAvailableInResultsList();
         $this->logOut();
-
-
-        $this->logIn(self::$STUDENT_EMAIL, self::$PASSWORD);
-        $this->checkStudentCanSeeNewMark();
-        $this->checkStudentCanStartTestIfExtraAttemptWasAdded();
-        $this->logOut();
-
 
         $this->writeConsoleMessage(PHP_EOL.'---- ТЕСТИРОВАНИЕ ВОПРОСОВ С КОДОМ ПРОШЛО УСПЕШНО. ----', 'green', 2);
     }
@@ -141,7 +121,9 @@ class CodeQuestionProcessTests extends TestCase
         $this->clearRedis();
         $this->writeConsoleMessage('Заполнение данными таблицы глобальных настроек тестирования. [Seed]', 'grey', 1);
         $this->seed('SettingsTableSeeder');
-
+        $this->checkQuestionImagesDirectoryWritable();
+        $this->checkImportDirectoryWritable();
+        $this->clearPublicFolder(self::$QUESTION_IMAGES_DIR);
     }
 
     /**
@@ -150,185 +132,11 @@ class CodeQuestionProcessTests extends TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        //this->clearTables();
-        //$this->clearRedis();
+
+        $this->clearTables();
+        $this->clearRedis();
+        $this->clearPublicFolder(self::$QUESTION_IMAGES_DIR);
     }
-
-    /**
-     * Последовательное получение и отправка ответа на все вопросы теста.
-     */
-    protected function answerAllTestQuestions(){
-        $questionsAnswered = 0;
-
-        // Вопросы будут запрашиваться до тех пор, пока с сервера не вернётся результат теста.
-        while (true) {
-            $questionData = $this->getNextTestQuestion();
-            if (!array_key_exists('question', $questionData)) break;
-
-            $answerData = $this->createQuestionAnswerData($questionData);
-            $this->answerTestQuestion($answerData);
-            $questionsAnswered++;
-        }
-        $this->writeConsoleMessage('Проверка общего количества полученных вопросов теста.');
-        $this->assertEquals(self::$QUESTIONS_COUNT, $questionsAnswered);
-        $this->writeOk();
-    }
-
-    protected function createUserAccount(){
-        $this->writeConsoleMessage('Создание аккаунта студента. [API]');
-
-        DB::table('user')->insert(array(
-            'id' => self::$STUDENT_ID,
-            'firstname' => 'Кирилл',
-            'lastname' => 'Сухоруких',
-            'email' => self::$STUDENT_EMAIL,
-            'password' => bcrypt(self::$PASSWORD),
-            'active' => true));
-
-        $this->seeInDatabase('user', ['id' => self::$STUDENT_ID, 'email' => self::$STUDENT_EMAIL]);
-
-        DB::table('role_user')->insert([
-            'role_id' => self::$STUDENT_ID,
-            'user_id' => self::$STUDENT_ROLE_ID,
-        ]);
-
-        $this->seeInDatabase('role_user', ['role_id' => self::$STUDENT_ID, 'user_id' => self::$STUDENT_ROLE_ID]);
-
-
-        $this->writeOk();
-    }
-
-    /**
-     * Создание объекта с данными ответа на вопрос теста.
-     * @param $questionData - Данные текущего вопроса.
-     * @return array
-     * @throws Exception
-     */
-    protected function createQuestionAnswerData($questionData){
-        $question = $questionData->question;
-        $answers = $questionData->answers;
-
-        $answerData = [
-            'questionId' => $question->id,
-            'answerIds' => [],
-            'answerText' => ''
-        ];
-
-        // Заполняем объект ответа на вопрос в соответствии с вопросом.
-        switch ($question->id){
-            case self::$C_CODE_QUESTION_ID:{
-
-                break;
-            }
-            case self::$PHP_CODE_QUESTION_ID:{
-
-                break;
-            }
-            case self::$PASCAL_CODE_QUESTION_ID:{
-
-                break;
-            }
-
-            default: {
-                throw new Exception('Для данного вопроса не указаны подходящие ответы');
-            }
-        }
-
-        return $answerData;
-    }
-
-    /**
-     * Создание открытого вопроса с кодом на языке С
-     *
-     */
-    private function createCodeQuestionC(){
-
-            $this->writeConsoleMessage('Создание вопроса теста с кодом на языке С. [API]');
-            $apiUri = '/api/questions/create';
-            $this->writeApiCall($apiUri);
-
-            $this->json('POST', $apiUri,
-                [ "question" => [
-                    'id' => self::$C_CODE_QUESTION_ID,
-                    'type' => QuestionType::WithProgram,
-                    'text' => 'Выведите Hello world на языке С',
-                    'complexity' => QuestionComplexity::Low,
-                    'time' => 20],
-                    "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                    "program" => '#include <stdio.h> int main(){printf("Hello world");}',
-                    "timeLimit" => '1',
-                    "memoryLimit" => '1',
-                    "lang" => "C",
-                    "paramSets" => [
-                        ["input" => 2, "expectedOutput" => "Hello World"]
-                    ],
-                ])
-                ->seeJson(['Success' => true]);
-
-
-            $this->writeOk();
-
-        }
-
-
-    private function createCodeQuestionPHP(){
-
-            $this->writeConsoleMessage('Создание вопроса теста с кодом на языке PHP. [API]');
-            $apiUri = '/api/questions/create';
-            $this->writeApiCall($apiUri);
-
-            $this->json('POST', $apiUri,
-                [ "question" => [
-                    'id' => self::$PHP_CODE_QUESTION_ID,
-                    'type' => QuestionType::WithProgram,
-                    'text' => 'Выведите Hello world на языке PHP',
-                    'complexity' => QuestionComplexity::Low,
-                    'time' => 20],
-                    "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                    "program" => "echo 'Hello world' ",
-                    "timeLimit" => '1',
-                    "memoryLimit" => '1',
-                    "lang" => "PHP",
-                    "paramSets" => [
-                        ["input" => 2, "expectedOutput" => "Hello World"]
-                    ],
-                ])
-                ->seeJson(['Success' => true]);
-
-
-            $this->writeOk();
-        }
-
-
-    private function createCodeQuestionPascal(){
-
-            $this->writeConsoleMessage('Создание вопроса теста с кодом на языке Pascal. [API]');
-            $apiUri = '/api/questions/create';
-            $this->writeApiCall($apiUri);
-
-            $this->json('POST', $apiUri,
-                [ "question" => [
-                    'id' => self::$PASCAL_CODE_QUESTION_ID,
-                    'type' => QuestionType::WithProgram,
-                    'text' => 'Выведите Hello world на языке Pascal',
-                    'complexity' => QuestionComplexity::Low,
-                    'time' => 20],
-                    "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                    "program" => "begin writeln ('Hello, world.'); end.",
-                    "timeLimit" => '1',
-                    "memoryLimit" => '1',
-                    "lang" => "Pascal",
-                    "paramSets" => [
-                        ["input" => 2, "expectedOutput" => "Hello World"]
-                    ],
-                ])
-                ->seeJson(['Success' => true]);
-
-
-            $this->writeOk();
-        }
-
-
 
     /**
      * Очистка всех задействованных в тесте таблиц.
@@ -360,6 +168,98 @@ class CodeQuestionProcessTests extends TestCase
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }
+
+    /**
+     * Создание открытого вопроса с кодом на языке С
+     *
+     */
+    private function createCodeQuestionC(){
+
+        $this->writeConsoleMessage('Создание вопроса теста с кодом на языке С. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
+
+        $this->json('POST', $apiUri,
+            [ "question" => [
+                'id' => self::$C_CODE_QUESTION_ID,
+                'type' => QuestionType::WithProgram,
+                'text' => 'Выведите Hello world на языке С',
+                'complexity' => QuestionComplexity::Low,
+                'time' => 20],
+                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
+                "program" => '#include <stdio.h> int main(){printf("Hello world");}',
+                "timeLimit" => '1',
+                "memoryLimit" => '1',
+                "lang" => "C",
+                "paramSets" => [
+                    ["input" => 2, "expectedOutput" => "Hello World"]
+                ],
+            ])
+            ->seeJson(['Success' => true]);
+
+
+        $this->writeOk();
+
+    }
+
+
+    private function createCodeQuestionPHP(){
+
+        $this->writeConsoleMessage('Создание вопроса теста с кодом на языке PHP. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
+
+        $this->json('POST', $apiUri,
+            [ "question" => [
+                'id' => self::$PHP_CODE_QUESTION_ID,
+                'type' => QuestionType::WithProgram,
+                'text' => 'Выведите Hello world на языке PHP',
+                'complexity' => QuestionComplexity::Low,
+                'time' => 20],
+                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
+                "program" => "echo 'Hello world' ",
+                "timeLimit" => '1',
+                "memoryLimit" => '1',
+                "lang" => "PHP",
+                "paramSets" => [
+                    ["input" => 2, "expectedOutput" => "Hello World"]
+                ],
+            ])
+            ->seeJson(['Success' => true]);
+
+
+        $this->writeOk();
+    }
+
+
+    private function createCodeQuestionPascal(){
+
+        $this->writeConsoleMessage('Создание вопроса теста с кодом на языке Pascal. [API]');
+        $apiUri = '/api/questions/create';
+        $this->writeApiCall($apiUri);
+
+        $this->json('POST', $apiUri,
+            [ "question" => [
+                'id' => self::$PASCAL_CODE_QUESTION_ID,
+                'type' => QuestionType::WithProgram,
+                'text' => 'Выведите Hello world на языке Pascal',
+                'complexity' => QuestionComplexity::Low,
+                'time' => 20],
+                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
+                "program" => "begin writeln ('Hello, world.'); end.",
+                "timeLimit" => '1',
+                "memoryLimit" => '1',
+                "lang" => "Pascal",
+                "paramSets" => [
+                    ["input" => 2, "expectedOutput" => "Hello World"]
+                ],
+            ])
+            ->seeJson(['Success' => true]);
+
+
+        $this->writeOk();
+    }
+
 
 
     /**
@@ -619,21 +519,22 @@ class CodeQuestionProcessTests extends TestCase
      */
     protected function createLecturerWithDisciplineAttached(){
         $this->writeConsoleMessage('Создание учётной записи преподавателя c закреплением за ним дисциплины. [API]');
+        $apiUri = '/api/lecturers/create';
+        $this->writeApiCall($apiUri);
 
-
-        DB::table('user')->insert(array(
-            'id' => self::$LECTURER_ID,
+        $this->json('POST', $apiUri, ["lecturer" =>[
             'firstName' => 'Александр',
             'lastName' => 'Овчинников',
             'email' => self::$LECTURER_EMAIL,
-            'password' => bcrypt(self::$PASSWORD),
-            'active' => true));
+            'password' => self::$PASSWORD
+        ], "disciplineIds" => [self::$WEB_DISCIPLINE_ID]])
+            ->seeJson(['Success' => true]);
 
-        DB::table('discipline_lecturer')->insert(array(
-           'lecturer_id' => self::$LECTURER_ID,
-            'discipline_id' => self::$WEB_DISCIPLINE_ID,
-        ));
-
+        $this->seeInDatabase('user',['email' => self::$LECTURER_EMAIL]);
+        $this->seeInDatabase('role_user', ['user_id' => self::$LECTURER_ID,
+            'role_id' => self::$LECTURER_ROLE_ID]);
+        $this->seeInDatabase('discipline_lecturer', ['lecturer_id' => self::$LECTURER_ID,
+            'discipline_id' => self::$WEB_DISCIPLINE_ID]);
         $this->writeOk();
     }
 
@@ -681,55 +582,7 @@ class CodeQuestionProcessTests extends TestCase
         $this->writeOk();
     }
 
-    /**
-     * Создание закрытого вопроса теста с единственным правильным ответом и изображением.
-     */
-    protected function addClosedOneAnswerQuestionWithImage(){
-        $this->writeConsoleMessage('Создание закрытого вопроса теста с единственным правильным ответом и изображением. [API]');
-        $apiUri = '/api/questions/create';
-        $this->writeApiCall($apiUri);
 
-        $this->json('POST', $apiUri,
-            [ "question" => [
-                'id' => self::$HTML_MARKUP_QUESTION_ID,
-                'type' => QuestionType::ClosedOneAnswer,
-                'text' => 'Что означает вторая буква в названии языка HTML?',
-                'complexity' => QuestionComplexity::Low,
-                'time' => 20],
-                "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "answers" =>
-                    [['text' => 'Makeup', 'isRight' => false],
-                        ['text' => 'Markup', 'isRight' => true],
-                        ['text' => 'Malware', 'isRight' => false]],
-                //"file" => TestDataSource::getTestImageBase64Content(),
-                //"fileType" => TestDataSource::getTestImageFileType(),
-            ])
-            ->seeJson(['Success' => true]);
-
-        /*
-        $this->seeInDatabase('question', [
-            'theme_id' => self::$HTML_DISCIPLINE_THEME_ID,
-            'type' => QuestionType::ClosedOneAnswer,
-            'time' => 20])
-            ->notSeeInDatabase('question', [                // У вопроса в БД должна быть ссылка на изображение
-                'id' => self::$HTML_MARKUP_QUESTION_ID,
-                'image' => null
-            ]);
-
-        $this->seeInDatabase('answer', ['text' => 'Makeup', 'is_right' => false,
-            'question_id' => self::$HTML_MARKUP_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' =>'Markup', 'is_right' => true,
-                'question_id' => self::$HTML_MARKUP_QUESTION_ID])
-            ->seeInDatabase('answer', ['text' => 'Malware', 'is_right' => false,
-                'question_id' => self::$HTML_MARKUP_QUESTION_ID]);
-        $this->writeOk();
-
-        $questionImagesFolderPath = public_path().self::$QUESTION_IMAGES_DIR;
-        $this->writeConsoleMessage("Проверка наличия файла изображения в папке $questionImagesFolderPath. [DIR]");
-        $this->assertEquals(1, (count(glob($questionImagesFolderPath."/*"))));
-        $this->writeOk();
-        */
-    }
 
     /**
      * Создание закрытого вопроса теста с несколькими правильными ответами.
@@ -901,6 +754,35 @@ class CodeQuestionProcessTests extends TestCase
         $this->writeOk();
     }
 
+    /**
+     * Отправка студентом заявки на регистрацию в системе.
+     */
+    protected function sendStudentRegistrationApplication(){
+        $this->writeConsoleMessage('Отправка студентом заявки на регистрацию в системе. [API]');
+        $apiUri = '/register';
+        $this->writeApiCall($apiUri);
+
+        $this->json('POST', '/register', [
+            'user' => [
+                'id' => self::$STUDENT_ID,
+                'email' => self::$STUDENT_EMAIL,
+                'password' => self::$PASSWORD,
+                'firstname' => 'Никита',
+                'lastname' => 'Жихарев',
+            ],
+            'role' => UserRole::Student,
+            'groupId' => self::$STUDENT_GROUP_ID
+        ])
+            ->seeJson(['Success' => true]);
+
+        $this->seeInDatabase('user', ['email' => self::$STUDENT_EMAIL, 'active' => false])
+            ->seeInDatabase('role_user', ['role_id' => self::$STUDENT_ROLE_ID,
+                'user_id' => self::$STUDENT_ID])
+            ->seeInDatabase('student_group', ['group_id' => self::$STUDENT_GROUP_ID,
+                'student_id' => self::$STUDENT_ID]);
+
+        $this->writeOk();
+    }
 
     /**
      * Проверка невозможности авторизации студента без подтверждения заявки на регистрацию.
@@ -1006,6 +888,28 @@ class CodeQuestionProcessTests extends TestCase
         $this->writeOk();
     }
 
+    /**
+     * Последовательное получение и отправка ответа на все вопросы теста.
+     */
+    protected function answerAllTestQuestions(){
+        $questionsAnswered = 0;
+
+        // Вопросы будут запрашиваться до тех пор, пока с сервера не вернётся результат теста.
+        while (true) {
+            $questionData = $this->getNextTestQuestion();
+            if (!array_key_exists('question', $questionData)) break;
+
+            $answerData = $this->createQuestionAnswerData($questionData);
+            $this->answerTestQuestion($answerData);
+            $questionsAnswered++;
+
+
+        }
+
+        $this->writeConsoleMessage('Проверка общего количества полученных вопросов теста.');
+        $this->assertEquals(self::$QUESTIONS_COUNT, $questionsAnswered);
+        $this->writeOk();
+    }
 
     /**
      * Получение очередного вопроса студентом.
@@ -1026,6 +930,45 @@ class CodeQuestionProcessTests extends TestCase
         return $responseData;
     }
 
+    /**
+     * Создание объекта с данными ответа на вопрос теста.
+     * @param $questionData - Данные текущего вопроса.
+     * @return array
+     * @throws Exception
+     */
+    protected function createQuestionAnswerData($questionData){
+        $question = $questionData->question;
+        $answers = $questionData->answers;
+
+        $answerData = [
+            'questionId' => $question->id,
+            'answerIds' => [],
+            'answerText' => ''
+        ];
+
+        // Заполняем объект ответа на вопрос в соответствии с вопросом.
+        switch ($question->id){
+            case self::$C_CODE_QUESTION_ID:{
+                //$this->checkQuestionWithImageHasImage($questionData);
+                $answerData['answerIds'] = $this->getAnswersIds($answers, ['Markup']);
+                break;
+            }
+            case self::$PASCAL_CODE_QUESTION_ID:{
+                $answerData['answerIds'] = $this->getAnswersIds($answers, ['margin', 'padding']);
+                break;
+            }
+            case self::$PHP_CODE_QUESTION_ID:{
+                $answerData['answerIds'] = $this->getAnswersIds($answers, ['Унарный +']);
+                break;
+            }
+
+            default: {
+                throw new Exception('Для данного вопроса не указаны подходящие ответы');
+            }
+        }
+
+        return $answerData;
+    }
 
     /**
      * Отправка ответа на вопрос.
@@ -1224,6 +1167,9 @@ class CodeQuestionProcessTests extends TestCase
             exit (0);
         }
     }
+
+
+
 
 
 
