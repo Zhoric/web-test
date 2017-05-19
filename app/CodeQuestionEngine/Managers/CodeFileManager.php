@@ -345,8 +345,11 @@ class CodeFileManager
      */
     public function compareOutputs($inputFileName, $outputFileName)
     {
+        $character_mask = " \t\n\r\0\x0B";
         $input = file_get_contents("$this->dirPath/$inputFileName");
+        $input = trim ( $input, $character_mask);
         $output = file_get_contents("$this->dirPath/$outputFileName");
+        $output = trim ( $output, $character_mask);
 
         return $input == $output;
     }
@@ -438,9 +441,13 @@ class CodeFileManager
 
         $dir_items  = scandir($this->dirPath);
         if($this->executeFileName === ""){
-            $this->executeFileName = $this->getCodeFileName();
+            return $this->getCodeFileName();
         }
-        $name = explode(".",$this->executeFileName)[0];
+        else {
+            $executeFileName = $this->executeFileName;
+        }
+
+        $name = explode(".",$executeFileName)[0];
         foreach($dir_items as $item){
             if(strstr($item,$name)){
                 return $item;
@@ -449,12 +456,14 @@ class CodeFileManager
         return "";
     }
 
-    protected function renameFile($old,$new){
-        rename($this->dirPath."/".$old
+    protected function copyFile($old, $new){
+         copy($this->dirPath."/".$old
             ,$this->dirPath."/".$new);
     }
 
-    protected function putBaseShellScriptInfoIntoExecuteShellScript($executeShellScriptName, $executeFileName){
+
+
+    protected function putBaseShellScriptInfoIntoExecuteShellScript($executeShellScriptName, $executeFileNameForTestCase){
 
 
         $filePath = "$this->app_path/$this->cacheDirName/$this->uniqueDirName/$executeShellScriptName";
@@ -467,16 +476,31 @@ class CodeFileManager
         $alreadyExistedExecutionFile = $this->getExecutionFileNameIfExist();
 
 
+
+        //TODO:: переписать этот участок, это говнокод
+
+
         if($alreadyExistedExecutionFile == ""){
 
         $text = $this->getBaseShellScriptText();
-        $text = str_replace($this->keyWordToPutObjectFile, $executeFileName,$text);
+        $text = str_replace($this->keyWordToPutObjectFile, $executeFileNameForTestCase,$text);
 
         }
-        else{
-            $this->renameFile($alreadyExistedExecutionFile, $executeFileName);
+        elseif($this->executeFileName == ""){
+            $this->copyFile($alreadyExistedExecutionFile, $executeFileNameForTestCase);
             $text = $this->keyWordToRun;
         }
+        elseif($alreadyExistedExecutionFile == $this->getCodeFileName()){
+
+            $text = $this->getBaseShellScriptText();
+            $text = str_replace($this->executeFileName,$executeFileNameForTestCase,$text);
+            if(!str_contains($executeFileNameForTestCase,".")){
+                $executeFileNameForTestCase.=".".$this->codeFileExtension;
+            }
+            $this->copyFile($alreadyExistedExecutionFile, $executeFileNameForTestCase);
+        }
+
+
 
         $command = $command . $text;
 
@@ -508,13 +532,21 @@ class CodeFileManager
         $executeFileNameForTestCase = $this->getExecuteFileName();
 
         if($executeFileNameForTestCase === ""){
-            return $this->getCodeFileName();
+            $executeFileNameForTestCase =  $this->getCodeFileName();
         }
 
         $splitted = explode(".", $executeFileNameForTestCase);
+
         $first_part = $splitted[0].'_'.$programId.'_'.$testCaseNum;
-        $second_part = $splitted[1];
-        $executeFileNameForTestCase = $first_part.".".$second_part;
+
+        if(count($splitted ) > 1) {
+            $second_part = $splitted[1];
+            $executeFileNameForTestCase = $first_part.".".$second_part;
+        }
+        else{
+            $executeFileNameForTestCase = $first_part;
+        }
+
         return $executeFileNameForTestCase;
     }
 
@@ -546,7 +578,6 @@ class CodeFileManager
                 , $this->executeFileName);
             $testShellScriptText = file_get_contents($filePath);
 
-            //todo:: доделать
             $command = $this->CreateCommandStringToExecute($this->executeFileName
                 ,$this->inputFileName
                 , $this->outputFileName,false);
@@ -575,9 +606,9 @@ class CodeFileManager
         try {
             $scriptName = $this->createShellScriptNameForTestCase($testCaseNum);
 
-            $isScriptLang = false;
+            $isNoExecuteFile = false;
             if($this->executeFileName === ""){
-                $isScriptLang = true;
+                $isNoExecuteFile = true;
             }
 
             $executeFileNameForTestCase = $this->getExecuteFileNameForTestCase($programId, $testCaseNum);
@@ -593,7 +624,7 @@ class CodeFileManager
             $command = $this->CreateCommandStringToExecute($executeFileNameForTestCase
                 , $inputFileName
                 , $outputFileName
-                , $isScriptLang);
+                , $isNoExecuteFile);
 
 
             $text = str_replace($this->keyWordToRun, $command, $testShellScriptText);

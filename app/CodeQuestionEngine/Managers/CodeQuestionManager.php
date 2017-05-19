@@ -141,6 +141,7 @@ class CodeQuestionManager
             $script_name = $result["scriptName"];
             $executeFileName = $result["executeFileName"];
 
+
             $command = "sh /opt/$cache_dir/$dirName/$script_name";
 
             $codeTask = new CodeTask($program->getId()

@@ -65,10 +65,12 @@ class DemoController extends BaseController
 
 
 
-        $program = $this->_uow->programs()->find(6);
+        $program = $this->_uow->programs()->find(8);
 
         $this->manager->setProgramLanguage($program->getLang());
-        $this->manager->runQuestionProgram($program->getTemplate(), $program);
+        $testResult = $this->_uow->testResults()->find(1);
+        $question = $this->_uow->questions()->find(1);
+        $this->manager->runQuestionProgram($program->getTemplate(),$program,$testResult,$question);
         sleep(1);
 
         dd("done");

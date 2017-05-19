@@ -51,9 +51,18 @@ class EngineGlobalSettings
      * Для скриптовых языков оставьте пустую строку
      */
     const EXECUTE_FILE_NAME = [
-        \Language::C => 'c_output.out',
+        \Language::C => "c_output.out",
         \Language::PHP => "",
-        \Language::Pascal => 'pascal_output.out',
+        \Language::Pascal => "code",
+    ];
+
+    /**
+     * Требуется ли компиляция для данного языка
+     */
+    const SCRIPT_LANGUAGE = [
+        \Language::C => false,
+        \Language::Pascal => false,
+        \Language::PHP => true,
     ];
 
     /**
