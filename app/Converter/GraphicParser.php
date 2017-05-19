@@ -55,4 +55,5 @@ class GraphicParser{
         }
         return $html;
     }
+
 }

@@ -44,53 +44,49 @@ class DocxReader{
      * @throws
      */
     private function load($file) {
-        if (file_exists($file)) {
-            $zip = new ZipArchive();
-            $openedZip = $zip->open($file);
-            if ($openedZip != true) {
-                $this->getOpenedZipError($openedZip);
-                exit();
-            }
-            $this->setStyles($zip);
-            $this->setRelations($zip);
-            $this->setNumbering($zip);
-            $data = $this->getMainXml($zip);
-            $zip->close();
-            return $data;
-        }
-        else throw new Exception('Файла не существует!');
+        if (!file_exists($file)) throw new Exception('Файла не существует!');
+        $zip = new ZipArchive();
+        $openedZip = $zip->open($file);
+
+        if ($openedZip != true) throw new Exception($this->getOpenedZipError($openedZip));
+        $this->setStyles($zip);
+        $this->setRelations($zip);
+        $this->setNumbering($zip);
+        $data = $this->getMainXml($zip);
+        $zip->close();
+        return $data;
     }
 
     /**
      * Установка ошибок при открытии архива
      * @param $openedZip
-     *
+     * @return string
      */
     private function getOpenedZipError($openedZip){
         switch($openedZip) {
             case ZipArchive::ER_EXISTS:
-                $this->errors[] = 'File exists.';
+                return 'File exists.';
                 break;
             case ZipArchive::ER_INCONS:
-                $this->errors[] = 'Inconsistent zip file.';
+                return 'Inconsistent zip file.';
                 break;
             case ZipArchive::ER_MEMORY:
-                $this->errors[] = 'Malloc failure.';
+                return 'Malloc failure.';
                 break;
             case ZipArchive::ER_NOENT:
-                $this->errors[] = 'No such file.';
+                return 'No such file.';
                 break;
             case ZipArchive::ER_NOZIP:
-                $this->errors[] = 'File is not a zip archive.';
+                return 'File is not a zip archive.';
                 break;
             case ZipArchive::ER_OPEN:
-                $this->errors[] = 'Could not open file.';
+                return 'Could not open file.';
                 break;
             case ZipArchive::ER_READ:
-                $this->errors[] = 'Read error.';
+                return 'Read error.';
                 break;
             case ZipArchive::ER_SEEK:
-                $this->errors[] = 'Seek error.';
+                return 'Seek error.';
                 break;
         }
     }
@@ -151,28 +147,48 @@ class DocxReader{
      */
     public function loadImages($file, $path){
         $this->_mainParser->setPath($path);
-        if (file_exists($file)) {
-            $files = array();
-            $zip = new ZipArchive();
-            $openedZip = $zip->open($file);
-            if ($openedZip != true) {
-                $this->getOpenedZipError($openedZip);
-                exit();
+        if (!file_exists($file)) throw new Exception('File does not exist.');
+        $zip = new ZipArchive();
+        $openedZip = $zip->open($file);
+        if ($openedZip != true) throw new Exception($this->getOpenedZipError($openedZip));
+        $this->extractImages($zip, $file);
+        $zip->close();
+    }
+
+    public function changeImagesPath($content, $path){
+        $lastPos = 0;
+
+        $needle = '<img src="http://';
+        $word = '/word';
+
+        while (($lastPos = strpos($content, $needle, $lastPos))!== false) {
+            $wordPos = strpos($content, $word, $lastPos);
+            $firstHalf = substr($content, 0, $lastPos + 17);
+            $secondHalf = substr($content, $wordPos);
+
+            $firstHalf .= $_SERVER['HTTP_HOST'] . '/' . $path;
+            $content = $firstHalf . $secondHalf;
+
+            $lastPos = $lastPos + strlen($needle);
+        }
+
+        return $content;
+
+    }
+
+    private function extractImages($zip, $path){
+        $files = array();
+        // поиск папки с изображениями в архиве и сохранение её содержимого в files
+        for($i = 0; $i < $zip->numFiles; $i++) {
+            $entry = $zip->getNameIndex($i);
+            if (strpos($entry, "/media/")) {
+                $files[] = $entry;
             }
-            // поиск папки с изображениями в архиве и сохранение её содержимого в files
-            for($i = 0; $i < $zip->numFiles; $i++) {
-                $entry = $zip->getNameIndex($i);
-                if (strpos($entry, "/media/")) {
-                    $files[] = $entry;
-                }
-            }
-            if ($zip->extractTo($path, $files) === true) {
-                exec ("find " . $path . " -type d -exec chmod 0777 {} +"); //for sub directory
-                exec ("find " . $path . " -type f -exec chmod 0777 {} +"); //for files inside directory
-            }
-            $zip->close();
-            }
-        else throw new Exception('File does not exist.');
+        }
+        if ($zip->extractTo($path, $files) === true) {
+            exec ("find " . $path . " -type d -exec chmod 0777 {} +"); //for sub directory
+            exec ("find " . $path . " -type f -exec chmod 0777 {} +"); //for files inside directory
+        }
     }
 
 
@@ -196,10 +212,7 @@ class DocxReader{
      * @throws
      */
     public function toHtml() {
-        if (!$this->fileData) {
-            throw new Exception('Файл не загружен!');
-            exit();
-        }
+        if (!$this->fileData) throw new Exception('Файл не загружен!');
         $xml = simplexml_load_string($this->fileData);
         $namespaces = $xml->getNamespaces(true);
         $children = $xml->children($namespaces['w']);
@@ -236,10 +249,6 @@ class DocxReader{
 /x
 END;
         preg_replace($regex, '$1', $this->html);
-    }
-
-    public function getErrors() {
-        return $this->errors;
     }
 
 
