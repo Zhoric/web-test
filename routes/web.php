@@ -397,4 +397,15 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('questions/{themeId}', 'ImportExportController@exportQuestions')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
+
+     /*-----------------------------------------------------------------------------
+    *                          ВНЕШНЕЕ API ДЛЯ МОДУЛЯ ПРОГРАММНОГО КОДА
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'external'], function () {
+        Route::post('setMark', 'TestResultController@setAnswerMark')
+            ->middleware('CheckIP');
+    });
+
+
 });

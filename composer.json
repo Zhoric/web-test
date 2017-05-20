@@ -15,7 +15,8 @@
         "jeroennoten/laravel-ckeditor": "^3.7",
         "kalnoy/nestedset": "^4.1",
         "trupedia/laravel-blade-haml": "~1.0",
-        "barryvdh/laravel-elfinder": "^0.3.8"
+        "barryvdh/laravel-elfinder": "^0.3.8",
+ 	"ixudra/curl": "6.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -27,7 +28,8 @@
 	"illuminate/console": "5.3.*",
 	"laravelcollective/remote": "5.3.*",
         "laravel-doctrine/orm": "1.2.*",
-        "trupedia/laravel-blade-haml": "~1.0"
+        "trupedia/laravel-blade-haml": "~1.0",
+ 	"ixudra/curl": "6.*"
     },
     "autoload": {
         "classmap": [

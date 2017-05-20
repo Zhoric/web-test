@@ -183,6 +183,7 @@ return [
         trupedia\LaravelBladeHaml\LaravelBladeHamlServiceProvider::class,
         JeroenNoten\LaravelCkEditor\ServiceProvider::class,
         Barryvdh\Elfinder\ElfinderServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
     ],
 
@@ -231,7 +232,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'SSH' => Collective\Remote\RemoteFacade::class,
-        'EntityManager' => LaravelDoctrine\ORM\Facades\EntityManager::class
+        'EntityManager' => LaravelDoctrine\ORM\Facades\EntityManager::class,
+        'Curl'          => Ixudra\Curl\Facades\Curl::class,
 
     ],
 
