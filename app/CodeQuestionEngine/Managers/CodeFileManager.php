@@ -272,16 +272,22 @@ class CodeFileManager
     }
 
     public function removeDir($dir){
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->removeDir($dir."/".$object); else unlink($dir."/".$object);
+        try {
+            if (is_dir($dir)) {
+                $objects = scandir($dir);
+                foreach ($objects as $object) {
+                    if ($object != "." && $object != "..") {
+                        if (filetype($dir . "/" . $object) == "dir")
+                            $this->removeDir($dir . "/" . $object); else unlink($dir . "/" . $object);
+                    }
                 }
+                reset($objects);
+                rmdir($dir);
             }
-            reset($objects);
-            rmdir($dir);
+        }
+        catch(Exception $e){
+            $msg = $e->getMessage();
+            throw new Exception("Не удалось удалить директорию: $msg");
         }
 
     }

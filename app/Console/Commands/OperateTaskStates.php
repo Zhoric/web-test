@@ -54,7 +54,6 @@ class OperateTaskStates extends Command
 
                     echo "Ключ: ".$task->key."Состояние: ".$task->state."\n";
                 }
-                echo "checked $i\n";
                 sleep(1);
            }
 

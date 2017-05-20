@@ -55,6 +55,10 @@ class DemoController extends BaseController
 
     public function docker(){
 
+
+
+        $this->dockerManager->dropAllInstances();
+dd();
         $tasks = CodeTask::getAll();
 
 

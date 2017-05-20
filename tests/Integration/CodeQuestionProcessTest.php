@@ -1,5 +1,5 @@
 <?php
-use Helpers\DateHelper;
+use CodeQuestionEngine\CodeQuestionManager;
 use Illuminate\Support\Facades\DB;
 
 
@@ -47,6 +47,11 @@ class CodeQuestionProcessTest extends TestCase
     private static $PHP_CODE_QUESTION_ID = 2;
     private static $PASCAL_CODE_QUESTION_ID = 3;
 
+
+    private static $C_PROGRAM_ID = 1;
+    private static $PHP_PROGRAM_ID = 2;
+    private static $PASCAL_PROGRAM_ID = 3;
+
     //Текст сообщений об ошибках
     private static $AUTHORISATION_REPEAT_ERROR = 'Вы уже вошли под другим пользователем!';
     private static $USER_NOT_EXISTS_ERROR = 'Такого пользователя не существует!';
@@ -56,6 +61,12 @@ class CodeQuestionProcessTest extends TestCase
 
     //Константы процесса тестирования.
     private static $QUESTIONS_COUNT = 3;
+
+
+    /**
+     * @var CodeQuestionManager
+     */
+    private $codeQuestionManager;
 
     public function testFullProcess(){
         $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ ДВИЖКА С ВОПРОСАМИ С КОДОМ. -----', 'cyan', 2);
@@ -76,8 +87,8 @@ class CodeQuestionProcessTest extends TestCase
         $this->createGroupWithStudyPlanAttached();
         $this->createDisciplineTheme();
         $this->createCodeQuestionC();
-        $this->createCodeQuestionPascal();
         $this->createCodeQuestionPHP();
+        $this->createCodeQuestionPascal();
         $this->createTest();
         $this->logOut();
 
@@ -90,6 +101,7 @@ class CodeQuestionProcessTest extends TestCase
         $this->logIn(self::$STUDENT_EMAIL, self::$PASSWORD);
         $this->startTest();
         $this->answerAllTestQuestions();
+        $this->checkTestMark100();
         $this->logOut();
 
         $this->writeConsoleMessage(PHP_EOL.'---- ТЕСТИРОВАНИЕ ВОПРОСОВ С КОДОМ ПРОШЛО УСПЕШНО. ----', 'green', 2);
@@ -119,8 +131,8 @@ class CodeQuestionProcessTest extends TestCase
     {
         parent::tearDown();
 
-        $this->clearTables();
-        $this->clearRedis();
+        //$this->clearTables();
+        //$this->clearRedis();
     }
 
     /**
@@ -150,6 +162,8 @@ class CodeQuestionProcessTest extends TestCase
         DB::table('roles')->truncate();
         DB::table('role_user')->truncate();
         DB::table('extra_attempt')->truncate();
+        DB::table('program')->truncate();
+        DB::table('params_set')->truncate();
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }
@@ -164,6 +178,9 @@ class CodeQuestionProcessTest extends TestCase
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
 
+
+        $app_path = app_path();
+        $text = file_get_contents("$app_path/TestPrograms/code.c");
         $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$C_CODE_QUESTION_ID,
@@ -172,7 +189,7 @@ class CodeQuestionProcessTest extends TestCase
                 'complexity' => QuestionComplexity::Low,
                 'time' => 20],
                 "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "program" => '#include <stdio.h> int main(){printf("Hello world");}',
+                "program" => $text,
                 "timeLimit" => '1',
                 "memoryLimit" => '1',
                 "lang" => "C",
@@ -194,6 +211,9 @@ class CodeQuestionProcessTest extends TestCase
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
 
+        $app_path = app_path();
+        $text = file_get_contents("$app_path/TestPrograms/code.php");
+
         $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$PHP_CODE_QUESTION_ID,
@@ -202,7 +222,7 @@ class CodeQuestionProcessTest extends TestCase
                 'complexity' => QuestionComplexity::Low,
                 'time' => 20],
                 "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "program" => "echo 'Hello world' ",
+                "program" => $text,
                 "timeLimit" => '1',
                 "memoryLimit" => '1',
                 "lang" => "PHP",
@@ -223,6 +243,9 @@ class CodeQuestionProcessTest extends TestCase
         $apiUri = '/api/questions/create';
         $this->writeApiCall($apiUri);
 
+        $app_path = app_path();
+        $text = file_get_contents("$app_path/TestPrograms/code.pas");
+
         $this->json('POST', $apiUri,
             [ "question" => [
                 'id' => self::$PASCAL_CODE_QUESTION_ID,
@@ -231,7 +254,7 @@ class CodeQuestionProcessTest extends TestCase
                 'complexity' => QuestionComplexity::Low,
                 'time' => 20],
                 "theme" => self::$HTML_DISCIPLINE_THEME_ID,
-                "program" => "begin writeln ('Hello, world.'); end.",
+                "program" => $text,
                 "timeLimit" => '1',
                 "memoryLimit" => '1',
                 "lang" => "Pascal",
@@ -654,8 +677,8 @@ class CodeQuestionProcessTest extends TestCase
             $questionData = $this->getNextTestQuestion();
             if (!array_key_exists('question', $questionData)) break;
 
-            $answerData = $this->createQuestionAnswerData($questionData);
-            $this->answerTestQuestion($answerData);
+
+            $this->createQuestionAnswer($questionData);
             $questionsAnswered++;
         }
 
@@ -684,14 +707,15 @@ class CodeQuestionProcessTest extends TestCase
     }
 
     /**
-     * Создание объекта с данными ответа на вопрос теста.
+     * Отвечает на вопрос с кодом
      * @param $questionData - Данные текущего вопроса.
-     * @return array
      * @throws Exception
      */
-    protected function createQuestionAnswerData($questionData){
+    protected function createQuestionAnswer($questionData){
         $question = $questionData->question;
         $answers = $questionData->answers;
+
+        $this->codeQuestionManager = app()->make(CodeQuestionManager::class);
 
         $answerData = [
             'questionId' => $question->id,
@@ -699,18 +723,41 @@ class CodeQuestionProcessTest extends TestCase
             'answerText' => ''
         ];
 
+        $testSessionFactory = app()->make(\TestEngine\TestSessionFactory::class);
+        $testSession = $testSessionFactory->getBySessionId(self::$TEST_SESSION_ID);
+
+        $testResultId = $testSession->getTestResultId();
+
+        $uow = app()->make(\Repositories\UnitOfWork::class);
+
+        $testResult = $uow->testResults()->find($testResultId);
+
+
+
         // Заполняем объект ответа на вопрос в соответствии с вопросом.
         switch ($question->id){
             case self::$C_CODE_QUESTION_ID:{
-
+                $questionEntity = $uow->questions()->find(self::$C_CODE_QUESTION_ID);
+                $programEntity = $uow->programs()->find(self::$C_PROGRAM_ID);
+                $this->codeQuestionManager->setProgramLanguage(Language::C);
+                $this->codeQuestionManager->runQuestionProgram($programEntity->getTemplate(),$programEntity,$testResult,$questionEntity);
+                sleep(1);
                 break;
             }
             case self::$PASCAL_CODE_QUESTION_ID:{
-
+                $questionEntity = $uow->questions()->find(self::$PASCAL_CODE_QUESTION_ID);
+                $programEntity = $uow->programs()->find(self::$PASCAL_PROGRAM_ID);
+                $this->codeQuestionManager->setProgramLanguage(Language::Pascal);
+                $this->codeQuestionManager->runQuestionProgram($programEntity->getTemplate(),$programEntity,$testResult,$questionEntity);
+                sleep(1);
                 break;
             }
             case self::$PHP_CODE_QUESTION_ID:{
-
+                $questionEntity = $uow->questions()->find(self::$PHP_CODE_QUESTION_ID);
+                $programEntity = $uow->programs()->find(self::$PHP_PROGRAM_ID);
+                $this->codeQuestionManager->setProgramLanguage(Language::PHP);
+                $this->codeQuestionManager->runQuestionProgram($programEntity->getTemplate(),$programEntity,$testResult,$questionEntity);
+                sleep(1);
                 break;
             }
 
@@ -719,31 +766,47 @@ class CodeQuestionProcessTest extends TestCase
             }
         }
 
-        return $answerData;
     }
 
     /**
-     * Отправка ответа на вопрос.
+     * Проверка, что результат теста 100, т.е. все программы успешно отработали
      */
-    protected function answerTestQuestion($answerData){
-        $this->writeConsoleMessage('   Отправка ответа на вопрос. [API]');
-        $apiUri = '/api/tests/answer';
-        $this->writeApiCall($apiUri);
-
-        $this->json('POST', $apiUri, $answerData)
-            ->seeJson(['Success' => true]);
-
-        $this->writeOk();
-
-        $this->writeConsoleMessage('   Проверка наличия вопроса в списке отвеченных для текущей сессии тестирования. [Redis]');
-
-        /** @var \TestEngine\TestSessionFactory $testSessionFactory */
+    private function checkTestMark100(){
+        $this->writeConsoleMessage('   Проверка успешной отработки всех тестовых программ. ','white',1);
         $testSessionFactory = app()->make(\TestEngine\TestSessionFactory::class);
         $testSession = $testSessionFactory->getBySessionId(self::$TEST_SESSION_ID);
 
-        $this->assertContains($answerData['questionId'], $testSession->getAnsweredQuestionsIds());
-        $this->writeOk();
+        $testResultId = $testSession->getTestResultId();
+
+
+
+        $i = 0;
+        $success = false;
+        while($i < 50) {
+            sleep(1);
+            $i++;
+            $this->writeConsoleMessage("   Ожидание результатов: $i сек.",'cyan',1);
+
+
+            $testResult = DB::table('test_result')->where('id', $testResultId)->first();
+
+            if($testResult->mark == 100){
+
+                $success = true;
+                break;
+            }
+        }
+
+        if(!$success) {
+            throw new Exception("Результаты программ не обработаны!");
+        }
+        else $this->writeOk();
     }
+
+
+
+
+
 
 
     /**
