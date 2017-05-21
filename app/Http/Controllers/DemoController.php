@@ -12,6 +12,7 @@ use App\Process;
 use CodeQuestionEngine\DockerManager;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Managers\TestResultManager;
 use Managers\UISettingsCacheManager;
 use Queue;
 use CodeQuestionEngine\CodeTask;
@@ -31,10 +32,11 @@ class DemoController extends BaseController
     private $fileManager;
     private $dockerManager;
     private $taskStatesManager;
+    private $testResultManager;
 
 
 
-    public function __construct(UnitOfWork $uow,TaskStatesManager $taskStatesManager, DockerManager $dockerManager, CodeQuestionManagerProxy $manager)
+    public function __construct(UnitOfWork $uow,TestResultManager $testResultManager, TaskStatesManager $taskStatesManager, DockerManager $dockerManager, CodeQuestionManagerProxy $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = CodeFileManagerFactory::getCodeFileManager(\Language::C);
@@ -42,6 +44,7 @@ class DemoController extends BaseController
         $this->app_path = app_path();
         $this->dockerManager = $dockerManager;
         $this->taskStatesManager = $taskStatesManager;
+        $this->testResultManager = $testResultManager;
     }
 
     public function auth(){
@@ -55,7 +58,6 @@ class DemoController extends BaseController
     }
 
     public function docker(){
-
 
         CodeTask::flush();
 

@@ -114,6 +114,7 @@ class TestResultManager
      * @param $code
      * @param $testResultId
      * @param $questionId
+     * @return int
      */
     public function createGivenAnswerEntity($code,$testResultId,$questionId){
 
@@ -127,6 +128,8 @@ class TestResultManager
 
             $this->_unitOfWork->givenAnswers()->create($givenAnswer);
             $this->_unitOfWork->commit();
+
+            return $givenAnswer->getId();
     }
 
     /**
