@@ -108,6 +108,27 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
      */
     private $userId;
 
+    /**
+     * @var string язык программирования
+     */
+    private $language;
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
 
     public function jsonSerialize()
     {
@@ -117,6 +138,7 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
             'testResultId' => $this->testResultId,
             'questionId' => $this->questionId,
             'userId' => $this->userId,
+            'language' => $this->language,
         );
     }
 }

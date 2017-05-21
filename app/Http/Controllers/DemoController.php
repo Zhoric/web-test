@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use CodeQuestionEngine\CodeQuestionManager;
 use CodeQuestionEngine\EngineGlobalSettings;
 use TaskStatesManager;
+use CodeQuestionManagerProxy;
 
 class DemoController extends BaseController
 {
@@ -33,7 +34,7 @@ class DemoController extends BaseController
 
 
 
-    public function __construct(UnitOfWork $uow,TaskStatesManager $taskStatesManager, DockerManager $dockerManager, CodeQuestionManager $manager)
+    public function __construct(UnitOfWork $uow,TaskStatesManager $taskStatesManager, DockerManager $dockerManager, CodeQuestionManagerProxy $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = CodeFileManagerFactory::getCodeFileManager(\Language::C);
@@ -56,26 +57,21 @@ class DemoController extends BaseController
     public function docker(){
 
 
-
-        $this->dockerManager->dropAllInstances();
-dd();
-        $tasks = CodeTask::getAll();
-
-
-
-
-
         CodeTask::flush();
 
 
 
-        $program = $this->_uow->programs()->find(8);
+        $program = $this->_uow->programs()->find(1);
 
-        $this->manager->setProgramLanguage($program->getLang());
+       // $this->manager->setProgramLanguage($program->getLang());
         $testResult = $this->_uow->testResults()->find(1);
         $question = $this->_uow->questions()->find(1);
-        $this->manager->runQuestionProgram($program->getTemplate(),$program,$testResult,$question);
-        sleep(1);
+
+        for($i = 0; $i < 1; $i++) {
+           $this->manager->runQuestionProgram($program->getTemplate(), $program, $testResult, $question);
+            sleep(1);
+        }
+
 
         dd("done");
 
