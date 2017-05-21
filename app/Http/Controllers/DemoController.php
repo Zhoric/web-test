@@ -59,18 +59,22 @@ class DemoController extends BaseController
 
     public function docker(){
 
-        CodeTask::flush();
-
-
-
         $program = $this->_uow->programs()->find(1);
 
        // $this->manager->setProgramLanguage($program->getLang());
         $testResult = $this->_uow->testResults()->find(1);
         $question = $this->_uow->questions()->find(1);
 
+
+        $paramSets = $this->_uow->paramsSets()->getByProgram(1);
+
+
+
+       $result =  $this->manager->runQuestionProgram($program->getTemplate(), $program,$paramSets, $testResult, $question);
+
+       return $result;
         for($i = 0; $i < 1; $i++) {
-           $this->manager->runQuestionProgram($program->getTemplate(), $program, $testResult, $question);
+           $this->manager->runQuestionProgram($program->getTemplate(), $program,$paramSets, $testResult, $question);
             sleep(1);
         }
 

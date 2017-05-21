@@ -1,7 +1,7 @@
 <?php
 
 namespace TestEngine;
-use CodeQuestionEngine\CodeQuestionManager;
+use CodeQuestionManagerProxy;
 use Exception;
 use Repositories\UnitOfWork;
 
@@ -27,14 +27,12 @@ class AnswerChecker
     /**
      * Получение менеджера вопросов с программным кодом для подсчёта оценки за ответ на
      * вопрос с кодом.
-     * @param $lang - язык программирования, который используется при запуске программы на выполнение
-     * @return CodeQuestionManager
+     * @return CodeQuestionManagerProxy
      */
-    private static function getCodeQuestionManager($lang){
+    private static function getCodeQuestionManager(){
         if (self::$_codeQuestionManager == null){
-            self::$_codeQuestionManager = app()->make(CodeQuestionManager::class);
+            self::$_codeQuestionManager = app()->make(CodeQuestionManagerProxy::class);
         }
-        self::$_codeQuestionManager->setProgramLanguage($lang);
         return self::$_codeQuestionManager;
     }
 
@@ -87,16 +85,17 @@ class AnswerChecker
         if (!isset($program)){
             throw new Exception('По данному вопросу не найдены данные о программе!');
         }
-        $lang = $program->getLang();
+
 
         if (!isset($studentCode) || empty($studentCode)){
             return 0;
         }
+        $paramSets = self::getUnitOfWork()->paramsSets()->getByProgram($program->getId());
 
 
         $question = self::getUnitOfWork()->questions()->find($questionId);
 
-        self::getCodeQuestionManager($lang)->runQuestionProgram($studentCode, $program,$testResult,$question);
+        self::getCodeQuestionManager()->runQuestionProgram($studentCode, $program,$paramSets,$testResult,$question);
 
         //код обрабатывается асинхронно, поэтому null
         return null;

@@ -1,18 +1,31 @@
 <?php
 
 use Ixudra\Curl\Facades\Curl;
+
 class CodeQuestionManagerProxy
 {
 
-    public function runQuestionProgram($code,$program, $testResult,$question)
+    public function runQuestionProgram($code,$program,$paramSets, $testResult,$question)
     {
         $contract = new RunProgramDataContract();
+
         $contract->setCode($code);
         $contract->setProgramId($program->getId());
+        $contract->setLanguage($program->getLang());
+        $contract->setTimeLimit($program->getTimeLimit());
+        $contract->setMemoryLimit($program->getMemoryLimit());
+        $contract->setParamSets($paramSets);
+
         $contract->setTestResultId($testResult->getId());
         $contract->setQuestionId($question->getId());
-        $contract->setLanguage($program->getLang());
-        $contract->setUserId(Auth::user()->getId());
+
+        $user = Auth::user();
+        $f = $user->getLastname();
+        $i = $user->getFirstname();
+        $o = $user->getPatronymic();
+        $fio = $f."_".$i."_".$o;
+        $contract->setFio($fio);
+
 
         $baseUrl = ConnectionConfigSettings::$BASE_URL;
         $action = ConnectionConfigSettings::$RUN_PROGRAM_URL;

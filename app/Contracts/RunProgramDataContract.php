@@ -8,6 +8,52 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
      */
     protected $code;
 
+
+    /**
+     * @var array ParamsSet
+     */
+    protected $paramSets;
+
+
+    /**
+     * @var int id сущности Program из бд
+     */
+    protected $programId;
+
+    /**
+     * @var int id сущности testResult из бд
+     */
+    protected $testResultId;
+
+    /**
+     * @var int id сущности Question из бд
+     */
+    protected $questionId;
+
+    /**
+     * @var string язык программирования
+     */
+    protected $language;
+
+
+    /**
+     * @var int Лимит памяти на программу
+     */
+    protected $memoryLimit;
+
+
+    /**
+     * @var string Фамилия_Имя_Отчество пользователя
+     */
+    protected $fio;
+
+
+    /**
+     * @var int Лимит времени на программу
+     */
+    protected $timeLimit;
+
+
     /**
      * @return string
      */
@@ -72,37 +118,6 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
         $this->questionId = $questionId;
     }
 
-    /**
-     * @var int id сущности Program из бд
-     */
-    protected $programId;
-
-    /**
-     * @var int id сущности testResult из бд
-     */
-    protected $testResultId;
-
-    /**
-     * @var int id сущности Question из бд
-     */
-    protected $questionId;
-
-    /**
-     * @var string язык программирования
-     */
-    protected $language;
-
-
-    /**
-     * @var int Лимит памяти на программу
-     */
-    protected $memoryLimit;
-
-
-    /**
-     * @var string Фамилия_Имя_Отчество пользователя
-     */
-    protected $fio;
 
     /**
      * @return string
@@ -152,12 +167,6 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
         $this->timeLimit = $timeLimit;
     }
 
-
-    /**
-     * @var int Лимит времени на программу
-     */
-    protected $timeLimit;
-
     /**
      * @return string
      */
@@ -174,6 +183,22 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
         $this->language = $language;
     }
 
+    /**
+     * @return array
+     */
+    public function getParamSets()
+    {
+        return $this->paramSets;
+    }
+
+    /**
+     * @param array $paramSets
+     */
+    public function setParamSets($paramSets)
+    {
+        $this->paramSets = $paramSets;
+    }
+
 
     public function jsonSerialize()
     {
@@ -182,8 +207,21 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
             'programId' => $this->programId,
             'testResultId' => $this->testResultId,
             'questionId' => $this->questionId,
-            'userId' => $this->userId,
-            'language' => $this->language
+            'language' => $this->language,
+            'timeLimit' => $this->timeLimit,
+            'memoryLimit' => $this->memoryLimit,
+            'fio' => $this->fio,
+            'paramSets' => $this->jsonSerializeParamSets($this->paramSets)
         );
+    }
+
+    private function jsonSerializeParamSets(array $paramSets){
+
+        $result = array();
+        foreach($paramSets as $paramSet){
+            $result[] = $paramSet->jsonSerialize();
+        }
+
+        return json_encode($result);
     }
 }
