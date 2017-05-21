@@ -40,9 +40,9 @@
             "app/Entities",
             "app/ViewModels",
             "app/TestEngine",
-	    "app/CodeQuestionEngine",
             "app/Http/Controllers/Core",
-	    "app/Http/Middleware"
+	    "app/Http/Middleware",
+	    "app/Common"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -57,9 +57,9 @@
             "app/Entities",
             "app/ViewModels",
             "app/TestEngine",
-	    "app/CodeQuestionEngine",
             "app/Http/Controllers/Core",
 	    "app/Http/Middleware",
+	    "app/Common",
  	    "app/Contracts"
         ],
         "psr-4": {

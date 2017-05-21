@@ -1,17 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 25.11.16
- * Time: 22:34
- */
 
 namespace App\Http\Controllers;
-use CodeFileManager;
-use CodeQuestionEngine\CodeQuestionManager;
+
 use Illuminate\Http\Request;
 use Exception;
-use Illuminate\Support\Facades\Lang;
 use ParamsSet;
 use ProgramViewModel;
 use Repositories\UnitOfWork;
@@ -22,12 +14,9 @@ class ProgramController extends Controller
 
     private $unitOfWork;
     private $codeManager;
-    private $fileManager;
-    public function __construct(UnitOfWork $unitOfWork, CodeQuestionManager $codeManager, CodeFileManager $fileManager)
+    public function __construct(UnitOfWork $unitOfWork)
     {
         $this->unitOfWork = $unitOfWork;
-        $this->codeManager = $codeManager;
-        $this->fileManager = $fileManager;
     }
 
     /*

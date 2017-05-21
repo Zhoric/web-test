@@ -9,18 +9,14 @@ use App\Process;
 
 
 
-use CodeQuestionEngine\DockerManager;
+
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Managers\TestResultManager;
 use Managers\UISettingsCacheManager;
 use Queue;
-use CodeQuestionEngine\CodeTask;
-use CodeQuestionEngine\CodeFileManagerFactory;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
-use CodeQuestionEngine\CodeQuestionManager;
-use CodeQuestionEngine\EngineGlobalSettings;
 use TaskStatesManager;
 use CodeQuestionManagerProxy;
 
@@ -36,14 +32,13 @@ class DemoController extends BaseController
 
 
 
-    public function __construct(UnitOfWork $uow,TestResultManager $testResultManager, TaskStatesManager $taskStatesManager, DockerManager $dockerManager, CodeQuestionManagerProxy $manager)
+    public function __construct(UnitOfWork $uow,TestResultManager $testResultManager,  CodeQuestionManagerProxy $manager)
     {
         $this->_uow = $uow;
         $this->fileManager = CodeFileManagerFactory::getCodeFileManager(\Language::C);
         $this->manager = $manager;
         $this->app_path = app_path();
-        $this->dockerManager = $dockerManager;
-        $this->taskStatesManager = $taskStatesManager;
+
         $this->testResultManager = $testResultManager;
     }
 

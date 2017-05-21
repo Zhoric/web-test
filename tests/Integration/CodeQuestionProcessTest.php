@@ -1,5 +1,5 @@
 <?php
-use CodeQuestionEngine\CodeQuestionManager;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -63,10 +63,10 @@ class CodeQuestionProcessTest extends TestCase
     private static $QUESTIONS_COUNT = 3;
 
 
-    /**
-     * @var CodeQuestionManager
-     */
     private $codeQuestionManager;
+
+
+
 
     public function testFullProcess(){
         $this->writeConsoleMessage(PHP_EOL.'---- ЗАПУСК ТЕСТИРОВАНИЯ ДВИЖКА С ВОПРОСАМИ С КОДОМ. -----', 'cyan', 2);
@@ -715,7 +715,7 @@ class CodeQuestionProcessTest extends TestCase
         $question = $questionData->question;
         $answers = $questionData->answers;
 
-        $this->codeQuestionManager = app()->make(CodeQuestionManager::class);
+        $this->codeQuestionManager = app()->make(CodeQuestionManagerProxy::class);
 
         $answerData = [
             'questionId' => $question->id,
