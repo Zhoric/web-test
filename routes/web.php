@@ -405,6 +405,8 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'external'], function () {
         Route::post('setMark', 'TestResultController@setAnswerMark')
             ->middleware('checkIP');
+        Route::post('createGivenAnswer', 'TestResultController@createGivenAnswer')
+            ->middleware('checkIP');
     });
 
 

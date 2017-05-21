@@ -6,7 +6,7 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
     /**
      * @var string текст программы
      */
-    private $code;
+    protected $code;
 
     /**
      * @return string
@@ -30,8 +30,8 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
     public function getProgramId()
     {
         return $this->programId;
-    }
 
+    }
     /**
      * @param int $programId
      */
@@ -73,45 +73,90 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
     }
 
     /**
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
-
-    /**
      * @var int id сущности Program из бд
      */
-    private $programId;
+    protected $programId;
 
     /**
      * @var int id сущности testResult из бд
      */
-    private $testResultId;
+    protected $testResultId;
 
     /**
      * @var int id сущности Question из бд
      */
-    private $questionId;
-
-    /**
-     * @var int id сущности User из бд
-     */
-    private $userId;
+    protected $questionId;
 
     /**
      * @var string язык программирования
      */
-    private $language;
+    protected $language;
+
+
+    /**
+     * @var int Лимит памяти на программу
+     */
+    protected $memoryLimit;
+
+
+    /**
+     * @var string Фамилия_Имя_Отчество пользователя
+     */
+    protected $fio;
+
+    /**
+     * @return string
+     */
+    public function getFio()
+    {
+        return $this->fio;
+    }
+
+    /**
+     * @param string $fio
+     */
+    public function setFio($fio)
+    {
+        $this->fio = $fio;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMemoryLimit()
+    {
+        return $this->memoryLimit;
+    }
+
+    /**
+     * @param int $memoryLimit
+     */
+    public function setMemoryLimit($memoryLimit)
+    {
+        $this->memoryLimit = $memoryLimit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeLimit()
+    {
+        return $this->timeLimit;
+    }
+
+    /**
+     * @param int $timeLimit
+     */
+    public function setTimeLimit($timeLimit)
+    {
+        $this->timeLimit = $timeLimit;
+    }
+
+
+    /**
+     * @var int Лимит времени на программу
+     */
+    protected $timeLimit;
 
     /**
      * @return string
@@ -138,7 +183,7 @@ class RunProgramDataContract extends BaseContract implements JsonSerializable
             'testResultId' => $this->testResultId,
             'questionId' => $this->questionId,
             'userId' => $this->userId,
-            'language' => $this->language,
+            'language' => $this->language
         );
     }
 }

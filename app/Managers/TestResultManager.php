@@ -14,7 +14,7 @@ use TestPassingChronologyViewModel;
 use TestResult;
 use TestResultViewModel;
 use TestType;
-use UserRole;
+use GivenAnswer;
 
 class TestResultManager
 {
@@ -106,6 +106,27 @@ class TestResultManager
         }
 
         return $results;
+    }
+
+
+    /**
+     * Создание сущности студенческого ответа на вопрос
+     * @param $code
+     * @param $testResultId
+     * @param $questionId
+     */
+    public function createGivenAnswerEntity($code,$testResultId,$questionId){
+
+            $question = $this->_unitOfWork->questions()->find($questionId);
+            $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+
+            $givenAnswer = new GivenAnswer();
+            $givenAnswer->setAnswer($code);
+            $givenAnswer->setQuestion($question);
+            $givenAnswer->setTestResult($testResult);
+
+            $this->_unitOfWork->givenAnswers()->create($givenAnswer);
+            $this->_unitOfWork->commit();
     }
 
     /**
