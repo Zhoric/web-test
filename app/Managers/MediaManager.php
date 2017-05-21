@@ -74,18 +74,16 @@ class MediaManager
     public function addDocx(Media $media){
         $doc = new DocxReader();
         $doc->setFile($media->getPath());
-        if(!$doc->getErrors()) {
-            $path = 'upload/.wordImage/' . $media->getHash();
-            $oldmask = umask(0);
-            mkdir($path, 0777);
-            umask($oldmask);
+        $path = 'upload/.wordImage/' . $media->getHash();
+        $oldmask = umask(0);
+        mkdir($path, 0777);
+        umask($oldmask);
 
-            $doc->loadImages($media->getPath(), $path);
-            $html = $doc->toHtml();
-            $media->setContent($html);
-            $this->_unitOfWork->medias()->create($media);
-            $this->_unitOfWork->commit();
-        }
+        $doc->loadImages($media->getPath(), $path);
+        $html = $doc->toHtml();
+        $media->setContent($html);
+        $this->_unitOfWork->medias()->create($media);
+        $this->_unitOfWork->commit();
     }
 
 }

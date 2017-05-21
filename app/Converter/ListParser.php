@@ -11,6 +11,7 @@ class ListParser {
     private $_numbering;
     private $_styleList;
     private $_counts;
+    private $_maxCounts;
 
     private $_isList;
     private $_isUlEnd;
@@ -52,8 +53,11 @@ class ListParser {
                     else $lvlId = 0;
                     if ($this->_counts[$numId][$lvlId] > 0)
                         $this->_counts[$numId][$lvlId]--;
-                    else $this->_isUlEnd = true;
-                    $html = $this->getListHtml($p, $currentHtml, $numId, $lvlId);
+                    else {
+                        $this->_isUlEnd = true;
+                        $this->_counts[$numId][$lvlId]--;
+                    }
+                    $html = $this->getListHtml($p, $currentHtml, $numId, $lvlId, $this->_counts[$numId][$lvlId]);
                 }
             }
         }
@@ -62,19 +66,22 @@ class ListParser {
             $lvlId = (int)$p->pPr->numPr->ilvl['val'];
             if ($this->_counts[$numId][$lvlId] > 0)
                 $this->_counts[$numId][$lvlId]--;
-            else $this->_isUlEnd = true;
-            $html = $this->getListHtml($p, $currentHtml, $numId, $lvlId);
+            else {
+                $this->_isUlEnd = true;
+                $this->_counts[$numId][$lvlId]--;
+            }
+            $html = $this->getListHtml($p, $currentHtml, $numId, $lvlId, $this->_counts[$numId][$lvlId]);
         }
 
         return $html;
     }
 
-    private function getListHtml($p, $currentHtml, $numId, $lvlId = null){
+    private function getListHtml($p, $currentHtml, $numId, $lvlId = null, $value){
         $html = '';
         $this->_isList = true;
         $isDecimalList = false;
 
-        $attrs = $this->_textParser->parseTextStyle($p->pPr);
+        $attrs = array_merge($this->_textParser->parseTextStyle($p->pPr), $this->_textParser->parseTextStyle($p->r));
         $className = $this->_paragraphParser->parseParagraphStyle($p);
 
         if ($numId == 0) {
@@ -83,28 +90,23 @@ class ListParser {
             return $html;
         }
 
-       // if (strrpos($this->_numbering[$numId][$lvlId], 'decimal') || strrpos($this->_numbering[$numId][$lvlId], 'decimal-leading-zero')) {
-            if (!strrpos($currentHtml, '<ol id="list' . $numId . '"'))
-                $html .= '<ol id="list' . $numId . '">';
-       // }
-        /*else {
-            if (!strrpos($currentHtml, '<ul id="list'. $numId . '"'))
-                $html .= '<ul id="list'. $numId . '">';
+        if (!strrpos($currentHtml, '<ol id="list' . $numId . '"'))
+            $html .= '<ol id="list' . $numId . '">';
+
+        /*if (strrpos($this->_numbering[$numId][$lvlId], 'decimal') || strrpos($this->_numbering[$numId][$lvlId], 'decimal-leading-zero')) {
+            $className .= " decimal-list";
         } */
 
-         if (strrpos($this->_numbering[$numId][$lvlId], 'decimal') || strrpos($this->_numbering[$numId][$lvlId], 'decimal-leading-zero')) {
-             $className .= " decimal-list";
-         }
-
+        $currentValue = $this->_maxCounts[$numId][$lvlId] - $value;
 
         if ($className)
             if(isset($this->_numbering[$numId]))
-                $html .= '<li class="' . $className .'" style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . implode(';', $attrs) . '">';
-            else $html .= '<li class="' . $className .'" style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
+                $html .= '<li value="' . $currentValue . '" class="' . $className .'" style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . implode(';', $attrs) . '">';
+            else $html .= '<li value="' . $currentValue . '" class="' . $className .'" style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
         else
             if(isset($this->_numbering[$numId]))
-                $html .= '<li style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . '">';
-            else $html .= '<li style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
+                $html .= '<li value="' . $currentValue . '" style="list-style-position: inside; ' . $this->_numbering[$numId][$lvlId] . '">';
+            else $html .= '<li value="' . $currentValue . '" style="list-style-position: inside; list-style-type: none;' . implode(';', $attrs) .'">';
         return $html;
     }
 
@@ -143,6 +145,15 @@ class ListParser {
                         else  $this->_counts[$numId][$ilvl] = 0;
                     }
                 }
+            }
+        }
+        $this->getMaxCounts();
+    }
+
+    public function getMaxCounts(){
+        foreach ($this->_counts as $numId => $elem){
+            foreach ($elem as $lvlId => $val){
+                $this->_maxCounts[$numId][$lvlId] = $val++;
             }
         }
     }

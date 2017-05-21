@@ -303,10 +303,10 @@ $(document).ready(function(){
                             var type = file.mime.split('/')[0];
                             if (type == 'video' || type == 'audio')
                                 self.actions.anchor.open.multimedia(file);
-                            else if (type == 'image')
-                                self.errors.show('Нельзя выделить отрывок в изображении!');
-                            else {
+                            else if (file.mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                                 self.actions.anchor.open.editor(file);
+                            else {
+                                self.errors.show('В данном файле нельзя выделить отрывок!');
                             }
 
                         },
@@ -412,7 +412,7 @@ $(document).ready(function(){
                                 commonHelper.modal.open(self.modals.textAnchors);
                             }
                         })
-                    }, // TO DO
+                    },
                     attachTextAnchor: function () {
                         //прикрепление связи с якорем текста
                         ko.utils.arrayForEach(self.current.textAnchors(), function (textAnchor) {

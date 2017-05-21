@@ -127,6 +127,32 @@ $(document).ready(function(){
                         self.current.multimediaURL(self.helpers.getEncodedUrl(data));
                         commonHelper.modal.open(self.modals.multimedia);
                         $('#multimedia')[0].load();
+                    },
+                    loadeddata: function () {
+                        //проверка наличия якорей у аудио/видео при загрузке;
+                        //если есть, то перевести ползунок в начальное время
+                        if (self.current.media().start() == null && self.current.media().stop() == null) return;
+
+                        var multimedia = $('#multimedia')[0];
+                        multimedia.currentTime = self.helpers.toSeconds(self.current.media().start());
+                    },
+                    play: function () {
+                        //проверка выхода за границы якорей ползунка при проигрывании аудио/видео
+                        if (self.current.media().start() == null && self.current.media().stop() == null) return;
+
+                        var multimedia = $('#multimedia')[0];
+                        var stopTime = self.helpers.toSeconds(self.current.media().stop());
+                        var startTime = self.helpers.toSeconds(self.current.media().start());
+                        var currentTime = Math.floor(multimedia.currentTime);
+
+                        if (currentTime >= stopTime){
+                            multimedia.pause();
+                            multimedia.currentTime = stopTime;
+                        }
+                        else if (currentTime < startTime) {
+                            multimedia.pause();
+                            multimedia.currentTime = startTime;
+                        }
                     }
                 }
             };
@@ -147,6 +173,11 @@ $(document).ready(function(){
                     var index = data.path().indexOf(data.name());
                     var path = data.path().substring(0,index);
                     return window.location.origin + '/' + encodeURI(path) + encodeURIComponent(data.name());
+                },
+                toSeconds : function (time) {
+                    if(+time == 0) return 0;
+                    var timeArray = time.split(':');
+                    return +timeArray[2] + +timeArray[1] * 60 + +timeArray[0] * 3600;
                 }
             };
             self.alter = {

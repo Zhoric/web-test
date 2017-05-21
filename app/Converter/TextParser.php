@@ -16,14 +16,6 @@ class TextParser {
     public function parseText($paragraph, $className, $attrs, $isList = null, $isUlEnd = null){
         $html = '';
         foreach ($paragraph as $part) {
-            $tags = array();
-
-            foreach (get_object_vars($part->pPr) as $k => $v) {
-                if ($k = 'numPr') {
-                    $tags[] = 'li';
-                }
-            }
-
             $newAttr = $this->parseTextStyle($part);
 
             foreach ($part->drawing as $draw) {
@@ -33,15 +25,7 @@ class TextParser {
                 $html .= "</div>";
             }
 
-            $openTags = '';
-            $closeTags = '';
-            foreach ($tags as $tag) {
-                $openTags .= '<' . $tag . '>';
-                $closeTags .= '</' . $tag . '>';
-            }
-
-            $html .= '<span class="inline-block" style="' . implode(';', $attrs) . implode(';', $newAttr) . '">' . $openTags . $part->t . $closeTags . '</span>';
-
+            $html .= '<span class="inline-block" style="' . implode(';', $attrs) . implode(';', $newAttr) . '">' . htmlentities($part->t) . '</span>';
         }
 
         if ($isList) {
@@ -81,4 +65,5 @@ class TextParser {
         //if (!in_array('font-style: italic;', $attrs)) $attrs[] = 'font-style: normal;';
         return $attrs;
     }
+
 }

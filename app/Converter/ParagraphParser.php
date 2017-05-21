@@ -40,7 +40,8 @@ class ParagraphParser {
                     $attrs[] = 'padding-bottom:' . ($att['after'] / 10) . 'px;';
                 }
                 if (isset($att['line'])) {
-                    $attrs[] = 'line-height:' . ($att['line'] / 10) . 'px;';
+                    if (($att['line'] / 10) >= 34) $attrs[] = 'line-height:' . ($att['line'] / 10) . 'px;';
+                    else $attrs[] = 'line-height: 34px;';
                 }
                 else $attrs[] = 'line-height: initial;';
 
@@ -52,11 +53,36 @@ class ParagraphParser {
                     $attrs[] = 'text-align: justify;';
                 else $attrs[] = 'text-align:' . $att['val'] . ';';
             }
-            else $attrs[] = 'text-align: inherit;';
+            //else $attrs[] = 'text-align: inherit;';
+
             if ($p->pPr->ind) {
                 $att = $p->pPr->ind->attributes('w', true);
-                $attrs[] = 'text-indent:' . ($att['firstLine'] / 10) . 'px;';
+                if (isset($att['firstLine'])) $attrs[] = 'text-indent:' . ($att['firstLine'] / 10) . 'px;';
+
             } else $attrs[] = 'text-indent: 0px;';
+
+            //$this->html .= '<div class="block" style="' . $this->style . '">';
+            //$attrs[] = 'display: inline-block;';
+        }
+        return $attrs;
+    }
+
+    public function parseDivProperties($p){
+        $attrs = array();
+        if ($p->pPr) {
+
+            if ($p->pPr->ind) {
+                $att = $p->pPr->ind->attributes('w', true);
+                if (isset($att['firstLine'])) $attrs[] = 'text-indent:' . ($att['firstLine'] / 10) . 'px;';
+                if (isset($att['left'])) $attrs[] = 'margin-left:' . ($att['left'] / 10) . 'px;';
+                if (isset($att['right'])) $attrs[] = 'margin-right:' . ($att['right'] / 10) . 'px;';
+
+            } else $attrs[] = 'text-indent: 0px;';
+
+            if ($p->pPr->shd) {
+                $att = $p->pPr->shd->attributes('w', true);
+                $attrs[] = 'background-color: #' . $att['fill'];
+            }
 
             //$this->html .= '<div class="block" style="' . $this->style . '">';
             //$attrs[] = 'display: inline-block;';

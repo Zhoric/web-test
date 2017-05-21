@@ -137,8 +137,6 @@ class MainParser {
         $html = '';
         $this->_listParser->getListsCount($children);
         foreach ($children as $child) {
-            $isList = false;
-            $isUlEnd = false;
             $html .= $this->_tableParser->parseTable($child);
             $html .= $this->_listParser->parseList($child, $html);
             $isList = $this->_listParser->getIsList();
@@ -146,15 +144,19 @@ class MainParser {
 
             $className = $this->_paragraphParser->parseParagraphStyle($child);
             $attrs = $this->_paragraphParser->parseProperties($child);
+            $divAttrs = array_merge($this->_paragraphParser->parseProperties($child), $this->_paragraphParser->parseDivProperties($child));
 
             if ($className)
-                $html.='<div class="' . $className .'" style="' . implode(';', $attrs) . '">' ;
-            else $html.='<div style="' . implode(';', $attrs) . '">' ;
+                $html.='<div class="' . $className .'" style="' . implode(';', $divAttrs) . '">' ;
+            else $html.='<div style="' . implode(';', $divAttrs) . '">' ;
 
             // если есть текст или изображение, то обработать их;
             // иначе пустая строка
             if (isset($child->r->t) || isset($child->r->drawing)) {
                 $html .= $this->_textParser->parseText($child->r, $className, $attrs, $isList, $isUlEnd);
+            }
+            else if (isset($child->hyperlink->r->t)){
+                $html .= $this->_textParser->parseText($child->hyperlink->r, $className, $attrs, $isList, $isUlEnd);
             }
             else $html .= '<br>';
             $html.='</div>';

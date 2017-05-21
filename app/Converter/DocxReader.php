@@ -44,11 +44,11 @@ class DocxReader{
      * @throws
      */
     private function load($file) {
-        if (!file_exists($file)) throw new Exception('Файла не существует!');
+        if (!file_exists($file)) throw new \Exception('Файла не существует!');
         $zip = new ZipArchive();
         $openedZip = $zip->open($file);
 
-        if ($openedZip != true) throw new Exception($this->getOpenedZipError($openedZip));
+        if ($openedZip != true) throw new \Exception($this->getOpenedZipError($openedZip));
         $this->setStyles($zip);
         $this->setRelations($zip);
         $this->setNumbering($zip);
@@ -147,11 +147,22 @@ class DocxReader{
      */
     public function loadImages($file, $path){
         $this->_mainParser->setPath($path);
-        if (!file_exists($file)) throw new Exception('File does not exist.');
+        if (!file_exists($file)) throw new \Exception('File does not exist.');
         $zip = new ZipArchive();
         $openedZip = $zip->open($file);
-        if ($openedZip != true) throw new Exception($this->getOpenedZipError($openedZip));
-        $this->extractImages($zip, $file);
+        if ($openedZip != true) throw new \Exception($this->getOpenedZipError($openedZip));
+        $files = array();
+        // поиск папки с изображениями в архиве и сохранение её содержимого в files
+        for($i = 0; $i < $zip->numFiles; $i++) {
+            $entry = $zip->getNameIndex($i);
+            if (strpos($entry, "/media/")) {
+                $files[] = $entry;
+            }
+        }
+        if ($zip->extractTo($path, $files) === true) {
+            exec ("find " . $path . " -type d -exec chmod 0777 {} +"); //for sub directory
+            exec ("find " . $path . " -type f -exec chmod 0777 {} +"); //for files inside directory
+        }
         $zip->close();
     }
 
@@ -176,21 +187,6 @@ class DocxReader{
 
     }
 
-    private function extractImages($zip, $path){
-        $files = array();
-        // поиск папки с изображениями в архиве и сохранение её содержимого в files
-        for($i = 0; $i < $zip->numFiles; $i++) {
-            $entry = $zip->getNameIndex($i);
-            if (strpos($entry, "/media/")) {
-                $files[] = $entry;
-            }
-        }
-        if ($zip->extractTo($path, $files) === true) {
-            exec ("find " . $path . " -type d -exec chmod 0777 {} +"); //for sub directory
-            exec ("find " . $path . " -type f -exec chmod 0777 {} +"); //for files inside directory
-        }
-    }
-
 
     private function setNumbering($zip){
         $numbering = array();
@@ -212,7 +208,7 @@ class DocxReader{
      * @throws
      */
     public function toHtml() {
-        if (!$this->fileData) throw new Exception('Файл не загружен!');
+        if (!$this->fileData) throw new \Exception('Файл не загружен!');
         $xml = simplexml_load_string($this->fileData);
         $namespaces = $xml->getNamespaces(true);
         $children = $xml->children($namespaces['w']);
