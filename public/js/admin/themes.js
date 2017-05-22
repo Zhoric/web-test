@@ -474,6 +474,7 @@ $(document).ready(function(){
                 compile: function(){
                     var program = JSON.stringify(editor.getValue());
                     var params = [];
+                    var lang = self.code.lang;
 
                     $.each(self.code.params.set(), function(i, item){
                         var param = {
@@ -482,7 +483,7 @@ $(document).ready(function(){
                         };
                         params.push(param);
                     });
-                    var json = JSON.stringify({program: program, paramSets: params});
+                    var json = JSON.stringify({program: program, paramSets: params, lang: lang});
                     self.post.program(json);
                 },
                 approve: function(){
