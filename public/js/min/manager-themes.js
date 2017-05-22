@@ -40633,8 +40633,12 @@ $(document).ready(function(){
                     editor.setValue(self.code.text());
                 },
                 compile: function(){
+
                     var program = JSON.stringify(editor.getValue());
                     var params = [];
+                    var lang = self.code.lang;
+                    var timeLimit = self.code.timeLimit;
+                    var memoryLimit = self.code.memoryLimit;
 
                     $.each(self.code.params.set(), function(i, item){
                         var param = {
@@ -40643,8 +40647,14 @@ $(document).ready(function(){
                         };
                         params.push(param);
                     });
-                    var json = JSON.stringify({program: program, paramSets: params});
+                    var json = JSON.stringify({program: program
+                        , paramSets: params
+                        , lang: lang
+                        , memoryLimit: memoryLimit
+                        , timeLimit: timeLimit});
+
                     self.post.program(json);
+                    
                 },
                 approve: function(){
                     commonHelper.modal.open(self.modals.saveCode);
