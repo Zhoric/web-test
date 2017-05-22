@@ -37,14 +37,30 @@ class ProgramController extends Controller
 
             $program = $request->json('program');
 
-           // $program = json_decode($program);
+             $program = json_decode($program);
 
 
 
             $paramSets = (array) $request->json('paramSets');
-            $language = $request->json('lang');
-            $language = \Language::getLanguageByAlias($language);
 
+            $language = $request->json('lang');
+            $timeLimit = $request->json('timeLimit');
+            $memoryLimit = $request->json('memoryLimit');
+
+            if($timeLimit == null){
+                $timeLimit = 1;
+            }
+            if($memoryLimit == null){
+                $memoryLimit = 100;
+            }
+
+
+            if(empty($language)){
+                $language = \Language::C;
+            }
+            else {
+                $language = \Language::getLanguageByAlias($language);
+            }
 
 
             $paramsSetsObjects = [];
@@ -58,10 +74,9 @@ class ProgramController extends Controller
             }
 
 
-            $result = $this->codeManagerProxy->runProgram($program,$language,$paramsSetsObjects);
+            $result = $this->codeManagerProxy->runProgram($program,$language,$timeLimit,$memoryLimit,$paramsSetsObjects);
 
-            return $result;
-           return $this->successJSONResponse('Результат: '.$result);
+            return $this->successJSONResponse('Результат: '.$result);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
