@@ -5,11 +5,19 @@ class ConnectionConfigSettings
 
 
     /**
-     * @var string URL основного сервиса
+     * @var string адрес сервиса обработки вопросов с кодом
      */
     public static $BASE_URL = "www.code-question.ru";
 
 
+    /**
+     * @var string URL Для запуска вопросов с кодом
+     */
+    public static $RUN_QUESTION_PROGRAM_URL = "/api/program/runQuestionProgram";
+
+    /**
+     * @var string URL Для запуска программ(используется админом при составлении вопросов)
+     */
     public static $RUN_PROGRAM_URL = "/api/program/runProgram";
 
     /**

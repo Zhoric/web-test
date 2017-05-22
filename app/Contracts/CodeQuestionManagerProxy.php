@@ -28,6 +28,33 @@ class CodeQuestionManagerProxy
 
 
         $baseUrl = ConnectionConfigSettings::$BASE_URL;
+        $action = ConnectionConfigSettings::$RUN_QUESTION_PROGRAM_URL;
+
+        $response = Curl::to($baseUrl.'/'.$action)
+            ->withData( $contract->jsonSerialize())
+            ->post();
+
+        return $response;
+
+    }
+
+
+    public function runProgram($code,$language,$paramSets){
+
+        $contract =  new RunProgramDataContract();
+        $contract->setCode($code);
+        $contract->setParamSets($paramSets);
+        $contract->setLanguage($language);
+
+        $user = Auth::user();
+        $f = $user->getLastname();
+        $i = $user->getFirstname();
+        $o = $user->getPatronymic();
+        $fio = $f."_".$i."_".$o;
+        $contract->setFio($fio);
+
+
+        $baseUrl = ConnectionConfigSettings::$BASE_URL;
         $action = ConnectionConfigSettings::$RUN_PROGRAM_URL;
 
         $response = Curl::to($baseUrl.'/'.$action)

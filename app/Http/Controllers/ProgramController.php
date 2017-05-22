@@ -7,16 +7,18 @@ use Exception;
 use ParamsSet;
 use ProgramViewModel;
 use Repositories\UnitOfWork;
+use CodeQuestionManagerProxy;
 
 class ProgramController extends Controller
 {
 
 
     private $unitOfWork;
-    private $codeManager;
-    public function __construct(UnitOfWork $unitOfWork)
+    private $codeManagerProxy;
+    public function __construct(UnitOfWork $unitOfWork, CodeQuestionManagerProxy $codeQuestionManagerProxy)
     {
         $this->unitOfWork = $unitOfWork;
+        $this->codeManagerProxy = $codeQuestionManagerProxy;
     }
 
     /*
@@ -31,12 +33,18 @@ class ProgramController extends Controller
     public function run(Request $request){
         try{
 
-            $this->codeManager->setProgramLanguage(\Language::C);
+
 
             $program = $request->json('program');
-            $program = json_decode($program);
+
+           // $program = json_decode($program);
+
+
 
             $paramSets = (array) $request->json('paramSets');
+            $language = $request->json('lang');
+            $language = \Language::getLanguageByAlias($language);
+
 
 
             $paramsSetsObjects = [];
@@ -49,10 +57,11 @@ class ProgramController extends Controller
 
             }
 
-            $mark = $this->codeManager->runQuestionProgramWithParamSets($program,$paramsSetsObjects);
 
+            $result = $this->codeManagerProxy->runProgram($program,$language,$paramsSetsObjects);
 
-            return $this->successJSONResponse('Ваша оценка: '.$mark);
+            return $result;
+           return $this->successJSONResponse('Результат: '.$result);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
