@@ -502,9 +502,9 @@ $(document).ready(function(){
 
                     var program = JSON.stringify(editor.getValue());
                     var params = [];
-                    var lang = self.code.lang;
-                    var timeLimit = self.code.timeLimit;
-                    var memoryLimit = self.code.memoryLimit;
+                    var lang = self.code.lang();
+                    var timeLimit = self.code.timeLimit();
+                    var memoryLimit = self.code.memoryLimit();
 
                     $.each(self.code.params.set(), function(i, item){
                         var param = {

@@ -51,7 +51,7 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php",
-	        "app/Repositories",
+	    "app/Repositories",
             "app/Managers",
             "app/Helpers",
             "app/Entities",
