@@ -42,12 +42,7 @@ class RoleTableSeeder extends Seeder
             'user_id' => 2,
         ]);
 
-        DB::table('role_user')->insert([
-            'role_id' => 2,
-            'user_id' => 3,
-        ]);
-
-        for ($i = 4; $i <= 73; $i++){
+        for ($i = 3; $i <= 12; $i++){
             DB::table('role_user')->insert([
                 'role_id' => 3,
                 'user_id' => $i,

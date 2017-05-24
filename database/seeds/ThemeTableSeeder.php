@@ -8,16 +8,14 @@ class ThemeTableSeeder extends Seeder
     {
         DB::table('theme')->delete();
 
-        for ($disciplineIndex = 1; $disciplineIndex <= 5; $disciplineIndex++){
-            $themesCount = 5;
+        DB::table('theme')->insert(array(
+            'name' => 'Основы алгоритмизации и программирования',
+            'discipline_id' => 1
+        ));
 
-            for($i = 1; $i <= $themesCount; $i++){
-                DB::table('theme')->insert(array(
-                    'name' => 'Тема '.$i.' - Длинное название темы, очень длинное. На одну трочку не уместить. Вообще никак.',
-                    'discipline_id' => $disciplineIndex
-                ));
-            }
-        }
-
+        DB::table('theme')->insert(array(
+            'name' => 'Основы веб-технологий',
+            'discipline_id' => 2
+        ));
     }
 }

@@ -25,32 +25,12 @@ class GroupTableSeeder extends Seeder
             'is_fulltime' => true,
             'name' => 'ИСб-42о'));
 
-        DB::table('group')->insert(array(
-            'studyplan_id' => 2,
-            'prefix' => 'ИСб',
-            'course' => 4,
-            'number' => 3,
-            'is_fulltime' => true,
-            'name' => 'ИСб-43о'));
-
-        for ($i=4; $i<=73; $i++)
+        for ($i=3; $i<=12; $i++)
         {
-            if ($i > 4 ) {
-                $groupId = 0;
-                if ($i > 4 && $i < 24){
-                    $groupId = 1;
-                } else if ($i >= 24 && $i < 54){
-                    $groupId = 2;
-                } else {
-                    $groupId = 3;
-                }
-
-                DB::table('student_group')->insert(array(
-                    'student_id' => $i,
-                    'group_id' => $groupId
-                ));
-            }
-;
+            DB::table('student_group')->insert(array(
+                'student_id' => $i,
+                'group_id' => 1
+            ));
         }
     }
 }

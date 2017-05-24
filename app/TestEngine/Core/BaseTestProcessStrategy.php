@@ -285,7 +285,7 @@ class BaseTestProcessStrategy
         $openAnswerText = $studentAnswer->getAnswerText();
 
         if ($openAnswerText != null && $openAnswerText != ""){
-            return $openAnswerText;
+            return $openAnswerText.' ';
         }
 
         $studentAnswersIds = $studentAnswer->getAnswerIds();
@@ -295,13 +295,25 @@ class BaseTestProcessStrategy
 
         switch ($questionType){
             case QuestionType::ClosedOneAnswer: {
-                $answerText = $answers[0]['text'];
+                if (count($studentAnswersIds) > 0){
+                    $studentAnswerId = $studentAnswersIds[0];
+                    $selectedAnswers = array_filter($answers, function($answer) use($studentAnswerId){
+                        return $answer['id'] == $studentAnswerId;
+                    });
+                    if ($selectedAnswers != null && count($selectedAnswers) > 0){
+                        $answerText = array_values($selectedAnswers)[0]['text'].' ';
+                    }
+                }
                 break;
             }
             case QuestionType::ClosedManyAnswers: {
-                foreach ($answers as $answer){
-                    if (in_array($answer['id'], $studentAnswersIds)){
-                        $answerText .= $answer['text'].'</answer>';
+                foreach ($studentAnswersIds as $studentAnswerId){
+                    $selectedAnswers = array_filter($answers, function($answer) use($studentAnswerId){
+                        return $answer['id'] == $studentAnswerId;
+                    });
+
+                    if ($selectedAnswers != null && count($selectedAnswers) > 0){
+                        $answerText .= array_values($selectedAnswers)[0]['text'].' </answer>';
                     }
                 }
                 break;

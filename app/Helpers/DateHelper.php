@@ -33,4 +33,8 @@ class DateHelper
         $date = strtotime("+".$days." days", strtotime($date));
         return date('Y-m-d', $date);
     }
+
+    public static function toMskDateTime($dateTime){
+        return $dateTime->setTimezone(new DateTimeZone(GlobalTestSettings::dateTimeZone));
+    }
 }

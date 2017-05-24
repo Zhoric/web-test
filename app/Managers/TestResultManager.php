@@ -39,7 +39,7 @@ class TestResultManager
         $lastAttemptNumber = $this->_unitOfWork
             ->testResults()
             ->getLastAttemptNumber($testId, $userId);
-        $now = DateHelper::getCurrentDateTime();
+        $now = new DateTime();
         if ($user == null) {
             throw new Exception('Не удаётся начать тест. Указанного пользователя не существует!');
         }
@@ -101,6 +101,7 @@ class TestResultManager
          * изменения в БД могут быть некоторое время недоступны, в связи с чем приходятся так явно и убого обновлять
          * полученные сущности результатов тестирования.
          */
+        /** @var TestResult $result */
         foreach ($results as $result){
             $this->_unitOfWork->refresh($result);
         }
