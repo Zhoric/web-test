@@ -14,16 +14,12 @@ class ClosedQuestionAnswerResultCalculationTest extends TestCase
     {
         //Arrange
         //Возможные ответы на вопрос - 2 правильных и 2 неправильных.
-        $firstAnswer = new Answer();
-        $firstAnswer->setId(1)->setIsRight(true);
-        $secondAnswer = new Answer();
-        $secondAnswer->setId(2)->setIsRight(false);
-        $thirdAnswer = new Answer();
-        $thirdAnswer->setId(3)->setIsRight(true);
-        $fourthAnswer = new Answer();
-        $fourthAnswer->setId(4)->setIsRight(false);
+        $firstAnswer = ['id' => 1, 'isRight' => true];
+        $secondAnswer = ['id' => 2, 'isRight' => false];
+        $thirdAnswer = ['id' => 3, 'isRight' => true];
+        $fourthAnswer = ['id' => 4, 'isRight' => false];
 
-
+        //Act
         $noAnswersMark = AnswerChecker::calculatePointsForClosedAnswer(
             array($firstAnswer, $secondAnswer, $thirdAnswer, $fourthAnswer), array());
 
@@ -36,14 +32,10 @@ class ClosedQuestionAnswerResultCalculationTest extends TestCase
     {
         //Arrange
         //Возможные ответы на вопрос - 2 правильных и 2 неправильных.
-        $firstAnswer = new Answer();
-        $firstAnswer->setId(1)->setIsRight(true);
-        $secondAnswer = new Answer();
-        $secondAnswer->setId(2)->setIsRight(false);
-        $thirdAnswer = new Answer();
-        $thirdAnswer->setId(3)->setIsRight(true);
-        $fourthAnswer = new Answer();
-        $fourthAnswer->setId(4)->setIsRight(false);
+        $firstAnswer = ['id' => 1, 'isRight' => true];
+        $secondAnswer = ['id' => 2, 'isRight' => false];
+        $thirdAnswer = ['id' => 3, 'isRight' => true];
+        $fourthAnswer = ['id' => 4, 'isRight' => false];
 
         //Act
         $twoRightOnlyMark = AnswerChecker::calculatePointsForClosedAnswer(
@@ -57,14 +49,10 @@ class ClosedQuestionAnswerResultCalculationTest extends TestCase
     public function testCalculatePointsForClosedAnswerShouldReturn0IfNoRightAnswersSelected(){
         //Arrange
         //Возможные ответы на вопрос - 2 правильных и 2 неправильных.
-        $firstAnswer = new Answer();
-        $firstAnswer->setId(1)->setIsRight(true);
-        $secondAnswer = new Answer();
-        $secondAnswer->setId(2)->setIsRight(false);
-        $thirdAnswer = new Answer();
-        $thirdAnswer->setId(3)->setIsRight(true);
-        $fourthAnswer = new Answer();
-        $fourthAnswer->setId(4)->setIsRight(false);
+        $firstAnswer = ['id' => 1, 'isRight' => true];
+        $secondAnswer = ['id' => 2, 'isRight' => false];
+        $thirdAnswer = ['id' => 3, 'isRight' => true];
+        $fourthAnswer = ['id' => 4, 'isRight' => false];
 
         //Act
         $wrongOnlyMark = AnswerChecker::calculatePointsForClosedAnswer(
@@ -80,14 +68,10 @@ class ClosedQuestionAnswerResultCalculationTest extends TestCase
     public function testCalculatePointsForClosedAnswerShouldDecreaseMarkForWrongAnswersSelected(){
         //Arrange
         //Возможные ответы на вопрос - 2 правильных и 2 неправильных.
-        $firstAnswer = new Answer();
-        $firstAnswer->setId(1)->setIsRight(true);
-        $secondAnswer = new Answer();
-        $secondAnswer->setId(2)->setIsRight(false);
-        $thirdAnswer = new Answer();
-        $thirdAnswer->setId(3)->setIsRight(true);
-        $fourthAnswer = new Answer();
-        $fourthAnswer->setId(4)->setIsRight(false);
+        $firstAnswer = ['id' => 1, 'isRight' => true];
+        $secondAnswer = ['id' => 2, 'isRight' => false];
+        $thirdAnswer = ['id' => 3, 'isRight' => true];
+        $fourthAnswer = ['id' => 4, 'isRight' => false];
 
         //Act
         //Выбор 2 правильных и одного неправильного ответа (50 + 50 - 50 = 50)

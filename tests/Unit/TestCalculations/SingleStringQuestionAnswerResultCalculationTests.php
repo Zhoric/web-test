@@ -16,13 +16,9 @@ class SingleStringQuestionAnswerResultCalculationTest extends TestCase
     {
         //Arrange
 
-        $firstRightAnswer = new Answer();
-        $secondRightAnswer = new Answer();
-        $thirdRightAnswer = new Answer();
-
-        $firstRightAnswer->setText("2");
-        $secondRightAnswer->setText("два");
-        $thirdRightAnswer->setText("two");
+        $firstRightAnswer = ['id' => 1, 'text' => '2'];
+        $secondRightAnswer = ['id' => 2, 'text' => 'два'];
+        $thirdRightAnswer = ['id' => 3, 'text' => 'two'];
 
         $rightAnswers = array($firstRightAnswer, $secondRightAnswer, $thirdRightAnswer);
 
