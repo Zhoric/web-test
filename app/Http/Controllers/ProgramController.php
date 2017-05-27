@@ -35,6 +35,8 @@ class ProgramController extends Controller
 
 
 
+
+            dd ($request->all());
             $program = $request->json('program');
 
              $program = json_decode($program);
