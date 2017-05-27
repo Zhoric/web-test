@@ -33,10 +33,7 @@ class ProgramController extends Controller
     public function run(Request $request){
         try{
 
-
-
-
-            dd ($request->all());
+            
             $program = $request->json('program');
 
              $program = json_decode($program);

@@ -25,7 +25,6 @@ class DemoController extends BaseController
     private $_uow;
     private $app_path;
     private $manager;
-    private $fileManager;
     private $dockerManager;
     private $taskStatesManager;
     private $testResultManager;
@@ -35,7 +34,6 @@ class DemoController extends BaseController
     public function __construct(UnitOfWork $uow,TestResultManager $testResultManager,  CodeQuestionManagerProxy $manager)
     {
         $this->_uow = $uow;
-        $this->fileManager = CodeFileManagerFactory::getCodeFileManager(\Language::C);
         $this->manager = $manager;
         $this->app_path = app_path();
 
@@ -68,10 +66,7 @@ class DemoController extends BaseController
        $result =  $this->manager->runQuestionProgram($program->getTemplate(), $program,$paramSets, $testResult, $question);
 
        return $result;
-        for($i = 0; $i < 1; $i++) {
-           $this->manager->runQuestionProgram($program->getTemplate(), $program,$paramSets, $testResult, $question);
-            sleep(1);
-        }
+
 
 
         dd("done");
