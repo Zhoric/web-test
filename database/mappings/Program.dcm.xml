@@ -13,6 +13,8 @@
       </options>
     </field>
     <field name="lang" type="smallint" column="lang" nullable="false"/>
+    <field name="timeLimit" type="smallint" column="time_limit" nullable="false"/>
+    <field name="memoryLimit" type="smallint" column="memory_limit" nullable="false"/>
     <many-to-one field="question" target-entity="Question" fetch="LAZY">
       <join-columns>
         <join-column name="question_id" referenced-column-name="id"/>

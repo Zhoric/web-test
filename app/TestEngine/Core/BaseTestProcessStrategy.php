@@ -9,6 +9,7 @@ use Managers\TestManager;
 use Managers\TestResultManager;
 use QuestionType;
 use QuestionViewModel;
+use Repositories\UnitOfWork;
 use TestResult;
 use TestType;
 
@@ -201,20 +202,20 @@ class BaseTestProcessStrategy
      * Проверка правильности ответов
      * @param QuestionViewModel $questionInfo - Вопрос со всеми его ответами.
      * @param QuestionAnswer $questionAnswer - ответы, которые дал студент
+     * @param TestResult $testResult - айдишник результата теста(нужен в случаях, если вопрос с кодом)
      * @return int - оценка за ответ, %
-     * @throws Exception
      */
-    protected function checkAnswers($questionInfo, $questionAnswer){
+    protected function checkAnswers($questionInfo, $questionAnswer, $testResult = null){
         $answerResultPoints = null;
 
         $question = $questionInfo->getQuestion();
         $questionType = $question->getType();
         $answers = $questionInfo->getAnswers();
-
         switch ($questionType){
             case QuestionType::ClosedOneAnswer:
             case QuestionType::ClosedManyAnswers: {
-                $studentAnswers = $questionAnswer->getAnswerIds();
+
+            $studentAnswers = $questionAnswer->getAnswerIds();
                 $answerResultPoints =  AnswerChecker::calculatePointsForClosedAnswer($answers, $studentAnswers);
                 break;
             }
@@ -226,7 +227,7 @@ class BaseTestProcessStrategy
             case QuestionType::WithProgram:{
                 $studentCode = $questionAnswer->getAnswerText();
                 $questionId = $question->getId();
-                $answerResultPoints = AnswerChecker::calculatePointsForProgramAnswer($questionId, $studentCode);
+                $answerResultPoints = AnswerChecker::calculatePointsForProgramAnswer($questionId, $studentCode, $testResult);
                 break;
             }
         }
@@ -257,13 +258,17 @@ class BaseTestProcessStrategy
             throw new Exception("На данный вопрос уже был дан ответ.");
         }
 
-        $givenAnswer = new GivenAnswer();
-        $givenAnswer->setTestResult($testResult);
-        $givenAnswer->setQuestion($question);
-        $givenAnswer->setRightPercentage($rightPercentage);
-        $givenAnswer->setAnswer($answerText);
+        //todo:: для вопроса с программой сущность ответа на вопрос создается ранее
+        if($question->getType() != QuestionType::WithProgram) {
+            $givenAnswer = new GivenAnswer();
+            $givenAnswer->setTestResult($testResult);
+            $givenAnswer->setQuestion($question);
+            $givenAnswer->setRightPercentage($rightPercentage);
+            $givenAnswer->setAnswer($answerText);
+            $this->_questionManager->createQuestionAnswer($givenAnswer);
+        }
 
-        $this->_questionManager->createQuestionAnswer($givenAnswer);
+
     }
 
     /**
@@ -276,29 +281,45 @@ class BaseTestProcessStrategy
      * @internal param Question $question
      */
     protected function getAnswerText($questionAnswer, $studentAnswer){
+
         $openAnswerText = $studentAnswer->getAnswerText();
+
         if ($openAnswerText != null && $openAnswerText != ""){
-            return $openAnswerText;
+            return $openAnswerText.' ';
         }
 
         $studentAnswersIds = $studentAnswer->getAnswerIds();
         $questionType = $questionAnswer->getQuestion()->getType();
         $answers = $questionAnswer->getAnswers();
         $answerText = '';
+
         switch ($questionType){
             case QuestionType::ClosedOneAnswer: {
-                $answerText = $answers[0]->getText();
+                if (count($studentAnswersIds) > 0){
+                    $studentAnswerId = $studentAnswersIds[0];
+                    $selectedAnswers = array_filter($answers, function($answer) use($studentAnswerId){
+                        return $answer['id'] == $studentAnswerId;
+                    });
+                    if ($selectedAnswers != null && count($selectedAnswers) > 0){
+                        $answerText = array_values($selectedAnswers)[0]['text'].' ';
+                    }
+                }
                 break;
             }
             case QuestionType::ClosedManyAnswers: {
-                foreach ($answers as $answer){
-                    if (in_array($answer->getId(), $studentAnswersIds)){
-                        $answerText .= $answer->getText().'</answer>';
+                foreach ($studentAnswersIds as $studentAnswerId){
+                    $selectedAnswers = array_filter($answers, function($answer) use($studentAnswerId){
+                        return $answer['id'] == $studentAnswerId;
+                    });
+
+                    if ($selectedAnswers != null && count($selectedAnswers) > 0){
+                        $answerText .= array_values($selectedAnswers)[0]['text'].' </answer>';
                     }
                 }
                 break;
             }
         }
+
         return $answerText;
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Managers\TestResultManager;
 use TestEngine\TestResultCalculator;
 use TestResultViewModel;
+use GivenAnswerData;
 
 class TestResultController extends Controller
 {
@@ -119,6 +120,32 @@ class TestResultController extends Controller
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }
+    }
+
+    /**
+     *
+     * Создает сущность студенческого ответа на вопрос (используется внешним модулем)
+     * @param Request $request
+     * @throws
+     * @return int
+     */
+    public function createGivenAnswer(Request $request){
+
+        try {
+            $givenAnswerJson = $request->all();
+            $contract = new GivenAnswerData();
+            $contract->fillFromJson($givenAnswerJson);
+            $givenAnswerId = $this->_testResultManager->createGivenAnswerEntity( $contract->getCode()
+                                                               ,$contract->getTestResultId()
+                                                               ,$contract->getQuestionId());
+
+            return $givenAnswerId;
+        }
+        catch(Exception $e){
+            throw new Exception("Не удалось создать ответ студента на вопрос. "
+                . $e->getMessage());
+        }
+
     }
 
     /**

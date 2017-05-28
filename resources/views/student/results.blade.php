@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/site.css')}}" />
 @endsection
 @section('javascript')
-    <script src="{{ URL::asset('js/student/results.js')}}"></script>
+    <script src="{{ URL::asset('js/min/student-results.js')}}"></script>
 @endsection
 
 @section('menu')
@@ -34,17 +34,17 @@
                                     </div>
                                 </div>
                                 <div class="details-row">
-                                    <div class="details-column width-100p">
+                                    <div class="details-column width-100p zero-margin">
                                         <!-- ko if: mark() !== null -->
-                                        <span class="radio-important" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
+                                        <span class="info coloredin-patronus float-right" data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                                         <!-- /ko -->
-                                        <span class="radio-negative" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
+                                        <span class="info coloredin-crimson float-right" data-bind="if: mark() === null">Ожидает&nbsp;проверки</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="details-column width-60p">
-                            <label class="title">Название теста</label>
+                            <label class="title">Название&nbsp;теста</label>
                             <span class="info" data-bind="text: testName"></span>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="details-column float-right">
                             <div class="float-right">
                                 <div class="details-row">
-                                    <div class="details-column float-right">
+                                    <div class="details-column float-right zero-margin">
                                         <label class="title">Номер&nbsp;попытки</label>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="details-column width-60p">
                             <label class="title">Дата&nbsp;прохождения</label>
-                            <span class="info" data-bind="text: commonHelper.parseDate(dateTime.date())"></span>
+                            <span class="info" data-bind="text: dateTime.date.parseDate()"></span>
                         </div>
                     </div>
                     <!-- /ko -->

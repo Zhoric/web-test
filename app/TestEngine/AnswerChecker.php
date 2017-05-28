@@ -1,7 +1,7 @@
 <?php
 
 namespace TestEngine;
-use CodeQuestionEngine\CodeQuestionManager;
+use CodeQuestionManagerProxy;
 use Exception;
 use Repositories\UnitOfWork;
 
@@ -27,11 +27,11 @@ class AnswerChecker
     /**
      * Получение менеджера вопросов с программным кодом для подсчёта оценки за ответ на
      * вопрос с кодом.
-     * @return CodeQuestionManager
+     * @return CodeQuestionManagerProxy
      */
     private static function getCodeQuestionManager(){
         if (self::$_codeQuestionManager == null){
-            self::$_codeQuestionManager = app()->make(CodeQuestionManager::class);
+            self::$_codeQuestionManager = app()->make(CodeQuestionManagerProxy::class);
         }
         return self::$_codeQuestionManager;
     }
@@ -43,12 +43,12 @@ class AnswerChecker
      * @return int - Оценка, %.
      */
     public static function calculatePointsForClosedAnswer($answers, $studentAnswers){
-
         $studentAnswers = ($studentAnswers == null) ? [] : $studentAnswers;
         $totalRightAnswersCount = self::calculateTotalRightAnswers($answers);
         $studentRightAnswersCount = self::calculateRightStudentAnswers($answers, $studentAnswers);
 
         $rightPercentage = $studentRightAnswersCount/$totalRightAnswersCount * 100;
+
         $rightPercentageRounded = floor($rightPercentage);
 
         return $rightPercentageRounded;
@@ -63,11 +63,12 @@ class AnswerChecker
      */
     public static function calculatePointsForSingleStringAnswer($answers, $studentAnswerText){
         foreach ($answers as $answer){
-            $rightAnswerText = $answer->getText();
+            $rightAnswerText = $answer['text'];
             if (self::prepareForComparison($rightAnswerText) == self::prepareForComparison($studentAnswerText)){
                 return 100;
             }
         }
+
         return 0;
     }
 
@@ -79,28 +80,34 @@ class AnswerChecker
      * @throws \Exception
      * @internal param $questionId - идентификатор вопроса.
      */
-    public static function calculatePointsForProgramAnswer($questionId, $studentCode){
+    public static function calculatePointsForProgramAnswer($questionId, $studentCode, $testResult){
         $program = self::getUnitOfWork()->programs()->getByQuestion($questionId);
         if (!isset($program)){
             throw new Exception('По данному вопросу не найдены данные о программе!');
         }
-        $programId = $program->getId();
+
 
         if (!isset($studentCode) || empty($studentCode)){
             return 0;
         }
+        $paramSets = self::getUnitOfWork()->paramsSets()->getByProgram($program->getId());
 
-        $rightPercentage = self::getCodeQuestionManager()->runQuestionProgram($studentCode, $programId);
 
-        return $rightPercentage;
+        $question = self::getUnitOfWork()->questions()->find($questionId);
+
+        self::getCodeQuestionManager()->runQuestionProgram($studentCode, $program,$paramSets,$testResult,$question);
+
+        //код обрабатывается асинхронно, поэтому null
+        return null;
     }
 
     /**
-     * Подготовка строки ответа к сравнению.
+     * Подготовка строки ответа к сравнению. Удаление пробелов, спецсимволов, приведение к верхнему регистру.
      * @param $string - Входная строка.
      * @return string
      */
     private static function prepareForComparison($string){
+
         preg_replace("/(^\\s+)|(\\s+$)/us", "", $string);
         return mb_strtoupper(($string));
     }
@@ -114,7 +121,7 @@ class AnswerChecker
         $rightAnsCount = 0;
 
         for ($i = 0; $i < count($answers); $i++){
-            if (self::isRight($answers[$i])) $rightAnsCount++;
+            if ($answers[$i]['isRight']) $rightAnsCount++;
         }
 
         return $rightAnsCount;
@@ -130,19 +137,11 @@ class AnswerChecker
         $rightAnswers = 0;
 
         for ($i = 0; $i < count($answers); $i++){
-            if (in_array($answers[$i]->getId(), $studentAnswers)){
-                self::isRight($answers[$i]) ? $rightAnswers++ : $rightAnswers--;
+            if (in_array($answers[$i]['id'], $studentAnswers)){
+                $answers[$i]['isRight'] ? $rightAnswers++ : $rightAnswers--;
             }
         }
 
         return $rightAnswers > 0 ? $rightAnswers : 0;
-    }
-
-    /**
-     * @param \Answer $answer
-     * @return bool - Верен ли данный ответ.
-     */
-    private static function isRight($answer){
-        return $answer->getIsRight();
     }
 }

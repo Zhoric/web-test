@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/site.css')}}" />
 @endsection
 @section('javascript')
-    <script src="{{ URL::asset('js/student/discipline.js')}}"></script>
+    <script src="{{ URL::asset('js/min/student-discipline.js')}}"></script>
 @endsection
 
 @section('menu')
@@ -25,9 +25,9 @@
             </div>
             <div class="items-body" data-bind="foreach: current.tests">
                 <div class="item test" data-bind="click: $root.actions.start">
+                    <span class="start">Пройти тест</span>
                     <span data-bind="text: test.subject"></span>
                     <span class="attempts" data-bind="text: 'Попыток осталось: ' + attemptsLeft()"></span>
-                    <span class="start">Пройти тест</span>
                 </div>
             </div>
         </div>

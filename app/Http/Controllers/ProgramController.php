@@ -1,32 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 25.11.16
- * Time: 22:34
- */
 
 namespace App\Http\Controllers;
-use CodeQuestionEngine\CodeFileManager;
-use CodeQuestionEngine\CodeQuestionManager;
+
 use Illuminate\Http\Request;
 use Exception;
 use ParamsSet;
 use ProgramViewModel;
 use Repositories\UnitOfWork;
+use CodeQuestionManagerProxy;
 
 class ProgramController extends Controller
 {
 
 
     private $unitOfWork;
-    private $codeManager;
-    private $fileManager;
-    public function __construct(UnitOfWork $unitOfWork,CodeQuestionManager $codeManager,CodeFileManager $fileManager)
+    private $codeManagerProxy;
+    public function __construct(UnitOfWork $unitOfWork, CodeQuestionManagerProxy $codeQuestionManagerProxy)
     {
         $this->unitOfWork = $unitOfWork;
-        $this->codeManager = $codeManager;
-        $this->fileManager = $fileManager;
+        $this->codeManagerProxy = $codeQuestionManagerProxy;
     }
 
     /*
@@ -41,10 +33,33 @@ class ProgramController extends Controller
     public function run(Request $request){
         try{
 
+            
             $program = $request->json('program');
-            $program = json_decode($program);
+
+             $program = json_decode($program);
+
+
 
             $paramSets = (array) $request->json('paramSets');
+
+            $language = $request->json('lang');
+            $timeLimit = $request->json('timeLimit');
+            $memoryLimit = $request->json('memoryLimit');
+
+            if($timeLimit == null){
+                $timeLimit = 1;
+            }
+            if($memoryLimit == null){
+                $memoryLimit = 100;
+            }
+
+
+            if(empty($language)){
+                $language = \Language::C;
+            }
+            else {
+                $language = \Language::getLanguageByAlias($language);
+            }
 
 
             $paramsSetsObjects = [];
@@ -57,10 +72,10 @@ class ProgramController extends Controller
 
             }
 
-            $mark = $this->codeManager->runQuestionProgramWithParamSets($program,$paramsSetsObjects);
 
+            $result = $this->codeManagerProxy->runProgram($program,$language,$timeLimit,$memoryLimit,$paramsSetsObjects);
 
-            return $this->successJSONResponse('Ваша оценка: '.$mark);
+            return $this->successJSONResponse('Результат: '.$result);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
         }

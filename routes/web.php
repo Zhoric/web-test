@@ -9,10 +9,11 @@ Route::get('docker','DemoController@docker');
 Route::get('getProfiles', 'DemoController@getProfiles');
 Route::get('test', 'DemoController@index');
 Route::get('auth', 'DemoController@auth');
-Route::post('receiveCode','DemoController@receiveCode');
+Route::get('receiveCode','DemoController@receiveCode');
 Route::get('compile','DemoController@compileOnDocker');
 Route::post('register/checkEmail', 'Auth\RegisterController@checkIfEmailExists');
 Route::get('role','UserController@getRoleByUser');
+Route::get('cachetest','DemoController@test');
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
@@ -418,4 +419,17 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('questions/{themeId}', 'ImportExportController@exportQuestions')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
     });
+
+     /*-----------------------------------------------------------------------------
+    *                          ВНЕШНЕЕ API ДЛЯ МОДУЛЯ ПРОГРАММНОГО КОДА
+    *------------------------------------------------------------------------------
+    */
+    Route::group(['prefix' => 'external'], function () {
+        Route::post('setMark', 'TestResultController@setAnswerMark')
+            ->middleware('checkIP');
+        Route::post('createGivenAnswer', 'TestResultController@createGivenAnswer')
+            ->middleware('checkIP');
+    });
+
+
 });

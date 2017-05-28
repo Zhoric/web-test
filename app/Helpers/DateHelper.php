@@ -15,6 +15,13 @@ class DateHelper
         return $nowString;
     }
 
+    public static function getCurrentUtcDateTimeString(){
+        $now = new DateTime();
+        $nowString = $now->format(GlobalTestSettings::dateSerializationFormat);
+
+        return $nowString;
+    }
+
     public static function getCurrentDateTime(){
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone(GlobalTestSettings::dateTimeZone));
@@ -25,5 +32,9 @@ class DateHelper
     public static function addDaysToDate($date,$days){
         $date = strtotime("+".$days." days", strtotime($date));
         return date('Y-m-d', $date);
+    }
+
+    public static function toMskDateTime($dateTime){
+        return $dateTime->setTimezone(new DateTimeZone(GlobalTestSettings::dateTimeZone));
     }
 }

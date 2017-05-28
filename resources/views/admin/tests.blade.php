@@ -3,9 +3,7 @@
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster.bundle.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
-    <script src="{{ URL::asset('js/tooltipster.bundle.js')}}"></script>
-    <script src="{{ URL::asset('js/knockout.multiselect.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/tests.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-tests.js')}}"></script>
 @endsection
 
 @section('content')
@@ -134,7 +132,7 @@
                  title="Пожалуйста, укажите хотя бы одну тему" validate special
                  data-bind="with: $root.multiselect">
                 <label class="title">Темы&nbsp;<span class="required">*</span></label>
-                <multiselect params="{source: data, tags: tags}"></multiselect>
+                <multiselect params="{source: $root.multiselect.data, tags: $root.multiselect.tags}"></multiselect>
             </div>
         </div>
         <div class="details-row float-buttons">

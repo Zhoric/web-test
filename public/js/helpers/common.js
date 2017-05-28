@@ -222,9 +222,10 @@ var commonHelper = {
         }
     },
     scroll: function(selector){
-        $('html, body').animate({
-            scrollTop: $(selector).offset().top
-        }, 1000);
+
+        // $('html, body').animate({
+        //     scrollTop: $(selector).offset().top
+        // }, 1000);
     },
     parseAnswers: function(answers){
         return answers

@@ -33,34 +33,25 @@ h1{line-height: 25px;}
     }
   }
 }
-
 .item.test{
-  background: @patronus-shade;
-  background-image: linear-gradient(@patronus, @patronus);
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  background-size: 0 100%;
-  transition: background-size .4s, color 0s;
   span.start{
     display: none;
   }
   span.attempts{
     float: right;
   }
-
-  &:hover{
-    background-size: 100% 100%;
-    color: @patronus;
-    span{
+  &:hover {
+    span {
       display: none;
     }
-    span.start{
+    span.start {
       display: block;
       width: 100%;
       text-align: center;
       color: @white;
     }
   }
+
 }
 .result{
   width:100%;

@@ -61,6 +61,7 @@ class TestResultRepository extends BaseRepository
             ->leftJoin(TestResult::class, 'tr2', Join::WITH, "tr.test = tr2.test 
             AND tr.user = tr2.user AND tr2.attempt > tr.attempt")
             ->where('tr2.id is NULL')
+            ->orderBy('tr.attempt', 'DESC')
             ->getQuery();
 
         return $query->execute();

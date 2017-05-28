@@ -9,6 +9,7 @@ use Managers\QuestionManager;
 use Managers\SettingsManager;
 use Managers\TestManager;
 use Managers\TestResultManager;
+use Repositories\UnitOfWork;
 
 class TestProcessControlStrategy extends BaseTestProcessStrategy implements ITestProcessStrategy
 {
@@ -48,7 +49,6 @@ class TestProcessControlStrategy extends BaseTestProcessStrategy implements ITes
         if ($this->_testResult != null) {
             return $this->_testResult;
         }
-
         $nextQuestionId = $this->getRandomQuestion($testSession);
         $question = $this->_testManager->getQuestionWithAnswers($nextQuestionId, false);
 
@@ -75,12 +75,14 @@ class TestProcessControlStrategy extends BaseTestProcessStrategy implements ITes
             $this->validateQuestionToAnswer($questionId);
 
             $question = $this->_questionManager->getWithAnswers($questionId);
+            $testResultId = $session->getTestResultId();
+            $testResult = $this->_testResultManager->getById($testResultId);
 
-            $answerRightPercentage = $this->checkAnswers($question, $questionAnswer);
+            $answerRightPercentage = $this->checkAnswers($question, $questionAnswer,$testResult);
+
+
             $answerText = $this->getAnswerText($question, $questionAnswer);
-
             $this->saveQuestionAnswer($session, $questionId, $answerRightPercentage, $answerText);
-
         } catch (Exception $exception){
             $questionId = $questionAnswer->getQuestionId();
             $question = $this->_questionManager->getWithAnswers($questionId);

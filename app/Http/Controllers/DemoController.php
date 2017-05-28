@@ -4,32 +4,40 @@ namespace App\Http\Controllers;
 
 
 
+use App\Jobs\RunProgramJob;
 use App\Process;
 
 
-use CodeQuestionEngine\CodeFileManager;
+
+
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
-use Managers\ProfileManager;
+use Managers\TestResultManager;
 use Managers\UISettingsCacheManager;
+use Queue;
 use Repositories\UnitOfWork;
 use Illuminate\Http\Request;
-use CodeQuestionEngine\CodeQuestionManager;
+use TaskStatesManager;
+use CodeQuestionManagerProxy;
 
 class DemoController extends BaseController
 {
     private $_uow;
     private $app_path;
     private $manager;
-    private $fileManager;
+    private $dockerManager;
+    private $taskStatesManager;
+    private $testResultManager;
 
 
-    public function __construct(UnitOfWork $uow, CodeFileManager $fileManager, CodeQuestionManager $manager)
+
+    public function __construct(UnitOfWork $uow,TestResultManager $testResultManager,  CodeQuestionManagerProxy $manager)
     {
         $this->_uow = $uow;
-        $this->fileManager = $fileManager;
         $this->manager = $manager;
         $this->app_path = app_path();
+
+        $this->testResultManager = $testResultManager;
     }
 
     public function auth(){
@@ -37,32 +45,157 @@ class DemoController extends BaseController
 
     }
 
-    public function docker(){
-        error_reporting(E_ALL);
-        ini_set('display_errors',1);
-        $command_pattern = 'docker run -v $PWD/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init --skip-startup-files --quiet';
-        $command = 'echo hello wold';
-        $result =  exec("$command_pattern $command",$output);
-        dd($result,$output);
-        return;
+
+    public function test(){
 
     }
 
-    
+    public function docker(){
+
+        $program = $this->_uow->programs()->find(1);
+
+       // $this->manager->setProgramLanguage($program->getLang());
+        $testResult = $this->_uow->testResults()->find(1);
+        $question = $this->_uow->questions()->find(1);
+
+
+        $paramSets = $this->_uow->paramsSets()->getByProgram(1);
+
+
+
+       $result =  $this->manager->runQuestionProgram($program->getTemplate(), $program,$paramSets, $testResult, $question);
+
+       return $result;
+
+
+
+        dd("done");
+
+
+
+
+
+        $command = "ps aux";
+        $this->dockerManager->setLanguage(\Language::C);
+        $dockerInstance = $this->dockerManager->getOrCreateInstance();
+        $result = $dockerInstance->run($command);
+
+        $result = $dockerInstance->getProcessInfo("c_output_1_0.out");
+
+
+        dd($result);
+
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command = "ps aux";
+        exec("docker exec b178c3393937f51af504a6f1d13d49784f24d8875c65346ff70d5f962e346569 $command", $output);
+
+        dd($output);
+
+
+        $app_path = app_path();
+        $cache_dir = EngineGlobalSettings::CACHE_DIR;
+
+        $dirPath = "$app_path/$cache_dir/code";
+        file_get_contents("$dirPath/test.c");
+
+        $start_time = microtime(true);
+
+        $command_pattern = "docker run -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init";
+
+        dd($command_pattern);
+
+        $container_id =  exec("$command_pattern",$output);
+
+
+        $command_pattern = "sh /opt/temp_cache/code/run.sh";
+
+        $descriptorspec = array(
+            0 => array('pipe', 'r'),
+        );
+
+        $process = proc_open("docker exec $container_id $command_pattern",
+            $descriptorspec,$pipes);
+        dd($process);
+
+
+        $current_time = microtime(true);
+
+
+        while($current_time - $start_time < 10){
+            $metainfo = proc_get_status($process);
+
+            if($metainfo["running"] === false){
+
+                return "no overtime";
+                break;
+            }
+            sleep(1);
+
+            $current_time = microtime(true);
+        }
+        $metainfo = proc_get_status($process);
+                   $pid = $metainfo['pid'];
+                  $sigterm = 9;
+                   posix_kill ( $pid, $sigterm );
+
+       // $command_pattern = "docker stop $container_id";
+
+       // exec($command_pattern,$output);
+
+        return "overtime";
+
+
+
+    }
+
+
+    public function connect(){
+
+        error_reporting(E_ALL);
+        ini_set('display_errors',1);
+        $command_pattern = "docker run -d -v $this->app_path/temp_cache:/opt/temp_cache -m 50M baseimage-ssh /sbin/my_init";
+        $command = 'echo hello world';
+
+        $container_id =  exec("$command_pattern",$output);
+
+        $container_id = substr($container_id,0,7);
+
+        $command_pattern = "docker stop $container_id";
+
+        exec($command_pattern,$output);
+
+        $container_id = substr($container_id, 0, 5);
+        $command_pattern = "docker exec $container_id $command";
+
+
+        $result = exec($command_pattern,$external);
+
+
+
+    }
+
+
+    public function docker_test(){
+
+    }
 
 
     public function editor(){
         return view('editor');
     }
 
-    public function receiveCode(Request $request){
-        $code = $request->input('code');
+    public function receiveCode(){
 
-      //  $result = $this->manager->runQuestionProgram($code,1);
 
-        $result = $this->manager->run($code);
-        return $result;
+        $command = 'sh /opt/temp_cache/Петр_Петров_Перович_1493669336/run0.sh';
+        for($i = 0; $i < 1; $i ++) {
 
+            $queue = Queue::push(new RunProgramJob(\Language::C,$command));
+
+
+        }
+        return $queue;
     }
 
     /**
@@ -83,6 +216,9 @@ class DemoController extends BaseController
         $settMan = app()->make(UISettingsCacheManager::class);
         $settMan->setValues($userId, $settings);
     }
+
+
+
 
     /**
      * Получение настроек. Пример тела запроса:

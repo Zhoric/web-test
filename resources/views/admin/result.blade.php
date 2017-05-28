@@ -1,7 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Результат теста')
 @section('javascript')
-    <script src="{{ URL::asset('js/admin/result.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-result.js')}}"></script>
 @endsection
 
 @section('content')
@@ -141,8 +141,7 @@
             <div class="item" data-bind="click: $root.actions.results.select">
                 <span data-bind="text: attempt() + ')'"></span>
                 <span data-bind="if: mark() !== null">
-                        <span data-bind="text: mark"></span>
-                        <span data-bind="text: $root.current.markScale"></span>
+                        <span data-bind="text: mark() + '/' + $root.current.markScale()"></span>
                     </span>
                 <span data-bind="if: mark() === null">Требуется&nbsp;проверка</span>
                 <span class="float-right date-string" data-bind="text: dateTime.date.parseDate()"></span>

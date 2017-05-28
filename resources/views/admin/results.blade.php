@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Результаты')
 @section('javascript')
-    <script src="{{ URL::asset('js/helpers/common.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/results.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-results.js')}}"></script>
 @endsection
 
 @section('content')

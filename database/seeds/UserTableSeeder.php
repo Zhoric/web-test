@@ -17,29 +17,20 @@ class UserTableSeeder extends Seeder
             'active' => true));
 
         DB::table('user')->insert(array(
-            'firstname' => 'Никита',
-            'lastname' => 'Жихарев',
-            'patronymic' => 'Евгеньевич',
-            'email' => 'test@gmail.com',
-            'password' => bcrypt('123456'),
+            'firstname' => 'для',
+            'lastname' => 'Преподаватель',
+            'patronymic' => 'отладки',
+            'email' => 'lecturer@mail.ru',
+            'password' => bcrypt('lecturer'),
             'active' => true));
 
-        DB::table('user')->insert(array(
-            'firstname' => 'Преподов',
-            'lastname' => 'Препод',
-            'patronymic' => 'Преподович',
-            'email' => 'test2@gmail.com',
-            'password' => bcrypt('123456'),
-            'active' => true));
-
-        $faker = Faker::create('ru_RU');
-        foreach (range(1,70) as $index) {
+        foreach (range(1,10) as $index) {
             DB::table('user')->insert([
-                'firstname' => $faker->firstNameMale,
-                'lastname' => $faker->lastName,
-                'patronymic' => $faker->middleNameMale,
-                'email' => $faker->email,
-                'password' => bcrypt('123456'),
+                'firstname' => "для",
+                'lastname' => "Студент",
+                'patronymic' => "отладки".$index,
+                'email' => "student".$index."@mail.ru",
+                'password' => bcrypt("student".$index),
                 'active' => true
             ]);
         }

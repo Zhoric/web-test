@@ -2,10 +2,7 @@
 @section('title', 'Администрирование')
 @section('javascript')
     <link rel="stylesheet" href="{{ URL::asset('css/datepicker.css')}}"/>
-    <script src="{{ URL::asset('js/bootstrap-datepicker.min.js')}}"></script>
-    <script src="{{ URL::asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{ URL::asset('js/helpers/datepicker.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/setting.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-setting.js')}}"></script>
 @endsection
 
 @section('content')
@@ -41,6 +38,26 @@
                             <td>
                                 <span title="Максимальная оценка, которая может быть получена за тест.
                                             По умолчанию используется 100-балльная система."
+                                      class="fa tagged coloredin-patronus">
+                                    &#xf05a;
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Относительная оценка за сложный вопрос</td>
+                            <td>
+                                <input id="complexQuestionPoints" type="text" validate
+                                       data-bind="textInput: complexQuestionPoints, validationElement: complexQuestionPoints,
+                                       enable: $root.current.editSettingsAllowed,
+                                       event: {focusout: $root.events.focusout, focusin: $root.events.focusin}"/>
+                            </td>
+                            <td>
+                                <span title="Устанавливает, во сколько раз больше будет количество баллов, полученных за ответ на
+                                            сложный вопрос, по сравнению с баллами за лёгкий. Коэффициент для вопроса средней сложности
+                                            считается как среднее арифметическое между коэффициентом для простого вопроса (единица)
+                                            и значением данной настройки. Например: 1 - простой вопрос, 1.25 - средний, 1.5 - сложный.
+                                            После изменения данной настройки, старые результаты тестирования не будут пересчитаны
+                                            с учётом новой шкалы оценивания вопросов!"
                                       class="fa tagged coloredin-patronus">
                                     &#xf05a;
                                 </span>

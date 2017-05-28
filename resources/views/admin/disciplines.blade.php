@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Дисциплины')
 @section('javascript')
-    <script src="{{ URL::asset('js/knockout.multiselect.js') }}"></script>
-    <script src="{{ URL::asset('js/admin/disciplines.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-disciplines.js')}}"></script>
 @endsection
 
 @section('content')
@@ -41,7 +40,7 @@
                         </thead>
                         <tbody>
                         <!-- ko if: $root.current.theme().mode() !== state.create-->
-                        <tr class="adder-row">
+                        <tr class="adder-row" class="width-100p">
                             <td colspan="3" data-bind="click: $root.actions.theme.start.add">
                                 <span class="fa">&#xf067;</span>&nbsp;Добавить тему
                             </td>
@@ -49,7 +48,7 @@
                         <!-- /ko -->
                         <!-- ko if: $root.current.theme().mode() === state.create -->
                         <tr class="input-row">
-                            <td colspan="2">
+                            <td colspan="2" class="width-100p">
                                 <input type="text" placeholder="Название темы"
                                        data-bind="value: $root.current.theme().name,
                                    event: {keyup: $root.events.theme}"/>
@@ -63,7 +62,7 @@
                         <!-- ko foreach: $root.current.themes-->
                         <tr data-bind="click: $root.actions.theme.move">
                             <td data-bind="text: $index()+1"></td>
-                            <td data-bind="text: name"><a data-bind="text: name, click: $root.actions.theme.move"></a></td>
+                            <td data-bind="text: name" class="width-100p"><a data-bind="text: name, click: $root.actions.theme.move"></a></td>
                             <td class="action-holder">
                                 <button data-bind="click: $root.actions.theme.start.remove" class="fa remove mini actions">&#xf014;</button>
                             </td>

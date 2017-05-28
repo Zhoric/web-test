@@ -62,14 +62,24 @@ class QuestionController extends Controller
             $themeId = $request->json('theme');
             $file = $request->json('file');
             $fileType = $request->json('fileType');
-            $program = $request->json('program');
+            $timeLimit = $request->json('timeLimit');
+            $memoryLimit = $request->json('memoryLimit');
+            $language = \Language::getLanguageByAlias($request->json('lang'));
+            $program = ["text" => $request->json('program'),
+                "timeLimit" => $timeLimit,
+                "memoryLimit" => $memoryLimit,
+                "language" => $language];
             $paramSets = (array) $request->json('paramSets');
 
             $question = new Question();
             $question->fillFromJson($questionData);
 
+          //  var_dump($request->json('answers'));
+
             if ($file != null){
                 $filePath = FileHelper::save($file, $fileType);
+
+
                 $question->setImage($filePath);
             }
             $this->_questionManager->create($question,$themeId,$answers,$program,$paramSets);
@@ -94,7 +104,17 @@ class QuestionController extends Controller
             $themeId = $request->json('theme');
             $file = $request->json('file');
             $fileType = $request->json('fileType');
-            $program = $request->json('program');
+            $timeLimit = $request->json('timeLimit');
+            $memoryLimit = $request->json('memoryLimit');
+            $language = \Language::getLanguageByAlias($request->json('lang'));
+            $program = ["text" => $request->json('program'),
+                        "timeLimit" => $timeLimit,
+                        "memoryLimit" => $memoryLimit,
+                        "language" => $language];
+
+
+
+
             $paramSets = (array) $request->json('paramSets');
 
             $question = new Question();

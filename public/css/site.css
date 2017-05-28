@@ -19,29 +19,25 @@ body {
 }
 .page-wrap {
   min-height: 100%;
-  margin-bottom: -200px;
+  margin-bottom: -50px;
 }
 .page-wrap:after {
   content: "";
   display: block;
-  height: 200px;
+  height: 50px;
 }
 .content {
   width: 90%;
   margin: 3% auto;
 }
 .footer {
-  height: 200px;
+  height: 50px;
   background: #666666;
   opacity: 0.8;
   color: #666666;
 }
-.footer-content {
-  height: 150px;
-  color: #fff;
-}
 .footer-copyright {
-  background: #5D8CAE;
+  background: #666666;
   color: #fff;
   line-height: 50px;
   text-indent: 40px;
@@ -583,20 +579,26 @@ a:hover {
 .minw-50 {
   min-width: 50px;
 }
-.minw-200 {
-  min-width: 200px;
-}
-.minw-220 {
-  min-width: 220px;
-}
 .minw-100 {
   min-width: 100px;
+}
+.minw-120 {
+  min-width: 120px;
 }
 .minw-130 {
   min-width: 130px;
 }
 .minw-185 {
   min-width: 185px;
+}
+.minw-200 {
+  min-width: 200px;
+}
+.minw-220 {
+  min-width: 220px;
+}
+.minw-220 {
+  min-width: 220px;
 }
 .minh-40 {
   min-height: 40px !important;
@@ -739,23 +741,11 @@ h1 {
 .item:hover span {
   color: #fff;
 }
-.item.test {
-  background: #EDEEF0;
-  background-image: linear-gradient(#5D8CAE, #5D8CAE);
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  background-size: 0 100%;
-  transition: background-size 0.4s, color 0s;
-}
 .item.test span.start {
   display: none;
 }
 .item.test span.attempts {
   float: right;
-}
-.item.test:hover {
-  background-size: 100% 100%;
-  color: #5D8CAE;
 }
 .item.test:hover span {
   display: none;

@@ -35,6 +35,7 @@ class FileHelper
             } while (file_exists($filePath));
         }
 
+
         $file = fopen($filePath, "a");
         fwrite($file, base64_decode($fileContent));
         fclose($file);

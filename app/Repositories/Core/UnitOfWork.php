@@ -45,6 +45,7 @@ class UnitOfWork
     private $_settingsRepo;
     private $_paramsSetRepo;
     private $_programRepo;
+    private $_dockerInfoRepo;
     private $_mediaRepo;
     private $_mediableRepo;
 
@@ -230,7 +231,35 @@ class UnitOfWork
         return $this->_mediableRepo;
     }
 
+    public function dockerInfos(){
+        if($this->_dockerInfoRepo == null){
+            $this->_dockerInfoRepo = new DockerInfoRepository($this->_em);
+        }
+        return $this->_dockerInfoRepo;
+    }
+
+    /**
+     * Применяет к базе данных изменения, сделанные втечение сессии.
+     */
+
     public function commit(){
         $this->_em->flush();
+    }
+
+    /**
+     * Отсоединяет сущность от контеста БД.
+     * @param $entity
+     */
+    public function detach($entity){
+        $this->_em->detach($entity);
+    }
+
+    /**
+     * Обновляет сущность, полученную из БД.
+     * (из-за кэширования ORM некоторых получаемых из БД данных, могут возвращаться неактуальные значения).
+     * @param $entity
+     */
+    public function refresh($entity){
+        $this->_em->refresh($entity);
     }
 }

@@ -45,8 +45,6 @@ class LoginController extends Controller
     {
         $this->_authManager = $authManager;
         $this->_userManager = $userManager;
-        $this->middleware('guest', ['except' => 'logout']);
-
     }
 
     public function login(Request $request)
@@ -63,6 +61,10 @@ class LoginController extends Controller
                 return $this->sendLockoutResponse($request);
             }
             $credentials = ['email' => $request->json('email'), 'password' => $request->json('password')];
+
+            if(Auth::check()){
+                throw new Exception('Вы уже вошли под другим пользователем!');
+            }
 
             if (!$this->_authManager->checkIfEmailExists($request->json('email'))) {
                 throw new Exception('Такого пользователя не существует!');
@@ -91,6 +93,7 @@ class LoginController extends Controller
 
 
     }
+
 
 
 }

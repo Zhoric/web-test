@@ -14,7 +14,7 @@ use TestPassingChronologyViewModel;
 use TestResult;
 use TestResultViewModel;
 use TestType;
-use UserRole;
+use GivenAnswer;
 
 class TestResultManager
 {
@@ -39,7 +39,7 @@ class TestResultManager
         $lastAttemptNumber = $this->_unitOfWork
             ->testResults()
             ->getLastAttemptNumber($testId, $userId);
-        $now = DateHelper::getCurrentDateTime();
+        $now = new DateTime();
         if ($user == null) {
             throw new Exception('Не удаётся начать тест. Указанного пользователя не существует!');
         }
@@ -93,7 +93,44 @@ class TestResultManager
      */
     public function getByUserAndDiscipline($userId, $disciplineId)
     {
-        return $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
+        $results = $this->_unitOfWork->testResults()->getByUserAndDiscipline($userId, $disciplineId);
+
+        /**
+         * Этот замечательный костыль нужен, чтобы студент смог увидеть изменения своей оценки за тест
+         * СРАЗУ ЖЕ, как они произойдут. Из-за того, что ORM кэширует некоторые получаемые из неё данные,
+         * изменения в БД могут быть некоторое время недоступны, в связи с чем приходятся так явно и убого обновлять
+         * полученные сущности результатов тестирования.
+         */
+        /** @var TestResult $result */
+        foreach ($results as $result){
+            $this->_unitOfWork->refresh($result);
+        }
+
+        return $results;
+    }
+
+
+    /**
+     * Создание сущности студенческого ответа на вопрос
+     * @param $code
+     * @param $testResultId
+     * @param $questionId
+     * @return int
+     */
+    public function createGivenAnswerEntity($code,$testResultId,$questionId){
+
+            $question = $this->_unitOfWork->questions()->find($questionId);
+            $testResult = $this->_unitOfWork->testResults()->find($testResultId);
+
+            $givenAnswer = new GivenAnswer();
+            $givenAnswer->setAnswer($code);
+            $givenAnswer->setQuestion($question);
+            $givenAnswer->setTestResult($testResult);
+
+            $this->_unitOfWork->givenAnswers()->create($givenAnswer);
+            $this->_unitOfWork->commit();
+
+            return $givenAnswer->getId();
     }
 
     /**
@@ -270,7 +307,6 @@ class TestResultManager
      */
     private function prepareForStudentResultRequest(Test $test, TestResultViewModel $resultViewModel, $studentId)
     {
-
         $requestedTestResultStudentId = $resultViewModel->getTestResult()->getUser()->getId();
 
         if ($requestedTestResultStudentId != $studentId) {

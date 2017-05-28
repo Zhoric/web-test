@@ -1,8 +1,7 @@
 @extends('layouts.manager')
 @section('title', 'Мониторинг тестирования')
 @section('javascript')
-    <script src="{{ URL::asset('js/helpers/ko-progressbar.js')}}"></script>
-    <script src="{{ URL::asset('js/admin/monitoring.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-monitoring.js')}}"></script>
 @endsection
 
 @section('content')
