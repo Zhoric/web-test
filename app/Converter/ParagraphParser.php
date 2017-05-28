@@ -44,8 +44,6 @@ class ParagraphParser {
                     else $attrs[] = 'line-height: 34px;';
                 }
                 else $attrs[] = 'line-height: initial;';
-
-                //$attrs[] = 'display: inline-block;';
             }
             if ($p->pPr->jc) {
                 $att = $p->pPr->jc->attributes('w', true);
@@ -53,16 +51,12 @@ class ParagraphParser {
                     $attrs[] = 'text-align: justify;';
                 else $attrs[] = 'text-align:' . $att['val'] . ';';
             }
-            //else $attrs[] = 'text-align: inherit;';
-
             if ($p->pPr->ind) {
                 $att = $p->pPr->ind->attributes('w', true);
                 if (isset($att['firstLine'])) $attrs[] = 'text-indent:' . ($att['firstLine'] / 10) . 'px;';
 
             } else $attrs[] = 'text-indent: 0px;';
 
-            //$this->html .= '<div class="block" style="' . $this->style . '">';
-            //$attrs[] = 'display: inline-block;';
         }
         return $attrs;
     }
@@ -84,8 +78,6 @@ class ParagraphParser {
                 $attrs[] = 'background-color: #' . $att['fill'];
             }
 
-            //$this->html .= '<div class="block" style="' . $this->style . '">';
-            //$attrs[] = 'display: inline-block;';
         }
         return $attrs;
     }

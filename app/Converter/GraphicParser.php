@@ -25,7 +25,6 @@ class GraphicParser{
         $namespaces = $draw->getNamespaces(true);
         $wp = $draw->children($namespaces['wp']);
         if ($wp->inline){
-            $this->parseInlineWP($wp->inline);
             $a = $wp->inline->children($namespaces['a']);
             if ($a->graphic)
                 $html .= $this->parseGraphic($a->graphic);
@@ -36,11 +35,6 @@ class GraphicParser{
                 $html .= $this->parseGraphic($a->graphic);
         }
         return $html;
-    }
-
-    public function parseInlineWP($wp){
-        //EMU = pixel * 914400 / 96
-
     }
 
     public function parseGraphic($graphic){

@@ -8,7 +8,6 @@
 class DocxReader{
 
     private $fileData = false;
-    private $errors = array();
     private $styles = array();
 
     private $html = '';

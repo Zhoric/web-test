@@ -79,7 +79,6 @@ class ListParser {
     private function getListHtml($p, $currentHtml, $numId, $lvlId = null, $value){
         $html = '';
         $this->_isList = true;
-        $isDecimalList = false;
 
         $attrs = array_merge($this->_textParser->parseTextStyle($p->pPr), $this->_textParser->parseTextStyle($p->r));
         $className = $this->_paragraphParser->parseParagraphStyle($p);
@@ -92,10 +91,6 @@ class ListParser {
 
         if (!strrpos($currentHtml, '<ol id="list' . $numId . '"'))
             $html .= '<ol id="list' . $numId . '">';
-
-        /*if (strrpos($this->_numbering[$numId][$lvlId], 'decimal') || strrpos($this->_numbering[$numId][$lvlId], 'decimal-leading-zero')) {
-            $className .= " decimal-list";
-        } */
 
         $currentValue = $this->_maxCounts[$numId][$lvlId] - $value;
 

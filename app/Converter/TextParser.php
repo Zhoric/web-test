@@ -61,8 +61,6 @@ class TextParser {
                 }
             }
         }
-        //if (!in_array('font-weight: bold;', $attrs)) $attrs[] = 'font-weight: normal;';
-        //if (!in_array('font-style: italic;', $attrs)) $attrs[] = 'font-style: normal;';
         return $attrs;
     }
 

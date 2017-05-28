@@ -111,7 +111,6 @@ class TableParser {
             switch ($att) {
                 case "vMerge":
                     if ($val['val'] == "restart") {
-                        //$att = $this->checkRowColSpan($style);
                         $this->_vMerge = 1;
                         $attr .= 'rowspan=;';
                     } else if ($val['val'] == "continue") {
