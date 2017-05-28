@@ -23242,7 +23242,11 @@ var state = {
     update: 'update',
     remove: 'remove',
     create: 'create',
-    info: 'info'
+    info: 'info',
+    overall: 'overall',
+    themes: 'themes',
+    materials: 'materials',
+    anchor: 'anchor'
 };
 
 var filters = {
@@ -23502,13 +23506,15 @@ var menu = {
         students: 'students',
         disciplines: 'disciplines',
         tests: 'tests',
-        results: 'results'
+        results: 'results',
+        materials: 'materials'
     },
     student: {
         main: 'home',
         results: 'results',
         stats: 'statistics',
-        faq: 'faq'
+        faq: 'faq',
+        materials: 'materials'
     }
 };
 

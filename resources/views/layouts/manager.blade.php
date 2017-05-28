@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="{{ URL::asset('css/tooltipster-sideTip-light.min.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/simple.css')}}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/admin.css')}}" />
+    <link rel="stylesheet" href="{{ URL::asset('css/jquery-ui.css')}}" />
+    <link rel="stylesheet" href="{{ URL::asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/barryvdh/elfinder/css/theme.css') }}">
 
     <script src="{{ URL::asset('js/min/manager-common.js')}}"></script>
     {{--<script src="{{ URL::asset('js/es5-shim.js')}}"></script>--}}

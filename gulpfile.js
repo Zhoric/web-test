@@ -25,9 +25,12 @@ elixir(function(mix){
 
 elixir(function(mix){
     mix.scripts([
+
         "lib/es5-shim.js",
         "lib/polyfills.js",
         "lib/jquery-3.1.1.js",
+        "lib/jquery.min.js",
+        "lib/jquery-ui.min.js",
         "lib/jquery.cookie.js",
         "lib/knockout-3.4.0.debug.js",
         "lib/knockout.validation.js",
@@ -64,7 +67,8 @@ elixir(function(mix){
         "helpers/modals.js",
         "helpers/ko-events.js",
         "helpers/tooltip.js",
-        "helpers/user-info.js"
+        "helpers/user-info.js",
+        "helpers/ko-pager.js"
     ], "public/js/min/student-common.js");
 });
 // ------ /COMMON ------
@@ -119,8 +123,13 @@ elixir(function(mix){
 });
 elixir(function(mix){
     mix.scripts([
-        "student/section.js"
-    ], "public/js/min/student-section.js");
+        "student/media.js"
+    ], "public/js/min/student-media.js");
+});
+elixir(function(mix){
+    mix.scripts([
+        "student/materials.js"
+    ], "public/js/min/student-materials.js");
 });
 elixir(function(mix){
     mix.scripts([
@@ -148,8 +157,16 @@ elixir(function(mix){
 });
 elixir(function(mix){
     mix.scripts([
-        "admin/editor.js"
-    ], "public/js/min/manager-editor.js");
+        "admin/media.js"
+    ], "public/js/min/manager-media.js");
+});
+elixir(function(mix){
+    mix.scripts([
+        "admin/materials.js",
+        "lib/knockout.multiselect.js",
+        "lib/elfinder.min.js",
+        "lib/elfinder.ru.js"
+    ], "public/js/min/manager-materials.js");
 });
 elixir(function(mix){
     mix.scripts([

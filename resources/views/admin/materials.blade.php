@@ -1,12 +1,7 @@
-@extends('layouts.managerElf')
+@extends('layouts.manager')
 @section('title', 'Материалы')
 @section('javascript')
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('packages/barryvdh/elfinder/css/theme.css') }}">
-    <script src="{{ URL::asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
-    <script src="{{ URL::asset('packages/barryvdh/elfinder/js/i18n/elfinder.ru.js') }}"></script>
-    <script src="{{ URL::asset('js/knockout.multiselect.js') }}"></script>
-    <script src="{{ URL::asset('js/admin/materials.js')}}"></script>
+    <script src="{{ URL::asset('js/min/manager-materials.js')}}"></script>
 @endsection
 
 @section('content')

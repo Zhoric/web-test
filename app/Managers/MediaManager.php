@@ -37,7 +37,7 @@ class MediaManager
             if ($media->getName() != $oldMedia->getName()){
                 $doc = new DocxReader();
                 $media->setContent($doc->changeImagesPath($media->getContent(), 'upload/.wordImage/' . $media->getHash()));
-                rename('upload/' . $oldMedia->getName(), 'upload/' . $media->getName());
+                rename($oldMedia->getPath(), $media->getPath());
                 rename('upload/.wordImage/' . $oldMedia->getHash(), 'upload/.wordImage/' . $media->getHash());
             }
         }
