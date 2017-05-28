@@ -319,6 +319,7 @@
             <td data-bind="text: pureName, click: $root.actions.media.move"></td>
             <!-- /ko -->
             <td class="action-holder">
+                <button data-bind="click: $root.actions.anchor.show, css: type" class="editor fa approve mini actions">&#xf13d;</button>
                 <button data-bind="click: $root.actions.media.open.editor, css: type" class="editor fa approve mini actions">&#xf040;</button>
                 <button data-bind="click: $root.actions.media.open.replacement" class="fa approve mini actions">&#xf0ec;</button>
                 <button data-bind="click: $root.actions.media.remove" class="fa remove mini actions">&#xf014;</button>
