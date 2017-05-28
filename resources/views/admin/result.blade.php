@@ -126,7 +126,7 @@
                     </div>
                     <div class="details-row">
                         <div class="details-column">
-                            <span class="fa icon">&#xf0ab;</span>
+                            <span class="fa icon">&#xf05a;</span>
                             <span class="coloredin-patronus bold pointer" data-bind="click: $root.actions.answer.details">Подробнее</span>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
     </div>
 </div>
 
-<div class="g-hidden">
+<div class="g-hidden" data-bind="with: $root.current.answer">
     <div class="box-modal" id="details-modal">
         <div class="layer zero-margin width-auto">
             <div class="layer-head">
@@ -167,8 +167,7 @@
             </div>
             <div class="layer-body zero-margin">
                 <div class="details-row">
-
-                    <h3 style="white-space: pre-wrap;" class="text" data-bind="text: $root.current.answer().answer.parseAnswer()"></h3>
+                    <span class="pre-wrap-text" data-bind="text: answer.parseAnswer()"></span>
                 </div>
                 <div class="details-row float-buttons minh-40">
                     <button class="arcticmodal-close approve" data-bind="click: ">Закрыть</button>
