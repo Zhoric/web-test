@@ -109,6 +109,7 @@
                                event: {focusout: $root.events.focusout, focusin: $root.events.focusin}">
                         <span class="fa radio-important" data-bind="click: $root.actions.mark.approve">&#xf00c;</span>
                         <span class="fa radio-important" data-bind="click: $root.actions.mark.cancel">&#xf00d;</span>
+
                         <!-- /ko -->
                     </div>
                 </div>
@@ -121,7 +122,13 @@
                     </div>
                     <div class="details-column">
                         <span class="fa icon">&#xf27a;</span>
-                        <span class="text" class="text" data-bind="text: answer.parseAnswer()"></span>
+                        <span class="text" data-bind="text: answer.parseAnswer()"></span>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-column">
+                            <span class="fa icon">&#xf0ab;</span>
+                            <span class="coloredin-patronus bold pointer" data-bind="click: $root.actions.answer.details">Подробнее</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,6 +138,7 @@
     <!-- /ko -->
 </div>
 @endsection
+
 
 <div class="g-hidden">
     <div class="box-modal" id="attempts-modal">
@@ -150,3 +158,23 @@
         </div>
     </div>
 </div>
+
+<div class="g-hidden">
+    <div class="box-modal" id="details-modal">
+        <div class="layer zero-margin width-auto">
+            <div class="layer-head">
+                <h3>Детальный просмотр ответа</h3>
+            </div>
+            <div class="layer-body zero-margin">
+                <div class="details-row">
+
+                    <h3 style="white-space: pre-wrap;" class="text" data-bind="text: $root.current.answer().answer.parseAnswer()"></h3>
+                </div>
+                <div class="details-row float-buttons minh-40">
+                    <button class="arcticmodal-close approve" data-bind="click: ">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -33,14 +33,18 @@ class ProgramController extends Controller
     public function run(Request $request){
         try{
 
-            
+
             $program = $request->json('program');
 
-             $program = json_decode($program);
+            $program = json_decode($program);
 
 
 
             $paramSets = (array) $request->json('paramSets');
+
+            if(empty($paramSets)){
+                throw new Exception("Не заданы тестовые параметры!");
+            }
 
             $language = $request->json('lang');
             $timeLimit = $request->json('timeLimit');
