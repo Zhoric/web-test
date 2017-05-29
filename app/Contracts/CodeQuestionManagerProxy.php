@@ -30,7 +30,9 @@ class CodeQuestionManagerProxy
 
         $baseUrl = ConnectionConfigSettings::$BASE_URL;
         $action = ConnectionConfigSettings::$RUN_QUESTION_PROGRAM_URL;
-
+	
+	//vinujdennui Ujas
+	sleep(1);
         $response = Curl::to($baseUrl.'/'.$action)
             ->withData( $contract->jsonSerialize())
             ->post();
