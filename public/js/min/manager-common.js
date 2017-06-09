@@ -25814,8 +25814,9 @@ ko.observable.fn.parseDayFromString = function(){
 };
 ko.observable.fn.parseAnswer = function(){
     if (!this()) return;
-    return this().replace(/<\/answer>/g, '\n\n')
-        .slice(0, this().lastIndexOf('\n\n'));
+    var text = this() + '\n';
+    return text.replace(/<\/answer>/g, '\n');
+        //.slice(0, this().lastIndexOf('\n'));
 };
 ko.observableArray.fn.knot = function(startDate, endDate){
     return ko.pureComputed(function(){

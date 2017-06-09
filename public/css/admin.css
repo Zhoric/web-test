@@ -979,6 +979,12 @@ button {
 .details-row.special-item-details .result-setter input {
   max-width: 83px;
 }
+.pre-wrap-text {
+  white-space: pre-wrap;
+  font-size: 13px;
+  display: table;
+  text-align: justify;
+}
 .stripe-table {
   width: 100%;
   padding: 15px 0;

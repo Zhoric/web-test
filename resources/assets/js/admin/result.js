@@ -56,7 +56,12 @@ $(document).ready(function(){
                             var q = data.question.text();
                             return commonHelper.shortenText(q, 100);
                         }
+                    },
+
+                    details: function(){
+                        commonHelper.modal.open('#details-modal');
                     }
+
                 },
                 mark: {
                     edit: function(data){
