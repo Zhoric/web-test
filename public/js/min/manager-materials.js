@@ -663,7 +663,14 @@ $(document).ready(function(){
                         url: '/api/mediable/media/' + mediaId,
                         error: self.errors,
                         successCallback: function (data) {
-                            if (data().length == 0) commonHelper.modal.open(self.modals.delete);
+                            console.log(data());
+                            var anchorsCount = 0;
+                            ko.utils.arrayForEach(data(), function (mediable) {
+                               // console.log(mediable.discipline());
+                               if (mediable.media.type() == 'text' && typeof mediable.discipline != 'object' && mediable.discipline() == null
+                                   && typeof mediable.theme != 'object' && mediable.theme() == null) anchorsCount++;
+                            });
+                            if (data().length == 0 || data().length == anchorsCount) commonHelper.modal.open(self.modals.delete);
                         }
                     })
                 }
