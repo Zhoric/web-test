@@ -79,10 +79,42 @@
     </div>
 
     <div class="g-hidden">
-        <div class="box-modal removal-modal" id="text-anchors-modal">
+        <div class="box-modal" id="all-texts-anchors-modal">
             <div class="layer zero-margin width-auto">
                 <div class="layer-head">
-                    <h3>Выберите из списка ниже ссылки, которые необходимо прикрепить.</h3>
+                    <h3>Выберите из списка ниже фрагменты, которые необходимо прикрепить.</h3>
+                </div>
+                <div class="layer-body">
+                    <div>
+                        <!-- ko if:  $root.current.textAnchors().length == 0-->
+                        <h3>Фрагменты для документов отсутствуют.</h3>
+                        <!-- /ko -->
+
+                        <!-- ko if:  $root.current.textAnchors().length > 0-->
+                        <!-- ko foreach: $root.current.textAnchors-->
+                        <input data-bind="attr: {id: id}, checked: isChecked" class="custom-checkbox" type="checkbox">
+                        <label data-bind="text: media.name, attr: {for: id}" class="anchor"></label>
+                        <label data-bind="text: start, attr: {for: id}"></label> <br>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                    </div>
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">Отмена</button>
+                        <!-- ko if:  $root.current.textAnchors().length > 0-->
+                        <button data-bind="click: $root.actions.anchor.attachTextAnchorsAndClose" class="approve arcticmodal-close">OK</button>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-hidden">
+        <div class="box-modal removal-modal" id="text-anchors-modal">
+            <div class="layer zero-margin width-auto">
+                <!-- ko if:  $root.current.textAnchors().length > 0-->
+                <div class="layer-head">
+                    <h3>Выберите из списка ниже фрагменты, которые необходимо прикрепить.</h3>
                 </div>
                 <div class="layer-body">
                     <div>
@@ -93,9 +125,20 @@
                     </div>
                     <div class="details-row float-buttons">
                         <button class="cancel arcticmodal-close">Отмена</button>
-                        <button data-bind="click: $root.actions.anchor.attachTextAnchor" class="remove arcticmodal-close">Да</button>
+                        <button data-bind="click: $root.actions.anchor.attachTextAnchor" class="remove arcticmodal-close">OK</button>
                     </div>
                 </div>
+                <!-- /ko -->
+                <!-- ko if:  $root.current.textAnchors().length == 0-->
+                <div class="layer-head">
+                    <h3>Для данного документа фрагменты отсутствуют.</h3>
+                </div>
+                <div class="layer-body">
+                    <div class="details-row float-buttons">
+                        <button class="cancel arcticmodal-close">OK</button>
+                    </div>
+                </div>
+                <!-- /ko -->
             </div>
         </div>
     </div>
@@ -224,13 +267,10 @@
         </thead>
         <tbody>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.open.add" colspan="4">
-                <span class="fa">&#xf067;</span>&nbsp;Добавить материал
-            </td>
-        </tr>
-        <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.open.anchor" colspan="4">
-                <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок
+            <td colspan="4">
+                <div data-bind="click: $root.actions.media.open.add"> <span class="fa">&#xf067;</span>&nbsp;Добавить материал </div>
+                <div data-bind="click: $root.actions.media.open.anchor"> <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок </div>
+                <div data-bind="click: $root.actions.anchor.open.text"> <span class="fa">&#xf067;</span>&nbsp;Прикрепить фрагмент текста </div>
             </td>
         </tr>
         <!-- ko if:  $root.current.medias().length > 0-->
@@ -288,13 +328,10 @@
         </thead>
         <tbody>
         <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.open.add" colspan="4">
-                <span class="fa">&#xf067;</span>&nbsp;Добавить материал
-            </td>
-        </tr>
-        <tr class="adder-row">
-            <td data-bind="click: $root.actions.media.open.anchor" colspan="4">
-                <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок
+            <td colspan="4">
+                <div data-bind="click: $root.actions.media.open.add"> <span class="fa">&#xf067;</span>&nbsp;Добавить материал </div>
+                <div data-bind="click: $root.actions.media.open.anchor"> <span class="fa">&#xf125;</span>&nbsp;Выделить отрывок </div>
+                <div data-bind="click: $root.actions.anchor.open.text"> <span class="fa">&#xf067;</span>&nbsp;Прикрепить фрагмент текста </div>
             </td>
         </tr>
         <!-- ko if:  $root.current.medias().length > 0-->

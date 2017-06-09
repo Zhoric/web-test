@@ -1138,7 +1138,7 @@ table.werewolf.materials tr .action-holder .editor.text {
   display: inline-block;
 }
 table.werewolf.materials tr.adder-row {
-  height: 40px;
+  height: 50px;
   font-size: 16px;
   color: #6C7A89;
   cursor: pointer;
@@ -1148,6 +1148,18 @@ table.werewolf.materials tr.adder-row .fa {
   font-size: 17px;
 }
 table.werewolf.materials tr.adder-row:hover {
+  background: #fff;
+}
+table.werewolf.materials tr.adder-row td {
+  padding: 0 !important;
+}
+table.werewolf.materials tr.adder-row td div {
+  display: inline-block;
+  padding-top: 12px;
+  width: 33%;
+  height: 100%;
+}
+table.werewolf.materials tr.adder-row td div:hover {
   background: #EDEEF0;
 }
 table.werewolf.materials tr.input-row {
@@ -1703,6 +1715,26 @@ body.media .page-wrap:after {
   font-size: 16px;
   letter-spacing: 1px;
   font-family: "Roboto Regular" !important;
+}
+#all-texts-anchors-modal {
+  width: 1200px;
+}
+#all-texts-anchors-modal input[type=checkbox].custom-checkbox:checked + label {
+  color: #5D8CAE;
+}
+#all-texts-anchors-modal input[type=checkbox].custom-checkbox:checked + label + label {
+  color: #5D8CAE;
+}
+#all-texts-anchors-modal label.anchor {
+  font-size: 16px;
+  display: inline-block;
+}
+#all-texts-anchors-modal label.anchor + label {
+  font-weight: bold;
+  display: inline-block;
+  font-size: 17px;
+  padding-bottom: 10px;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=admin.css.map */

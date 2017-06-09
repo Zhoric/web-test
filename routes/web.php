@@ -286,6 +286,7 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('hash/{id}', 'MediaController@getMediaByHash');
         Route::get('{id}', 'MediaController@getMedia');
         Route::post('createdocx', 'MediaController@createDocx');
+        Route::get('type/{type}', 'MediaController@getMediaByType');
     });
 
     /*-----------------------------------------------------------------------------

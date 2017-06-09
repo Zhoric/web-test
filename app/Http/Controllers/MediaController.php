@@ -34,6 +34,15 @@ class MediaController extends Controller
         }
     }
 
+    public function getMediaByType($type){
+        try{
+            $media = $this->_mediaManager->getMediaByType($type);
+            return $this->successJSONResponse($media);
+        } catch (Exception $exception){
+            return $this->faultJSONResponse($exception->getMessage());
+        }
+    }
+
     public function create(Request $request){
         try{
             $mediaData = $request->json('media');

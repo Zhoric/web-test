@@ -47,7 +47,8 @@ $(document).ready(function(){
                     start: ko.observable(null),
                     stop: ko.observable(null)
                 }),
-                multimediaURL: ko.observable('')
+                multimediaURL: ko.observable(''),
+                tests: ko.observableArray([])
             };
 
             self.filter = {
@@ -67,6 +68,7 @@ $(document).ready(function(){
                             self.alter.discipline.fill(data);
                             self.get.disciplineProfiles();
                             self.get.disciplineMedias(data.id());
+                            self.get.tests();
                             return;
                         }
                         self.actions.discipline.cancel();
@@ -153,6 +155,25 @@ $(document).ready(function(){
                             multimedia.pause();
                             multimedia.currentTime = startTime;
                         }
+                    }
+                },
+                test: {
+                    start: function(data){
+                        self.confirm.show({
+                            message: 'Вы уверены, что хотите пройти выбранный тест?',
+                            additionalHtml: '<p><span class="bold">Предупреждение: </span>' +
+                            'Во время прохождения теста перезагрузка или переход на другую страницу приведёт к тому, ' +
+                            'что текущая попытка прохождения теста будет считаться израсходованной.</p>',
+                            approve: function(){
+                                commonHelper.cookies.create({
+                                    testId: data.test.id(),
+                                    testName: data.test.subject(),
+                                    disciplineName: data.test.disciplineName(),
+                                    testType: data.test.type()
+                                });
+                                window.location.href = '/test';
+                            }
+                        });
                     }
                 }
             };
@@ -323,6 +344,15 @@ $(document).ready(function(){
                             self.current.multimedias.push(mediable.media);
                         else if (mediable.media.type() == 'text') self.current.medias.push(mediable.media);
                         else self.current.others.push(mediable.media);
+                    });
+                },
+                tests: function(){
+                    $ajaxget({
+                        url: '/api/tests/showForStudent?discipline=' + self.current.discipline().id(),
+                        errors: self.errors,
+                        successCallback: function(data){
+                            self.current.tests(data());
+                        }
                     });
                 }
             };

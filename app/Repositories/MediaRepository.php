@@ -15,4 +15,8 @@ class MediaRepository extends BaseRepository
     public function findByHash($hash){
         return $this->repo->findBy(['hash' => $hash]);
     }
+
+    public function findByType($type){
+        return $this->repo->findBy(['type' => $type]);
+    }
 }

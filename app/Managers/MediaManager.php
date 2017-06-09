@@ -26,6 +26,10 @@ class MediaManager
         return $this->_unitOfWork->medias()->findByHash($hash);
     }
 
+    public function getMediaByType($type){
+        return $this->_unitOfWork->medias()->findByType($type);
+    }
+
     public function addMedia(Media $media){
         $this->_unitOfWork->medias()->create($media);
         $this->_unitOfWork->commit();
@@ -64,11 +68,13 @@ class MediaManager
             $this->_unitOfWork->medias()->delete($media);
             $this->_unitOfWork->commit();
         }
+        else throw new Exception('Файл не найден!');
     }
 
     public function deleteFile($path){
         if (file_exists($path))
             unlink(public_path($path));
+        else throw new Exception('Файл не найден!');
     }
 
     public function addDocx(Media $media){

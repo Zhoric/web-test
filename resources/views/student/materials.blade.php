@@ -181,7 +181,18 @@
         <!-- /ko -->
         <!-- /ko -->
 
-
+        <!-- ko if:  $root.current.tests().length > 0-->
+        <tr><th colspan="3">Тесты</th></tr>
+        <!-- ko foreach: $root.current.tests-->
+        <tr>
+            <td data-bind="text: $index()+1"></td>
+            <td colspan="2" data-bind="click: $root.actions.test.start" class="test">
+                <span data-bind="text: test.subject"></span>
+                <span class="attempts" data-bind="text: 'Попыток осталось: ' + attemptsLeft()"></span>
+            </td>
+        </tr>
+        <!-- /ko -->
+        <!-- /ko -->
 
         <!-- ko if:  $root.current.medias().length == 0 && $root.current.multimedias().length == 0 && $root.current.others().length == 0-->
         <tr>

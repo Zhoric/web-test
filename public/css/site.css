@@ -996,6 +996,12 @@ table.werewolf.materials tr td:nth-child(2) {
   width: 30px;
   text-align: center;
 }
+table.werewolf.materials tr td.test {
+  text-align: left;
+}
+table.werewolf.materials tr td.test span.attempts {
+  float: right;
+}
 .item {
   background: #EDEEF0;
   color: #6C7A89;

@@ -14,7 +14,8 @@ $(document).ready(function(){
                 delete: '#delete-modal',
                 anchorMultimedia: '#anchor-multimedia-modal',
                 multimedia: '#multimedia-modal',
-                textAnchors: '#text-anchors-modal'
+                textAnchors: '#text-anchors-modal',
+                allTextsAnchors: '#all-texts-anchors-modal'
             };
 
             self.current = {
@@ -68,6 +69,11 @@ $(document).ready(function(){
                     }
                 }.init()),
                 textAnchors: ko.observableArray([]),
+                textAnchorsWrapper: ko.observableArray([]),
+                textAnchorsElement: ko.observable({
+                    name: ko.observable(''),
+                    textAnchors: ko.observableArray([])
+                }),
                 multimediaURL: ko.observable(''),
                 mode: ko.observable('')
             };
@@ -340,6 +346,56 @@ $(document).ready(function(){
                                     window.location.href = '/admin/editor/anchor/' + data()[0].id();
                                 }
                             });
+                        },
+                        text: function () {
+                            $ajaxget({
+                                url: '/api/media/type/text',
+                                errors: self.errors,
+                                successCallback: function(data){
+                                    self.current.textAnchors.removeAll();
+                                    ko.utils.arrayForEach(data(), function (media) {
+                                        $ajaxget({
+                                            url: '/api/mediable/media/' + media.id(),
+                                            error: self.errors,
+                                            successCallback: function (mediables) {
+                                                var isAttachToDiscipline = false;
+                                                ko.utils.arrayForEach(mediables(), function (mediable) {
+                                                    if (mediable.start() == null && typeof mediable.discipline == 'object' && self.current.discipline().id() == mediable.discipline.id())
+                                                        isAttachToDiscipline = true;
+                                                });
+                                                if (isAttachToDiscipline) {
+                                                    ko.utils.arrayForEach(mediables(), function (mediable) {
+                                                        var isInArray = false;
+                                                        if (mediable.start() != null) {
+                                                            if ((self.current.theme().id() != 0 && typeof mediable.theme == 'object' && self.current.theme().id() == mediable.theme.id()) ||
+                                                                (self.current.theme().id() == 0 && typeof mediable.discipline == 'object' && self.current.discipline().id() == mediable.discipline.id())) {
+                                                                mediable.isChecked = ko.observable(true);
+                                                                ko.utils.arrayForEach(self.current.textAnchors(), function (txtAnc) {
+                                                                    if (txtAnc.start() == mediable.start()) {
+                                                                        txtAnc.isChecked(true);
+                                                                        isInArray = true;
+                                                                    }
+                                                                })
+                                                            }
+                                                            else if (typeof mediable.discipline != 'object' && mediable.discipline() == null &&
+                                                                typeof mediable.theme != 'object' && mediable.theme() == null) {
+                                                                mediable.isChecked = ko.observable(false);
+                                                            }
+                                                            else isInArray = true;
+                                                            if (!isInArray) {
+                                                                mediable.media.name(mediable.media.name().substr(0, mediable.media.name().lastIndexOf('.')) + '.');
+                                                                self.current.textAnchors.push(mediable);
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    });
+                                    commonHelper.modal.open(self.modals.allTextsAnchors);
+                                }
+                            });
+
                         }
                     },
                     remove: {
@@ -424,7 +480,11 @@ $(document).ready(function(){
                                     self.actions.anchor.remove.themeTextAnchor(textAnchor);
                                 else self.actions.anchor.remove.disciplineTextAnchor(textAnchor);
                             }
-                        })
+                        });
+                    },
+                    attachTextAnchorsAndClose: function () {
+                        self.actions.anchor.attachTextAnchor();
+                        commonHelper.modal.close(self.modals.allTextsAnchors);
                     }
                 },
                 multimedia : {
@@ -470,6 +530,11 @@ $(document).ready(function(){
                     }
                 }
             };
+
+            $('#all-texts-anchors-modal .arcticmodal-close').onclick = function () {
+              commonHelper.modal.close(self.modals.allTextsAnchors);
+            };
+
 
             self.post = {
                 create: {
