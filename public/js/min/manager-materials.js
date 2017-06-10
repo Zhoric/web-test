@@ -666,7 +666,6 @@ $(document).ready(function(){
                             console.log(data());
                             var anchorsCount = 0;
                             ko.utils.arrayForEach(data(), function (mediable) {
-                               // console.log(mediable.discipline());
                                if (mediable.media.type() == 'text' && typeof mediable.discipline != 'object' && mediable.discipline() == null
                                    && typeof mediable.theme != 'object' && mediable.theme() == null) anchorsCount++;
                             });
@@ -787,21 +786,19 @@ $(document).ready(function(){
                         resizable: false,
                         overwriteUploadConfirm : false,
                         commands : [
-                            'getfile', 'back', 'chmod', 'colwidth', 'copy', 'cut',
-                            'edit', 'forward',  'help', 'home', 'info', 'reload',
+                            'getfile', 'back', 'chmod', 'colwidth',
+                            'forward',  'help', 'home', 'info', 'reload',
                             'mkdir', 'netmount', 'netunmount', 'open', 'opendir', 'paste', 'places',
-                            'quicklook', 'rename', 'resize', 'search', 'sort', 'up', 'upload', 'view'
+                            'quicklook', 'rename', 'search', 'sort', 'up', 'upload', 'view'
                         ],
                         uiOptions: {
                             toolbar: [
                                 ['back', 'forward'],
-                                ['reload'],
                                 ['mkdir', 'upload'],
                                 ['open', 'opendir'],
-                                ['copy', 'cut', 'paste'],
                                 ['info'],
                                 ['quicklook'],
-                                ['rename', 'edit', 'resize'],
+                                ['rename'],
                                 ['search'],
                                 ['view'],
                                 ['help'],
