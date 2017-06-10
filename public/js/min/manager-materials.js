@@ -851,7 +851,8 @@ $(document).ready(function(){
                 handlers: {
                     upload: function (elfinder) {
                         elfinder.bind('upload', function(event) {
-                            if (event.data.removed[0] == event.data.removed[1]) return;
+                            if (event.data.removed[0] == event.data.removed[1])  return;
+                            if (event.data.added[0].mime == 'directory') return;
 
                             ko.utils.arrayForEach(event.data.added, function(file) {
                                 var path = file.url.substring(file.url.search('upload'),file.url.length).split('/');
@@ -886,36 +887,40 @@ $(document).ready(function(){
                     },
                     rename: function (elfinder) {
                         elfinder.bind('rename', function (event) {
-                            $ajaxget({
-                                url: '/api/media/hash/' + event.data.removed[0], // получение переименованного файла
-                                errors: self.errors,
-                                successCallback: function(data){
-                                    var media = data()[0];
-                                    // новый путь к файлу - старый путь + новое название файла
-                                    var index = media.path().indexOf(media.name());
-                                    var newPath = media.path().substring(0, index) + event.data.added[0].name;
-                                    var mediaJSON = {
-                                        id: media.id(),
-                                        type: media.type(),
-                                        path: newPath,
-                                        name: event.data.added[0].name,
-                                        hash: event.data.added[0].hash,
-                                        content: media.content()
-                                    };
-                                    $ajaxpost({
-                                        url: '/api/media/update',
-                                        error: self.errors,
-                                        data: JSON.stringify({media: mediaJSON}),
-                                        successCallback: function(){
-                                            self.get.currentMedias();
-                                        }
-                                    });
-                                }
-                            });
+                            if (event.data.added[0].mime != 'directory') {
+                                $ajaxget({
+                                    url: '/api/media/hash/' + event.data.removed[0], // получение переименованного файла
+                                    errors: self.errors,
+                                    successCallback: function (data) {
+                                        var media = data()[0];
+                                        // новый путь к файлу - старый путь + новое название файла
+                                        var index = media.path().indexOf(media.name());
+                                        var newPath = media.path().substring(0, index) + event.data.added[0].name;
+                                        var mediaJSON = {
+                                            id: media.id(),
+                                            type: media.type(),
+                                            path: newPath,
+                                            name: event.data.added[0].name,
+                                            hash: event.data.added[0].hash,
+                                            content: media.content()
+                                        };
+                                        $ajaxpost({
+                                            url: '/api/media/update',
+                                            error: self.errors,
+                                            data: JSON.stringify({media: mediaJSON}),
+                                            successCallback: function () {
+                                                self.get.currentMedias();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
                     },
                     change: function (elfinder) {
                         elfinder.bind('change', function (event) {
+                            console.log(event);
+                            if (event.data.added[0].mime == 'directory') return;
                             if (event.data.removed[0] == event.data.removed[1]) {
                                 $ajaxget({
                                     url: '/api/media/hash/' + event.data.added[0].hash,
