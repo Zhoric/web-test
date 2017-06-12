@@ -16,6 +16,7 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('ssutestsadmin'),
             'active' => true));
 
+        /*
         DB::table('user')->insert(array(
             'firstname' => 'для',
             'lastname' => 'Преподаватель',
@@ -34,5 +35,6 @@ class UserTableSeeder extends Seeder
                 'active' => true
             ]);
         }
+        */
     }
 }

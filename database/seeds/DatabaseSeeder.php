@@ -10,13 +10,13 @@ class DatabaseSeeder extends Seeder
         $this->call('ProfileTableSeeder');
         $this->call('UserTableSeeder');
         $this->call('RoleTableSeeder');
-        $this->call('DisciplineTableSeeder');
-        $this->call('StudyPlanTableSeeder');
-        $this->call('GroupTableSeeder');
-        $this->call('ThemeTableSeeder');
-        $this->call('QuestionTableSeeder');
-        $this->call('TestTableSeeder');
-        $this->call('MarkTypeTableSeeder');
+        //$this->call('DisciplineTableSeeder');
+        //$this->call('StudyPlanTableSeeder');
+        //$this->call('GroupTableSeeder');
+        //$this->call('ThemeTableSeeder');
+        //$this->call('QuestionTableSeeder');
+        //$this->call('TestTableSeeder');
+        //$this->call('MarkTypeTableSeeder');
         $this->call('SettingsTableSeeder');
 
     }
