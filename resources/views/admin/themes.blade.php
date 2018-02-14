@@ -278,7 +278,7 @@
             <tbody>
             <!-- ko foreach: $root.current.questions-->
             <tr data-bind="attr: {id: 'qwn-' + id()}">
-                <td data-bind="text: text" class="width-100p"></td>
+                <td data-bind="html: text" class="width-100p"></td>
                 <td data-bind="text: $root.alter.set.type($data)"></td>
                 <td data-bind="text: $root.alter.set.complexity($data)" class="text-center"></td>
                 <td class="minw-100 action-holder">

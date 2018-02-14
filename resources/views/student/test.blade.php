@@ -19,7 +19,7 @@
             </div>
             <div class="layer-body" data-bind="if: current.question()">
                 <div class="question">
-                    <span data-bind="text: current.question().text"></span>
+                    <span data-bind="html: current.question().text"></span>
                 </div>
                 <div class="question-image" data-bind="if: current.question().image()">
                     <img class="pointer" data-bind="attr: {src: '/' + current.question().image()}, click: $root.actions.image.expand"/>
@@ -28,14 +28,14 @@
                     <!-- ko foreach: $root.current.answers-->
                     <input type="radio" group="answers" class="custom-radio"
                            data-bind="attr: {id: id}, checked: $root.current.singleAnswer, value: id" >
-                    <label data-bind="text: text, attr: {for: id}"></label>
+                    <label data-bind="html: text, attr: {for: id}"></label>
                     <!-- /ko -->
                 </div>
                 <div class="answers" data-bind="if: $root.current.answers().length && $root.current.question().type() === 2">
                     <!-- ko foreach: $root.current.answers -->
                     <input type="checkbox" class="custom-checkbox"
                            data-bind="attr: {id: id}, checked: isRight" >
-                    <label data-bind="text: text, attr: {for: id}"></label>
+                    <label data-bind="html: text, attr: {for: id}"></label>
                     <!-- /ko -->
                 </div>
                 <div class="answers" data-bind="if: $root.current.question().type() === 3">
