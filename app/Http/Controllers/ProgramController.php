@@ -76,9 +76,9 @@ class ProgramController extends Controller
 
             }
 
-
+		
             $result = $this->codeManagerProxy->runProgram($program,$language,$timeLimit,$memoryLimit,$paramsSetsObjects);
-
+	    
             return $this->successJSONResponse('Результат: '.$result);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());
