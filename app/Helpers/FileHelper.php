@@ -44,9 +44,9 @@ class FileHelper
     }
 
     public static function delete($filePath){
-        if (file_exists($filePath)){
-            unlink($filePath);
-        }
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
     }
 
     private static function tryGetFileExtension($fileTypeString){

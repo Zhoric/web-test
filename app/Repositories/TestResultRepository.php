@@ -27,29 +27,36 @@ class TestResultRepository extends BaseRepository
         return $countQuery->getSingleScalarResult();
     }
 
-    public function getByGroupAndTest($testId, $groupId)
+    public function getResults($testId, $groupId, $disciplineId)
     {
-        $maxQb = $this->repo->createQueryBuilder('tr');
-        $maxQuery = $maxQb->select('MAX(tr.dateTime)')
-            ->join(\StudentGroup::class, 'sg', Join::WITH, 'sg.group = :groupId')
-            ->setParameter('groupId', $groupId)
-            ->join(User::class, 'u', Join::WITH, 'tr.user = u.id AND sg.student = u.id')
-            ->where('tr.test = :testId')
-            ->setParameter('testId', $testId)
-            ->groupBy('tr.user, tr.test')
-            ->getQuery();
+        $query = $this->repo->createQueryBuilder('tr');
 
-        $maxDateTimes = $maxQuery->execute();
-        $qb = $this->repo->createQueryBuilder('tr');
-        $query = $qb->join(\StudentGroup::class, 'sg', Join::WITH, 'sg.group = :groupId')
-            ->setParameter('groupId', $groupId)
+        $query = $query->leftJoin(\TestResult::class,'tr2'
+            , Join::WITH
+            ,'tr.user= tr2.user AND tr.test = tr2.test AND tr2.attempt > tr.attempt')
+            ->where('tr2.attempt is NULL')
+            ->join(\StudentGroup::class,'sg',Join::WITH,'tr.user = sg.student')
             ->join(User::class, 'u', Join::WITH, 'tr.user = u.id AND sg.student = u.id')
-            ->where($qb->expr()->in('tr.dateTime', '?1'))
-            ->setParameter(1,$maxDateTimes)
-            ->orderBy('u.lastname')
-            ->getQuery();
+            ->join(\Test::class,'t',Join::WITH,'tr.test = t.id');
 
-        return $query->execute();
+
+        if($groupId != 0){
+            $query =  $query->andWhere('sg.group = :groupId')
+                ->setParameter('groupId', $groupId);
+        }
+
+        if($testId != 0){
+            $query =  $query->andWhere('tr.test = :testId')
+                ->setParameter('testId', $testId);
+        }
+
+
+        $query->andWhere('t.discipline = :disciplineId')
+            ->setParameter('disciplineId',$disciplineId);
+
+
+        return $query->orderBy('u.lastname')->getQuery()->execute();
+
     }
 
     public function getByUserAndDiscipline($userId, $disciplineId){

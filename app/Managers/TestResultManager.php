@@ -78,11 +78,12 @@ class TestResultManager
      * Получение последних результатов заданного теста для заданной группы.
      * @param $testId
      * @param $groupId
+     * @param $disciplineId
      * @return array
      */
-    public function getByGroupAndTest($groupId, $testId)
+    public function getResults($groupId, $testId, $disciplineId)
     {
-        return $this->_unitOfWork->testResults()->getByGroupAndTest($testId, $groupId);
+       return $this->_unitOfWork->testResults()->getResults($testId, $groupId,$disciplineId);
     }
 
     /**

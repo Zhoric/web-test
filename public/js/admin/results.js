@@ -225,6 +225,7 @@ $(document).ready(function(){
                 }
                 self.current.results([]);
                 self.post.settings({'result_test': null});
+                self.get.results();
             });
 
 

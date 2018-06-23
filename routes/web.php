@@ -360,7 +360,7 @@ Route::group(['prefix' => 'api'], function() {
     *------------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'results'], function () {
-        Route::get('show', 'TestResultController@getByGroupAndTest')
+        Route::get('show', 'TestResultController@getResults')
             ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);
         Route::get('getGroupResults','TestResultController@getGroupResults');
         // ->middleware('checkRole:'.UserRole::Admin.'|'.UserRole::Lecturer);

@@ -238,7 +238,7 @@
                     <tbody data-bind="foreach: $root.current.answers">
                     <tr>
                         <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
-                        <td data-bind="text: text" class="width-100p"></td>
+                        <td data-bind="html: text" class="width-100p"></td>
                         <td data-bind="visible: !$root.current.question().isOpenSingleLine()" class="minw-220">
                             <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.alter.set.answerCorrectness">Правильный</span>
                             <span>|</span>

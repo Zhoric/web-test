@@ -78,6 +78,10 @@ class ImportExportManager
             }
             return $importResult;
         }
+        catch (Exception $exception) {
+            array_push($importResult->errors, $exception->getMessage());
+            $importResult->failed++;
+        }
         finally {
             FileHelper::delete($importFilePath);
         }
@@ -93,8 +97,12 @@ class ImportExportManager
     {
         try{
             $filePath = self::$importPath . self::$exportFileName;
+
             FileHelper::delete($filePath);
+
+
             $exportFile = fopen($filePath, 'w');
+
             $exportResult = new ExportResultViewModel();
             $exportContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".PHP_EOL;
             $exportContent .= "<questions-list>".PHP_EOL;
@@ -118,7 +126,13 @@ class ImportExportManager
                 throw new Exception('Ни один из вопросов данной темы не может быть экспортирован.');
             }
 
-        } finally {
+        }
+        catch (Exception $exception) {
+            array_push($exportResult->errors, $exception->getMessage());
+            $exportResult->failed++;
+            throw new Exception($exception->getMessage());
+        }
+        finally {
             fclose($exportFile);
         }
 

@@ -19,16 +19,17 @@ class TestResultController extends Controller
     }
 
     /**
-     * Получение последних результатов заданного теста для заданной группы.
+     * Получение последних результатов по группе, дисциплине, тесту
      * @param Request $request
      * @return array
      */
-    public function getByGroupAndTest(Request $request){
+    public function getResults(Request $request){
         try{
             $testId = $request->query('testId');
             $groupId = $request->query('groupId');
+            $disciplineId = $request->query('disciplineId');
 
-            $results = $this->_testResultManager->getByGroupAndTest($groupId, $testId);
+            $results = $this->_testResultManager->getResults($groupId, $testId,$disciplineId);
             return $this->successJSONResponse($results);
         } catch (Exception $exception){
             return $this->faultJSONResponse($exception->getMessage());

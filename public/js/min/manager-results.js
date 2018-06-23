@@ -153,11 +153,26 @@ $(document).ready(function(){
                 results: function(){
                     var group = self.filter.group();
                     var test = self.filter.test();
+                    var discipline = self.filter.discipline();
 
-                    if (!group || !test) return;
+                    if(!discipline) return;
+
+                    if (!group){
+                        group = {
+                            id : function(){ return 0;}
+                        }
+                    }
+
+                    if(!test){
+                        test = {
+                            id : function(){ return 0;}
+                        }
+                    }
 
                     $ajaxget({
-                        url: '/api/results/show?groupId='+ group.id() + '&testId=' + test.id(),
+                        url: '/api/results/show?groupId='+ group.id()
+                                             + '&testId=' + test.id()
+                                             + '&disciplineId=' + discipline.id(),
                         errors: self.errors,
                         successCallback: function(data){
                             self.current.results(data());
@@ -213,9 +228,11 @@ $(document).ready(function(){
             self.filter.group.subscribe(function(value){
                 if (value){
                     self.post.settings({'result_group': self.filter.group().id()});
+                    self.get.results();
                     return;
                 }
                 self.post.settings({'result_group': null});
+                self.get.results();
             });
             self.filter.test.subscribe(function(value){
                 if (value){
@@ -225,6 +242,7 @@ $(document).ready(function(){
                 }
                 self.current.results([]);
                 self.post.settings({'result_test': null});
+                self.get.results();
             });
 
 
