@@ -266,12 +266,8 @@ $(document).ready(function(){
                 themes: function(){
                     var url = '/api/disciplines/' + self.current.discipline().id() +'/themes';
 
-                    var formatTime = function(time){
-                        return time < 10 ? "0" + time : time;
-                    };
-
                     $.get(url, function(response){
-                        const result = JSON.parse(response);
+                        var result = JSON.parse(response);
                         for (var i = 0; i < result.Data.length; i++){
                             var time = result.Data[i].totalTimeInSeconds;
                             var minutes = formatTime(Math.floor(time / 60));

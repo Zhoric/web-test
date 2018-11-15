@@ -272,6 +272,7 @@
                 <th>Вопрос</th>
                 <th>Тип</th>
                 <th>Сложность</th>
+                <th>Время</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -281,6 +282,7 @@
                 <td data-bind="html: text" class="width-100p"></td>
                 <td data-bind="text: $root.alter.set.type($data)"></td>
                 <td data-bind="text: $root.alter.set.complexity($data)" class="text-center"></td>
+                <td data-bind="text: time" class="text-right"></td>
                 <td class="minw-100 action-holder">
                     <button data-bind="click: $root.actions.question.start.update" class="fa approve mini actions">&#xf040;</button>
                     <button data-bind="click: $root.actions.question.start.remove" class="fa remove mini actions">&#xf014;</button>

@@ -40215,6 +40215,7 @@ $(document).ready(function(){
                 code: ko.observable(),
                 answerIdCounter: ko.observable(0)
             };
+
             self.filter = {
                 name: ko.observable(),
                 type: ko.observable(),
@@ -40709,13 +40710,21 @@ $(document).ready(function(){
                     var url = '/api/questions/show' + theme +
                         page + pageSize + name + type + complexity;
 
-                    $ajaxget({
-                        url: url,
-                        errors: self.errors,
-                        successCallback: function(data){
-                            self.current.questions(data.data());
-                            self.pagination.itemsCount(data.count());
+                    $.get(url, function(response){
+                        var result = JSON.parse(response);
+                        var data = result.Data.data;
+                        for (var i = 0; i < data.length; i++){
+                            var time = data[i].time;
+                            var minutes = formatTime(Math.floor(time / 60));
+                            var seconds = formatTime(time % 60);
+                            data[i].time = minutes + ":" + seconds;
                         }
+                        if (result.Success){
+                            self.current.questions(ko.mapping.fromJS(data)());
+                            self.pagination.itemsCount(ko.mapping.fromJS(result.Data.count)());
+                            return;
+                        }
+                        self.errors.show(result.Message());
                     });
                 },
                 theme: function(){

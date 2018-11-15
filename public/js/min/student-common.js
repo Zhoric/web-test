@@ -25746,6 +25746,10 @@ var menu = {
     }
 };
 
+var formatTime = function(time){
+    return time < 10 ? "0" + time : time;
+};
+
 
 ko.observable.fn.copy = function(data){
     this(ko.mapping.fromJS(ko.mapping.toJS(data)));

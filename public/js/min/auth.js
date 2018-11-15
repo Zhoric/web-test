@@ -23518,6 +23518,10 @@ var menu = {
     }
 };
 
+var formatTime = function(time){
+    return time < 10 ? "0" + time : time;
+};
+
 
 var validationEvents = function(validObj){
 
