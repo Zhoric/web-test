@@ -5,7 +5,6 @@
 /app/temp_cache
 Homestead.json
 Homestead.yaml
-.env
 
 /bootstrap/compiled.php
 /vendor

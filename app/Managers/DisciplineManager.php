@@ -4,6 +4,7 @@ namespace Managers;
 
 use Discipline;
 use DisciplineInfoViewModel;
+use ThemeViewModel;
 use Illuminate\Support\Facades\Auth;
 use Repositories\UnitOfWork;
 use Theme;
@@ -79,8 +80,31 @@ class DisciplineManager
         }
     }
 
-    public function getDisciplineThemes($disciplineId){
-        return $this->_unitOfWork->themes()->getByDiscipline($disciplineId);
+    public function getDisciplineThemes($disciplineId) {
+        $themes = $this->_unitOfWork
+            ->themes()
+            ->getByDiscipline($disciplineId);
+        $data = [];
+        foreach ($themes as $theme) {
+            $questions = $this->_unitOfWork
+                ->questions()
+                ->getByTheme($theme->getId());
+            $data[] = new ThemeViewModel(
+                $theme->getId(),
+                $theme->getName(),
+                $theme->getDiscipline()->getId(),
+                count($questions),
+                $this->getTotalTime($questions)
+            );
+        }
+        return $data;
+    }
+
+    private function getTotalTime($questions) {
+        $time = 0;
+        foreach ($questions as $question)
+            $time += $question->getTime();
+        return $time;
     }
 
     public function addTheme(Theme $theme, $disciplineId){
