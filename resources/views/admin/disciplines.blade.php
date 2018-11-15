@@ -36,19 +36,25 @@
                 <div class="details-row">
                     <table class="werewolf themes">
                         <thead>
-                        <tr><th>№</th><th>Темы</th><th>Действия</th></tr>
+                        <tr>
+                            <th>№</th>
+                            <th>Темы</th>
+                            <th>Вопросы</th>
+                            <th>Время</th>
+                            <th>Действия</th>
+                        </tr>
                         </thead>
                         <tbody>
                         <!-- ko if: $root.current.theme().mode() !== state.create-->
                         <tr class="adder-row" class="width-100p">
-                            <td colspan="3" data-bind="click: $root.actions.theme.start.add">
+                            <td colspan="5" data-bind="click: $root.actions.theme.start.add">
                                 <span class="fa">&#xf067;</span>&nbsp;Добавить тему
                             </td>
                         </tr>
                         <!-- /ko -->
                         <!-- ko if: $root.current.theme().mode() === state.create -->
                         <tr class="input-row">
-                            <td colspan="2" class="width-100p">
+                            <td colspan="4" class="width-100p">
                                 <input type="text" placeholder="Название темы"
                                        data-bind="value: $root.current.theme().name,
                                    event: {keyup: $root.events.theme}"/>
@@ -63,6 +69,8 @@
                         <tr data-bind="click: $root.actions.theme.move">
                             <td data-bind="text: $index()+1"></td>
                             <td data-bind="text: name" class="width-100p"><a data-bind="text: name, click: $root.actions.theme.move"></a></td>
+                            <td data-bind="text: questionsCount" class="text-right"></td>
+                            <td data-bind="text: totalTimeInSeconds" class="text-right"></td>
                             <td class="action-holder">
                                 <button data-bind="click: $root.actions.theme.start.remove" class="fa remove mini actions">&#xf014;</button>
                             </td>

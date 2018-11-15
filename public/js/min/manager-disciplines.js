@@ -356,9 +356,15 @@ $(document).ready(function(){
                 themes: function(){
                     var url = '/api/disciplines/' + self.current.discipline().id() +'/themes';
                     $.get(url, function(response){
-                        var result = ko.mapping.fromJSON(response);
-                        if (result.Success()){
-                            self.current.themes(result.Data());
+                        const result = JSON.parse(response);
+
+                        for (let i = 0; i < result.Data.length; i++) {
+                            result.Data[i].questionsCount = (i + 1) * 100;
+                            result.Data[i].totalTimeInSeconds = i * 10;
+                        }
+
+                        if (result.Success){
+                            self.current.themes(ko.mapping.fromJS(result.Data)());
                             return;
                         }
                         self.errors.show(result.Message());
