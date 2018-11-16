@@ -238,13 +238,17 @@
                     <tbody data-bind="foreach: $root.current.answers">
                     <tr>
                         <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
-                        <td data-bind="html: text" class="width-100p"></td>
+                        <td class="width-100p">
+                            <input data-bind="value: text, visible: isEdit()" class="width-100p"/>
+                            <label data-bind="html: text, visible: !isEdit()"></label>
+                        </td>
                         <td data-bind="visible: !$root.current.question().isOpenSingleLine()" class="minw-220">
                             <span level="1" class="radio" data-bind="css: { 'radio-positive': isRight() }, click: $root.alter.set.answerCorrectness">Правильный</span>
                             <span>|</span>
                             <span level="0" class="radio" data-bind="css: {'radio-negative':  !isRight() }, click: $root.alter.set.answerCorrectness" >Неправильный</span>
                         </td>
-                        <td class="action-holder">
+                        <td class="minw-100 action-holder">
+                            <button class="fa mini approve" data-bind="click: $root.actions.answer.edit, text: isEdit() ? '&#xf067;' : '&#xf040;'"></button>
                             <button class="fa mini remove" data-bind="click: $root.actions.answer.remove">&#xf014;</button>
                         </td>
                     </tr>

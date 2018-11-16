@@ -405,7 +405,8 @@ $(document).ready(function(){
                         self.current.answers.push({
                             id: ko.observable(id),
                             text: ko.observable(text),
-                            isRight: ko.observable(isRight)
+                            isRight: ko.observable(isRight),
+                            isEdit: ko.observable(false)
                         });
                         self.current.answerIdCounter(++id);
                         self.alter.empty.answer();
@@ -414,6 +415,9 @@ $(document).ready(function(){
                         self.current.answers.remove(function(item){
                             return item.id() === data.id();
                         });
+                    },
+                    edit: function (data) {
+                        data.isEdit(!data.isEdit());
                     }
                 },
                 image: {
@@ -616,6 +620,11 @@ $(document).ready(function(){
                         url: '/api/questions/' + id,
                         errors: self.errors,
                         successCallback: function(data){
+                            data = handleKnockoutObject(data, function (data) {
+                                handleArray(data.answers, function (answer) {
+                                    answer.isEdit = false;
+                                })
+                            });
                             self.alter.fill.question(data.question, data.answers);
                             data.question.type() === types.question.code.id
                                 ? self.get.code() : null;
