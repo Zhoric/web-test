@@ -1,7 +1,5 @@
 const elixir = require('laravel-elixir');
 
-require('laravel-elixir-vue');
-
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -25,7 +23,6 @@ elixir(function(mix){
 
 elixir(function(mix){
     mix.scripts([
-
         "lib/es5-shim.js",
         "lib/polyfills.js",
         "lib/jquery-3.1.1.js",
