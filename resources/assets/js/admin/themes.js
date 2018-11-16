@@ -368,7 +368,7 @@ $(document).ready(function(){
                             self.get.questionWithAnswers(data.id());
                             self.mode(state.update);
                             commonHelper.buildValidationList(self.validation);
-                            commonHelper.scroll('#question-form');
+                            window.scroll($("#question-form").position());
                         },
                         remove: function(data){
                             self.current.question().id(data.id());
