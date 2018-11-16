@@ -239,7 +239,7 @@
                     <tr>
                         <td data-bind="text: $index()+1" class="minw-20 text-center"></td>
                         <td class="width-100p">
-                            <input data-bind="value: text, visible: isEdit()" class="width-100p"/>
+                            <input data-bind="value: text, visible: isEdit(), hasFocus: isEdit()" class="width-100p"/>
                             <label data-bind="html: text, visible: !isEdit()"></label>
                         </td>
                         <td data-bind="visible: !$root.current.question().isOpenSingleLine()" class="minw-220">
