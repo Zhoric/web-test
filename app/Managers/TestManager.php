@@ -7,6 +7,7 @@ use QuestionViewModel;
 use Repositories\UnitOfWork;
 use Test;
 use TestInfoViewModel;
+use ThemeViewModel;
 
 class TestManager
 {
@@ -157,13 +158,30 @@ class TestManager
         return $testsInfo;
     }
 
-    /**
-     * Получение списка тем, из которых состоит тест
-     * @param $testId
-     * @return mixed
-     */
-    public function getThemesOfTest($testId){
-        $testThemes = $this->_unitOfWork->themes()->getByTest($testId);
-        return $testThemes;
+    public function getThemesOfTest($testId) {
+        $themes = $this->_unitOfWork
+            ->themes()
+            ->getByTest($testId);
+        $data = [];
+        foreach ($themes as $theme) {
+            $questions = $this->_unitOfWork
+                ->questions()
+                ->getByTheme($theme->getId());
+            $data[] = new ThemeViewModel(
+                $theme->getId(),
+                $theme->getName(),
+                $theme->getDiscipline()->getId(),
+                count($questions),
+                $this->getTotalTime($questions)
+            );
+        }
+        return $data;
+    }
+
+    private function getTotalTime($questions) {
+        $time = 0;
+        foreach ($questions as $question)
+            $time += $question->getTime();
+        return $time;
     }
 }
