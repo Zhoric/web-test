@@ -5,8 +5,8 @@ $(document).ready(function(){
             var self = this;
 
             initializeViewModel.call(self, {
-                page: menu.admin.results
-            });
+                        page: menu.admin.results
+                    });
 
             self.current = {
                 result: ko.observable(),

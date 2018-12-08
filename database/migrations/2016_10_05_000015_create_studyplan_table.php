@@ -16,12 +16,10 @@ class CreateStudyplanTable extends Migration
             $table->increments('id');
             $table->integer('profile_id')->unsigned();
             $table->string('name', 255)->nullable()->default(NULL);
+            $table->integer('year')->nullable();
+
 
             $table->foreign('profile_id')->references('id')->on('profile')->onDelete('restrict');
-        });
-
-        Schema::table('discipline_plan', function (Blueprint $table) {
-            $table->foreign('studyplan_id')->references('id')->on('studyplan')->onDelete('cascade');
         });
 
         Schema::table('group', function (Blueprint $table) {

@@ -63,8 +63,8 @@ class StudyPlanManager
             ->getPlansDisciplinesByStudyplanAndNamePaginated($pageSize, $pageNum, $studyplanId, $name);
     }
 
-    public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId, $disciplineId){
-
+    public function createDisciplinePlan(DisciplinePlan $disciplinePlan, $studyPlanId, $disciplineId)
+    {
         $existingDisciplinePlan = $this->_unitOfWork->disciplinePlans()
             ->where("DisciplinePlan.studyplan = $studyPlanId AND DisciplinePlan.discipline = $disciplineId");
 

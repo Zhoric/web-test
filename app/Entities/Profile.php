@@ -41,7 +41,7 @@ class Profile extends BaseEntity implements JsonSerializable
     protected $semesters;
 
     /**
-     * @var integer
+     * @var integerhasProjectWork
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

@@ -39,19 +39,30 @@ class TestRepository extends BaseRepository
         }
     }
 
-    public function getByNameAndDisciplinePaginated($pageSize, $pageNum, $disciplineId = null, $name = null){
+    public function getByNameAndDisciplinePaginated(
+        $pageSize,
+        $pageNum,
+        $disciplineId = null,
+        $name = null,
+        $isActive = null)
+    {
         $qb = $this->repo->createQueryBuilder('t');
         $query = $qb;
 
-        if ($disciplineId != null){
+        if ($disciplineId != null) {
             $query = $query->join(Discipline::class, 'd', Join::WITH,
                 't.discipline = d.id AND t.discipline = :disciplineId')
                 ->setParameter('disciplineId', $disciplineId);
         }
 
-        if ($name != null && $name != ''){
+        if ($name != null && $name != '') {
             $query = $query->where('t.subject LIKE :name')
                 ->setParameter('name', '%'.$name.'%');
+        }
+
+        if (filter_var($isActive, FILTER_VALIDATE_BOOLEAN) === true) {
+            $query = $query->andWhere('t.isActive = :isActive')
+                ->setParameter('isActive', 1);
         }
 
         $countQuery = clone $query;

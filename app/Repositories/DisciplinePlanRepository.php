@@ -21,7 +21,10 @@ class DisciplinePlanRepository extends BaseRepository
         $query = $qb;
 
         $query = $query->join(Discipline::class, 'd', Join::WITH, 'd.id = dp.discipline')
-            ->select('d.name AS discipline, d.id AS disciplineId, dp.id, dp.semestersCount, dp.startSemester, dp.hours, dp.hasExam, dp.hasProject')
+            ->select('d.name AS discipline, d.id AS disciplineId, dp.id, dp.semester, 
+            dp.hoursAll, dp.hoursLecture, dp.hoursPractical, dp.hoursLaboratory, dp.hoursSolo, 
+            dp.countLecture, dp.countPractical, dp.countLaboratory, 
+            dp.hasExam, dp.hasCoursework, dp.hasCourseProject, dp.hasDesignAssignment, dp.hasEssay, dp.hasAudienceTest, dp.hasHomeTest')
             ->where('dp.studyplan = :studyplan');
 
         $query->setParameter('studyplan',$studyplanId);
@@ -32,7 +35,7 @@ class DisciplinePlanRepository extends BaseRepository
         }
 
         $countQuery = clone $query;
-        $data =  $this->paginate($pageSize, $pageNum, $query, 'dp.startSemester');
+        $data =  $this->paginate($pageSize, $pageNum, $query, 'dp.semester');
 
         $count = $countQuery->select(
             $qb->expr()

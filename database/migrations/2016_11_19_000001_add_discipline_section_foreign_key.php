@@ -27,7 +27,6 @@ class AddDisciplineSectionForeignKey extends Migration
     public function down()
     {
         Schema::table('section', function ($table) {
-            $table->integer('theme_id')->default(NULL)->change();
             $table->dropForeign(['discipline_id']);
             $table->dropColumn('discipline_id');
         });

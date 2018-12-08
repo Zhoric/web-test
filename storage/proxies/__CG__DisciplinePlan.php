@@ -64,10 +64,10 @@ class DisciplinePlan extends \DisciplinePlan implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'startSemester', 'semestersCount', 'hours', 'hasProject', 'hasExam', 'id', 'discipline', 'studyplan'];
+            return ['__isInitialized__', 'semester', 'hasExam', 'hasCoursework', 'hasCourseProject', 'hasDesignAssignment', 'hasEssay', 'hasHomeTest', 'hasAudienceTest', 'hoursAll', 'hoursLecture', 'hoursLaboratory', 'hoursPractical', 'hoursSolo', 'countLecture', 'countLaboratory', 'countPractical', 'id', 'discipline', 'studyplan'];
         }
 
-        return ['__isInitialized__', 'startSemester', 'semestersCount', 'hours', 'hasProject', 'hasExam', 'id', 'discipline', 'studyplan'];
+        return ['__isInitialized__', 'semester', 'hasExam', 'hasCoursework', 'hasCourseProject', 'hasDesignAssignment', 'hasEssay', 'hasHomeTest', 'hasAudienceTest', 'hoursAll', 'hoursLecture', 'hoursLaboratory', 'hoursPractical', 'hoursSolo', 'countLecture', 'countLaboratory', 'countPractical', 'id', 'discipline', 'studyplan'];
     }
 
     /**
@@ -176,89 +176,12 @@ class DisciplinePlan extends \DisciplinePlan implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function setStartSemester($startSemester)
+    public function jsonSerialize()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStartSemester', [$startSemester]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
 
-        return parent::setStartSemester($startSemester);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getStartSemester()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStartSemester', []);
-
-        return parent::getStartSemester();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setSemestersCount($semestersCount)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSemestersCount', [$semestersCount]);
-
-        return parent::setSemestersCount($semestersCount);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSemestersCount()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSemestersCount', []);
-
-        return parent::getSemestersCount();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setHours($hours)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHours', [$hours]);
-
-        return parent::setHours($hours);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHours()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHours', []);
-
-        return parent::getHours();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setHasProject($hasProject)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasProject', [$hasProject]);
-
-        return parent::setHasProject($hasProject);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHasProject()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHasProject', []);
-
-        return parent::getHasProject();
+        return parent::jsonSerialize();
     }
 
     /**
@@ -345,12 +268,331 @@ class DisciplinePlan extends \DisciplinePlan implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function getSemester()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'jsonSerialize', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSemester', []);
 
-        return parent::jsonSerialize();
+        return parent::getSemester();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSemester($semester)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSemester', [$semester]);
+
+        return parent::setSemester($semester);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isHasCoursework()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isHasCoursework', []);
+
+        return parent::isHasCoursework();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasCoursework($hasCoursework)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasCoursework', [$hasCoursework]);
+
+        return parent::setHasCoursework($hasCoursework);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isHasCourseProject()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isHasCourseProject', []);
+
+        return parent::isHasCourseProject();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasCourseProject($hasCourseProject)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasCourseProject', [$hasCourseProject]);
+
+        return parent::setHasCourseProject($hasCourseProject);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isHasDesignAssignment()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isHasDesignAssignment', []);
+
+        return parent::isHasDesignAssignment();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasDesignAssignment($hasDesignAssignment)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasDesignAssignment', [$hasDesignAssignment]);
+
+        return parent::setHasDesignAssignment($hasDesignAssignment);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isHasEssay()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isHasEssay', []);
+
+        return parent::isHasEssay();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasEssay($hasEssay)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasEssay', [$hasEssay]);
+
+        return parent::setHasEssay($hasEssay);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isHasHomeTest()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isHasHomeTest', []);
+
+        return parent::isHasHomeTest();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasHomeTest($hasHomeTest)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasHomeTest', [$hasHomeTest]);
+
+        return parent::setHasHomeTest($hasHomeTest);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isHasAudienceTest()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isHasAudienceTest', []);
+
+        return parent::isHasAudienceTest();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasAudienceTest($hasAudienceTest)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasAudienceTest', [$hasAudienceTest]);
+
+        return parent::setHasAudienceTest($hasAudienceTest);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHoursAll()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHoursAll', []);
+
+        return parent::getHoursAll();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHoursAll($hoursAll)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHoursAll', [$hoursAll]);
+
+        return parent::setHoursAll($hoursAll);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHoursLecture()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHoursLecture', []);
+
+        return parent::getHoursLecture();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHoursLecture($hoursLecture)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHoursLecture', [$hoursLecture]);
+
+        return parent::setHoursLecture($hoursLecture);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHoursPractical()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHoursPractical', []);
+
+        return parent::getHoursPractical();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHoursPractical($hoursPractical)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHoursPractical', [$hoursPractical]);
+
+        return parent::setHoursPractical($hoursPractical);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHoursLaboratory()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHoursLaboratory', []);
+
+        return parent::getHoursLaboratory();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHoursLaboratory($hoursLaboratory)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHoursLaboratory', [$hoursLaboratory]);
+
+        return parent::setHoursLaboratory($hoursLaboratory);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHoursSolo()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHoursSolo', []);
+
+        return parent::getHoursSolo();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHoursSolo($hoursSolo)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHoursSolo', [$hoursSolo]);
+
+        return parent::setHoursSolo($hoursSolo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCountLecture()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCountLecture', []);
+
+        return parent::getCountLecture();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCountLecture($countLecture)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCountLecture', [$countLecture]);
+
+        return parent::setCountLecture($countLecture);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCountLaboratory()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCountLaboratory', []);
+
+        return parent::getCountLaboratory();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCountLaboratory($countLaboratory)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCountLaboratory', [$countLaboratory]);
+
+        return parent::setCountLaboratory($countLaboratory);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCountPractical()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCountPractical', []);
+
+        return parent::getCountPractical();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCountPractical($countPractical)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCountPractical', [$countPractical]);
+
+        return parent::setCountPractical($countPractical);
     }
 
     /**

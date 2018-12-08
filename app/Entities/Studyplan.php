@@ -19,6 +19,8 @@ class Studyplan extends BaseEntity implements JsonSerializable
      */
     protected $name;
 
+    protected $year;
+
     /**
      * @var integer
      *
@@ -97,11 +99,28 @@ class Studyplan extends BaseEntity implements JsonSerializable
         return $this->profile;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * @param mixed $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
     function jsonSerialize()
     {
         return array(
             'id' => $this->id,
             'name' => $this->name,
+            'year' => $this->year,
             'profile' => $this->profile->getId(),
         );
     }

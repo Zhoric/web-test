@@ -64,10 +64,10 @@ class Program extends \Program implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'template', 'lang', 'id', 'question'];
+            return ['__isInitialized__', 'template', 'lang', 'id', 'question', 'memoryLimit', 'timeLimit'];
         }
 
-        return ['__isInitialized__', 'template', 'lang', 'id', 'question'];
+        return ['__isInitialized__', 'template', 'lang', 'id', 'question', 'memoryLimit', 'timeLimit'];
     }
 
     /**
@@ -173,6 +173,50 @@ class Program extends \Program implements \Doctrine\ORM\Proxy\Proxy
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
+    public function getTimeLimit()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTimeLimit', []);
+
+        return parent::getTimeLimit();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTimeLimit($timeLimit)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTimeLimit', [$timeLimit]);
+
+        return parent::setTimeLimit($timeLimit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMemoryLimit()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getMemoryLimit', []);
+
+        return parent::getMemoryLimit();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setMemoryLimit($memoryLimit)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setMemoryLimit', [$memoryLimit]);
+
+        return parent::setMemoryLimit($memoryLimit);
+    }
+
     /**
      * {@inheritDoc}
      */

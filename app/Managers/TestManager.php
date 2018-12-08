@@ -53,9 +53,11 @@ class TestManager
         }
     }
 
-    public function getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId){
+    public function getTestsByNameAndDisciplinePaginated(
+        $pageNum, $pageSize, $name, $disciplineId, $isActive)
+    {
         return $this->_unitOfWork->tests()
-            ->getByNameAndDisciplinePaginated($pageSize, $pageNum, $disciplineId, $name);
+            ->getByNameAndDisciplinePaginated($pageSize, $pageNum, $disciplineId, $name, $isActive);
     }
     
     /**

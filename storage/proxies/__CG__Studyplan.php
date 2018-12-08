@@ -64,10 +64,10 @@ class Studyplan extends \Studyplan implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'name', 'id', 'profile'];
+            return ['__isInitialized__', 'name', 'year', 'id', 'profile'];
         }
 
-        return ['__isInitialized__', 'name', 'id', 'profile'];
+        return ['__isInitialized__', 'name', 'year', 'id', 'profile'];
     }
 
     /**
@@ -230,6 +230,28 @@ class Studyplan extends \Studyplan implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProfile', []);
 
         return parent::getProfile();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getYear()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getYear', []);
+
+        return parent::getYear();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setYear($year)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setYear', [$year]);
+
+        return parent::setYear($year);
     }
 
     /**

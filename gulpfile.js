@@ -172,6 +172,11 @@ elixir(function(mix){
 });
 elixir(function(mix){
     mix.scripts([
+        "admin/performance.js"
+    ], "public/js/min/manager-performance.js");
+});
+elixir(function(mix){
+    mix.scripts([
         "lib/knockout.multiselect.js",
         "admin/lecturers.js"
     ], "public/js/min/manager-lecturers.js");

@@ -64,9 +64,10 @@ class TestController extends Controller
             $pageSize = $request->query('pageSize');
             $disciplineId = $request->query('discipline');
             $name = $request->query('name');
+            $isActive = $request->query('isActive');
 
             $paginationResult = $this->_testManager
-                ->getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId);
+                ->getTestsByNameAndDisciplinePaginated($pageNum, $pageSize, $name, $disciplineId, $isActive);
 
             return $this->successJSONResponse($paginationResult);
         } catch (Exception $exception){

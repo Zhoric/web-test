@@ -41,23 +41,64 @@ $(document).ready(function () {
                     startSemester: ko.observable(0).extend({
                         required: true,
                         min: 1,
-                        max: 10,
+                        max: 12,
                         number: true
                     }),
-                    semestersCount: ko.observable(0).extend({
-                        required: true,
-                        min: 1,
-                        max: 10,
-                        number: true
-                    }),
-                    hours: ko.observable(0).extend({
+                    hoursCount: ko.observable(0).extend({
                         required: true,
                         min: 1,
                         max: 10000,
                         number: true
                     }),
-                    hasProject: ko.observable(true),
+                    hoursLecture: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10000,
+                        number: true
+                    }),
+                    hoursLaboratory: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10000,
+                        number: true
+                    }),
+                    hoursPractical: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10000,
+                        number: true
+                    }),
+                    hoursSolo: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 10000,
+                        number: true
+                    }),
+                    lectureCount: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 50,
+                        number: true
+                    }),
+                    laboratoryCount: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 50,
+                        number: true
+                    }),
+                    practicalCount: ko.observable(0).extend({
+                        required: true,
+                        min: 1,
+                        max: 50,
+                        number: true
+                    }),
                     hasExam: ko.observable(true),
+                    hasCourseWork: ko.observable(true),
+                    hasCourseProject: ko.observable(true),
+                    hasDesignAssignment: ko.observable(true),
+                    hasEssay: ko.observable(true),
+                    hasHomeTest: ko.observable(true),
+                    hasAudienceTest: ko.observable(true),
                     discipline: ko.observable(''),
                     disciplineId: ko.observable(0)
                 }),
@@ -65,25 +106,33 @@ $(document).ready(function () {
             };
             self.alter = {
                 stringify: function(){
-                  var discipline = ko.mapping.toJS(self.current.discipline);
-                  if (self.mode() === state.create) delete discipline.id;
-                  return JSON.stringify({
-                      disciplinePlan: discipline,
-                      studyPlanId: self.current.planId(),
-                      disciplineId: self.current.discipline().disciplineId()
-                  })
-              },
+                    var discipline = ko.mapping.toJS(self.current.discipline);
+                    if (self.mode() === state.create) delete discipline.id;
+                    return JSON.stringify({
+                        disciplinePlan: discipline,
+                        studyPlanId: self.current.planId(),
+                        disciplineId: self.current.discipline().disciplineId()
+                    })
+                },
                 fill: function(d){
-                  self.current.discipline().id(d.id()).hours(d.hours())
-                      .startSemester(d.startSemester()).semestersCount(d.semestersCount())
-                      .hasProject(d.hasProject()).hasExam(d.hasExam())
-                      .discipline(d.discipline()).disciplineId(d.disciplineId());
+                    self.current.discipline().id(d.id()).startSemester(d.startSemester())
+                        .hoursCount(d.hoursCount()).hoursLecture(d.hoursLecture())
+                        .hoursLaboratory(d.hoursLaboratory()).hoursPractical(d.hoursPractical())
+                        .hoursSolo(d.hoursSolo()).lectureCount(d.lectureCount())
+                        .laboratoryCount(d.laboratoryCount()).practicalCount(d.practicalCount())
+                        .hasExam(d.hasExam()).hasCourseWork(d.hasCourseWork())
+                        .hasCourseProject(d.hasCourseProject()).hasDesignAssignment(d.hasDesignAssignment())
+                        .hasEssay(d.hasEssay()).hasHomeTest(d.hasHomeTest()).hasAudienceTest(d.hasAudienceTest())
+                        .discipline(d.discipline()).disciplineId(d.disciplineId());
                 },
                 empty: function(){
-                    self.current.discipline().id(0).hours('')
-                        .startSemester('').semestersCount('')
-                        .hasProject(true).hasExam(true)
-                        .discipline('').disciplineId(0);
+                    self.current.discipline().id(0).startSemester('')
+                        .hoursCount('').hoursLecture('').hoursLaboratory('')
+                        .hoursPractical('').hoursSolo('').lectureCount('')
+                        .laboratoryCount('').practicalCount('')
+                        .hasExam(true).hasCourseWork(true).hasCourseProject(true)
+                        .hasDesignAssignment(true).hasEssay(true).hasHomeTest(true)
+                        .hasAudienceTest(true).discipline('').disciplineId(0);
                 }
             };
             self.actions = {
@@ -139,12 +188,52 @@ $(document).ready(function () {
                         data.hasExam(false);
                     }
                 },
-                switchProject: {
+                switchCourseWork: {
                     on: function(data){
-                        data.hasProject(true);
+                        data.hasCourseWork(true);
                     },
                     off: function(data){
-                        data.hasProject(false);
+                        data.hasCourseWork(false);
+                    }
+                },
+                switchCourseProject: {
+                    on: function(data){
+                        data.hasCourseProject(true);
+                    },
+                    off: function(data){
+                        data.hasCourseProject(false);
+                    }
+                },
+                switchDesignAssignment: {
+                    on: function(data){
+                        data.hasDesignAssignment(true);
+                    },
+                    off: function(data){
+                        data.hasDesignAssignment(false);
+                    }
+                },
+                switchEssay: {
+                    on: function(data){
+                        data.hasEssay(true);
+                    },
+                    off: function(data){
+                        data.hasEssay(false);
+                    }
+                },
+                switchHomeTest: {
+                    on: function(data){
+                        data.hasHomeTest(true);
+                    },
+                    off: function(data){
+                        data.hasHomeTest(false);
+                    }
+                },
+                switchAudienceTest: {
+                    on: function(data){
+                        data.hasAudienceTest(true);
+                    },
+                    off: function(data){
+                        data.hasAudienceTest(false);
                     }
                 },
             };
@@ -232,3 +321,14 @@ $(document).ready(function () {
 
     ko.applyBindings(studyplanViewModel());
 });
+
+
+
+
+
+
+
+
+
+
+
